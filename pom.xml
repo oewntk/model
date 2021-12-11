@@ -11,6 +11,9 @@
 	<groupId>io.github.x-englishwordnet</groupId>
 	<artifactId>model</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
+	<name>model</name>
+	<description>Wordnet model.</description>
+	<url>https://github.com/x-englishwordnet/model</url>
 
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>

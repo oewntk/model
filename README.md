@@ -1,11 +1,11 @@
 <p align="center">
-<img width="256" height="256" src="images/xewn2.png" alt="XEWN" alt="XEWN">
+<img width="256" height="256" src="images/oewntk.png" alt="XEWN" alt="XEWN">
 </p>
 <p align="center">
-<img width="198"src="images/mavencentral.png" alt="MavenCentral">
+<img width="150"src="images/mavencentral.png" alt="MavenCentral">
 </p>
 
-# OEWN model [WORK IN PROGRESS]
+# OEWN model
 
 This library contains the classes that model the objects (lexical entries, senses, synsets, relations, etc...) in a wordnet.
 

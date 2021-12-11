@@ -127,61 +127,51 @@ public class LibTestModelKeys
 		}
 	}
 
-	public static void testBass(final CoreModel model, final PrintStream ps)
+	public static void testBassDeep(final CoreModel model, final PrintStream ps)
 	{
-		String lemma = "bass";
-		Pronunciation pBass1 = Pronunciation.ipa("beɪs");
-		Pronunciation pBass2 = Pronunciation.ipa("bæs");
-		String d1 = "-1";
-		String d2 = "-2";
-		dump(lemma, 'n', 'n', model, ps);
-
-		Key.OEWN key1 = new Key.OEWN(lemma, 'n', pBass1);
-		ps.println(key1.toLongString());
-		Lex lex1 = key1.apply(model.lexesByLemma);
-		ps.println("\t" + lex1);
-
-		Key.Shallow key1_sh = new Key.Shallow(lemma, 'n', d1);
-		ps.println(key1_sh.toLongString());
-		Lex lex1_sh = key1_sh.apply(model.lexesByLemma);
-		ps.println("\t" + lex1_sh);
-
-		Key.OEWN key2 = new Key.OEWN(lemma, 'n', pBass2);
-		ps.println(key2.toLongString());
-		Lex lex2 = key2.apply(model.lexesByLemma);
-		ps.println("\t" + lex2);
-
-		Key.Shallow key2_sh = new Key.Shallow(lemma, 'n', d2);
-		ps.println(key2_sh.toLongString());
-		Lex lex2_sh = key2_sh.apply(model.lexesByLemma);
-		ps.println("\t" + lex2_sh);
+		testLemmaDeep(model, "bass", 'n', 'n', Pronunciation.ipa("beɪs"), Pronunciation.ipa("bæs"), ps);
 	}
 
-	public static void testRow(final CoreModel model, final PrintStream ps)
+	public static void testBassShallow(final CoreModel model, final PrintStream ps)
 	{
-		String lemma = "row";
-		Pronunciation pRowOu = Pronunciation.ipa("ɹəʊ" );
-		Pronunciation pRowAu = Pronunciation.ipa("ɹaʊ" );
-		String d1 = "-1";
-		String d2 = "-2";
-		dump(lemma, 'n', 'n', model, ps);
+		testLemmaShallow(model, "bass", 'n', 'n',  "-1",  "-2", ps);
+	}
 
-		Key.OEWN key1 = new Key.OEWN(lemma, 'n', pRowOu);
+	public static void testRowDeep(final CoreModel model, final PrintStream ps)
+	{
+		testLemmaDeep(model, "row", 'n', 'n', Pronunciation.ipa("ɹəʊ"), Pronunciation.ipa("ɹaʊ"), ps);
+	}
+
+	public static void testRowShallow(final CoreModel model, final PrintStream ps)
+	{
+		testLemmaShallow(model, "row", 'n', 'n', "-1", "-2", ps);
+	}
+
+	public static void testLemmaDeep(final CoreModel model, final String lemma, final char pos, final char type, final Pronunciation p1, final Pronunciation p2, final PrintStream ps)
+	{
+		dump(lemma, pos, type, model, ps);
+
+		Key.OEWN key1 = new Key.OEWN(lemma, type, p1);
 		ps.println(key1.toLongString());
 		Lex lex1 = key1.apply(model.lexesByLemma);
 		ps.println("\t" + lex1);
 
-		Key.Shallow key1_sh = new Key.Shallow(lemma, 'n', d1);
+		Key.OEWN key2 = new Key.OEWN(lemma, type, p2);
+		ps.println(key2.toLongString());
+		Lex lex2 = key2.apply(model.lexesByLemma);
+		ps.println("\t" + lex2);
+	}
+
+	public static void testLemmaShallow(final CoreModel model, final String lemma, final char pos, final char type, final String discriminant1, final String discriminant2, final PrintStream ps)
+	{
+		dump(lemma, pos, type, model, ps);
+
+		Key.Shallow key1_sh = new Key.Shallow(lemma, type, discriminant1);
 		ps.println(key1_sh.toLongString());
 		Lex lex1_sh = key1_sh.apply(model.lexesByLemma);
 		ps.println("\t" + lex1_sh);
 
-		Key.OEWN key2 = new Key.OEWN(lemma, 'n', pRowAu);
-		ps.println(key2.toLongString());
-		Lex lex2 = key2.apply(model.lexesByLemma);
-		ps.println("\t" + lex2);
-
-		Key.Shallow key2_sh = new Key.Shallow(lemma, 'n', d2);
+		Key.Shallow key2_sh = new Key.Shallow(lemma, type, discriminant2);
 		ps.println(key2_sh.toLongString());
 		Lex lex2_sh = key2_sh.apply(model.lexesByLemma);
 		ps.println("\t" + lex2_sh);

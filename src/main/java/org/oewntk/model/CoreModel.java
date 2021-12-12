@@ -90,6 +90,17 @@ public class CoreModel implements Serializable
 	}
 
 	/**
+	 * Generate inverse relations
+	 *
+	 * @return this model
+	 */
+	public CoreModel generateInverseRelations()
+	{
+		InverseRelationFactory.make(synsetsById);
+		return this;
+	}
+
+	/**
 	 * Info about this model
 	 *
 	 * @return info
@@ -113,7 +124,6 @@ public class CoreModel implements Serializable
 		long wordsCountEnglish = lexesByLemma.keySet().stream().map(s -> s.toLowerCase(Locale.ENGLISH)).distinct().count();
 		long discriminantsCount = lexesByLemma.values().stream().flatMap(List::stream).map(Lex::getDiscriminant).filter(Objects::nonNull).distinct().count();
 		long discriminantUsesCount = lexesByLemma.values().stream().flatMap(List::stream).filter(lex -> lex.getDiscriminant() != null).count();
-		return String.format("lexes: %d, casedwords: %d, words: %d(default lowercase), words(English lowercase): %d, discriminants: %d discriminant uses: %d",
-				lexesCount, casedWordsCount, wordsCount, wordsCountEnglish, discriminantsCount, discriminantUsesCount);
+		return String.format("lexes: %d, casedwords: %d, words: %d(default lowercase), words(English lowercase): %d, discriminants: %d discriminant uses: %d", lexesCount, casedWordsCount, wordsCount, wordsCountEnglish, discriminantsCount, discriminantUsesCount);
 	}
 }

@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
@@ -100,9 +99,7 @@ public class LibTestModelQueries
 		var relations = sense.getRelations();
 		if (relations != null)
 		{
-			relations.keySet().forEach(type -> {
-				ps.printf("%s%-28s: [%s]%n", indent, type, String.join(",", relations.get(type)));
-			});
+			relations.keySet().forEach(type -> ps.printf("%s%-28s: [%s]%n", indent, type, String.join(",", relations.get(type))));
 		}
 
 		// verbframes
@@ -155,9 +152,7 @@ public class LibTestModelQueries
 		var relations = synset.getRelations();
 		if (relations != null)
 		{
-			relations.keySet().forEach(type -> {
-				ps.printf("%s%-20s: %s%n", indent + "\t", type, relations.get(type));
-			});
+			relations.keySet().forEach(type -> ps.printf("%s%-20s: %s%n", indent + "\t", type, relations.get(type)));
 		}
 	}
 }

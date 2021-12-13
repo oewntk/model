@@ -361,8 +361,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.2727922"
-     inkscape:cx="250"
-     inkscape:cy="294.44444"
+     inkscape:cx="97.186367"
+     inkscape:cy="291.30174"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -385,7 +385,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -413,7 +413,7 @@
            sodipodi:role="line"
            id="tspan5454"
            x="-606.94"
-           y="-265.80655">producers</tspan></text>
+           y="-265.80655">suppliers</tspan></text>
       <g
          style="stroke-width:3.02774787"
          id="g4430"

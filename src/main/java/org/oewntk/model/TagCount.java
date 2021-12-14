@@ -38,7 +38,7 @@ public class TagCount implements Serializable
 	}
 
 	/**
-	 * Get sense number
+	 * Get sense number for that sensekey (index of sense in pos)
 	 *
 	 * @return sense num
 	 */
@@ -52,6 +52,6 @@ public class TagCount implements Serializable
 	@Override
 	public String toString()
 	{
-		return String.format("[%d] %d", getSenseNum(), getCount());
+		return Integer.toString(getCount());
 	}
 }

@@ -4,20 +4,29 @@
 
 package org.oewntk.model;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.*;
 
-public class Groupings
+public class LexGroupings
 {
-	public static Map<String, Map<String, List<Lex>>> byICLemma(final CoreModel model)
+	public static Map<String, Map<String, List<Lex>>> byLCLemma(final CoreModel model)
 	{
 		return model.lexesByLemma.entrySet().stream() //
 				.collect(groupingBy(e -> e.getKey().toLowerCase(Locale.ENGLISH), toMap(Map.Entry::getKey, Map.Entry::getValue)));
+	}
+
+	public static Map<String, List<Lex>> lexesByLCLemma(final CoreModel model)
+	{
+		return model.lexesByLemma.entrySet().stream() //
+				.collect(groupingBy(e -> e.getKey().toLowerCase(Locale.ENGLISH), TreeMap::new, flatMapping(e2 -> e2.getValue().stream(), toList())));
+	}
+
+	public static List<Lex> lexesForLCLemma(final CoreModel model, final String word)
+	{
+		return lexesByLCLemma(model).get(word);
 	}
 
 	public static Map<String, List<String>> lemmasByICLemma(final CoreModel model)

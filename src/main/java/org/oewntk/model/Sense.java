@@ -224,6 +224,16 @@ public class Sense implements Comparable<Sense>, Serializable
 	}
 
 	/**
+	 * Get int tag count
+	 *
+	 * @return tag count integer
+	 */
+	public int getIntTagCount()
+	{
+		return tagCount == null ? 0 : tagCount.getCount();
+	}
+
+	/**
 	 * Get sense relations
 	 *
 	 * @return sense relations

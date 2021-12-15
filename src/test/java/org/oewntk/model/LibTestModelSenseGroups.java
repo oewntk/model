@@ -43,10 +43,10 @@ public class LibTestModelSenseGroups
 		{
 			return "\t<none>";
 		}
-		List<Sense> senses2 = SenseGroupings.sortByDecreasingTagCount(senses);
+		senses.sort(SenseGroupings.byDecreasingTagCount);
 		StringWriter sw = new StringWriter();
-		senses2.forEach(sense2 -> {
-			sw.write(String.format("\t%d %s%n", sense2.getIntTagCount(), sense2));
+		senses.forEach(sense -> {
+			sw.write(String.format("\t%d %s%n", sense.getIntTagCount(), sense));
 		});
 		return sw.toString();
 	}

@@ -98,7 +98,7 @@ public class Lex implements Comparable<Lex>, Serializable
 	 */
 	public String getLemma()
 	{
-		return lemma.toLowerCase(Locale.ENGLISH);
+		return lemma;
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class Lex implements Comparable<Lex>, Serializable
 	 */
 	public String getLCLemma()
 	{
-		return lemma;
+		return lemma.toLowerCase(Locale.ENGLISH);
 	}
 
 	/**

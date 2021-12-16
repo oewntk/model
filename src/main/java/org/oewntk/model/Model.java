@@ -58,7 +58,7 @@ public class Model extends CoreModel
 
 		// set sense's verb templates
 		var sensesById = getSensesById();
-		for (Map.Entry<String, int[]> entry : senseToVerbTemplates)
+		for (Entry<String, int[]> entry : senseToVerbTemplates)
 		{
 			String sensekey = entry.getKey();
 			int[] templatesIds = entry.getValue();
@@ -69,7 +69,7 @@ public class Model extends CoreModel
 			}
 		}
 		// set sense's tag counts
-		for (Map.Entry<String, TagCount> entry : senseToTagCounts)
+		for (Entry<String, TagCount> entry : senseToTagCounts)
 		{
 			String sensekey = entry.getKey();
 			TagCount tagCount = entry.getValue();

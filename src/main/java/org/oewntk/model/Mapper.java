@@ -25,7 +25,12 @@ public class Mapper
 	public static <K, V> Map<K, V> map(final Collection<V> things, final Function<V, K> groupingFunction)
 	{
 		return things.stream() //
-				.collect(toMap(groupingFunction, Function.identity()));
+				.collect(toMap(groupingFunction, //
+						Function.identity(), //
+						(v1, v2) -> {
+							throw new RuntimeException(String.format("Duplicate key for values %s and %s", v1, v2));
+						}, //
+						TreeMap::new));
 	}
 
 	// M A P   F A C T O R Y
@@ -42,7 +47,7 @@ public class Mapper
 
 	public static Map<String, Sense> sensesById(final Collection<Sense> senses)
 	{
-		return map(senses, Sense::getLemma);
+		return map(senses, Sense::getSensekey);
 	}
 
 	public static Map<String, Synset> synsetsById(final Collection<Synset> synsets)

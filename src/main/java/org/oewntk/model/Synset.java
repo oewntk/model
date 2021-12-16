@@ -257,7 +257,9 @@ public class Synset implements Comparable<Synset>, Serializable
 	 */
 	public Sense findSenseOf(String lemma, Map<String, List<Lex>> lexesByLemma)
 	{
-		for (Lex lex : lexesByLemma.get(lemma))
+		var lexes = lexesByLemma.get(lemma);
+		assert lexes != null;
+		for (Lex lex : lexes)
 		{
 			if (lex.getType() != getType())
 			{

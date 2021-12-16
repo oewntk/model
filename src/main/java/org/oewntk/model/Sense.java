@@ -6,6 +6,7 @@ package org.oewntk.model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -131,6 +132,16 @@ public class Sense implements Comparable<Sense>, Serializable
 	public String getLemma()
 	{
 		return lex.getLemma();
+	}
+
+	/**
+	 * Get lower-case lemma
+	 *
+	 * @return lower-case lemma
+	 */
+	public String getLCLemma()
+	{
+		return lex.getLemma().toLowerCase(Locale.ENGLISH);
 	}
 
 	/**

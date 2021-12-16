@@ -27,13 +27,13 @@ public class LibTestModelSenseGroups
 
 	private static String testCISensesGroupingByLCLemmaString(final CoreModel model, final String word)
 	{
-		final var senses = sensesForLCLemma(model, word);
+		final var senses = sensesForLCLemma(model.getSensesById().values(), word);
 		return sensesToString(senses);
 	}
 
 	private static String testCISensesGroupingByLCLemmaAndPosString(final CoreModel model, final String word, final char pos)
 	{
-		final var senses = sensesForLCLemmaAndPos(model, word, pos);
+		final var senses = sensesForLCLemmaAndPos(model.getSensesById().values(), word, pos);
 		return sensesToString(senses);
 	}
 

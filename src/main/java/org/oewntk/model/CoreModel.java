@@ -6,11 +6,10 @@ package org.oewntk.model;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 /**
  * Base language model
@@ -18,20 +17,19 @@ import java.util.stream.Stream;
 public class CoreModel implements Serializable
 {
 	/**
-	 * Lexical items mapped by lemma written form.
-	 * A multimap: each value is an array of lexes for the lemma.
+	 * Lexical items
 	 */
-	public final Map<String, List<Lex>> lexesByLemma;
+	public final Collection<Lex> lexes;
 
 	/**
-	 * Senses mapped by id (sensekey)
+	 * Senses
 	 */
-	public final Map<String, Sense> sensesById;
+	public final Collection<Sense> senses;
 
 	/**
-	 * Synsets mapped by id (synset id)
+	 * Synsets
 	 */
-	public final Map<String, Synset> synsetsById;
+	public final Collection<Synset> synsets;
 
 	/**
 	 * Input directory
@@ -41,30 +39,18 @@ public class CoreModel implements Serializable
 	/**
 	 * Constructor
 	 *
-	 * @param lexesByLemma lexes
-	 * @param sensesById   senses
-	 * @param synsetsById  synsets
+	 * @param lexes   lexes
+	 * @param senses  senses
+	 * @param synsets synsets
 	 */
 	public CoreModel( //
-			final Map<String, List<Lex>> lexesByLemma, //
-			final Map<String, Sense> sensesById, //
-			final Map<String, Synset> synsetsById)
+			final Collection<Lex> lexes, //
+			final Collection<Sense> senses, //
+			final Collection<Synset> synsets)
 	{
-		this.lexesByLemma = lexesByLemma;
-		this.sensesById = sensesById;
-		this.synsetsById = synsetsById;
-	}
-
-	/**
-	 * Stream of lexes
-	 *
-	 * @return stream of lexes
-	 */
-	public Stream<Lex> getStreamOfLexes()
-	{
-		return lexesByLemma.entrySet() //
-				.stream() //
-				.flatMap(e -> e.getValue().stream()); //
+		this.lexes = lexes;
+		this.senses = senses;
+		this.synsets = synsets;
 	}
 
 	/**
@@ -96,8 +82,87 @@ public class CoreModel implements Serializable
 	 */
 	public CoreModel generateInverseRelations()
 	{
-		InverseRelationFactory.make(synsetsById);
+		InverseRelationFactory.make(getSynsetsById());
 		return this;
+	}
+
+	/**
+	 * Cached
+	 */
+	private volatile Map<String, List<Lex>> lexesByLemma = null;
+
+	/**
+	 * Lexical units mapped by lemma written form.
+	 * A multimap: each value is an array of lexes for the lemma.
+	 *
+	 * @return lexes mapped by lemma written form
+	 */
+	public Map<String, List<Lex>> getLexesByLemma()
+	{
+		if (lexesByLemma == null)
+		{
+			lexesByLemma = Mapper.lexesByLemma(lexes);
+		}
+		return lexesByLemma;
+	}
+
+	/**
+	 * Cached
+	 */
+	private volatile Map<String, List<Lex>> lexesByLCLemma = null;
+
+	/**
+	 * Lexical units mapped by lemma lower-cased written form.
+	 * A multimap: each value is an array of lexes for the lemma.
+	 *
+	 * @return lexes mapped by lemma written form
+	 */
+	public Map<String, List<Lex>> getLexesByLCLemma()
+	{
+		if (lexesByLCLemma == null)
+		{
+			lexesByLCLemma = Mapper.lexesByLCLemma(lexes);
+		}
+		return lexesByLCLemma;
+	}
+
+	/**
+	 * Cached
+	 */
+	private volatile Map<String, Sense> sensesById = null;
+
+	/**
+	 * Senses mapped by id (sensekey)
+	 *
+	 * @return senses mapped by id (sensekey)
+	 */
+	public Map<String, Sense> getSensesById()
+	{
+		if (sensesById == null)
+		{
+			sensesById = Mapper.sensesById(senses);
+		}
+
+		return Mapper.sensesById(senses);
+	}
+
+	/**
+	 * Cached
+	 */
+	private volatile Map<String, Synset> synsetsById = null;
+
+	/**
+	 * Synsets mapped by id (synset id)
+	 *
+	 * @return synsets mapped by id (synset id)
+	 */
+	public Map<String, Synset> getSynsetsById()
+	{
+		if (synsetsById == null)
+		{
+			synsetsById = Mapper.synsetsById(synsets);
+		}
+		return synsetsById;
 	}
 
 	/**
@@ -107,7 +172,7 @@ public class CoreModel implements Serializable
 	 */
 	public String info()
 	{
-		return String.format("casedwords: %d, senses: %d, synsets: %s", lexesByLemma.size(), sensesById.size(), synsetsById.size());
+		return String.format("casedwords: %d, senses: %d, synsets: %s", lexes.size(), senses.size(), synsets.size());
 	}
 
 	/**
@@ -117,13 +182,11 @@ public class CoreModel implements Serializable
 	 */
 	public String counts()
 	{
-		long lexesCount = lexesByLemma.values().stream().mapToLong(List::size).sum();
-		//noinspection ReplaceInefficientStreamCount
-		long casedWordsCount = lexesByLemma.keySet().stream().count();
-		long wordsCount = lexesByLemma.keySet().stream().map(String::toLowerCase).distinct().count();
-		long wordsCountEnglish = lexesByLemma.keySet().stream().map(s -> s.toLowerCase(Locale.ENGLISH)).distinct().count();
-		long discriminantsCount = lexesByLemma.values().stream().flatMap(List::stream).map(Lex::getDiscriminant).filter(Objects::nonNull).distinct().count();
-		long discriminantUsesCount = lexesByLemma.values().stream().flatMap(List::stream).filter(lex -> lex.getDiscriminant() != null).count();
-		return String.format("lexes: %d, casedwords: %d, words: %d(default lowercase), words(English lowercase): %d, discriminants: %d discriminant uses: %d", lexesCount, casedWordsCount, wordsCount, wordsCountEnglish, discriminantsCount, discriminantUsesCount);
+		long lexesCount = lexes.size();
+		long casedWordsCount = lexes.stream().map(Lex::getLemma).count();
+		long wordsCount = lexes.stream().map(Lex::getLCLemma).distinct().count();
+		long discriminantsCount = lexes.stream().map(Lex::getDiscriminant).filter(Objects::nonNull).distinct().count();
+		long discriminantUsesCount = lexes.stream().filter(lex -> lex.getDiscriminant() != null).count();
+		return String.format("lexes: %d, CSwords: %d, ICwords: %d, discriminants: %d discriminant uses: %d", lexesCount, casedWordsCount, wordsCount, discriminantsCount, discriminantUsesCount);
 	}
 }

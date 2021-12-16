@@ -7,6 +7,7 @@ package org.oewntk.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Lexical item/unit/entry
@@ -57,17 +58,17 @@ public class Lex implements Comparable<Lex>, Serializable
 	/**
 	 * Constructor
 	 *
-	 * @param source source file
 	 * @param lemma  lemma written form
 	 * @param code   {n,v,a,r,s]+discriminant, current values are a,n,n-1,n-2,r,s,s-1,s-2,v,v-1,v-2
+	 * @param source source file
 	 */
-	public Lex(final String source, final String lemma, final String code)
+	public Lex(final String lemma, final String code, final String source)
 	{
-		this.source = source;
 		this.lemma = lemma;
 		this.type = code.charAt(0);
 		this.partOfSpeech = this.type == 's' ? 'a' : this.type;
 		this.discriminant = code.length() > 1 ? code.substring(1) : null;
+		this.source = source;
 	}
 
 	/**
@@ -91,13 +92,13 @@ public class Lex implements Comparable<Lex>, Serializable
 	}
 
 	/**
-	 * Get source file
+	 * Get lower-cased lemma written form
 	 *
-	 * @return source file
+	 * @return lower-cased lemma written form
 	 */
-	public String getSource()
+	public String getLemma()
 	{
-		return source;
+		return lemma.toLowerCase(Locale.ENGLISH);
 	}
 
 	/**
@@ -105,7 +106,7 @@ public class Lex implements Comparable<Lex>, Serializable
 	 *
 	 * @return lemma written form
 	 */
-	public String getLemma()
+	public String getLCLemma()
 	{
 		return lemma;
 	}
@@ -211,6 +212,16 @@ public class Lex implements Comparable<Lex>, Serializable
 	{
 		this.forms = forms;
 		return this;
+	}
+
+	/**
+	 * Get source file
+	 *
+	 * @return source file
+	 */
+	public String getSource()
+	{
+		return source;
 	}
 
 	// stringify

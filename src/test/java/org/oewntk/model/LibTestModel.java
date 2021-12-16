@@ -26,7 +26,7 @@ public class LibTestModel
 {
 	public static void testKey(final CoreModel model, final PrintStream ps)
 	{
-		var dups = model.lexesByLemma.entrySet() //
+		var dups = model.getLexesByLemma().entrySet() //
 				.stream() // stream of map entries
 				.flatMap(e -> e.getValue().stream()) // stream of lexes
 				.map(Key.OEWN::of) // stream of keys
@@ -43,7 +43,7 @@ public class LibTestModel
 
 	public static void testKeyPos(final CoreModel model, final PrintStream ps)
 	{
-		var dups = model.lexesByLemma.entrySet() //
+		var dups = model.getLexesByLemma().entrySet() //
 				.stream() // stream of map entries
 				.flatMap(e -> e.getValue().stream()) // stream of lexes
 				.map(Key.Pos::of) // stream of keys
@@ -60,7 +60,7 @@ public class LibTestModel
 
 	public static void testKeyIC(final CoreModel model, final PrintStream ps)
 	{
-		var dups = model.lexesByLemma.entrySet() //
+		var dups = model.getLexesByLemma().entrySet() //
 				.stream() // stream of map entries
 				.flatMap(e -> e.getValue().stream()) // stream of lexes
 				.map(Key.IC::of) // stream of keys
@@ -77,7 +77,7 @@ public class LibTestModel
 
 	public static void testKeyPWN(final CoreModel model, final PrintStream ps)
 	{
-		var dups = model.lexesByLemma.entrySet() //
+		var dups = model.getLexesByLemma().entrySet() //
 				.stream() // stream of map entries
 				.flatMap(e -> e.getValue().stream()) // stream of lexes
 				.map(Key.PWN::of) // stream of keys
@@ -127,7 +127,7 @@ public class LibTestModel
 	public static void testStreams(final CoreModel model, final Function<Stream<Lex>, Map<Lex, Integer>> mapFunction, final Set<String> testWords, final boolean peekTestWords, final PrintStream ps)
 	{
 		// stream of lexes
-		Stream<Lex> lexStream = model.lexesByLemma.entrySet() //
+		Stream<Lex> lexStream = model.getLexesByLemma().entrySet() //
 				.stream() //
 				.flatMap(e -> e.getValue().stream()) //
 				.peek(lex -> {
@@ -146,7 +146,7 @@ public class LibTestModel
 		// test map
 		for (String word : testWords)
 		{
-			List<Lex> lexes = model.lexesByLemma.get(word);
+			List<Lex> lexes = model.getLexesByLemma().get(word);
 			for (Lex lex : lexes)
 			{
 				ps.printf("%d %s%n", lexToNID.get(lex), lex);
@@ -158,7 +158,7 @@ public class LibTestModel
 	{
 		for (String word : words)
 		{
-			List<Lex> lexes = model.lexesByLemma.get(word);
+			List<Lex> lexes = model.getLexesByLemma().get(word);
 			for (Lex lex : lexes)
 			{
 				ps.println(lex);
@@ -169,7 +169,7 @@ public class LibTestModel
 
 	public static void testWord(final String lemma, final CoreModel model, final PrintStream ps)
 	{
-		List<Lex> lexes = model.lexesByLemma.get(lemma);
+		List<Lex> lexes = model.getLexesByLemma().get(lemma);
 		for (Lex lex : lexes)
 		{
 			ps.println(lex);
@@ -179,7 +179,7 @@ public class LibTestModel
 
 	public static void testWord(final String lemma, char posFilter, final CoreModel model, final PrintStream ps)
 	{
-		Lex[] lexes = Finder.getLexesHavingPos(model.lexesByLemma, lemma, posFilter);
+		Lex[] lexes = Finder.getLexesHavingPos(model.getLexesByLemma(), lemma, posFilter);
 		int i = 0;
 		for (Lex lex : lexes)
 		{

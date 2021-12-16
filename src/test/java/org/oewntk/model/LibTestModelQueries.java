@@ -42,28 +42,28 @@ public class LibTestModelQueries
 	public static void testWordByType(final CoreModel model, final String lemma, final PrintStream ps)
 	{
 		ps.println(lemma);
-		var lexes = model.lexesByLemma.get(lemma);
+		var lexes = model.getLexesByLemma().get(lemma);
 		dump(lexes, Lex::getType, nullableDiscriminant, model, ps);
 	}
 
 	public static void testWordByPos(final CoreModel model, final String lemma, final PrintStream ps)
 	{
 		ps.println(lemma);
-		var lexes = model.lexesByLemma.get(lemma);
+		var lexes = model.getLexesByLemma().get(lemma);
 		dump(lexes, Lex::getPartOfSpeech, nullableDiscriminant, model, ps);
 	}
 
 	public static void testWordByTypeAndPronunciation(final CoreModel model, final String lemma, final PrintStream ps)
 	{
 		ps.println(lemma);
-		var lexes = model.lexesByLemma.get(lemma);
+		var lexes = model.getLexesByLemma().get(lemma);
 		dump(lexes, Lex::getType, nullablePronunciations, model, ps);
 	}
 
 	public static void testWordByPosAndPronunciation(final CoreModel model, final String lemma, final PrintStream ps)
 	{
 		ps.println(lemma);
-		var lexes = model.lexesByLemma.get(lemma);
+		var lexes = model.getLexesByLemma().get(lemma);
 		dump(lexes, Lex::getPartOfSpeech, nullablePronunciations, model, ps);
 	}
 
@@ -119,13 +119,13 @@ public class LibTestModelQueries
 
 	private static void dumpSynset(final String synsetId, final CoreModel model, final String indent, final PrintStream ps)
 	{
-		Synset synset = model.synsetsById.get(synsetId);
+		Synset synset = model.getSynsetsById().get(synsetId);
 		dump(synset, indent, ps);
 	}
 
 	private static String toShortSynset(final String synsetId, final CoreModel model)
 	{
-		Synset synset = model.synsetsById.get(synsetId);
+		Synset synset = model.getSynsetsById().get(synsetId);
 		return toShort(synset);
 	}
 

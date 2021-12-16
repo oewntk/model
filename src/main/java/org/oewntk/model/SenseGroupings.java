@@ -6,6 +6,7 @@ package org.oewntk.model;
 
 import java.io.PrintStream;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -13,7 +14,12 @@ import static java.util.stream.Collectors.toList;
 
 public class SenseGroupings
 {
-	static public class KeyLCLemmaAndPos implements Comparable
+	// L O W E R - C A S E   A N D   P O S   K E Y   ( P W N )
+
+	/**
+	 * Key that matches how indexes are built in PWN (index.sense and index.noun|verb|adj|adv
+	 */
+	static public class KeyLCLemmaAndPos implements Comparable<KeyLCLemmaAndPos>
 	{
 		public final String lcLemma;
 
@@ -62,7 +68,7 @@ public class SenseGroupings
 		}
 
 		@Override
-		public int compareTo(final Object o)
+		public int compareTo(final KeyLCLemmaAndPos o)
 		{
 			KeyLCLemmaAndPos that = (KeyLCLemmaAndPos) o;
 			int cmp = lcLemma.compareTo(that.lcLemma);
@@ -80,52 +86,45 @@ public class SenseGroupings
 		}
 	}
 
-	public static Map<KeyLCLemmaAndPos, List<Sense>> sensesByLCLemmaAndPos(final CoreModel model)
+	// G E N E R I C   M A P   F A C T O R Y
+
+	public static <K, V> Map<K, List<V>> groupBy(final Collection<V> things, final Function<V, K> groupingFunction)
 	{
-		return sensesBy(model.sensesById.values(), KeyLCLemmaAndPos::new);
+		return things.stream() //
+				.collect(groupingBy(groupingFunction, TreeMap::new, toList()));
 	}
 
-	public static <K> Map<K, List<Sense>> sensesBy(final CoreModel model, final Function<Sense, K> groupingFunction)
-	{
-		return sensesBy(model.sensesById.values(), groupingFunction);
-	}
-
-	public static Map<String, List<Sense>> sensesByLCLemma(final CoreModel model)
-	{
-		return sensesBy(model.sensesById.values(), s -> s.getLemma().toLowerCase(Locale.ENGLISH));
-	}
+	// S E N S E   M A P S
 
 	public static Map<KeyLCLemmaAndPos, List<Sense>> sensesByLCLemmaAndPos(final Collection<Sense> senses)
 	{
-		return sensesBy(senses, KeyLCLemmaAndPos::new);
+		return groupBy(senses, KeyLCLemmaAndPos::new);
 	}
 
 	public static Map<String, List<Sense>> sensesByLCLemma(final Collection<Sense> senses)
 	{
-		return sensesBy(senses, s -> s.getLemma().toLowerCase(Locale.ENGLISH));
+		return groupBy(senses, Sense::getLCLemma);
 	}
 
-	public static <K> Map<K, List<Sense>> sensesBy(final Collection<Sense> senses, final Function<Sense, K> groupingFunction)
+	// S E N S E S  F O R
+	// for debug as it makes a fresh map every time
+
+	public static <K> List<Sense> sensesFor(final Collection<Sense> senses, final Function<Sense, K> groupingFunction, K k)
 	{
-		return senses.stream() //
-				.collect(groupingBy(groupingFunction, TreeMap::new, toList()));
+		return groupBy(senses, groupingFunction).get(k);
 	}
 
-	public static List<Sense> sensesForLCLemmaAndPos(final CoreModel model, final String lcLemma, final char pos)
+	public static List<Sense> sensesForLCLemmaAndPos(final Collection<Sense> senses, final String lcLemma, final char pos)
 	{
-		return sensesFor(model, KeyLCLemmaAndPos::new, KeyLCLemmaAndPos.of(lcLemma, pos));
+		return sensesFor(senses, KeyLCLemmaAndPos::new, KeyLCLemmaAndPos.of(lcLemma, pos));
 	}
 
-	public static List<Sense> sensesForLCLemma(final CoreModel model, final String lcLemma)
+	public static List<Sense> sensesForLCLemma(final Collection<Sense> senses, final String lcLemma)
 	{
-		return sensesFor(model, s -> s.getLemma().toLowerCase(Locale.ENGLISH), lcLemma);
+		return sensesFor(senses, Sense::getLCLemma, lcLemma);
 	}
 
-	public static <K> List<Sense> sensesFor(final CoreModel model, final Function<Sense, K> groupingFunction, K k)
-	{
-		return model.sensesById.values().stream() //
-				.collect(groupingBy(groupingFunction, toList())).get(k);
-	}
+	// C O M P A R A T O R
 
 	public static Comparator<Sense> byDecreasingTagCount = (s1, s2) -> {
 
@@ -149,7 +148,7 @@ public class SenseGroupings
 		dumpSenses(senses, ps);
 	}
 
-	public static <K> void dumpSensesByDecreasingTagCount(Map.Entry<K, List<Sense>> sensesWithKey, final PrintStream ps)
+	public static <K> void dumpSensesByDecreasingTagCount(Entry<K, List<Sense>> sensesWithKey, final PrintStream ps)
 	{
 		var k = sensesWithKey.getKey();
 		var senses2 = sensesWithKey.getValue();

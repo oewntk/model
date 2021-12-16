@@ -115,7 +115,7 @@ public class LibTestModelKeys
 		{
 			Key.OEWN key1 = new Key.OEWN(lemma, type, p);
 			ps.println(key1.toLongString());
-			Lex lex1 = key1.apply(model.lexesByLemma);
+			Lex lex1 = key1.apply(model.getLexesByLemma());
 			ps.println("\t" + lex1);
 		}
 	}
@@ -127,7 +127,7 @@ public class LibTestModelKeys
 		{
 			Key.Shallow key1_sh = new Key.Shallow(lemma, type, d);
 			ps.println(key1_sh.toLongString());
-			Lex lex1_sh = key1_sh.apply(model.lexesByLemma);
+			Lex lex1_sh = key1_sh.apply(model.getLexesByLemma());
 			ps.println("\t" + lex1_sh);
 		}
 	}
@@ -139,7 +139,7 @@ public class LibTestModelKeys
 		{
 			Key.Pos key_pos = new Key.Pos(lemma, pos, p);
 			ps.println(key_pos.toLongString());
-			Lex lex_pos = key_pos.apply(model.lexesByLemma); // first
+			Lex lex_pos = key_pos.apply(model.getLexesByLemma()); // first
 			ps.println("\t" + lex_pos);
 		}
 	}
@@ -150,7 +150,7 @@ public class LibTestModelKeys
 
 		Key.PWN key_pwn = new Key.PWN(lemma, pos);
 		ps.println(key_pwn.toLongString());
-		Lex[] lexes_pwn = key_pwn.apply(model.lexesByLemma);
+		Lex[] lexes_pwn = key_pwn.apply(model.getLexesByLemma());
 		for (Lex lex_pwn : lexes_pwn)
 		{
 			ps.println("\t" + lex_pwn);
@@ -164,7 +164,7 @@ public class LibTestModelKeys
 		for (var k : keys)
 		{
 			ps.println(k);
-			Lex lex = k.apply(model.lexesByLemma);
+			Lex lex = k.apply(model.getLexesByLemma());
 			ps.println("\t" + lex);
 		}
 	}
@@ -176,7 +176,7 @@ public class LibTestModelKeys
 		for (var k : keys)
 		{
 			ps.println(k);
-			Lex[] lexes = k.apply(model.lexesByLemma);
+			Lex[] lexes = k.apply(model.getLexesByLemma());
 			for (var lex : lexes)
 			{
 				ps.println("\t" + lex);
@@ -188,14 +188,14 @@ public class LibTestModelKeys
 	{
 		ps.println("----------");
 		ps.println("ALL LEMMAS " + lemma);
-		List<Lex> lexes = Finder.getLexes(model.lexesByLemma, lemma);
+		List<Lex> lexes = Finder.getLexes(model.getLexesByLemma(), lemma);
 		for (var lex : lexes)
 		{
 			ps.println("\t" + lex);
 		}
 
 		ps.println("ALL LEMMAS WITH POS " + posFilter + " " + lemma);
-		Lex[] lexes_p = Finder.getLexesHavingPos(model.lexesByLemma, lemma, posFilter);
+		Lex[] lexes_p = Finder.getLexesHavingPos(model.getLexesByLemma(), lemma, posFilter);
 		for (var lex : lexes_p)
 		{
 			ps.println("\t" + lex);
@@ -204,7 +204,7 @@ public class LibTestModelKeys
 		if (typeFilter != '\0')
 		{
 			ps.println("ALL LEMMAS WITH TYPE " + typeFilter + " " + lemma);
-			Lex[] lexes_t = Finder.getLexesHavingType(model.lexesByLemma, lemma, typeFilter);
+			Lex[] lexes_t = Finder.getLexesHavingType(model.getLexesByLemma(), lemma, typeFilter);
 			for (var lex : lexes_t)
 			{
 				ps.println("\t" + lex);
@@ -212,14 +212,14 @@ public class LibTestModelKeys
 		}
 
 		ps.println("ALL LEMMAS IGNORE CASE " + lemma);
-		Lex[] lexes_u = Finder.getLcLexes(model.lexesByLemma, lemma);
+		Lex[] lexes_u = Finder.getLcLexes(model.getLexesByLemma(), lemma);
 		for (var lex : lexes_u)
 		{
 			ps.println("\t" + lex);
 		}
 
 		ps.println("ALL LEMMAS IGNORE CASE WITH POS " + posFilter + " " + lemma);
-		Lex[] lexes_up = Finder.getLcLexesHavingPos(model.lexesByLemma, lemma, posFilter);
+		Lex[] lexes_up = Finder.getLcLexesHavingPos(model.getLexesByLemma(), lemma, posFilter);
 		for (var lex : lexes_up)
 		{
 			ps.println("\t" + lex);
@@ -228,7 +228,7 @@ public class LibTestModelKeys
 		if (typeFilter != '\0')
 		{
 			ps.println("ALL LEMMAS IGNORE CASE WITH TYPE " + typeFilter + " " + lemma);
-			Lex[] lexes_ut = Finder.getLcLexesHavingType(model.lexesByLemma, lemma, typeFilter);
+			Lex[] lexes_ut = Finder.getLcLexesHavingType(model.getLexesByLemma(), lemma, typeFilter);
 			for (var lex : lexes_ut)
 			{
 				ps.println("\t" + lex);

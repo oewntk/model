@@ -13,11 +13,6 @@ import java.util.*;
 public class Synset implements Comparable<Synset>, Serializable
 {
 	/**
-	 * Source file
-	 */
-	private final String source;
-
-	/**
 	 * Synset id
 	 */
 	private final String synsetId;
@@ -53,9 +48,13 @@ public class Synset implements Comparable<Synset>, Serializable
 	private Map<String, List<String>> relations;
 
 	/**
+	 * Source file
+	 */
+	private final String source;
+
+	/**
 	 * Constructor
 	 *
-	 * @param source      source file
 	 * @param synsetId    synset id
 	 * @param type        type: {n,v,a,r,s}
 	 * @param members     synset members
@@ -63,10 +62,10 @@ public class Synset implements Comparable<Synset>, Serializable
 	 * @param examples    examples
 	 * @param wikidata    wiki data
 	 * @param relations   synset relations
+	 * @param source      source file
 	 */
-	public Synset(final String source, final String synsetId, final char type, final String[] members, final String[] definitions, final String[] examples, final String wikidata, final Map<String, List<String>> relations)
+	public Synset(final String synsetId, final char type, final String[] members, final String[] definitions, final String[] examples, final String wikidata, final Map<String, List<String>> relations, final String source)
 	{
-		this.source = source;
 		this.synsetId = synsetId;
 		this.type = type;
 		this.members = members;
@@ -74,6 +73,7 @@ public class Synset implements Comparable<Synset>, Serializable
 		this.examples = examples;
 		this.wikidata = wikidata;
 		this.relations = relations;
+		this.source = source;
 	}
 
 	/**

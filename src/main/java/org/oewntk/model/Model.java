@@ -5,8 +5,9 @@
 package org.oewntk.model;
 
 import java.io.File;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Language model
@@ -14,14 +15,14 @@ import java.util.Map;
 public class Model extends CoreModel
 {
 	/**
-	 * Verb frames mapped by id (tag)
+	 * Verb frames
 	 */
-	public final Map<String, VerbFrame> verbFramesById;
+	public final Collection<VerbFrame> verbFrames;
 
 	/**
-	 * Verb templates mapped by id (num)
+	 * Verb templates
 	 */
-	public final Map<Integer, VerbTemplate> verbTemplatesById;
+	public final Collection<VerbTemplate> verbTemplates;
 
 	/**
 	 * Extra input directory
@@ -31,30 +32,33 @@ public class Model extends CoreModel
 	/**
 	 * Constructor
 	 *
-	 * @param lexesByLemma         lexes a multimap
-	 * @param sensesById           senses
-	 * @param synsetsById          synsets
-	 * @param verbFramesById       verb frames
-	 * @param verbTemplatesById    verb templates
+	 * @param lexes                lexes
+	 * @param senses               senses
+	 * @param synsets              synsets
+	 * @param verbFrames           verb frames
+	 * @param verbTemplates        verb templates
 	 * @param senseToVerbTemplates sensekey-to-verb template
 	 * @param senseToTagCounts     sensekey-to-tagcount
 	 */
 	public Model( //
-			final Map<String, List<Lex>> lexesByLemma, //
-			final Map<String, Sense> sensesById, //
-			final Map<String, Synset> synsetsById, //
-			final Map<String, VerbFrame> verbFramesById, //
-			final Map<Integer, VerbTemplate> verbTemplatesById, //
-			final Map<String, int[]> senseToVerbTemplates, //
-			final Map<String, TagCount> senseToTagCounts)
-	{
-		super(lexesByLemma, sensesById, synsetsById);
+			final Collection<Lex> lexes, //
+			final Collection<Sense> senses, //
+			final Collection<Synset> synsets, //
 
-		this.verbFramesById = verbFramesById;
-		this.verbTemplatesById = verbTemplatesById;
+			final Collection<VerbFrame> verbFrames, //
+			final Collection<VerbTemplate> verbTemplates, //
+
+			final Collection<Entry<String, int[]>> senseToVerbTemplates, //
+			final Collection<Entry<String, TagCount>> senseToTagCounts)
+	{
+		super(lexes, senses, synsets);
+
+		this.verbFrames = verbFrames;
+		this.verbTemplates = verbTemplates;
 
 		// set sense's verb templates
-		for (Map.Entry<String, int[]> entry : senseToVerbTemplates.entrySet())
+		var sensesById = getSensesById();
+		for (Map.Entry<String, int[]> entry : senseToVerbTemplates)
 		{
 			String sensekey = entry.getKey();
 			int[] templatesIds = entry.getValue();
@@ -65,7 +69,7 @@ public class Model extends CoreModel
 			}
 		}
 		// set sense's tag counts
-		for (Map.Entry<String, TagCount> entry : senseToTagCounts.entrySet())
+		for (Map.Entry<String, TagCount> entry : senseToTagCounts)
 		{
 			String sensekey = entry.getKey();
 			TagCount tagCount = entry.getValue();
@@ -80,15 +84,35 @@ public class Model extends CoreModel
 	/**
 	 * Constructor from base model
 	 *
-	 * @param coreModel            base model
-	 * @param verbFramesById       verb frames
-	 * @param verbTemplatesById    verb templates
-	 * @param senseToVerbTemplates sensekey-to-verb template
-	 * @param senseToTagCounts     sensekey-to-tagcount
+	 * @param coreModel             base model
+	 * @param verbFrames            verb frames
+	 * @param verbTemplates         verb templates
+	 * @param sensesToVerbTemplates collection of entries of type sensekey-to-verb template
+	 * @param sensesToTagCounts     collection of entries of type sensekey-to-tagcount
 	 */
-	public Model(final CoreModel coreModel, final Map<String, VerbFrame> verbFramesById, final Map<Integer, VerbTemplate> verbTemplatesById, final Map<String, int[]> senseToVerbTemplates, final Map<String, TagCount> senseToTagCounts)
+	public Model(final CoreModel coreModel, final Collection<VerbFrame> verbFrames, final Collection<VerbTemplate> verbTemplates, final Collection<Entry<String, int[]>> sensesToVerbTemplates, final Collection<Entry<String, TagCount>> sensesToTagCounts)
 	{
-		this(coreModel.lexesByLemma, coreModel.sensesById, coreModel.synsetsById, verbFramesById, verbTemplatesById, senseToVerbTemplates, senseToTagCounts);
+		this(coreModel.lexes, coreModel.senses, coreModel.synsets, verbFrames, verbTemplates, sensesToVerbTemplates, sensesToTagCounts);
+	}
+
+	/**
+	 * Verb frames mapped by id
+	 *
+	 * @return verb frames mapped by id
+	 */
+	public Map<String, VerbFrame> getVerbFramesById()
+	{
+		return Mapper.map(verbFrames, VerbFrame::getId);
+	}
+
+	/**
+	 * Verb templates mapped by id
+	 *
+	 * @return verb templates mapped by id
+	 */
+	public Map<Integer, VerbTemplate> getVerbTemplatesById()
+	{
+		return Mapper.map(verbTemplates, VerbTemplate::getId);
 	}
 
 	/**
@@ -117,7 +141,7 @@ public class Model extends CoreModel
 	 */
 	public File[] getSources()
 	{
-		return new File[]{ source, source2 };
+		return new File[]{source, source2};
 	}
 
 	/**
@@ -127,6 +151,6 @@ public class Model extends CoreModel
 	 */
 	public String info()
 	{
-		return super.info() + String.format(", verb frames: %d, verb templates: %s", verbFramesById.size(), verbTemplatesById.size());
+		return super.info() + String.format(", verb frames: %d, verb templates: %s", verbFrames.size(), verbTemplates.size());
 	}
 }

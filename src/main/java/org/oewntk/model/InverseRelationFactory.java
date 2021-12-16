@@ -39,7 +39,7 @@ public class InverseRelationFactory
 	/**
 	 * Generate inverse synset relations
 	 *
-	 * @param synsetsById synsets
+	 * @param synsetsById synsets mapped by id
 	 */
 	public static void make(Map<String, Synset> synsetsById)
 	{

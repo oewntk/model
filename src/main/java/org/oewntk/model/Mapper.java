@@ -5,12 +5,11 @@
 package org.oewntk.model;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Function;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toMap;
 
 public class Mapper
 {
@@ -21,9 +20,14 @@ public class Mapper
 		return things.stream() //
 				.collect(toMap(groupingFunction, //
 						Function.identity(), //
-						(v1, v2) -> {
-							throw new RuntimeException(String.format("Duplicate key for values %s and %s", v1, v2));
-						}, //
+						(existing, replacement) -> {
+							if (existing.equals(replacement))
+							{
+								throw new IllegalArgumentException(existing + "," + replacement);
+							}
+							return existing;
+						},
+						//TODO (v1, v2) -> { throw new RuntimeException(String.format("Duplicate key for values %s and %s", v1, v2)); }, //
 						TreeMap::new));
 	}
 

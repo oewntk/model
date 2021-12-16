@@ -16,12 +16,6 @@ public class Mapper
 {
 	// G E N E R I C   M A P   F A C T O R Y
 
-	public static <K, V> Map<K, List<V>> groupBy(final Collection<V> things, final Function<V, K> groupingFunction)
-	{
-		return things.stream() //
-				.collect(groupingBy(groupingFunction, TreeMap::new, toList()));
-	}
-
 	public static <K, V> Map<K, V> map(final Collection<V> things, final Function<V, K> groupingFunction)
 	{
 		return things.stream() //
@@ -33,17 +27,7 @@ public class Mapper
 						TreeMap::new));
 	}
 
-	// M A P   F A C T O R Y
-
-	public static Map<String, List<Lex>> lexesByLemma(final Collection<Lex> lexes)
-	{
-		return groupBy(lexes, Lex::getLemma);
-	}
-
-	public static Map<String, List<Lex>> lexesByLCLemma(final Collection<Lex> lexes)
-	{
-		return groupBy(lexes, Lex::getLCLemma);
-	}
+	// G E N E R I C   M A P   F A C T O R Y
 
 	public static Map<String, Sense> sensesById(final Collection<Sense> senses)
 	{

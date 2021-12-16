@@ -4,65 +4,101 @@
 
 package org.oewntk.model;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.function.Predicate;
+import java.util.*;
 
 import static java.util.stream.Collectors.*;
 
 public class LexGroupings
 {
-	public static Map<String, Map<String, List<Lex>>> byLCLemma(final CoreModel model)
+	/**
+	 * Group lexes by CS lemma
+	 *
+	 * @param lexes lexes
+	 * @return lexes grouped by CS lemma
+	 */
+	public static Map<String, List<Lex>> lexesByLemma(final Collection<Lex> lexes)
+	{
+		return Groupings.groupBy(lexes, Lex::getLemma);
+	}
+
+	/**
+	 * Group lexes by LC lemma
+	 *
+	 * @param lexes lexes
+	 * @return lexes grouped by LCS lemma
+	 */
+	public static Map<String, List<Lex>> lexesByLCLemma(final Collection<Lex> lexes)
+	{
+		return Groupings.groupBy(lexes, Lex::getLCLemma);
+	}
+
+	/**
+	 * Hypermap (LCLemma -> CSLemma -> lexes)
+	 *
+	 * @param model model
+	 * @return 2-tier hypermap (LCLemma -> CSLemma -> lexes)
+	 */
+	public static Map<String, Map<String, List<Lex>>> hyperMapByLCLemmaByLemma(final CoreModel model)
 	{
 		return model.getLexesByLemma().entrySet().stream() //
 				.collect(groupingBy(e -> e.getKey().toLowerCase(Locale.ENGLISH), toMap(Map.Entry::getKey, Map.Entry::getValue)));
 	}
 
-	public static Map<String, List<Lex>> lexesByLCLemma(final CoreModel model)
+	/**
+	 * CSLemmas grouped by LCLemma
+	 * baroque -> (Baroque, baroque)
+	 *
+	 * @param model model
+	 * @return CS lemmas by LC lemmas
+	 */
+	public static Map<String, List<String>> cSLemmasByLCLemma(final CoreModel model)
 	{
-		return model.getLexesByLemma().entrySet().stream() //
-				.collect(groupingBy(e -> e.getKey().toLowerCase(Locale.ENGLISH), TreeMap::new, flatMapping(e2 -> e2.getValue().stream(), toList())));
+		return model.lexes.stream() //
+				.map(Lex::getLemma) //
+				.collect(groupingBy(l -> l.toLowerCase(Locale.ENGLISH), TreeMap::new, toList()));
 	}
 
-	public static List<Lex> lexesForLCLemma(final CoreModel model, final String word)
+	/**
+	 * CSLemmas for LCLemma
+	 *
+	 * @param model model
+	 * @return CS lemmas for given LC lemma
+	 */
+	public static List<String> cSLemmasForLCLemma(final CoreModel model, final String lcLemma)
 	{
-		return lexesByLCLemma(model).get(word);
+		return cSLemmasByLCLemma(model).get(lcLemma);
 	}
 
-	public static Map<String, List<String>> lemmasByICLemma(final CoreModel model)
+	/**
+	 * Counts of CS lemmas by LC lemma
+	 *
+	 * @param model model
+	 * @return counts of CS lemmas by LC lemmas
+	 */
+	public static Map<String, Long> countsByLCLemma(final CoreModel model)
 	{
-		return model.getLexesByLemma().keySet().stream() //
-				.collect(groupingBy(k -> k.toLowerCase(Locale.ENGLISH), TreeMap::new, toList()));
+		return Groupings.countsBy(model.lexes.stream().map(Lex::getLemma), lemma -> lemma.toLowerCase(Locale.ENGLISH));
 	}
 
-	public static Map<String, Long> countsByICLemma(final CoreModel model)
-	{
-		return model.getLexesByLemma().keySet().stream() //
-				.collect(groupingBy(k -> k.toLowerCase(Locale.ENGLISH), TreeMap::new, counting()));
-	}
-
+	/**
+	 * Counts of CS lemmas by LC lemma, sme as above but retain entries that have count > 1
+	 *
+	 * @param model model
+	 * @return counts of CS lemmas by LC lemmas, with count > 2
+	 */
 	public static Map<String, Long> multipleCountsByICLemma(final CoreModel model)
 	{
-		return model.getLexesByLemma().keySet().stream() //
-				.collect(collectingAndThen(groupingBy(k -> k.toLowerCase(Locale.ENGLISH), TreeMap::new, counting()), m -> {
-					m.values().removeIf(v -> v <= 1L);
-					return m;
-				}));
+		return Groupings.multipleCountsBy(model.lexes.stream().map(Lex::getLemma), lemma -> lemma.toLowerCase(Locale.ENGLISH));
 	}
 
-	public static Map<String, List<String>> lemmasByICLemmaHavingMultipleCount(final CoreModel model)
+	/**
+	 * CS lemmas by LC lemmas, retain entries that have count > 1
+	 *
+	 * @param model model
+	 * @return CS lemmas by LC lemmas, with count > 2
+	 */
+	public static Map<String, List<String>> cSLemmasByLCLemmaHavingMultipleCount(final CoreModel model)
 	{
-		return lemmasByICLemmaHaving(model, v -> v.size() <= 1L);
-	}
-
-	public static Map<String, List<String>> lemmasByICLemmaHaving(final CoreModel model, final Predicate<List<String>> predicate)
-	{
-		return model.getLexesByLemma().keySet().stream() //
-				.collect(collectingAndThen(groupingBy(k -> k.toLowerCase(Locale.ENGLISH), TreeMap::new, toList()), m -> {
-					m.values().removeIf(predicate);
-					return m;
-				}));
+		return Groupings.groupByHavingMultipleCount(model.lexes.stream().map(Lex::getLemma), lemma -> lemma.toLowerCase(Locale.ENGLISH));
 	}
 }

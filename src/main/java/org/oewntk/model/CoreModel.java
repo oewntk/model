@@ -101,7 +101,7 @@ public class CoreModel implements Serializable
 	{
 		if (lexesByLemma == null)
 		{
-			lexesByLemma = Mapper.lexesByLemma(lexes);
+			lexesByLemma = LexGroupings.lexesByLemma(lexes);
 		}
 		return lexesByLemma;
 	}
@@ -121,7 +121,7 @@ public class CoreModel implements Serializable
 	{
 		if (lexesByLCLemma == null)
 		{
-			lexesByLCLemma = Mapper.lexesByLCLemma(lexes);
+			lexesByLCLemma = LexGroupings.lexesByLCLemma(lexes);
 		}
 		return lexesByLCLemma;
 	}

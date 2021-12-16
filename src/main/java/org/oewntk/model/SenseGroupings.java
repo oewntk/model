@@ -9,9 +9,6 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
-
 public class SenseGroupings
 {
 	// L O W E R - C A S E   A N D   P O S   K E Y   ( P W N )
@@ -86,24 +83,16 @@ public class SenseGroupings
 		}
 	}
 
-	// G E N E R I C   M A P   F A C T O R Y
-
-	public static <K, V> Map<K, List<V>> groupBy(final Collection<V> things, final Function<V, K> groupingFunction)
-	{
-		return things.stream() //
-				.collect(groupingBy(groupingFunction, TreeMap::new, toList()));
-	}
-
 	// S E N S E   M A P S
 
 	public static Map<KeyLCLemmaAndPos, List<Sense>> sensesByLCLemmaAndPos(final Collection<Sense> senses)
 	{
-		return groupBy(senses, KeyLCLemmaAndPos::new);
+		return Groupings.groupBy(senses.stream(), KeyLCLemmaAndPos::new);
 	}
 
 	public static Map<String, List<Sense>> sensesByLCLemma(final Collection<Sense> senses)
 	{
-		return groupBy(senses, Sense::getLCLemma);
+		return Groupings.groupBy(senses.stream(), Sense::getLCLemma);
 	}
 
 	// S E N S E S  F O R
@@ -111,7 +100,7 @@ public class SenseGroupings
 
 	public static <K> List<Sense> sensesFor(final Collection<Sense> senses, final Function<Sense, K> groupingFunction, K k)
 	{
-		return groupBy(senses, groupingFunction).get(k);
+		return Groupings.groupBy(senses.stream(), groupingFunction).get(k);
 	}
 
 	public static List<Sense> sensesForLCLemmaAndPos(final Collection<Sense> senses, final String lcLemma, final char pos)

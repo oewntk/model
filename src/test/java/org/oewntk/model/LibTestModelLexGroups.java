@@ -17,19 +17,19 @@ public class LibTestModelLexGroups
 {
 	public static void testCIMultipleAll(final CoreModel model, final PrintStream ps)
 	{
-		LexGroupings.lemmasByICLemmaHavingMultipleCount(model) //
+		LexGroupings.cSLemmasByLCLemmaHavingMultipleCount(model) //
 				.forEach((u, cs) -> ps.printf("%s {%s}%n", u, String.join(",", cs)));
 	}
 
 	public static void testCILemmas(final CoreModel model, final String word, final PrintStream ps)
 	{
-		var lemmas = LexGroupings.lemmasByICLemma(model).get(word);
+		var lemmas = LexGroupings.cSLemmasByLCLemma(model).get(word);
 		ps.printf("%s {%s}%n", word, String.join(",", lemmas));
 	}
 
 	public static void testCICounts(final CoreModel model, final String word, final PrintStream ps)
 	{
-		var count = LexGroupings.countsByICLemma(model).get(word);
+		var count = LexGroupings.countsByLCLemma(model).get(word);
 		ps.printf("%s %d%n", word, count);
 	}
 
@@ -100,7 +100,7 @@ public class LibTestModelLexGroups
 	public static String testCIHypermapString(final CoreModel model, final String word)
 	{
 		StringWriter sw = new StringWriter();
-		final var hyperMap = LexGroupings.byLCLemma(model);
+		final var hyperMap = LexGroupings.hyperMapByLCLemmaByLemma(model);
 		assert hyperMap != null;
 		final var map = hyperMap.get(word.toLowerCase(Locale.ENGLISH));
 		map.keySet().forEach(cs -> {
@@ -114,7 +114,7 @@ public class LibTestModelLexGroups
 	public static String testCILexesString(final CoreModel model, final String word)
 	{
 		StringWriter sw = new StringWriter();
-		final var map = LexGroupings.lexesByLCLemma(model);
+		final var map = model.getLexesByLCLemma();
 		assert map != null;
 		final var lexes = map.get(word.toLowerCase(Locale.ENGLISH));
 		assert lexes != null;
@@ -124,7 +124,7 @@ public class LibTestModelLexGroups
 	public static String testCILexesForWordString(final CoreModel model, final String word)
 	{
 		StringWriter sw = new StringWriter();
-		final var lexes = LexGroupings.lexesForLCLemma(model, word);
+		final var lexes = model.getLexesByLCLemma().get(word);
 		assert lexes != null;
 		return lexesToString(lexes);
 	}

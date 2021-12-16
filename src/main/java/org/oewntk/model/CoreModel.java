@@ -6,10 +6,7 @@ package org.oewntk.model;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Base language model
@@ -48,9 +45,9 @@ public class CoreModel implements Serializable
 			final Collection<Sense> senses, //
 			final Collection<Synset> synsets)
 	{
-		this.lexes = lexes;
-		this.senses = senses;
-		this.synsets = synsets;
+		this.lexes = Collections.unmodifiableCollection(lexes);
+		this.senses = Collections.unmodifiableCollection(senses);
+		this.synsets = Collections.unmodifiableCollection(synsets);
 	}
 
 	/**

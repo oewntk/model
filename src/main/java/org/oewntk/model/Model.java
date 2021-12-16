@@ -6,6 +6,7 @@ package org.oewntk.model;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -44,17 +45,15 @@ public class Model extends CoreModel
 			final Collection<Lex> lexes, //
 			final Collection<Sense> senses, //
 			final Collection<Synset> synsets, //
-
 			final Collection<VerbFrame> verbFrames, //
 			final Collection<VerbTemplate> verbTemplates, //
-
 			final Collection<Entry<String, int[]>> senseToVerbTemplates, //
 			final Collection<Entry<String, TagCount>> senseToTagCounts)
 	{
 		super(lexes, senses, synsets);
 
-		this.verbFrames = verbFrames;
-		this.verbTemplates = verbTemplates;
+		this.verbFrames = Collections.unmodifiableCollection(verbFrames);
+		this.verbTemplates = Collections.unmodifiableCollection(verbTemplates);
 
 		// set sense's verb templates
 		var sensesById = getSensesById();

@@ -361,8 +361,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.2727922"
-     inkscape:cx="97.186367"
-     inkscape:cy="291.30174"
+     inkscape:cx="-55.627266"
+     inkscape:cy="288.15904"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -394,6 +394,13 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(284.26356,-536.43945)">
+    <rect
+       style="opacity:0.98000004;fill:#f9f9f9;fill-opacity:1;stroke:none;stroke-width:1;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1046"
+       width="132.62508"
+       height="132.83295"
+       x="-284.26355"
+       y="536.3139" />
     <g
        id="g6077"
        transform="translate(-0.23153561,4.0213098)">

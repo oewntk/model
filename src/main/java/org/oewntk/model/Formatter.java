@@ -4,6 +4,7 @@
 
 package org.oewntk.model;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -83,7 +84,7 @@ public class Formatter
 	 * @param delim delimiter
 	 * @return joined string representation of items
 	 */
-	public static <K, V> String join(Map<K, List<V>> map, String delim)
+	public static <K, V extends Iterable<T>, T> String join(Map<K, V> map, String delim)
 	{
 		if (map == null)
 		{
@@ -91,7 +92,7 @@ public class Formatter
 		}
 		StringBuilder sb = new StringBuilder();
 		boolean first = true;
-		for (Map.Entry<K, List<V>> entry : map.entrySet())
+		for (Map.Entry<K, V> entry : map.entrySet())
 		{
 			if (first)
 			{
@@ -102,7 +103,7 @@ public class Formatter
 				sb.append(delim);
 			}
 			String k = entry.getKey().toString();
-			Iterable<V> v = entry.getValue();
+			Iterable<T> v = entry.getValue();
 			sb.append('[');
 			sb.append(k);
 			sb.append(']');

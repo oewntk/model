@@ -4,8 +4,8 @@
 
 package org.oewntk.model;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -47,12 +47,12 @@ public class InverseRelationFactory
 		{
 			String sourceSynsetId = entry.getKey();
 			Synset sourceSynset = entry.getValue();
-			Map<String, List<String>> relations = sourceSynset.getRelations();
+			Map<String, Set<String>> relations = sourceSynset.getRelations();
 			if (relations != null && relations.size() > 0)
 			{
 				for (String type : INVERSE_SYNSET_RELATIONS_KEYS)
 				{
-					List<String> targetSynsetIds = relations.get(type);
+					Collection<String> targetSynsetIds = relations.get(type);
 					if (targetSynsetIds != null && targetSynsetIds.size() > 0)
 					{
 						String inverseType = INVERSE_SYNSET_RELATIONS.get(type);
@@ -60,7 +60,14 @@ public class InverseRelationFactory
 						{
 							Synset targetSynset = synsetsById.get(targetSynsetId);
 							assert targetSynset != null;
-							targetSynset.addInverseRelation(inverseType, sourceSynsetId);
+							try
+							{
+								targetSynset.addInverseRelation(inverseType, sourceSynsetId);
+							}
+							catch (IllegalArgumentException e)
+							{
+								Tracing.psErr.printf("[W] %s%n", e.getMessage());
+							}
 						}
 					}
 				}

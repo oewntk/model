@@ -184,6 +184,6 @@ public class CoreModel implements Serializable
 		long wordsCount = lexes.stream().map(Lex::getLCLemma).distinct().count();
 		long discriminantsCount = lexes.stream().map(Lex::getDiscriminant).filter(Objects::nonNull).distinct().count();
 		long discriminantUsesCount = lexes.stream().filter(lex -> lex.getDiscriminant() != null).count();
-		return String.format("lexes: %d, CSwords: %d, ICwords: %d, discriminants: %d discriminant uses: %d", lexesCount, casedWordsCount, wordsCount, discriminantsCount, discriminantUsesCount);
+		return String.format("lexes: %d, CS lemmas: %d, CI lemmas: %d, discriminants: %d discriminant uses: %d", lexesCount, casedWordsCount, wordsCount, discriminantsCount, discriminantUsesCount);
 	}
 }

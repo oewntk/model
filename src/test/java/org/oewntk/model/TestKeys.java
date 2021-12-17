@@ -13,12 +13,6 @@ import static org.junit.Assert.*;
 
 public class TestKeys
 {
-	@SuppressWarnings("EmptyMethod")
-	@BeforeClass
-	public static void init()
-	{
-	}
-
 	@Test
 	public void testRow()
 	{

@@ -45,35 +45,35 @@ public class Synset implements Comparable<Synset>, Serializable
 	/**
 	 * Synset relations
 	 */
-	private Map<String, List<String>> relations;
+	private Map<String, Set<String>> relations;
 
 	/**
 	 * Source file
 	 */
-	private final String source;
+	private final String domain;
 
 	/**
 	 * Constructor
 	 *
 	 * @param synsetId    synset id
 	 * @param type        type: {n,v,a,r,s}
+	 * @param domain      source file
 	 * @param members     synset members
 	 * @param definitions definitions
 	 * @param examples    examples
 	 * @param wikidata    wiki data
 	 * @param relations   synset relations
-	 * @param source      source file
 	 */
-	public Synset(final String synsetId, final char type, final String[] members, final String[] definitions, final String[] examples, final String wikidata, final Map<String, List<String>> relations, final String source)
+	public Synset(final String synsetId, final char type, final String domain, final String[] members, final String[] definitions, final String[] examples, final String wikidata, final Map<String, Set<String>> relations)
 	{
 		this.synsetId = synsetId;
 		this.type = type;
+		this.domain = domain;
 		this.members = members;
 		this.definitions = definitions;
 		this.examples = examples;
 		this.wikidata = wikidata;
 		this.relations = relations;
-		this.source = source;
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class Synset implements Comparable<Synset>, Serializable
 	 *
 	 * @return synset relations
 	 */
-	public Map<String, List<String>> getRelations()
+	public Map<String, Set<String>> getRelations()
 	{
 		return relations;
 	}
@@ -175,25 +175,34 @@ public class Synset implements Comparable<Synset>, Serializable
 	}
 
 	/**
-	 * Get source file
+	 * Get domain
 	 *
 	 * @return source file
 	 */
-	public String getSource()
+	public String getDomain()
 	{
-		return source;
+		return domain;
 	}
 
-	// computed
-
 	/**
-	 * Find lexfile
+	 * Get lex file
 	 *
-	 * @return lexfile
+	 * @return lex file
 	 */
-	public String findLexfile()
+	public String getLexfile()
 	{
-		return source.substring(0, source.length() - ".yaml".length());
+		switch (getPartOfSpeech())
+		{
+			case 'n':
+				return "noun." + domain;
+			case 'v':
+				return "verb." + domain;
+			case 'a':
+				return "adj." + domain;
+			case 'r':
+				return "adv." + domain;
+		}
+		return null;
 	}
 
 	// mutation
@@ -210,7 +219,12 @@ public class Synset implements Comparable<Synset>, Serializable
 		{
 			relations = new HashMap<>();
 		}
-		relations.computeIfAbsent(inverseType, (k) -> new ArrayList<>()).add(targetSynsetId);
+		var rels = relations.computeIfAbsent(inverseType, (k) -> new LinkedHashSet<>());
+		if (rels.contains(targetSynsetId))
+		{
+			throw new IllegalArgumentException(String.format("%s duplicate %s to %s", getSynsetId(), inverseType, targetSynsetId));
+		}
+		rels.add(targetSynsetId);
 	}
 
 	// computed
@@ -230,7 +244,7 @@ public class Synset implements Comparable<Synset>, Serializable
 		{
 			for (Lex lex : lexesByLemma.get(member))
 			{
-				if (lex.getType() != getType())
+				if (lex.getPartOfSpeech() != getPartOfSpeech())
 				{
 					continue;
 				}
@@ -258,10 +272,10 @@ public class Synset implements Comparable<Synset>, Serializable
 	public Sense findSenseOf(String lemma, Map<String, List<Lex>> lexesByLemma)
 	{
 		var lexes = lexesByLemma.get(lemma);
-		assert lexes != null;
+		assert lexes != null : String.format("%s has no sense", lemma);
 		for (Lex lex : lexes)
 		{
-			if (lex.getType() != getType())
+			if (lex.getPartOfSpeech() != getPartOfSpeech())
 			{
 				continue;
 			}

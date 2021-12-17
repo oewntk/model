@@ -5,8 +5,6 @@
 package org.oewntk.model;
 
 import java.io.PrintStream;
-import java.io.StringWriter;
-import java.util.List;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
@@ -97,36 +95,27 @@ public class LibTestModelLexGroups
 		ps.println(testCILexesForWordString(model, word));
 	}
 
-	public static String testCIHypermapString(final CoreModel model, final String word)
+	public static String testCIHypermapString(final CoreModel model, final String lemma)
 	{
-		StringWriter sw = new StringWriter();
-		final var hyperMap = LexGroupings.hyperMapByLCLemmaByLemma(model);
-		assert hyperMap != null;
-		final var map = hyperMap.get(word.toLowerCase(Locale.ENGLISH));
-		map.keySet().forEach(cs -> {
-			sw.write(String.format("\tcs '%s'%n", cs));
-			map.get(cs) //
-					.forEach(s -> sw.write(String.format("\t\t%s%n", s)));
-		});
-		return sw.toString();
+		var lexHypermap = LexGroupings.hyperMapByLCLemmaByLemma(model);
+		assert lexHypermap != null;
+		return Utils.lexHypermapForLemmaToString(lexHypermap, lemma);
 	}
 
 	public static String testCILexesString(final CoreModel model, final String word)
 	{
-		StringWriter sw = new StringWriter();
 		final var map = model.getLexesByLCLemma();
 		assert map != null;
 		final var lexes = map.get(word.toLowerCase(Locale.ENGLISH));
 		assert lexes != null;
-		return lexesToString(lexes);
+		return Utils.lexesToString(lexes);
 	}
 
 	public static String testCILexesForWordString(final CoreModel model, final String word)
 	{
-		StringWriter sw = new StringWriter();
 		final var lexes = model.getLexesByLCLemma().get(word);
 		assert lexes != null;
-		return lexesToString(lexes);
+		return Utils.lexesToString(lexes);
 	}
 
 	public static void testCISensesGroupingByLCLemmaAndPos(final CoreModel model, final String word, final char pos, final PrintStream ps)
@@ -144,38 +133,12 @@ public class LibTestModelLexGroups
 	private static String testCISensesGroupingByLCLemmaString(final CoreModel model, final String word)
 	{
 		final var senses = sensesForLCLemma(model.getSensesById().values(), word);
-		return sensesToString(senses);
+		return Utils.sensesToString(senses);
 	}
 
 	private static String testCISensesGroupingByLCLemmaAndPosString(final CoreModel model, final String word, final char pos)
 	{
 		final var senses = sensesForLCLemmaAndPos(model.getSensesById().values(), word, pos);
-		return sensesToString(senses);
-	}
-
-	private static String sensesToString(final List<Sense> senses)
-	{
-		if (senses == null || senses.isEmpty())
-		{
-			return "\t<none>";
-		}
-		StringWriter sw = new StringWriter();
-		senses.forEach(sense -> {
-			sw.write(String.format("\t%s%n", sense));
-		});
-		return sw.toString();
-	}
-
-	private static String lexesToString(final List<Lex> lexes)
-	{
-		if (lexes == null || lexes.isEmpty())
-		{
-			return "\t<none>";
-		}
-		StringWriter sw = new StringWriter();
-		lexes.forEach(lex -> {
-			sw.write(String.format("\t%s%n", lex));
-		});
-		return sw.toString();
+		return Utils.sensesToString(senses);
 	}
 }

@@ -5,115 +5,39 @@
 package org.oewntk.model;
 
 import java.io.PrintStream;
-import java.util.AbstractMap;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
-
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.counting;
 
 public class LibTestModel
 {
-	public static void testKey(final CoreModel model, final PrintStream ps)
+	public static <T extends Comparable<T>> Map<T, Integer> makeSortedIndexMap(final Stream<T> stream)
 	{
-		var dups = model.getLexesByLemma().entrySet() //
-				.stream() // stream of map entries
-				.flatMap(e -> e.getValue().stream()) // stream of lexes
-				.map(Key.OEWN::of) // stream of keys
-				.collect(groupingBy(Function.identity(), counting())) // map(key, count));
-				.entrySet().stream() // stream of map entries
-				.filter(m -> m.getValue() > 1) // if map value > 1, duplicate element
-				//.sorted(Comparator.comparingLong(Map.Entry::getValue)) //
-				.sorted(Comparator.comparing(e -> e.getKey().toString())) //
-				.collect(toCollection(LinkedHashSet::new));
-		ps.println(dups.size());
-		dups.forEach(ps::println);
-		Assert.assertEquals(0, dups.size());
-	}
-
-	public static void testKeyPos(final CoreModel model, final PrintStream ps)
-	{
-		var dups = model.getLexesByLemma().entrySet() //
-				.stream() // stream of map entries
-				.flatMap(e -> e.getValue().stream()) // stream of lexes
-				.map(Key.Pos::of) // stream of keys
-				.collect(groupingBy(Function.identity(), counting())) // map(key, count));
-				.entrySet().stream() // stream of map entries
-				.filter(m -> m.getValue() > 1) // if map value > 1, duplicate element
-				//.sorted(Comparator.comparingLong(Map.Entry::getValue)) //
-				.sorted(Comparator.comparing(e -> e.getKey().toString())) //
-				.collect(toCollection(LinkedHashSet::new));
-		ps.println(dups.size());
-		dups.forEach(ps::println);
-		Assert.assertNotEquals(0, dups.size());
-	}
-
-	public static void testKeyIC(final CoreModel model, final PrintStream ps)
-	{
-		var dups = model.getLexesByLemma().entrySet() //
-				.stream() // stream of map entries
-				.flatMap(e -> e.getValue().stream()) // stream of lexes
-				.map(Key.IC::of) // stream of keys
-				.collect(groupingBy(Function.identity(), counting())) // map(key, count));
-				.entrySet().stream() // stream of map entries
-				.filter(m -> m.getValue() > 1) // if map value > 1, duplicate element
-				//.sorted(Comparator.comparingLong(Map.Entry::getValue)) //
-				.sorted(Comparator.comparing(e -> e.getKey().toString())) //
-				.collect(toCollection(LinkedHashSet::new));
-		ps.println(dups.size());
-		// dups.forEach(ps::println);
-		Assert.assertNotEquals(0, dups.size());
-	}
-
-	public static void testKeyPWN(final CoreModel model, final PrintStream ps)
-	{
-		var dups = model.getLexesByLemma().entrySet() //
-				.stream() // stream of map entries
-				.flatMap(e -> e.getValue().stream()) // stream of lexes
-				.map(Key.PWN::of) // stream of keys
-				.collect(groupingBy(Function.identity(), counting())) // map(key, count));
-				.entrySet().stream() // stream of map entries
-				.filter(m -> m.getValue() > 1) // if map value > 1, duplicate element
-				//.sorted(Comparator.comparingLong(Map.Entry::getValue)) //
-				.sorted(Comparator.comparing(e -> e.getKey().toString())) //
-				.collect(toCollection(LinkedHashSet::new));
-		ps.println(dups.size());
-		// dups.forEach(ps::println);
-		Assert.assertNotEquals(0, dups.size());
-	}
-
-	public static <T extends Comparable<T>> Map<T, Integer> makeSortedMap(final Stream<T> stream)
-	{
-		final int[] i = { 0 };
+		final int[] i = {0};
 		//noinspection UnnecessaryLocalVariable
 		Map<T, Integer> map = stream //
 				.sequential() //
 				.peek(e -> i[0]++) //
 				.map(item -> new AbstractMap.SimpleEntry<>(item, i[0])) //
-				.collect(toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue, (existing, replacement) -> {
-					if (existing.equals(replacement))
-					{
-						throw new IllegalArgumentException(existing + "," + replacement);
-					}
-					return existing;
-				}, TreeMap::new));
+				.collect(toMap( //
+						AbstractMap.SimpleEntry::getKey,  //
+						AbstractMap.SimpleEntry::getValue, (existing, replacement) -> {
+							if (existing.equals(replacement))
+							{
+								throw new IllegalArgumentException(existing + "," + replacement);
+							}
+							return existing;
+						}, //
+						TreeMap::new));
 		// map.forEach((k, v) -> ps.printf("%s %s%n", k, v));
 		return map;
 	}
 
-	public static <T> Map<T, Integer> makeMap(final Stream<T> stream)
+	public static <T> Map<T, Integer> makeIndexMap(final Stream<T> stream)
 	{
-		final int[] i = { 0 };
+		final int[] i = {0};
 		//noinspection UnnecessaryLocalVariable
 		Map<T, Integer> map = stream //
 				.sequential() //
@@ -124,7 +48,7 @@ public class LibTestModel
 		return map;
 	}
 
-	public static void testStreams(final CoreModel model, final Function<Stream<Lex>, Map<Lex, Integer>> mapFunction, final Set<String> testWords, final boolean peekTestWords, final PrintStream ps)
+	public static void testScanLexesForTestWords(final CoreModel model, final Function<Stream<Lex>, Map<Lex, Integer>> mapFunction, final Set<String> testWords, final boolean peekTestWords, final PrintStream ps)
 	{
 		// stream of lexes
 		Stream<Lex> lexStream = model.getLexesByLemma().entrySet() //
@@ -140,16 +64,17 @@ public class LibTestModel
 					}
 				});
 
-		// make lex-to-nid map
-		Map<Lex, Integer> lexToNID = mapFunction.apply(lexStream);
+		// make lex-to-index map
+		Map<Lex, Integer> lexToIndex = mapFunction.apply(lexStream);
 
 		// test map
+		ps.printf("%-12s %s%n", "index", "lex");
 		for (String word : testWords)
 		{
 			List<Lex> lexes = model.getLexesByLemma().get(word);
 			for (Lex lex : lexes)
 			{
-				ps.printf("%d %s%n", lexToNID.get(lex), lex);
+				ps.printf("%-12d %s%n", lexToIndex.get(lex), lex);
 			}
 		}
 	}
@@ -169,7 +94,7 @@ public class LibTestModel
 
 	public static void testWord(final String lemma, final CoreModel model, final PrintStream ps)
 	{
-		List<Lex> lexes = model.getLexesByLemma().get(lemma);
+		List<Lex> lexes = Finder.getLexes(model, lemma);
 		for (Lex lex : lexes)
 		{
 			ps.println(lex);
@@ -179,7 +104,7 @@ public class LibTestModel
 
 	public static void testWord(final String lemma, char posFilter, final CoreModel model, final PrintStream ps)
 	{
-		Lex[] lexes = Finder.getLexesHavingPos(model.getLexesByLemma(), lemma, posFilter);
+		Lex[] lexes = Finder.getLexesHavingPos(model, lemma, posFilter);
 		int i = 0;
 		for (Lex lex : lexes)
 		{

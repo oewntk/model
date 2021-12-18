@@ -11,58 +11,56 @@ public class Finder
 	/**
 	 * Find lex matching word
 	 *
-	 * @param lexesByLemma lexes mapped by lemma as per model
-	 * @param lemma        lemma (cased)
+	 * @param model model
+	 * @param lemma lemma (CS)
 	 * @return lexes
 	 */
-	public static List<Lex> getLexes(Map<String, List<Lex>> lexesByLemma, String lemma)
+	public static List<Lex> getLexes(final CoreModel model, final String lemma)
 	{
-		return lexesByLemma.get(lemma);
+		return model.getLexesByLemma().get(lemma);
 	}
 
 	/**
 	 * Find lex matching word and type filter
 	 *
-	 * @param lexesByLemma lexes mapped by lemma as per model
-	 * @param lemma        lemma (cased)
-	 * @param typeFilter   type filter
+	 * @param model      model
+	 * @param lemma      lemma (CS)
+	 * @param typeFilter type filter
 	 * @return lexes
 	 */
-	public static Lex[] getLexesHavingType(Map<String, List<Lex>> lexesByLemma, String lemma, char typeFilter)
+	public static Lex[] getLexesHavingType(final CoreModel model, final String lemma, final char typeFilter)
 	{
-		return lexesByLemma.get(lemma) //
-				.stream()
-				.filter(lex -> lex.getType() == typeFilter) //
+		return model.getLexesByLemma().get(lemma) //
+				.stream().filter(lex -> lex.getType() == typeFilter) //
 				.toArray(Lex[]::new);
 	}
 
 	/**
 	 * Find lex matching word and part-of-speech filter
 	 *
-	 * @param lexesByLemma lexes mapped by lemma as per model
-	 * @param lemma        lemma (cased)
-	 * @param posFilter    part-of-speech filter
+	 * @param model     model
+	 * @param lemma     lemma (cased)
+	 * @param posFilter part-of-speech filter
 	 * @return lexes
 	 */
-	public static Lex[] getLexesHavingPos(Map<String, List<Lex>> lexesByLemma, String lemma, char posFilter)
+	public static Lex[] getLexesHavingPos(final CoreModel model, final String lemma, final char posFilter)
 	{
-		return lexesByLemma.get(lemma) //
-				.stream()
-				.filter(lex -> lex.getPartOfSpeech() == posFilter) //
+		return model.getLexesByLemma().get(lemma) //
+				.stream().filter(lex -> lex.getPartOfSpeech() == posFilter) //
 				.toArray(Lex[]::new);
 	}
 
 	/**
 	 * Find lexes matching lemma ignoring case and having the desired type
 	 *
-	 * @param lexesByLemma lexes by lemma
-	 * @param lcLemma      lower-cased lemma
-	 * @param typeFilter   type filter
+	 * @param model      model
+	 * @param lcLemma    lower-cased lemma
+	 * @param typeFilter type filter
 	 * @return array of lexes
 	 */
-	public static Lex[] getLcLexesHavingType(final Map<String, List<Lex>> lexesByLemma, final String lcLemma, final Character typeFilter)
+	public static Lex[] getLcLexesHavingType(final CoreModel model, final String lcLemma, final Character typeFilter)
 	{
-		return Arrays.stream(getLcLexes(lexesByLemma, lcLemma)) //
+		return model.getLexesByLCLemma().get(lcLemma.toLowerCase(Locale.ENGLISH)).stream() //
 				.filter(lex -> lex.getType() == typeFilter) //
 				.toArray(Lex[]::new);
 	}
@@ -70,14 +68,14 @@ public class Finder
 	/**
 	 * Find lexes matching lemma ignoring case and having the desired pos
 	 *
-	 * @param lexesByLemma lexes by lemma
+	 * @param model      model
 	 * @param lcLemma      lower-cased lemma
 	 * @param posFilter    pos filter
 	 * @return array of lexes
 	 */
-	public static Lex[] getLcLexesHavingPos(final Map<String, List<Lex>> lexesByLemma, final String lcLemma, final Character posFilter)
+	public static Lex[] getLcLexesHavingPos(final CoreModel model, final String lcLemma, final Character posFilter)
 	{
-		return Arrays.stream(getLcLexes(lexesByLemma, lcLemma)) //
+		return model.getLexesByLCLemma().get(lcLemma.toLowerCase(Locale.ENGLISH)).stream() //
 				.filter(lex -> lex.getPartOfSpeech() == posFilter) //
 				.toArray(Lex[]::new);
 	}
@@ -85,17 +83,13 @@ public class Finder
 	/**
 	 * Find lexes matching lemma ignoring case
 	 *
-	 * @param lexesByLemma lexes by lemma
+	 * @param model      model
 	 * @param lcLemma      lower-cased lemma
 	 * @return array of lexes
 	 */
-	public static Lex[] getLcLexes(final Map<String, List<Lex>> lexesByLemma, final String lcLemma)
+	public static Lex[] getLcLexes(final CoreModel model, final String lcLemma)
 	{
-		return lexesByLemma.keySet() //
-				.stream() //
-				.filter(lemma -> lemma.equalsIgnoreCase(lcLemma))//
-				.map(lexesByLemma::get) //
-				.flatMap(List::stream) //
+		return model.getLexesByLCLemma().get(lcLemma.toLowerCase(Locale.ENGLISH))
 				.toArray(Lex[]::new);
 	}
 

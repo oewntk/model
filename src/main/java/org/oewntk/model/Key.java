@@ -4,15 +4,25 @@
 
 package org.oewntk.model;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Function;
 
-public class Key
+public interface Key<R> extends Function<CoreModel, R>
 {
+	interface Mono extends Key<Lex>
+	{
+	}
+
+	interface Multi extends Key<Lex[]>
+	{
+	}
+
 	/**
 	 * Current deep key, returns unique value
 	 */
-	public static class OEWN implements Function<Map<String, List<Lex>>, Lex>
+	public static class OEWN implements Mono
 	{
 		public static OEWN of(final Lex lex)
 		{
@@ -76,16 +86,16 @@ public class Key
 		}
 
 		@Override
-		public Lex apply(final Map<String, List<Lex>> lexesByLemma)
+		public Lex apply(final CoreModel model)
 		{
-			return Finder.getLexHavingPronunciations(Finder.getLexesHavingType(lexesByLemma, lemma, type), pronunciations);
+			return Finder.getLexHavingPronunciations(Finder.getLexesHavingType(model, lemma, type), pronunciations);
 		}
 	}
 
 	/**
 	 * Current shallow key, returns unique value
 	 */
-	public static class Shallow implements Function<Map<String, List<Lex>>, Lex>
+	public static class Shallow implements Mono
 	{
 		public static Shallow of(final Lex lex)
 		{
@@ -149,16 +159,16 @@ public class Key
 		}
 
 		@Override
-		public Lex apply(final Map<String, List<Lex>> lexesByLemma)
+		public Lex apply(final CoreModel model)
 		{
-			return Finder.getLexHavingDiscriminant(Finder.getLcLexesHavingType(lexesByLemma, lemma, type), discriminant);
+			return Finder.getLexHavingDiscriminant(Finder.getLcLexesHavingType(model, lemma, type), discriminant);
 		}
 	}
 
 	/**
 	 * Part-of-Speech (a-s merge) deep key, returns first value
 	 */
-	public static class Pos implements Function<Map<String, List<Lex>>, Lex>
+	public static class Pos implements Mono
 	{
 		public static Pos of(final Lex lex)
 		{
@@ -222,16 +232,16 @@ public class Key
 		}
 
 		@Override
-		public Lex apply(final Map<String, List<Lex>> lexesByLemma)
+		public Lex apply(final CoreModel model)
 		{
-			return Finder.getLexHavingPronunciations(Finder.getLexesHavingPos(lexesByLemma, lemma, pos), pronunciations);
+			return Finder.getLexHavingPronunciations(Finder.getLexesHavingPos(model, lemma, pos), pronunciations);
 		}
 	}
 
 	/**
 	 * Part-of-Speech lemma ignore case deep key, returns values
 	 */
-	public static class IC implements Function<Map<String, List<Lex>>, Lex[]>
+	public static class IC implements Multi
 	{
 		public static IC of(final Lex lex)
 		{
@@ -297,16 +307,16 @@ public class Key
 		}
 
 		@Override
-		public Lex[] apply(final Map<String, List<Lex>> lexesByLemma)
+		public Lex[] apply(final CoreModel model)
 		{
-			return Finder.getLexesHavingPronunciations(Finder.getLcLexesHavingType(lexesByLemma, lcLemma, type), pronunciations);
+			return Finder.getLexesHavingPronunciations(Finder.getLcLexesHavingType(model, lcLemma, type), pronunciations);
 		}
 	}
 
 	/**
 	 * Princeton WordNet key, returns values
 	 */
-	public static class PWN implements Function<Map<String, List<Lex>>, Lex[]>
+	public static class PWN implements Multi
 	{
 		public static PWN of(final Lex lex)
 		{
@@ -364,9 +374,9 @@ public class Key
 		}
 
 		@Override
-		public Lex[] apply(final Map<String, List<Lex>> lexesByLemma)
+		public Lex[] apply(final CoreModel model)
 		{
-			return Finder.getLexesHavingPos(lexesByLemma, lemma, pos);
+			return Finder.getLexesHavingPos(model, lemma, pos);
 		}
 	}
 }

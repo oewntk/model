@@ -179,24 +179,56 @@ public class CoreModel implements Serializable
 	 */
 	public String counts()
 	{
-		long lexesCount = lexes.size();
 		long csWordsCount = lexes.stream().map(Lex::getLemma).distinct().count();
 		long lcWordsCount = lexes.stream().map(Lex::getLCLemma).distinct().count();
 		long casedCount = lexes.stream().filter(Lex::isCased).distinct().count();
+		long withMultiSenseLexCount = lexes.stream().filter(lex -> lex.getSenses().size() > 1).count();
 		long discriminantsCount = lexes.stream().map(Lex::getDiscriminant).filter(Objects::nonNull).distinct().count();
-		long discriminantUsesCount = lexes.stream().filter(lex -> lex.getDiscriminant() != null).count();
-		return String.format( //
-				"%n%-20s: %6d" + //
-				"%n%-20s: %6d" + //
-				"%n%-20s: %6d" + //
-				"%n%-20s: %6d" + //
-				"%n%-20s: %6d" + //
-				"%n%-20s: %6d", //
-				"lexes", lexesCount, //
-				"lemmas(CS)", csWordsCount, //
-				"lemmas(LC)", lcWordsCount, //
-				"lemmas(cased)", casedCount, //
-				"discr. types", discriminantsCount, //
-				"discr. uses", discriminantUsesCount);
+		long withDiscriminantLexCount = lexes.stream().filter(lex -> lex.getDiscriminant() != null).count();
+		long withPronunciationLexCount = lexes.stream().filter(lex -> lex.getPronunciations() != null).count();
+		long pronunciationRefsCount = lexes.stream().filter(lex -> lex.getPronunciations() != null).mapToLong(lex -> lex.getPronunciations().length).sum();
+		long pronunciationsCount = lexes.stream().filter(lex -> lex.getPronunciations() != null).flatMap(lex -> Arrays.stream(lex.getPronunciations())).distinct().count();
+		long withMorphLexCount = lexes.stream().filter(lex -> lex.getForms() != null).count();
+		long morphRefsCount = lexes.stream().filter(lex -> lex.getForms() != null).mapToLong(lex -> lex.getForms().length).sum();
+		long morphsCount = lexes.stream().filter(lex -> lex.getForms() != null).flatMap(lex -> Arrays.stream(lex.getForms())).distinct().count();
+		long senseCount = lexes.stream().mapToLong(lex -> lex.getSenses().size()).sum();
+
+		long withRelationSenseCount = senses.stream().filter(sense -> sense.getRelations() != null).count();
+		long withVerbFramesSenseCount = senses.stream().filter(sense -> sense.getVerbFrames() != null).count();
+		long withVerbTemplatesSenseCount = senses.stream().filter(sense -> sense.getVerbTemplates() != null).count();
+		long withTagCountSenseCount = senses.stream().filter(sense -> sense.getTagCount() != null).count();
+
+		long withRelationSynsetCount = synsets.stream().filter(synset -> synset.getRelations() != null).count();
+		long withSamplesSynsetCount = synsets.stream().filter(synset -> synset.getExamples() != null).count();
+		long samplesCount = synsets.stream().filter(synset -> synset.getExamples() != null).mapToLong(synset -> synset.getExamples().length).sum();
+
+		String format = "%n%-32s: %6d";
+		return String.format(format, "lexes", lexes.size()) + //
+				String.format(format, "lemmas(CS)", csWordsCount) + //
+				String.format(format, "lemmas(LC)", lcWordsCount) + //
+				String.format(format, "lemmas(cased)", casedCount) + //
+				String.format(format, "discriminant types", discriminantsCount) + //
+				String.format(format, "lexes with discriminant.", withDiscriminantLexCount) + //
+				String.format(format, "lexes with pronunciation", withPronunciationLexCount) + //
+				String.format(format, "lexes with multi senses", withMultiSenseLexCount) + //
+				String.format(format, "lexes with morphs", withMorphLexCount) + //
+
+				String.format(format, "senses", senses.size()) + //
+				String.format(format, "senses", senseCount) + //
+				String.format(format, "senses with relations", withRelationSenseCount) + //
+				String.format(format, "senses with verb frames", withVerbFramesSenseCount) + //
+				String.format(format, "senses with verb templates", withVerbTemplatesSenseCount) + //
+				String.format(format, "senses with tag count", withTagCountSenseCount) + //
+
+				String.format(format, "synsets", synsets.size()) + //
+				String.format(format, "synsets with relations", withRelationSynsetCount) +  //
+				String.format(format, "synsets with examples", withSamplesSynsetCount) + //
+
+				String.format(format, "samples", samplesCount) + //
+				String.format(format, "pronunciations", pronunciationsCount) + //
+				String.format(format, "pronunciations references", pronunciationRefsCount) + //
+				String.format(format, "morphs", morphsCount) + //
+				String.format(format, "morphs references", morphRefsCount) //
+				;
 	}
 }

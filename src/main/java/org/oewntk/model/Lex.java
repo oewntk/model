@@ -218,7 +218,7 @@ public class Lex implements Comparable<Lex>, Serializable
 	 * @return this
 	 */
 	@SuppressWarnings("UnusedReturnValue")
-	public Lex setMorphs(final String... forms)
+	public Lex setForms(final String... forms)
 	{
 		this.forms = forms;
 		return this;

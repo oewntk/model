@@ -169,7 +169,7 @@ public class CoreModel implements Serializable
 	 */
 	public String info()
 	{
-		return String.format("casedwords: %d, senses: %d, synsets: %s", lexes.size(), senses.size(), synsets.size());
+		return String.format("lexes: %d, senses: %d, synsets: %s", lexes.size(), senses.size(), synsets.size());
 	}
 
 	/**
@@ -180,10 +180,23 @@ public class CoreModel implements Serializable
 	public String counts()
 	{
 		long lexesCount = lexes.size();
-		long casedWordsCount = lexes.stream().map(Lex::getLemma).count();
-		long wordsCount = lexes.stream().map(Lex::getLCLemma).distinct().count();
+		long csWordsCount = lexes.stream().map(Lex::getLemma).distinct().count();
+		long lcWordsCount = lexes.stream().map(Lex::getLCLemma).distinct().count();
+		long casedCount = lexes.stream().filter(Lex::isCased).distinct().count();
 		long discriminantsCount = lexes.stream().map(Lex::getDiscriminant).filter(Objects::nonNull).distinct().count();
 		long discriminantUsesCount = lexes.stream().filter(lex -> lex.getDiscriminant() != null).count();
-		return String.format("lexes: %d, CS lemmas: %d, CI lemmas: %d, discriminants: %d discriminant uses: %d", lexesCount, casedWordsCount, wordsCount, discriminantsCount, discriminantUsesCount);
+		return String.format( //
+				"%n%-20s: %6d" + //
+				"%n%-20s: %6d" + //
+				"%n%-20s: %6d" + //
+				"%n%-20s: %6d" + //
+				"%n%-20s: %6d" + //
+				"%n%-20s: %6d", //
+				"lexes", lexesCount, //
+				"lemmas(CS)", csWordsCount, //
+				"lemmas(LC)", lcWordsCount, //
+				"lemmas(cased)", casedCount, //
+				"discr. types", discriminantsCount, //
+				"discr. uses", discriminantUsesCount);
 	}
 }

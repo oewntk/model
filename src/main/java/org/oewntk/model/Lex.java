@@ -112,6 +112,16 @@ public class Lex implements Comparable<Lex>, Serializable
 	}
 
 	/**
+	 * Get lemma written form
+	 *
+	 * @return lemma written form
+	 */
+	public boolean isCased()
+	{
+		return !lemma.equals(getLCLemma());
+	}
+
+	/**
 	 * Get type
 	 *
 	 * @return n, v, a, r, s

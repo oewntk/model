@@ -67,6 +67,7 @@ public class Model extends CoreModel
 				sense.setVerbTemplates(templatesIds);
 			}
 		}
+
 		// set sense's tag counts
 		for (Entry<String, TagCount> entry : senseToTagCounts)
 		{

@@ -27,9 +27,9 @@ public class SenseGroupings
 			this(sense.getLemma(), sense.getPartOfSpeech());
 		}
 
-		public KeyLCLemmaAndPos(final String lcLemma, final char pos)
+		public KeyLCLemmaAndPos(final String lemma, final char pos)
 		{
-			this.lcLemma = lcLemma.toLowerCase(Locale.ENGLISH);
+			this.lcLemma = lemma.toLowerCase(Locale.ENGLISH);
 			this.pos = pos;
 		}
 

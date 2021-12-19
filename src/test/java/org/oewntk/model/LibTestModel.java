@@ -51,9 +51,7 @@ public class LibTestModel
 	public static void testScanLexesForTestWords(final CoreModel model, final Function<Stream<Lex>, Map<Lex, Integer>> mapFunction, final Set<String> testWords, final boolean peekTestWords, final PrintStream ps)
 	{
 		// stream of lexes
-		Stream<Lex> lexStream = model.getLexesByLemma().entrySet() //
-				.stream() //
-				.flatMap(e -> e.getValue().stream()) //
+		Stream<Lex> lexStream = model.lexes.stream() //
 				.peek(lex -> {
 					if (testWords.contains(lex.getLemma()))
 					{

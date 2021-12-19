@@ -6,7 +6,6 @@ package org.oewntk.model;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -45,6 +44,11 @@ public class Sense implements Comparable<Sense>, Serializable
 	private final String synsetId;
 
 	/**
+	 * Examples
+	 */
+	private final String[] examples;
+
+	/**
 	 * Verb frames
 	 */
 	private final String[] verbFrames;
@@ -77,11 +81,12 @@ public class Sense implements Comparable<Sense>, Serializable
 	 * @param type        {n,v,a,r,s}
 	 * @param indexInLex  index of this sense in lex
 	 * @param synsetId    synset id
+	 * @param examples    examples
 	 * @param verbFrames  verb frames
 	 * @param adjPosition adjective position
 	 * @param relations   sense relations
 	 */
-	public Sense(final String senseId, final Lex lex, final char type, final int indexInLex, final String synsetId, final String[] verbFrames, final String adjPosition, final Map<String, List<String>> relations)
+	public Sense(final String senseId, final Lex lex, final char type, final int indexInLex, final String synsetId, final String[] examples, final String[] verbFrames, final String adjPosition, final Map<String, List<String>> relations)
 	{
 		this.lex = lex;
 		this.senseId = senseId;
@@ -89,6 +94,7 @@ public class Sense implements Comparable<Sense>, Serializable
 		this.type = type;
 		this.partOfSpeech = this.type == 's' ? 'a' : this.type;
 		this.synsetId = synsetId;
+		this.examples = examples;
 		this.verbFrames = verbFrames;
 		this.adjPosition = adjPosition;
 		this.relations = relations;
@@ -141,7 +147,7 @@ public class Sense implements Comparable<Sense>, Serializable
 	 */
 	public String getLCLemma()
 	{
-		return lex.getLemma().toLowerCase(Locale.ENGLISH);
+		return lex.getLCLemma();
 	}
 
 	/**
@@ -175,16 +181,6 @@ public class Sense implements Comparable<Sense>, Serializable
 	}
 
 	/**
-	 * Get word id
-	 *
-	 * @return word id
-	 */
-	public String getWordId()
-	{
-		return lex.getLemma();
-	}
-
-	/**
 	 * Get lex senses index
 	 *
 	 * @return index of this sense in lex
@@ -195,9 +191,19 @@ public class Sense implements Comparable<Sense>, Serializable
 	}
 
 	/**
+	 * Get examples
+	 *
+	 * @return examples
+	 */
+	public String[] getExamples()
+	{
+		return examples;
+	}
+
+	/**
 	 * Get verb frames
 	 *
-	 * @return ver frames
+	 * @return verb frames
 	 */
 	public String[] getVerbFrames()
 	{

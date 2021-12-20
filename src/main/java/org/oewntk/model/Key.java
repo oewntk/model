@@ -4,9 +4,7 @@
 
 package org.oewntk.model;
 
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 
 public interface Key<R> extends Function<CoreModel, R>
@@ -22,7 +20,7 @@ public interface Key<R> extends Function<CoreModel, R>
 	/**
 	 * Current deep key, returns unique value
 	 */
-	public static class OEWN implements Mono
+	class OEWN implements Mono, Comparable<OEWN>
 	{
 		public static OEWN of(final Lex lex)
 		{
@@ -45,6 +43,26 @@ public interface Key<R> extends Function<CoreModel, R>
 			this(lex.getLemma(), lex.getType(), lex.getPronunciations());
 		}
 
+		public String getLemma()
+		{
+			return lemma;
+		}
+
+		public Character getType()
+		{
+			return type;
+		}
+
+		public Pronunciation[] getPronunciations()
+		{
+			return pronunciations;
+		}
+
+		public Set<Pronunciation> getPronunciationSet()
+		{
+			return Utils.toSet(pronunciations);
+		}
+
 		@Override
 		public boolean equals(final Object o)
 		{
@@ -65,13 +83,32 @@ public interface Key<R> extends Function<CoreModel, R>
 			{
 				return false;
 			}
-			return Objects.equals(Finder.toSet(this.pronunciations), Finder.toSet(that.pronunciations));
+			return Objects.equals(Utils.toSet(this.pronunciations), Utils.toSet(that.pronunciations));
 		}
 
 		@Override
 		public int hashCode()
 		{
 			return Objects.hash(lemma, type, Arrays.hashCode(pronunciations));
+		}
+
+		@Override
+		public int compareTo(final OEWN that)
+		{
+			if (this.equals(that))
+			{
+				return 0;
+			}
+			int cmp = Comparator.comparing(OEWN::getLemma) //
+					.thenComparing(OEWN::getType) //
+					.compare(this, that);
+			if (cmp != 0)
+			{
+				return cmp;
+			}
+			var thisP = Utils.toSet(pronunciations);
+			var thatP = Utils.toSet(that.pronunciations);
+			return thisP.equals(thatP) ? 0 : thisP.toString().compareTo(thatP.toString());
 		}
 
 		@Override
@@ -95,7 +132,7 @@ public interface Key<R> extends Function<CoreModel, R>
 	/**
 	 * Current shallow key, returns unique value
 	 */
-	public static class Shallow implements Mono
+	class Shallow implements Mono, Comparable<Shallow>
 	{
 		public static Shallow of(final Lex lex)
 		{
@@ -116,6 +153,21 @@ public interface Key<R> extends Function<CoreModel, R>
 		private Shallow(final Lex lex)
 		{
 			this(lex.getLemma(), lex.getType(), lex.getDiscriminant());
+		}
+
+		public String getLemma()
+		{
+			return lemma;
+		}
+
+		public Character getType()
+		{
+			return type;
+		}
+
+		public String getDiscriminant()
+		{
+			return discriminant;
 		}
 
 		@Override
@@ -148,6 +200,19 @@ public interface Key<R> extends Function<CoreModel, R>
 		}
 
 		@Override
+		public int compareTo(final Shallow that)
+		{
+			if (this.equals(that))
+			{
+				return 0;
+			}
+			return Comparator.comparing(Shallow::getLemma) //
+					.thenComparing(Shallow::getType) //
+					.thenComparing(Shallow::getDiscriminant, Comparator.nullsFirst(Comparator.naturalOrder())) //
+					.compare(this, that);
+		}
+
+		@Override
 		public String toString()
 		{
 			return String.format("(%s,%s,%s)", lemma, type, discriminant);
@@ -168,7 +233,7 @@ public interface Key<R> extends Function<CoreModel, R>
 	/**
 	 * Part-of-Speech (a-s merge) deep key, returns first value
 	 */
-	public static class Pos implements Mono
+	class Pos implements Mono
 	{
 		public static Pos of(final Lex lex)
 		{
@@ -211,7 +276,7 @@ public interface Key<R> extends Function<CoreModel, R>
 			{
 				return false;
 			}
-			return Objects.equals(Finder.toSet(this.pronunciations), Finder.toSet(that.pronunciations));
+			return Objects.equals(Utils.toSet(this.pronunciations), Utils.toSet(that.pronunciations));
 		}
 
 		@Override
@@ -241,7 +306,7 @@ public interface Key<R> extends Function<CoreModel, R>
 	/**
 	 * Part-of-Speech lemma ignore case deep key, returns values
 	 */
-	public static class IC implements Multi
+	class IC implements Multi
 	{
 		public static IC of(final Lex lex)
 		{
@@ -286,7 +351,7 @@ public interface Key<R> extends Function<CoreModel, R>
 			{
 				return false;
 			}
-			return Objects.equals(Finder.toSet(this.pronunciations), Finder.toSet(that.pronunciations));
+			return Objects.equals(Utils.toSet(this.pronunciations), Utils.toSet(that.pronunciations));
 		}
 
 		@Override
@@ -316,7 +381,7 @@ public interface Key<R> extends Function<CoreModel, R>
 	/**
 	 * Princeton WordNet key, returns values
 	 */
-	public static class PWN implements Multi
+	class PWN implements Multi
 	{
 		public static PWN of(final Lex lex)
 		{

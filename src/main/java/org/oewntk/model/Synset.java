@@ -314,10 +314,35 @@ public class Synset implements Comparable<Synset>, Serializable
 		return String.format("%s %c {%s} '%s' {%s}", getSynsetId(), getType(), membersStr, getDefinition(), relationsStr);
 	}
 
+	// identity
+
 	@Override
-	public int compareTo(final Synset otherSynset)
+	public boolean equals(final Object o)
 	{
-		return getSynsetId().compareTo(otherSynset.getSynsetId());
+		if (this == o)
+		{
+			return true;
+		}
+		if (o == null || getClass() != o.getClass())
+		{
+			return false;
+		}
+		Synset synset = (Synset) o;
+		return synsetId.equals(synset.synsetId);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(synsetId);
+	}
+
+	// ordering
+
+	@Override
+	public int compareTo(final Synset that)
+	{
+		return getSynsetId().compareTo(that.getSynsetId());
 	}
 }
 

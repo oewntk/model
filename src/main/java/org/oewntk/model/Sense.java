@@ -7,6 +7,7 @@ package org.oewntk.model;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Sense
@@ -349,9 +350,34 @@ public class Sense implements Comparable<Sense>, Serializable
 		return String.format("[%d] of '%s' %s %s %s {%s}", getLexIndex(), getLex().getLemma(), getSenseId(), getType(), getSynsetId(), relationsStr);
 	}
 
+	// identity
+
 	@Override
-	public int compareTo(final Sense otherSense)
+	public boolean equals(final Object o)
 	{
-		return getSensekey().compareTo(otherSense.getSensekey());
+		if (this == o)
+		{
+			return true;
+		}
+		if (o == null || getClass() != o.getClass())
+		{
+			return false;
+		}
+		Sense sense = (Sense) o;
+		return senseId.equals(sense.senseId);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(senseId);
+	}
+
+	// ordering
+
+	@Override
+	public int compareTo(final Sense that)
+	{
+		return getSensekey().compareTo(that.getSensekey());
 	}
 }

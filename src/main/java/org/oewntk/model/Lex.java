@@ -5,24 +5,24 @@
 package org.oewntk.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Lexical item/unit/entry
+ * The basic container of senses.
+ * Can be thought of as athe pair of a key and value (k, senses).
+ * The value is the set of senses while the key is made up of member elements, depending on the key.
  */
 public class Lex implements Comparable<Lex>, Serializable
 {
-	/**
-	 * Source file
-	 */
-	private final String source;
+	// lemma
 
 	/**
 	 * Lemma written form
 	 */
 	private final String lemma;
+
+	// par-of-speech / synset type
 
 	/**
 	 * Synset type ss_type {n, v, a, r, s}
@@ -33,6 +33,8 @@ public class Lex implements Comparable<Lex>, Serializable
 	 * Part-of-speech
 	 */
 	private final char partOfSpeech;
+
+	// other
 
 	/**
 	 * Discriminant appended to type that distinguishes same-type lexes (because of pronunciation or morphological forms )
@@ -50,10 +52,17 @@ public class Lex implements Comparable<Lex>, Serializable
 	 */
 	private String[] forms;
 
+	// senses, the value
+
 	/**
 	 * Senses
 	 */
 	private final List<Sense> senses = new ArrayList<>();
+
+	/**
+	 * Source file
+	 */
+	private final String source;
 
 	/**
 	 * Constructor
@@ -69,26 +78,6 @@ public class Lex implements Comparable<Lex>, Serializable
 		this.partOfSpeech = this.type == 's' ? 'a' : this.type;
 		this.discriminant = code.length() > 1 ? code.substring(1) : null;
 		this.source = source;
-	}
-
-	/**
-	 * Get first key item (=lemma)
-	 *
-	 * @return lex's first item of the keys
-	 */
-	public String getKey1()
-	{
-		return lemma;
-	}
-
-	/**
-	 * Get second key item (=lemma)
-	 *
-	 * @return lex's second item of the keys
-	 */
-	public String getKey2()
-	{
-		return type + discriminant;
 	}
 
 	/**
@@ -184,6 +173,16 @@ public class Lex implements Comparable<Lex>, Serializable
 	}
 
 	/**
+	 * Get senses as a set
+	 *
+	 * @return senses
+	 */
+	public Set<Sense> getSensesAsSet()
+	{
+		return new LinkedHashSet<>(senses);
+	}
+
+	/**
 	 * Set senses
 	 *
 	 * @param senses senses
@@ -193,6 +192,11 @@ public class Lex implements Comparable<Lex>, Serializable
 		this.senses.addAll(List.of(senses));
 	}
 
+	/**
+	 * Add sense to the list fo senses
+	 *
+	 * @param sense sense
+	 */
 	public void addSense(final Sense sense)
 	{
 		this.senses.add(sense);
@@ -244,29 +248,42 @@ public class Lex implements Comparable<Lex>, Serializable
 		return String.format("%s %c%s %s {%s}", getLemma(), getType(), discriminant == null ? "" : discriminant, pronunciationsStr, sensesStr);
 	}
 
+	// identifty
+
 	@Override
-	public int compareTo(final Lex otherLex)
+	public boolean equals(final Object o)
 	{
-		int lemmaComp = getLemma().compareTo(otherLex.getLemma());
-		if (lemmaComp != 0)
+		throw new UnsupportedOperationException("Either compare values using 'getSensesAsSet' or keys using 'Key.OEWN.of', 'Key.PWN.of', etc");
+		/*
+		if (this == o)
 		{
-			return lemmaComp;
+			return true;
 		}
-		int typeComp = Character.compare(getType(), otherLex.getType());
-		if (typeComp != 0)
+		if (o == null || getClass() != o.getClass())
 		{
-			return lemmaComp;
+			return false;
 		}
-		String discriminant = getDiscriminant();
-		String otherDiscriminant = otherLex.getDiscriminant();
-		if (discriminant == null && otherDiscriminant == null)
-		{
-			return 0;
-		}
-		if (discriminant == null)
-		{
-			return -2;
-		}
-		return discriminant.compareTo(otherDiscriminant);
+		Lex lex = (Lex) o;
+		return type == lex.type && lemma.equals(lex.lemma) && Objects.equals(discriminant, lex.discriminant) && Arrays.equals(pronunciations, lex.pronunciations);
+		 */
+	}
+
+	@Override
+	public int hashCode()
+	{
+		int result = Objects.hash(lemma, type, discriminant);
+		result = 31 * result + Arrays.hashCode(pronunciations);
+		return result;
+	}
+
+	// ordering, this is used when sorted maps are made
+
+	@Override
+	public int compareTo(final Lex that)
+	{
+		var thisKey = Key.OEWN.of(this);
+		var thatKey = Key.OEWN.of(that);
+		int cmp = thisKey.compareTo(thatKey);
+		return cmp;
 	}
 }

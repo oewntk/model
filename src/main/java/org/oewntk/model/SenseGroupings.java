@@ -65,9 +65,8 @@ public class SenseGroupings
 		}
 
 		@Override
-		public int compareTo(final KeyLCLemmaAndPos o)
+		public int compareTo(final KeyLCLemmaAndPos that)
 		{
-			KeyLCLemmaAndPos that = (KeyLCLemmaAndPos) o;
 			int cmp = lcLemma.compareTo(that.lcLemma);
 			if (cmp != 0)
 			{

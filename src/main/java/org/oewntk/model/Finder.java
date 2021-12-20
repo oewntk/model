@@ -103,7 +103,7 @@ public class Finder
 	 */
 	public static Lex getLexHavingPronunciations(Lex[] lexes, final Pronunciation[] pronunciations)
 	{
-		Set<Pronunciation> set = toSet(pronunciations);
+		Set<Pronunciation> set = Utils.toSet(pronunciations);
 		return Arrays.stream(lexes) //
 				.filter(lex -> compareAsSets(set, lex.getPronunciations())) //
 				.findFirst().orElseThrow(IllegalArgumentException::new);
@@ -119,7 +119,7 @@ public class Finder
 	 */
 	public static Lex[] getLexesHavingPronunciations(final Lex[] lexes, final Pronunciation[] pronunciations)
 	{
-		Set<Pronunciation> set = toSet(pronunciations);
+		Set<Pronunciation> set = Utils.toSet(pronunciations);
 		return Arrays.stream(lexes) //
 				.filter(lex -> compareAsSets(set, lex.getPronunciations())) //
 				.toArray(Lex[]::new);
@@ -144,22 +144,13 @@ public class Finder
 
 	public static <T> boolean compareAsSets(T[] array1, T[] array2)
 	{
-		Set<T> set1 = toSet(array1);
+		Set<T> set1 = Utils.toSet(array1);
 		return compareAsSets(set1, array2);
 	}
 
 	public static <T> boolean compareAsSets(Set<T> set1, T[] array2)
 	{
-		Set<T> set2 = toSet(array2);
+		Set<T> set2 = Utils.toSet(array2);
 		return Objects.equals(set1, set2);
-	}
-
-	public static <T> Set<T> toSet(final T[] objects)
-	{
-		if (objects == null)
-		{
-			return Set.of();
-		}
-		return Set.of(objects);
 	}
 }

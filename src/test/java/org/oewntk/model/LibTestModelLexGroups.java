@@ -99,7 +99,7 @@ public class LibTestModelLexGroups
 	{
 		var lexHypermap = LexGroupings.hyperMapByLCLemmaByLemma(model);
 		assert lexHypermap != null;
-		return Utils.lexHypermapForLemmaToString(lexHypermap, lemma);
+		return TestUtils.lexHypermapForLemmaToString(lexHypermap, lemma);
 	}
 
 	public static String testCILexesString(final CoreModel model, final String word)
@@ -108,14 +108,14 @@ public class LibTestModelLexGroups
 		assert map != null;
 		final var lexes = map.get(word.toLowerCase(Locale.ENGLISH));
 		assert lexes != null;
-		return Utils.lexesToString(lexes);
+		return TestUtils.lexesToString(lexes);
 	}
 
 	public static String testCILexesForWordString(final CoreModel model, final String word)
 	{
 		final var lexes = model.getLexesByLCLemma().get(word);
 		assert lexes != null;
-		return Utils.lexesToString(lexes);
+		return TestUtils.lexesToString(lexes);
 	}
 
 	public static void testCISensesGroupingByLCLemmaAndPos(final CoreModel model, final String word, final char pos, final PrintStream ps)
@@ -133,12 +133,12 @@ public class LibTestModelLexGroups
 	private static String testCISensesGroupingByLCLemmaString(final CoreModel model, final String word)
 	{
 		final var senses = sensesForLCLemma(model.senses, word);
-		return Utils.sensesToString(senses);
+		return TestUtils.sensesToString(senses);
 	}
 
 	private static String testCISensesGroupingByLCLemmaAndPosString(final CoreModel model, final String word, final char pos)
 	{
 		final var senses = sensesForLCLemmaAndPos(model.senses, word, pos);
-		return Utils.sensesToString(senses);
+		return TestUtils.sensesToString(senses);
 	}
 }

@@ -11,8 +11,10 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
 
-public class Mapper
+public class MapFactory
 {
+	private static final boolean LOG_DUPLICATE_VALUES = true;
+
 	// G E N E R I C   M A P   F A C T O R Y
 
 	public static <K, V> Map<K, V> map(final Collection<V> things, final Function<V, K> groupingFunction)
@@ -23,12 +25,14 @@ public class Mapper
 						(existing, replacement) -> {
 							if (existing.equals(replacement))
 							{
-								throw new IllegalArgumentException(existing + "," + replacement);
+								if (LOG_DUPLICATE_VALUES)
+								{
+									Tracing.psInfo.printf("[W] Duplicate values %s and %s%n", existing, replacement);
+								}
+								//throw new IllegalArgumentException(existing + "," + replacement);
 							}
 							return existing;
-						},
-						//TODO (v1, v2) -> { throw new RuntimeException(String.format("Duplicate key for values %s and %s", v1, v2)); }, //
-						TreeMap::new));
+						}, TreeMap::new));
 	}
 
 	// G E N E R I C   M A P   F A C T O R Y

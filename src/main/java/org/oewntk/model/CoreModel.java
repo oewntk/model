@@ -137,10 +137,9 @@ public class CoreModel implements Serializable
 	{
 		if (sensesById == null)
 		{
-			sensesById = Mapper.sensesById(senses);
+			sensesById = MapFactory.sensesById(senses);
 		}
-
-		return Mapper.sensesById(senses);
+		return sensesById;
 	}
 
 	/**
@@ -157,7 +156,7 @@ public class CoreModel implements Serializable
 	{
 		if (synsetsById == null)
 		{
-			synsetsById = Mapper.synsetsById(synsets);
+			synsetsById = MapFactory.synsetsById(synsets);
 		}
 		return synsetsById;
 	}

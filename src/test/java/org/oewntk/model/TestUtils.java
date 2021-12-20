@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class Utils
+public class TestUtils
 {
 	public static String sensesToString(final List<Sense> senses)
 	{

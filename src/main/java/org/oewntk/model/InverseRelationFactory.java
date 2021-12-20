@@ -14,6 +14,8 @@ import java.util.Set;
  */
 public class InverseRelationFactory
 {
+	private static final boolean LOG_ALREADY_PRESENT = false;
+
 	private static final Map<String, String> INVERSE_SYNSET_RELATIONS = new HashMap<>();
 
 	static
@@ -66,7 +68,10 @@ public class InverseRelationFactory
 							}
 							catch (IllegalArgumentException e)
 							{
-								Tracing.psErr.printf("[W] %s%n", e.getMessage());
+								if (LOG_ALREADY_PRESENT)
+								{
+									Tracing.psErr.printf("[W] %s%n", e.getMessage());
+								}
 							}
 						}
 					}

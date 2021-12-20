@@ -102,7 +102,7 @@ public class Model extends CoreModel
 	 */
 	public Map<String, VerbFrame> getVerbFramesById()
 	{
-		return Mapper.map(verbFrames, VerbFrame::getId);
+		return MapFactory.map(verbFrames, VerbFrame::getId);
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class Model extends CoreModel
 	 */
 	public Map<Integer, VerbTemplate> getVerbTemplatesById()
 	{
-		return Mapper.map(verbTemplates, VerbTemplate::getId);
+		return MapFactory.map(verbTemplates, VerbTemplate::getId);
 	}
 
 	/**

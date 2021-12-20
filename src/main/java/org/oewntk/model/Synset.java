@@ -222,7 +222,7 @@ public class Synset implements Comparable<Synset>, Serializable
 		var rels = relations.computeIfAbsent(inverseType, (k) -> new LinkedHashSet<>());
 		if (rels.contains(targetSynsetId))
 		{
-			throw new IllegalArgumentException(String.format("%s duplicate %s to %s", getSynsetId(), inverseType, targetSynsetId));
+			throw new IllegalArgumentException(String.format("Inverse relation %s from %s to %s was already there.", inverseType, getSynsetId(), targetSynsetId));
 		}
 		rels.add(targetSynsetId);
 	}

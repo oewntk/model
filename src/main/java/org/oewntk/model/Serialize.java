@@ -4,15 +4,11 @@
 
 package org.oewntk.model;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 public class Serialize
 {
-	static public void serializeModel(final CoreModel model, final File file) throws IOException
+	static public void serializeModel(final Model model, final File file) throws IOException
 	{
 		try (OutputStream os = new FileOutputStream(file))
 		{
@@ -20,7 +16,20 @@ public class Serialize
 		}
 	}
 
-	public static void serializeModel(final OutputStream os, final CoreModel model) throws IOException
+	public static void serializeModel(final OutputStream os, final Model model) throws IOException
+	{
+		serialize(os, model);
+	}
+
+	static public void serializeCoreModel(final CoreModel model, final File file) throws IOException
+	{
+		try (OutputStream os = new FileOutputStream(file))
+		{
+			serializeCoreModel(os, model);
+		}
+	}
+
+	public static void serializeCoreModel(final OutputStream os, final CoreModel model) throws IOException
 	{
 		serialize(os, model);
 	}

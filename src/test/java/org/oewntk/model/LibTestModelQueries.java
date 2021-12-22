@@ -6,6 +6,7 @@ package org.oewntk.model;
 
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -67,7 +68,7 @@ public class LibTestModelQueries
 		dump(lexes, Lex::getPartOfSpeech, nullablePronunciations, model, ps);
 	}
 
-	private static <K> void dump(final List<Lex> lexes, final Function<Lex, ? extends K> classifier2, final Function<Lex, ? extends K> classifier3, final CoreModel model, final PrintStream ps)
+	private static <K> void dump(final Collection<Lex> lexes, final Function<Lex, ? extends K> classifier2, final Function<Lex, ? extends K> classifier3, final CoreModel model, final PrintStream ps)
 	{
 		var map2 = lexes.stream().collect((groupingBy(classifier2, toList())));
 		for (K k2 : map2.keySet())

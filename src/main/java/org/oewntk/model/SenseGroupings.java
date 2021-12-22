@@ -84,12 +84,12 @@ public class SenseGroupings
 
 	// S E N S E   M A P S
 
-	public static Map<KeyLCLemmaAndPos, List<Sense>> sensesByLCLemmaAndPos(final Collection<Sense> senses)
+	public static Map<KeyLCLemmaAndPos, Collection<Sense>> sensesByLCLemmaAndPos(final Collection<Sense> senses)
 	{
 		return Groupings.groupBy(senses.stream(), KeyLCLemmaAndPos::new);
 	}
 
-	public static Map<String, List<Sense>> sensesByLCLemma(final Collection<Sense> senses)
+	public static Map<String, Collection<Sense>> sensesByLCLemma(final Collection<Sense> senses)
 	{
 		return Groupings.groupBy(senses.stream(), Sense::getLCLemma);
 	}
@@ -97,17 +97,17 @@ public class SenseGroupings
 	// S E N S E S  F O R
 	// for debug as it makes a fresh map every time
 
-	public static <K> List<Sense> sensesFor(final Collection<Sense> senses, final Function<Sense, K> groupingFunction, K k)
+	public static <K> Collection<Sense> sensesFor(final Collection<Sense> senses, final Function<Sense, K> groupingFunction, K k)
 	{
 		return Groupings.groupBy(senses.stream(), groupingFunction).get(k);
 	}
 
-	public static List<Sense> sensesForLCLemmaAndPos(final Collection<Sense> senses, final String lcLemma, final char pos)
+	public static Collection<Sense> sensesForLCLemmaAndPos(final Collection<Sense> senses, final String lcLemma, final char pos)
 	{
 		return sensesFor(senses, KeyLCLemmaAndPos::new, KeyLCLemmaAndPos.of(lcLemma, pos));
 	}
 
-	public static List<Sense> sensesForLCLemma(final Collection<Sense> senses, final String lcLemma)
+	public static Collection<Sense> sensesForLCLemma(final Collection<Sense> senses, final String lcLemma)
 	{
 		return sensesFor(senses, Sense::getLCLemma, lcLemma);
 	}

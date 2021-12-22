@@ -15,7 +15,7 @@ public class Finder
 	 * @param lemma lemma (CS)
 	 * @return lexes
 	 */
-	public static List<Lex> getLexes(final CoreModel model, final String lemma)
+	public static Collection<Lex> getLexes(final CoreModel model, final String lemma)
 	{
 		return model.getLexesByLemma().get(lemma);
 	}

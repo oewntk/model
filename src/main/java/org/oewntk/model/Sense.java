@@ -341,7 +341,7 @@ public class Sense implements Comparable<Sense>, Serializable
 	@Override
 	public String toString()
 	{
-		return String.format(" %s (%dth of '%s', %s-%s) ", getSenseId(), getLexIndex(), getLex().getLemma(), getSynsetId(), getType());
+		return String.format(" %s (%dth of '%s', %s %s) ", getSenseId(), getLexIndex(), getLex().getLemma(), getSynsetId(), getType());
 	}
 
 	public String toLongString()

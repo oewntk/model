@@ -13,7 +13,7 @@ import java.util.*;
  * Can be thought of as athe pair of a key and value (k, senses).
  * The value is the set of senses while the key is made up of member elements, depending on the key.
  */
-public class Lex implements Comparable<Lex>, Serializable
+public class Lex implements Serializable //, Comparable<Lex>
 {
 	// lemma
 
@@ -278,12 +278,10 @@ public class Lex implements Comparable<Lex>, Serializable
 
 	// ordering, this is used when sorted maps are made
 
-	@Override
-	public int compareTo(final Lex that)
-	{
-		var thisKey = Key.OEWN.of(this);
-		var thatKey = Key.OEWN.of(that);
-		int cmp = thisKey.compareTo(thatKey);
-		return cmp;
-	}
+	static public final Comparator<Lex> comparatorByKeyOEWN = (thisLex, thatLex) -> {
+
+		var thisKey = Key.OEWN.of(thisLex);
+		var thatKey = Key.OEWN.of(thatLex);
+		return thisKey.compareTo(thatKey);
+	};
 }

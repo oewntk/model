@@ -13,13 +13,13 @@ import static java.util.stream.Collectors.toMap;
 
 public class LibTestModel
 {
-	public static <T extends Comparable<T>> Map<T, Integer> makeSortedIndexMap(final Stream<T> stream)
+	public static <T> Map<T, Integer> makeSortedIndexMap(final Stream<T> stream, final Comparator<T> comparator)
 	{
 		final int[] i = {0};
 		//noinspection UnnecessaryLocalVariable
 		Map<T, Integer> map = stream //
 				.sequential() //
-				.peek(e -> i[0]++) //
+				.sorted(comparator).peek(e -> i[0]++) //
 				.map(item -> new AbstractMap.SimpleEntry<>(item, i[0])) //
 				.collect(toMap( //
 						AbstractMap.SimpleEntry::getKey,  //
@@ -48,6 +48,11 @@ public class LibTestModel
 		return map;
 	}
 
+	public static Map<Lex, Integer> makeSortedIndexMapByKeyOEWN(final Stream<Lex> stream)
+	{
+		return makeSortedIndexMap(stream, Lex.comparatorByKeyOEWN);
+	}
+
 	public static void testScanLexesForTestWords(final CoreModel model, final Function<Stream<Lex>, Map<Lex, Integer>> mapFunction, final Set<String> testWords, final boolean peekTestWords, final PrintStream ps)
 	{
 		// stream of lexes
@@ -69,7 +74,7 @@ public class LibTestModel
 		ps.printf("%-12s %s%n", "index", "lex");
 		for (String word : testWords)
 		{
-			List<Lex> lexes = model.getLexesByLemma().get(word);
+			Collection<Lex> lexes = model.getLexesByLemma().get(word);
 			for (Lex lex : lexes)
 			{
 				ps.printf("%-12d %s%n", lexToIndex.get(lex), lex);
@@ -81,7 +86,7 @@ public class LibTestModel
 	{
 		for (String word : words)
 		{
-			List<Lex> lexes = model.getLexesByLemma().get(word);
+			var lexes = model.getLexesByLemma().get(word);
 			for (Lex lex : lexes)
 			{
 				ps.println(lex);
@@ -92,7 +97,7 @@ public class LibTestModel
 
 	public static void testWord(final String lemma, final CoreModel model, final PrintStream ps)
 	{
-		List<Lex> lexes = Finder.getLexes(model, lemma);
+		var lexes = Finder.getLexes(model, lemma);
 		for (Lex lex : lexes)
 		{
 			ps.println(lex);

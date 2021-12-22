@@ -86,7 +86,7 @@ public class CoreModel implements Serializable
 	/**
 	 * Cached
 	 */
-	private volatile Map<String, List<Lex>> lexesByLemma = null;
+	private volatile Map<String, Collection<Lex>> lexesByLemma = null;
 
 	/**
 	 * Lexical units mapped by lemma written form.
@@ -94,7 +94,7 @@ public class CoreModel implements Serializable
 	 *
 	 * @return lexes mapped by lemma written form
 	 */
-	public Map<String, List<Lex>> getLexesByLemma()
+	public Map<String, Collection<Lex>> getLexesByLemma()
 	{
 		if (lexesByLemma == null)
 		{
@@ -106,7 +106,7 @@ public class CoreModel implements Serializable
 	/**
 	 * Cached
 	 */
-	private volatile Map<String, List<Lex>> lexesByLCLemma = null;
+	private volatile Map<String, Collection<Lex>> lexesByLCLemma = null;
 
 	/**
 	 * Lexical units mapped by lemma lower-cased written form.
@@ -114,7 +114,7 @@ public class CoreModel implements Serializable
 	 *
 	 * @return lexes mapped by lemma written form
 	 */
-	public Map<String, List<Lex>> getLexesByLCLemma()
+	public Map<String, Collection<Lex>> getLexesByLCLemma()
 	{
 		if (lexesByLCLemma == null)
 		{
@@ -194,24 +194,22 @@ public class CoreModel implements Serializable
 		long discriminantCount = lexes.stream().map(Lex::getDiscriminant).filter(Objects::nonNull).distinct().count();
 		long withDiscriminantLexCount = lexes.stream().filter(lex -> lex.getDiscriminant() != null).count();
 		long withPronunciationLexCount = lexes.stream().filter(lex -> lex.getPronunciations() != null).count();
-		long pronunciationRefSum = lexes.stream().filter(lex -> lex.getPronunciations() != null).mapToLong(lex -> lex.getPronunciations().length).sum();
-		long pronunciationCount = lexes.stream().filter(lex -> lex.getPronunciations() != null).flatMap(lex -> Arrays.stream(lex.getPronunciations())).distinct().count();
-		long withMorphLexCount = lexes.stream().filter(lex -> lex.getForms() != null).count();
-		long morphRefSum = lexes.stream().filter(lex -> lex.getForms() != null).mapToLong(lex -> lex.getForms().length).sum();
-		long morphCount = lexes.stream().filter(lex -> lex.getForms() != null).flatMap(lex -> Arrays.stream(lex.getForms())).distinct().count();
 
-		long withExamplesSenseCount = senses.stream().filter(sense -> sense.getExamples() != null).count();
-		long withVerbFramesSenseCount = senses.stream().filter(sense -> sense.getVerbFrames() != null).count();
-		long withVerbTemplatesSenseCount = senses.stream().filter(sense -> sense.getVerbTemplates() != null).count();
-		long withTagCountSenseCount = senses.stream().filter(sense -> sense.getTagCount() != null).count();
 		long withRelationSenseCount = senses.stream().filter(sense -> sense.getRelations() != null).count();
-		long senseExampleSum = senses.stream().filter(sense -> sense.getExamples() != null).distinct().mapToLong(sense -> sense.getExamples().length).sum();
 		long senseRelationSum = senses.stream().filter(sense -> sense.getRelations() != null).distinct().mapToLong(sense -> sense.getRelations().size()).sum();
 
-		long withSamplesSynsetCount = synsets.stream().filter(synset -> synset.getExamples() != null).count();
-		long sampleSum = synsets.stream().filter(synset -> synset.getExamples() != null).mapToLong(synset -> synset.getExamples().length).sum();
 		long withRelationSynsetCount = synsets.stream().filter(synset -> synset.getRelations() != null).count();
 		long synsetRelationSum = synsets.stream().filter(synset -> synset.getRelations() != null).distinct().mapToLong(synset -> synset.getRelations().size()).sum();
+
+		System.err.println("lemma");
+		getLexesByLemma().get("Casanova").forEach(System.err::println);
+
+		System.err.println("lclemma");
+		getLexesByLCLemma().get("casanova").forEach(System.err::println);
+
+		System.err.println("scan");
+		lexes.stream().filter(lex->"casanova".equals(lex.getLCLemma())).forEach(System.err::println);
+		lexes.stream().filter(lex->"baroque".equals(lex.getLCLemma())).forEach(System.err::println);
 
 		String format = "%n%-32s: %6d";
 		return String.format(format, "lexes", lexes.size()) + //
@@ -222,7 +220,6 @@ public class CoreModel implements Serializable
 				String.format(format, "lexes with discriminant.", withDiscriminantLexCount) + //
 				String.format(format, "lexes with pronunciation", withPronunciationLexCount) + //
 				String.format(format, "lexes with multi senses", withMultiSenseLexCount) + //
-				String.format(format, "lexes with morphs", withMorphLexCount) + //
 
 				String.format(format, "distinct lexes by key oewn", distinctByKeyOEWNLexCount) + //
 				String.format(format, "distinct lexes by key shallow", distinctByKeyShallowLexCount) + //
@@ -230,21 +227,49 @@ public class CoreModel implements Serializable
 				String.format(format, "distinct lexes by key ic", distinctByKeyICLexCount) + //
 				String.format(format, "distinct lexes by key pwn", distinctByKeyPWNLexCount) + //
 
+				String.format(format, "senses", senses.size()) + //
 				String.format(format, "distinct sense sets in lexes", distinctSenseGroupsCount) + //
 				String.format(format, "senses in sense sets", sensesInSenseGroupsSum) + //
-
-				String.format(format, "senses", senses.size()) + //
 				String.format(format, "senses with relations", withRelationSenseCount) + //
 				String.format(format, "sense relations", senseRelationSum) + //
+
+				String.format(format, "synsets", synsets.size()) + //
+				String.format(format, "synsets with relations", withRelationSynsetCount) +  //
+				String.format(format, "synset relations", synsetRelationSum) //
+				;
+	}
+
+	/**
+	 * Computed count about this model
+	 *
+	 * @return info
+	 */
+	public String xCounts()
+	{
+		counts();
+
+		long pronunciationRefSum = lexes.stream().filter(lex -> lex.getPronunciations() != null).mapToLong(lex -> lex.getPronunciations().length).sum();
+		long pronunciationCount = lexes.stream().filter(lex -> lex.getPronunciations() != null).flatMap(lex -> Arrays.stream(lex.getPronunciations())).distinct().count();
+		long withMorphLexCount = lexes.stream().filter(lex -> lex.getForms() != null).count();
+		long morphRefSum = lexes.stream().filter(lex -> lex.getForms() != null).mapToLong(lex -> lex.getForms().length).sum();
+		long morphCount = lexes.stream().filter(lex -> lex.getForms() != null).flatMap(lex -> Arrays.stream(lex.getForms())).distinct().count();
+
+		long withExamplesSenseCount = senses.stream().filter(sense -> sense.getExamples() != null).count();
+		long withVerbFramesSenseCount = senses.stream().filter(sense -> sense.getVerbFrames() != null).count();
+		long withVerbTemplatesSenseCount = senses.stream().filter(sense -> sense.getVerbTemplates() != null).count();
+		long withTagCountSenseCount = senses.stream().filter(sense -> sense.getTagCount() != null).count();
+
+		long withSamplesSynsetCount = synsets.stream().filter(synset -> synset.getExamples() != null).count();
+		long sampleSum = synsets.stream().filter(synset -> synset.getExamples() != null).mapToLong(synset -> synset.getExamples().length).sum();
+
+		String format = "%n%-32s: %6d";
+		return String.format(format, "lexes with morphs", withMorphLexCount) + //
+
 				String.format(format, "senses with verb frames", withVerbFramesSenseCount) + //
 				String.format(format, "senses with verb templates", withVerbTemplatesSenseCount) + //
 				String.format(format, "senses with tag count", withTagCountSenseCount) + //
 				String.format(format, "senses with examples", withExamplesSenseCount) + //
-				String.format(format, "sense examples", senseExampleSum) + //
 
-				String.format(format, "synsets", synsets.size()) + //
-				String.format(format, "synsets with relations", withRelationSynsetCount) +  //
-				String.format(format, "synset relations", synsetRelationSum) + //
 				String.format(format, "synsets with examples", withSamplesSynsetCount) + //
 				String.format(format, "synset examples", sampleSum) + //
 

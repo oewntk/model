@@ -5,13 +5,13 @@
 package org.oewntk.model;
 
 import java.io.StringWriter;
-import java.util.List;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 
 public class TestUtils
 {
-	public static String sensesToString(final List<Sense> senses)
+	public static String sensesToString(final Collection<Sense> senses)
 	{
 		if (senses == null || senses.isEmpty())
 		{
@@ -24,21 +24,23 @@ public class TestUtils
 		return sw.toString();
 	}
 
-	public static String sensesToStringByDecreasingTagCount(final List<Sense> senses)
+	public static String sensesToStringByDecreasingTagCount(final Collection<Sense> senses)
 	{
 		if (senses == null || senses.isEmpty())
 		{
 			return "\t<none>";
 		}
-		senses.sort(SenseGroupings.byDecreasingTagCount);
+
 		StringWriter sw = new StringWriter();
-		senses.forEach(sense -> {
-			sw.write(String.format("\t%d %s%n", sense.getIntTagCount(), sense));
-		});
+		senses.stream() //
+				.sorted(SenseGroupings.byDecreasingTagCount) //
+				.forEach(sense -> {
+					sw.write(String.format("\t%d %s%n", sense.getIntTagCount(), sense));
+				});
 		return sw.toString();
 	}
 
-	public static String lexesToString(final List<Lex> lexes)
+	public static String lexesToString(final Collection<Lex> lexes)
 	{
 		if (lexes == null || lexes.isEmpty())
 		{
@@ -50,7 +52,8 @@ public class TestUtils
 		});
 		return sw.toString();
 	}
-	public static String lexHypermapForLemmaToString(final Map<String, Map<String, List<Lex>>> lexHypermap, final String lemma)
+
+	public static String lexHypermapForLemmaToString(final Map<String, Map<String, Collection<Lex>>> lexHypermap, final String lemma)
 	{
 		final var map = lexHypermap.get(lemma.toLowerCase(Locale.ENGLISH));
 		StringWriter sw = new StringWriter();

@@ -5,6 +5,7 @@
 package org.oewntk.model;
 
 import java.io.PrintStream;
+import java.util.Collection;
 import java.util.List;
 
 public class LibTestModelKeys
@@ -188,7 +189,7 @@ public class LibTestModelKeys
 	{
 		ps.println("----------");
 		ps.println("ALL LEMMAS " + lemma);
-		List<Lex> lexes = Finder.getLexes(model, lemma);
+		Collection<Lex> lexes = Finder.getLexes(model, lemma);
 		for (var lex : lexes)
 		{
 			ps.println("\t" + lex);

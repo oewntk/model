@@ -5,6 +5,8 @@
 package org.oewntk.model;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -16,7 +18,7 @@ public class LexGroupings
 	 * @param lexes lexes
 	 * @return lexes grouped by CS lemma
 	 */
-	public static Map<String, List<Lex>> lexesByLemma(final Collection<Lex> lexes)
+	public static Map<String, Collection<Lex>> lexesByLemma(final Collection<Lex> lexes)
 	{
 		return Groupings.groupBy(lexes, Lex::getLemma);
 	}
@@ -27,7 +29,7 @@ public class LexGroupings
 	 * @param lexes lexes
 	 * @return lexes grouped by LCS lemma
 	 */
-	public static Map<String, List<Lex>> lexesByLCLemma(final Collection<Lex> lexes)
+	public static Map<String, Collection<Lex>> lexesByLCLemma(final Collection<Lex> lexes)
 	{
 		return Groupings.groupBy(lexes, Lex::getLCLemma);
 	}
@@ -38,7 +40,7 @@ public class LexGroupings
 	 * @param model model
 	 * @return 2-tier hypermap (LCLemma -> CSLemma -> lexes)
 	 */
-	public static Map<String, Map<String, List<Lex>>> hyperMapByLCLemmaByLemma(final CoreModel model)
+	public static Map<String, Map<String, Collection<Lex>>> hyperMapByLCLemmaByLemma(final CoreModel model)
 	{
 		return model.getLexesByLemma().entrySet().stream() //
 				.collect(groupingBy(e -> e.getKey().toLowerCase(Locale.ENGLISH), toMap(Map.Entry::getKey, Map.Entry::getValue)));
@@ -68,6 +70,8 @@ public class LexGroupings
 	{
 		return cSLemmasByLCLemma(model).get(lcLemma);
 	}
+
+	// counts
 
 	/**
 	 * Counts of CS lemmas by LC lemma

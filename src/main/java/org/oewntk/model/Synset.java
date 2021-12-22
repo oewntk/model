@@ -235,7 +235,7 @@ public class Synset implements Comparable<Synset>, Serializable
 	 * @param lexesByLemma lexes
 	 * @return senses of this synset
 	 */
-	public Sense[] findSenses(Map<String, List<Lex>> lexesByLemma)
+	public Sense[] findSenses(Map<String, Collection<Lex>> lexesByLemma)
 	{
 		String[] members = getMembers();
 		Sense[] senses = new Sense[members.length];
@@ -269,7 +269,7 @@ public class Synset implements Comparable<Synset>, Serializable
 	 * @param lexesByLemma lexes
 	 * @return sense of lemma in this synset, null if not found
 	 */
-	public Sense findSenseOf(String lemma, Map<String, List<Lex>> lexesByLemma)
+	public Sense findSenseOf(String lemma, Map<String, Collection<Lex>> lexesByLemma)
 	{
 		var lexes = lexesByLemma.get(lemma);
 		assert lexes != null : String.format("%s has no sense", lemma);

@@ -6,6 +6,7 @@ package org.oewntk.model;
 
 import java.io.PrintStream;
 import java.util.*;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -13,17 +14,31 @@ import static java.util.stream.Collectors.toMap;
 
 public class LibTestModel
 {
-	public static <T> Map<T, Integer> makeSortedIndexMap(final Stream<T> stream, final Comparator<T> comparator)
+	public static Map<Key<Lex>, Integer> makeIndexMap(final Stream<Key<Lex>> stream)
 	{
 		final int[] i = {0};
 		//noinspection UnnecessaryLocalVariable
-		Map<T, Integer> map = stream //
+		Map<Key<Lex>, Integer> map = stream //
 				.sequential() //
-				.sorted(comparator).peek(e -> i[0]++) //
+				.peek(e -> i[0]++) //
+				.map(item -> new AbstractMap.SimpleEntry<>(item, i[0])) //
+				.collect(toMap(SimpleEntry::getKey, SimpleEntry::getValue));
+		// map.forEach((k, v) -> ps.printf("%s %s%n", k, v));
+		return map;
+	}
+
+	public static Map<Key<Lex>, Integer> makeSortedIndexMap(final Stream<Key<Lex>> stream)
+	{
+		final int[] i = {0};
+		//noinspection UnnecessaryLocalVariable
+		Map<Key<Lex>, Integer> map = stream //
+				.sequential() //
+				.peek(e -> i[0]++) //
 				.map(item -> new AbstractMap.SimpleEntry<>(item, i[0])) //
 				.collect(toMap( //
-						AbstractMap.SimpleEntry::getKey,  //
-						AbstractMap.SimpleEntry::getValue, (existing, replacement) -> {
+						SimpleEntry::getKey,  //
+						SimpleEntry::getValue, //
+						(existing, replacement) -> {
 							if (existing.equals(replacement))
 							{
 								throw new IllegalArgumentException(existing + "," + replacement);
@@ -35,28 +50,10 @@ public class LibTestModel
 		return map;
 	}
 
-	public static <T> Map<T, Integer> makeIndexMap(final Stream<T> stream)
-	{
-		final int[] i = {0};
-		//noinspection UnnecessaryLocalVariable
-		Map<T, Integer> map = stream //
-				.sequential() //
-				.peek(e -> i[0]++) //
-				.map(item -> new AbstractMap.SimpleEntry<>(item, i[0])) //
-				.collect(toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
-		// map.forEach((k, v) -> ps.printf("%s %s%n", k, v));
-		return map;
-	}
-
-	public static Map<Lex, Integer> makeSortedIndexMapByKeyOEWN(final Stream<Lex> stream)
-	{
-		return makeSortedIndexMap(stream, Lex.comparatorByKeyOEWN);
-	}
-
-	public static void testScanLexesForTestWords(final CoreModel model, final Function<Stream<Lex>, Map<Lex, Integer>> mapFunction, final Set<String> testWords, final boolean peekTestWords, final PrintStream ps)
+	public static void testScanLexesForTestWords(final CoreModel model, final Function<Lex, Key<Lex>> keyGetter, final Function<Stream<Key<Lex>>, Map<Key<Lex>, Integer>> indexerByKey, final Set<String> testWords, final boolean peekTestWords, final PrintStream ps)
 	{
 		// stream of lexes
-		Stream<Lex> lexStream = model.lexes.stream() //
+		Stream<Key<Lex>> lexKeyStream = model.lexes.stream()
 				.peek(lex -> {
 					if (testWords.contains(lex.getLemma()))
 					{
@@ -65,10 +62,11 @@ public class LibTestModel
 							ps.println("@" + lex);
 						}
 					}
-				});
+				})
+				.map(keyGetter::apply);
 
 		// make lex-to-index map
-		Map<Lex, Integer> lexToIndex = mapFunction.apply(lexStream);
+		Map<Key<Lex>, Integer> lexKeyToIndex = indexerByKey.apply(lexKeyStream);
 
 		// test map
 		ps.printf("%-12s %s%n", "index", "lex");
@@ -77,7 +75,7 @@ public class LibTestModel
 			Collection<Lex> lexes = model.getLexesByLemma().get(word);
 			for (Lex lex : lexes)
 			{
-				ps.printf("%-12d %s%n", lexToIndex.get(lex), lex);
+				ps.printf("%-12d %s%n", lexKeyToIndex.get(keyGetter.apply(lex)), lex);
 			}
 		}
 	}

@@ -68,9 +68,9 @@ public class Finder
 	/**
 	 * Find lexes matching lemma ignoring case and having the desired pos
 	 *
-	 * @param model      model
-	 * @param lcLemma      lower-cased lemma
-	 * @param posFilter    pos filter
+	 * @param model     model
+	 * @param lcLemma   lower-cased lemma
+	 * @param posFilter pos filter
 	 * @return array of lexes
 	 */
 	public static Lex[] getLcLexesHavingPos(final CoreModel model, final String lcLemma, final Character posFilter)
@@ -81,16 +81,30 @@ public class Finder
 	}
 
 	/**
+	 * Find lexes matching lemma ignoring case and having the desired pos
+	 *
+	 * @param model           model
+	 * @param lcLemma         lower-cased lemma
+	 * @param posOrTypeFilter type or pos filter
+	 * @return array of lexes
+	 */
+	public static Lex[] getLcLexesHavingTypeOrPos(final CoreModel model, final String lcLemma, final Character posOrTypeFilter)
+	{
+		return model.getLexesByLCLemma().get(lcLemma.toLowerCase(Locale.ENGLISH)).stream() //
+				.filter(lex -> lex.getType() == posOrTypeFilter || lex.getPartOfSpeech() == posOrTypeFilter) //
+				.toArray(Lex[]::new);
+	}
+
+	/**
 	 * Find lexes matching lemma ignoring case
 	 *
-	 * @param model      model
-	 * @param lcLemma      lower-cased lemma
+	 * @param model   model
+	 * @param lcLemma lower-cased lemma
 	 * @return array of lexes
 	 */
 	public static Lex[] getLcLexes(final CoreModel model, final String lcLemma)
 	{
-		return model.getLexesByLCLemma().get(lcLemma.toLowerCase(Locale.ENGLISH))
-				.toArray(Lex[]::new);
+		return model.getLexesByLCLemma().get(lcLemma.toLowerCase(Locale.ENGLISH)).toArray(Lex[]::new);
 	}
 
 	/**

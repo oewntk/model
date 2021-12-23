@@ -17,6 +17,12 @@ public interface Key<R> extends Function<CoreModel, R>
 	{
 	}
 
+	Comparator<Pronunciation[]> pronunciationsComparator = (pa1, pa2) -> {
+		var ps1 = Utils.toSet(pa1);
+		var ps2 = Utils.toSet(pa2);
+		return ps1.equals(ps2) ? 0 : ps1.toString().compareTo(ps2.toString());
+	};
+
 	/**
 	 * Current deep key, returns unique value
 	 */
@@ -25,6 +31,11 @@ public interface Key<R> extends Function<CoreModel, R>
 		public static OEWN of(final Lex lex)
 		{
 			return new OEWN(lex);
+		}
+
+		public static OEWN from(final String lemma, final Character type, final Pronunciation... pronunciations)
+		{
+			return new OEWN(lemma, type, pronunciations);
 		}
 
 		private final String lemma;
@@ -99,16 +110,10 @@ public interface Key<R> extends Function<CoreModel, R>
 			{
 				return 0;
 			}
-			int cmp = Comparator.comparing(OEWN::getLemma) //
+			return Comparator.comparing(OEWN::getLemma) //
 					.thenComparing(OEWN::getType) //
+					.thenComparing(OEWN::getPronunciations, Comparator.nullsFirst(pronunciationsComparator)) //
 					.compare(this, that);
-			if (cmp != 0)
-			{
-				return cmp;
-			}
-			var thisP = Utils.toSet(pronunciations);
-			var thatP = Utils.toSet(that.pronunciations);
-			return thisP.equals(thatP) ? 0 : thisP.toString().compareTo(thatP.toString());
 		}
 
 		@Override
@@ -233,7 +238,7 @@ public interface Key<R> extends Function<CoreModel, R>
 	/**
 	 * Part-of-Speech (a-s merge) deep key, returns first value
 	 */
-	class Pos implements Mono
+	class Pos implements Mono, Comparable<Pos>
 	{
 		public static Pos of(final Lex lex)
 		{
@@ -254,6 +259,21 @@ public interface Key<R> extends Function<CoreModel, R>
 		private Pos(final Lex lex)
 		{
 			this(lex.getLemma(), lex.getPartOfSpeech(), lex.getPronunciations());
+		}
+
+		public String getLemma()
+		{
+			return lemma;
+		}
+
+		public Character getPos()
+		{
+			return pos;
+		}
+
+		public Pronunciation[] getPronunciations()
+		{
+			return pronunciations;
 		}
 
 		@Override
@@ -286,6 +306,19 @@ public interface Key<R> extends Function<CoreModel, R>
 		}
 
 		@Override
+		public int compareTo(final Pos that)
+		{
+			if (this.equals(that))
+			{
+				return 0;
+			}
+			return Comparator.comparing(Pos::getLemma) //
+					.thenComparing(Pos::getPos) //
+					.thenComparing(Pos::getPronunciations, Comparator.nullsFirst(pronunciationsComparator)) //
+					.compare(this, that);
+		}
+
+		@Override
 		public String toString()
 		{
 			return String.format("(%s,%s,%s)", lemma, pos, Arrays.toString(pronunciations));
@@ -306,7 +339,7 @@ public interface Key<R> extends Function<CoreModel, R>
 	/**
 	 * Part-of-Speech lemma ignore case deep key, returns values
 	 */
-	class IC implements Multi
+	class IC implements Multi, Comparable<IC>
 	{
 		public static IC of(final Lex lex)
 		{
@@ -329,6 +362,26 @@ public interface Key<R> extends Function<CoreModel, R>
 		private IC(final Lex lex)
 		{
 			this(lex.getLemma(), lex.getType(), lex.getPronunciations());
+		}
+
+		public String getLemma()
+		{
+			return lemma;
+		}
+
+		public String getLcLemma()
+		{
+			return lcLemma;
+		}
+
+		public Character getType()
+		{
+			return type;
+		}
+
+		public Pronunciation[] getPronunciations()
+		{
+			return pronunciations;
 		}
 
 		@Override
@@ -361,6 +414,19 @@ public interface Key<R> extends Function<CoreModel, R>
 		}
 
 		@Override
+		public int compareTo(final IC that)
+		{
+			if (this.equals(that))
+			{
+				return 0;
+			}
+			return Comparator.comparing(IC::getLcLemma) //
+					.thenComparing(IC::getType) //
+					.thenComparing(IC::getPronunciations, Comparator.nullsFirst(pronunciationsComparator)) //
+					.compare(this, that);
+		}
+
+		@Override
 		public String toString()
 		{
 			return String.format("(%s,%s,%s)", lemma, type, Arrays.toString(pronunciations));
@@ -381,7 +447,7 @@ public interface Key<R> extends Function<CoreModel, R>
 	/**
 	 * Princeton WordNet key, returns values
 	 */
-	class PWN implements Multi
+	class PWN implements Multi, Comparable<PWN>
 	{
 		public static PWN of(final Lex lex)
 		{
@@ -400,6 +466,16 @@ public interface Key<R> extends Function<CoreModel, R>
 		private PWN(final Lex lex)
 		{
 			this(lex.getLemma(), lex.getPartOfSpeech());
+		}
+
+		public String getLemma()
+		{
+			return lemma;
+		}
+
+		public Character getPos()
+		{
+			return pos;
 		}
 
 		@Override
@@ -425,6 +501,18 @@ public interface Key<R> extends Function<CoreModel, R>
 		public int hashCode()
 		{
 			return Objects.hash(lemma, pos);
+		}
+
+		@Override
+		public int compareTo(final PWN that)
+		{
+			if (this.equals(that))
+			{
+				return 0;
+			}
+			return Comparator.comparing(PWN::getLemma) //
+					.thenComparing(PWN::getPos) //
+					.compare(this, that);
 		}
 
 		@Override

@@ -201,16 +201,6 @@ public class CoreModel implements Serializable
 		long withRelationSynsetCount = synsets.stream().filter(synset -> synset.getRelations() != null).count();
 		long synsetRelationSum = synsets.stream().filter(synset -> synset.getRelations() != null).distinct().mapToLong(synset -> synset.getRelations().size()).sum();
 
-		System.err.println("lemma");
-		getLexesByLemma().get("Casanova").forEach(System.err::println);
-
-		System.err.println("lclemma");
-		getLexesByLCLemma().get("casanova").forEach(System.err::println);
-
-		System.err.println("scan");
-		lexes.stream().filter(lex->"casanova".equals(lex.getLCLemma())).forEach(System.err::println);
-		lexes.stream().filter(lex->"baroque".equals(lex.getLCLemma())).forEach(System.err::println);
-
 		String format = "%n%-32s: %6d";
 		return String.format(format, "lexes", lexes.size()) + //
 				String.format(format, "lemmas(CS)", csWordCount) + //

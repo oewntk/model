@@ -328,12 +328,17 @@ public class Sense implements Comparable<Sense>, Serializable
 	 * although there is no requirement that the numbers be consecutive or begin with 00 .
 	 * Note that a value of 00 is the default, and therefore is not present in lexicographer files. (senseidx)
 	 * sensekey = ss_type:lex_filenum:lex_id:head_word:head_id
+	 * <p></p>
+	 * SENSEKEY
+	 * lemma % lex_sense
+	 * where lex_sense is encoded as:
+	 * ss_type:lex_filenum:lex_id:head_word:head_id
 	 *
 	 * @return lexid
 	 */
 	public int findLexid()
 	{
-		return Integer.parseInt(senseId.split("%")[1].split(":")[1]);
+		return Integer.parseInt(senseId.split("%")[1].split(":")[2]);
 	}
 
 	// stringify

@@ -18,9 +18,7 @@ public class TestUtils
 			return "\t<none>";
 		}
 		StringWriter sw = new StringWriter();
-		senses.forEach(sense -> {
-			sw.write(String.format("\t%s%n", sense));
-		});
+		senses.forEach(sense -> sw.write(String.format("\t%s%n", sense)));
 		return sw.toString();
 	}
 
@@ -34,9 +32,7 @@ public class TestUtils
 		StringWriter sw = new StringWriter();
 		senses.stream() //
 				.sorted(SenseGroupings.byDecreasingTagCount) //
-				.forEach(sense -> {
-					sw.write(String.format("\t%d %s%n", sense.getIntTagCount(), sense));
-				});
+				.forEach(sense -> sw.write(String.format("\t%d %s%n", sense.getIntTagCount(), sense)));
 		return sw.toString();
 	}
 
@@ -47,9 +43,7 @@ public class TestUtils
 			return "\t<none>";
 		}
 		StringWriter sw = new StringWriter();
-		lexes.forEach(lex -> {
-			sw.write(String.format("\t%s%n", lex));
-		});
+		lexes.forEach(lex -> sw.write(String.format("\t%s%n", lex)));
 		return sw.toString();
 	}
 

@@ -83,7 +83,7 @@ public class LibTestModelQueries
 		}
 	}
 
-	private static void dump(final List<Sense> senses, final CoreModel model, final String indent, final PrintStream ps)
+	private static void dump(final List<Sense> senses, final CoreModel model, @SuppressWarnings("SameParameterValue") final String indent, final PrintStream ps)
 	{
 		senses.forEach(sense -> {
 			ps.printf("%s%s%n", indent, sense);

@@ -62,6 +62,6 @@ public class Groupings
 
 	public static <K, V> Map<K, List<V>> groupByHavingMultipleCount(final  Stream<V> stream, final Function<V, K> groupingFunction)
 	{
-		return groupByHaving(stream, groupingFunction, vals -> vals.size() <= 1L);
+		return groupByHaving(stream, groupingFunction, values -> values.size() <= 1L);
 	}
 }

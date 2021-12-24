@@ -4,7 +4,6 @@
 
 package org.oewntk.model;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Set;

@@ -248,24 +248,12 @@ public class Lex implements Serializable //, Comparable<Lex>
 		return String.format("%s %c%s %s {%s}", getLemma(), getType(), discriminant == null ? "" : discriminant, pronunciationsStr, sensesStr);
 	}
 
-	// identifty
+	// identify
 
 	@Override
 	public boolean equals(final Object o)
 	{
 		throw new UnsupportedOperationException("Either compare values using 'getSensesAsSet' or keys using 'Key.OEWN.of', 'Key.PWN.of', etc");
-		/*
-		if (this == o)
-		{
-			return true;
-		}
-		if (o == null || getClass() != o.getClass())
-		{
-			return false;
-		}
-		Lex lex = (Lex) o;
-		return type == lex.type && lemma.equals(lex.lemma) && Objects.equals(discriminant, lex.discriminant) && Arrays.equals(pronunciations, lex.pronunciations);
-		 */
 	}
 
 	@Override

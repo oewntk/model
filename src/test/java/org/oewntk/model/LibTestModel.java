@@ -63,7 +63,7 @@ public class LibTestModel
 						}
 					}
 				})
-				.map(keyGetter::apply);
+				.map(keyGetter);
 
 		// make lex-to-index map
 		Map<Key<Lex>, Integer> lexKeyToIndex = indexerByKey.apply(lexKeyStream);

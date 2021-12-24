@@ -4,8 +4,6 @@
 
 package org.oewntk.model;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**

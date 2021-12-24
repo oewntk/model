@@ -114,7 +114,7 @@ public class SenseGroupings
 
 	// C O M P A R A T O R
 
-	public static Comparator<Sense> byDecreasingTagCount = (s1, s2) -> {
+	public static final Comparator<Sense> byDecreasingTagCount = (s1, s2) -> {
 
 		if (s1.equals(s2))
 		{

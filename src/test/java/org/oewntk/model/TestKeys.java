@@ -23,7 +23,7 @@ public class TestKeys
 		Lex lexRowAu = new Lex(wordRow, "n-2", "source2").setPronunciations(pRowAu);
 		Lex lexRowOuN = new Lex(wordRow, "n", "source1").setPronunciations(pRowOu);
 		Lex lexRowAuN = new Lex(wordRow, "n", "source2").setPronunciations(pRowAu);
-		assertNotEquals(lexRowOu, lexRowAu);
+
 		assertNotEquals(Key.OEWN.of(lexRowOu), Key.OEWN.of(lexRowAu));
 		assertNotEquals(Key.Shallow.of(lexRowOu), Key.Shallow.of(lexRowAu)); // because discriminant is different
 		assertEquals(Key.Shallow.of(lexRowOuN), Key.Shallow.of(lexRowAuN)); // because discriminant is same
@@ -43,8 +43,6 @@ public class TestKeys
 		Lex lexMobile0 = new Lex(wordMobile, "n", "source1");
 		Lex lexMobile1 = new Lex(wordMobile, "n", "source1").setPronunciations(paMobile1);
 		Lex lexMobile2 = new Lex(wordMobile, "n", "source2").setPronunciations(paMobile2);
-		assertNotEquals(lexMobile0, lexMobile1);
-		assertNotEquals(lexMobile1, lexMobile2);
 
 		assertEquals(Key.OEWN.of(lexMobile1), Key.OEWN.of(lexMobile2));
 		assertEquals(Key.Shallow.of(lexMobile1), Key.Shallow.of(lexMobile2));
@@ -62,8 +60,6 @@ public class TestKeys
 		Lex lexCriticalA = new Lex(wordCritical, "a", "source1");
 		Lex lexCriticalS = new Lex(wordCritical, "s", "source2");
 
-		assertNotEquals(lexCriticalA, lexCriticalS);
-
 		assertNotEquals(Key.OEWN.of(lexCriticalA), Key.OEWN.of(lexCriticalS));
 		assertNotEquals(Key.Shallow.of(lexCriticalA), Key.Shallow.of(lexCriticalS));
 		assertEquals(Key.PWN.of(lexCriticalA), Key.PWN.of(lexCriticalS));
@@ -79,7 +75,6 @@ public class TestKeys
 		Lex lexEarthL = new Lex(wordEarthL, "n", "source1");
 		Lex lexEarthU = new Lex(wordEarthU, "n", "source2");
 
-		assertNotEquals(lexEarthL, lexEarthU);
 		assertNotEquals(Key.OEWN.of(lexEarthL), Key.OEWN.of(lexEarthU));
 		assertNotEquals(Key.Shallow.of(lexEarthL), Key.Shallow.of(lexEarthU));
 		assertNotEquals(Key.PWN.of(lexEarthL), Key.PWN.of(lexEarthU));

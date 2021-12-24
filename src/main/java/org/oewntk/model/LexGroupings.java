@@ -33,10 +33,10 @@ public class LexGroupings
 	}
 
 	/**
-	 * Hypermap (LCLemma -> CSLemma -> lexes)
+	 * Hypermap (LCLemma -&gt; CSLemma -&gt; lexes)
 	 *
 	 * @param model model
-	 * @return 2-tier hypermap (LCLemma -> CSLemma -> lexes)
+	 * @return 2-tier hypermap (LCLemma -&gt; CSLemma -&gt; lexes)
 	 */
 	public static Map<String, Map<String, Collection<Lex>>> hyperMapByLCLemmaByLemma(final CoreModel model)
 	{
@@ -46,7 +46,7 @@ public class LexGroupings
 
 	/**
 	 * CSLemmas grouped by LCLemma
-	 * baroque -> (Baroque, baroque)
+	 * baroque -&gt; (Baroque, baroque)
 	 *
 	 * @param model model
 	 * @return CS lemmas by LC lemmas
@@ -61,7 +61,8 @@ public class LexGroupings
 	/**
 	 * CSLemmas for LCLemma
 	 *
-	 * @param model model
+	 * @param model   model
+	 * @param lcLemma lower-cased lemma
 	 * @return CS lemmas for given LC lemma
 	 */
 	public static List<String> cSLemmasForLCLemma(final CoreModel model, final String lcLemma)
@@ -83,10 +84,10 @@ public class LexGroupings
 	}
 
 	/**
-	 * Counts of CS lemmas by LC lemma, sme as above but retain entries that have count > 1
+	 * Counts of CS lemmas by LC lemma, sme as above but retain entries that have count &gt; 2
 	 *
 	 * @param model model
-	 * @return counts of CS lemmas by LC lemmas, with count > 2
+	 * @return counts of CS lemmas by LC lemmas, with count &gt; 2
 	 */
 	public static Map<String, Long> multipleCountsByICLemma(final CoreModel model)
 	{
@@ -94,10 +95,10 @@ public class LexGroupings
 	}
 
 	/**
-	 * CS lemmas by LC lemmas, retain entries that have count > 1
+	 * CS lemmas by LC lemmas, retain entries that have count &gt; 2
 	 *
 	 * @param model model
-	 * @return CS lemmas by LC lemmas, with count > 2
+	 * @return CS lemmas by LC lemmas, with count &gt; 2
 	 */
 	public static Map<String, List<String>> cSLemmasByLCLemmaHavingMultipleCount(final CoreModel model)
 	{

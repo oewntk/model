@@ -78,6 +78,7 @@ public class Formatter
 	 *
 	 * @param <K>   type of key
 	 * @param <V>   type of value
+	 * @param <T>   type of item
 	 * @param map   map of lists of items of type V mapped by K
 	 * @param delim delimiter
 	 * @return joined string representation of items

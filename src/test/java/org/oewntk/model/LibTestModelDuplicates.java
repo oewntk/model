@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.*;
 
 public class LibTestModelDuplicates
 {
-	public static <T> void testDuplicatesForKeyMono(final CoreModel model, final Function<Lex, Key.Mono> key, final PrintStream ps)
+	public static <T> void testDuplicatesForKeyMono(final CoreModel model, final Function<Lex, KeyF.MonoValued> key, final PrintStream ps)
 	{
 		var dups = model.lexes //
 				.stream() // stream of lexes
@@ -30,7 +30,7 @@ public class LibTestModelDuplicates
 		Assert.assertEquals(0, dups.size());
 	}
 
-	public static <T> void testDuplicatesForKeyMulti(final CoreModel model, final Function<Lex, Key.Multi> key, final PrintStream ps)
+	public static <T> void testDuplicatesForKeyMulti(final CoreModel model, final Function<Lex, KeyF.MultiValued> key, final PrintStream ps)
 	{
 		var dups = model.lexes //
 				.stream() // stream of lexes
@@ -47,21 +47,21 @@ public class LibTestModelDuplicates
 
 	public static void testDuplicatesForKeyOEWN(final CoreModel model, final PrintStream ps)
 	{
-		testDuplicatesForKeyMono(model, Key.OEWN::of, ps);
+		testDuplicatesForKeyMono(model, lex-> KeyF.W_P_A_functional.Mono.of(Lex::getLemma, Lex::getType, lex), ps);
 	}
 
 	public static void testDuplicatesForKeyPos(final CoreModel model, final PrintStream ps)
 	{
-		testDuplicatesForKeyMono(model, Key.Pos::of, ps);
+		testDuplicatesForKeyMono(model, lex-> KeyF.W_P_A_functional.Mono.of(Lex::getLemma, Lex::getPartOfSpeech, lex), ps);
 	}
 
 	public static void testDuplicatesForKeyIC(final CoreModel model, final PrintStream ps)
 	{
-		testDuplicatesForKeyMulti(model, Key.IC::of, ps);
+		testDuplicatesForKeyMulti(model, lex-> KeyF.W_P_A_functional.Multi.of(Lex::getLCLemma, Lex::getType, lex), ps);
 	}
 
 	public static void testDuplicatesForKeyPWN(final CoreModel model, final PrintStream ps)
 	{
-		testDuplicatesForKeyMulti(model, Key.PWN::of, ps);
+		testDuplicatesForKeyMulti(model, lex-> KeyF.W_P_functional.Multi.of(Lex::getLCLemma, Lex::getType, lex), ps);
 	}
 }

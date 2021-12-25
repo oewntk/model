@@ -182,11 +182,11 @@ public class CoreModel implements Serializable
 		long lcWordCount = lexes.stream().map(Lex::getLCLemma).distinct().count();
 		long casedCount = lexes.stream().map(Lex::getLemma).filter(lemma -> !lemma.equals(lemma.toLowerCase())).distinct().count();
 
-		long distinctByKeyOEWNLexCount = lexes.stream().map(Key.OEWN::of).distinct().count();
-		long distinctByKeyShallowLexCount = lexes.stream().map(Key.Shallow::of).distinct().count();
-		long distinctByKeyPOSLexCount = lexes.stream().map(Key.Pos::of).distinct().count();
-		long distinctByKeyICLexCount = lexes.stream().map(Key.IC::of).distinct().count();
-		long distinctByKeyPWNLexCount = lexes.stream().map(Key.PWN::of).distinct().count();
+		long distinctByKeyOEWNLexCount = lexes.stream().map(Key.W_P_A::of_t).distinct().count();
+		long distinctByKeyShallowLexCount = lexes.stream().map(Key.W_P_D::of_t).distinct().count();
+		long distinctByKeyPOSLexCount = lexes.stream().map(Key.W_P_A::of_p).distinct().count();
+		long distinctByKeyICLexCount = lexes.stream().map(Key.W_P_A::of_lc_t).distinct().count();
+		long distinctByKeyPWNLexCount = lexes.stream().map(lex -> Key.W_P.from(lex.getLCLemma(), lex.getPartOfSpeech())).distinct().count();
 		long distinctSenseGroupsCount = lexes.stream().map(Lex::getSensesAsSet).distinct().count();
 		long sensesInSenseGroupsSum = lexes.stream().map(Lex::getSensesAsSet).distinct().mapToLong(Set::size).sum();
 

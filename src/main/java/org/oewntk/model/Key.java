@@ -4,19 +4,14 @@
 
 package org.oewntk.model;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 
-public interface Key<R> extends Function<CoreModel, R>
+public interface Key
 {
-	interface Mono extends Key<Lex>
-	{
-	}
-
-	interface Multi extends Key<Lex[]>
-	{
-	}
-
 	Comparator<Pronunciation[]> pronunciationsComparator = (pa1, pa2) -> {
 		var ps1 = Utils.toSet(pa1);
 		var ps2 = Utils.toSet(pa2);
@@ -24,34 +19,192 @@ public interface Key<R> extends Function<CoreModel, R>
 	};
 
 	/**
-	 * Common logic to keys with pronunciations
+	 * (Word, PosOrType)
 	 */
-	abstract class Base implements Comparable<Base>
+	class W_P implements Key, Comparable<W_P>
 	{
-		protected final String lemma;
-		private final Character typeOrPos;
+		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> W_P of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
+		{
+			return new W_P(wordExtractor.apply(lex), posTypeExtractor.apply(lex));
+		}
+
+		public static W_P of_t(final Lex lex)
+		{
+			return W_P.of(lex, Lex::getLemma, Lex::getType);
+		}
+
+		public static W_P of_p(final Lex lex)
+		{
+			return W_P.of(lex, Lex::getLemma, Lex::getPartOfSpeech);
+		}
+
+		public static W_P of_lc_t(final Lex lex)
+		{
+			return W_P.of(lex, Lex::getLCLemma, Lex::getType);
+		}
+
+		public static W_P of_lc_p(final Lex lex)
+		{
+			return W_P.of(lex, Lex::getLCLemma, Lex::getPartOfSpeech);
+		}
+
+		public static W_P from(final String word, final Character posType)
+		{
+			return new W_P(word, posType);
+		}
+
+		/**
+		 * Word: Lemma or LC lemma
+		 */
+		protected final String word;
+
+		/**
+		 * PosType: part-of-speech or type
+		 */
+		protected final Character posType;
+
+		/**
+		 * Constructor
+		 *
+		 * @param word    word: lemma or LC lemma
+		 * @param posType pos type: part-of-speech or type
+		 */
+		protected W_P(final String word, final Character posType)
+		{
+			this.word = word;
+			this.posType = posType;
+		}
+
+		/**
+		 * Get word
+		 *
+		 * @return word
+		 */
+		public String getWord()
+		{
+			return word;
+		}
+
+		/**
+		 * Get pos type
+		 *
+		 * @return pos type
+		 */
+		public Character getPosType()
+		{
+			return posType;
+		}
+
+		@Override
+		public boolean equals(final Object o)
+		{
+			if (this == o)
+			{
+				return true;
+			}
+			if (o == null || getClass() != o.getClass())
+			{
+				return false;
+			}
+			W_P that = (W_P) o;
+			if (!this.word.equals(that.word))
+			{
+				return false;
+			}
+			return this.posType == that.posType;
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return Objects.hash(word, posType);
+		}
+
+		public static final Comparator<W_P> wpComparator = Comparator.comparing(W_P::getWord) //
+				.thenComparing(W_P::getPosType);
+
+		@Override
+		public int compareTo(final W_P that)
+		{
+			if (this.equals(that))
+			{
+				return 0;
+			}
+			return wpComparator.compare(this, that);
+		}
+
+		@Override
+		public String toString()
+		{
+			return String.format("(%s,%s)", word, posType);
+		}
+
+		public String toLongString()
+		{
+			return String.format("KEY %s %s", this, this.getClass().getSimpleName());
+		}
+
+		public class W_P_Mono implements KeyF.MonoValued
+		{
+			@Override
+			public Lex apply(final CoreModel model)
+			{
+				return Finder.getLexesHavingPos(model, word, posType).findFirst().orElseThrow(IllegalArgumentException::new);
+			}
+		}
+
+		public class W_P_Multi implements KeyF.MultiValued
+		{
+			@Override
+			public Lex[] apply(final CoreModel model)
+			{
+				return Finder.getLexesHavingPos(model, word, posType).toArray(Lex[]::new);
+			}
+		}
+
+	}
+
+	/**
+	 * (Word, PosOrType, Pronunciations)
+	 */
+	class W_P_A extends W_P
+	{
+		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> W_P_A of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
+		{
+			return new W_P_A(wordExtractor.apply(lex), posTypeExtractor.apply(lex), lex.getPronunciations());
+		}
+
+		public static W_P_A of_t(final Lex lex)
+		{
+			return W_P_A.of(lex, Lex::getLemma, Lex::getType);
+		}
+
+		public static W_P_A of_p(final Lex lex)
+		{
+			return W_P_A.of(lex, Lex::getLemma, Lex::getPartOfSpeech);
+		}
+
+		public static W_P_A of_lc_t(final Lex lex)
+		{
+			return W_P_A.of(lex, Lex::getLCLemma, Lex::getType);
+		}
+
+		public static W_P_A of_lc_p(final Lex lex)
+		{
+			return W_P_A.of(lex, Lex::getLCLemma, Lex::getPartOfSpeech);
+		}
+
+		public static W_P_A from(final String lemma, final Character type, final Pronunciation... pronunciations)
+		{
+			return new W_P_A(lemma, type, pronunciations);
+		}
+
 		protected final Pronunciation[] pronunciations;
 
-		public Base(final String lemma, final Character typeOrPos, final Pronunciation... pronunciations)
+		protected W_P_A(final String word, final Character posType, final Pronunciation[] pronunciations)
 		{
-			this.lemma = lemma;
-			this.typeOrPos = typeOrPos;
+			super(word, posType);
 			this.pronunciations = pronunciations;
-		}
-
-		private Base(final Lex lex)
-		{
-			this(lex.getLemma(), lex.getType(), lex.getPronunciations());
-		}
-
-		public String getLemma()
-		{
-			return lemma;
-		}
-
-		protected Character getTypeOrPos()
-		{
-			return typeOrPos;
 		}
 
 		public Pronunciation[] getPronunciations()
@@ -75,12 +228,12 @@ public interface Key<R> extends Function<CoreModel, R>
 			{
 				return false;
 			}
-			Base that = (Base) o;
-			if (!this.lemma.equals(that.lemma))
+			W_P_A that = (W_P_A) o;
+			if (!this.word.equals(that.word))
 			{
 				return false;
 			}
-			if (this.typeOrPos != that.typeOrPos)
+			if (this.posType != that.posType)
 			{
 				return false;
 			}
@@ -90,115 +243,76 @@ public interface Key<R> extends Function<CoreModel, R>
 		@Override
 		public int hashCode()
 		{
-			return Objects.hash(lemma, typeOrPos, Arrays.hashCode(pronunciations));
+			return Objects.hash(word, posType, Arrays.hashCode(pronunciations));
 		}
 
+		public static final Comparator<W_P_A> wpaComparator = Comparator.comparing(W_P_A::getWord) //
+				.thenComparing(W_P_A::getPosType) //
+				.thenComparing(W_P_A::getPronunciations, Comparator.nullsFirst(pronunciationsComparator));
+
 		@Override
-		public int compareTo(final Base that)
+		public int compareTo(final W_P that)
 		{
 			if (this.equals(that))
 			{
 				return 0;
 			}
-			return Comparator.comparing(Base::getLemma) //
-					.thenComparing(Base::getTypeOrPos) //
-					.thenComparing(Base::getPronunciations, Comparator.nullsFirst(pronunciationsComparator)) //
-					.compare(this, that);
+			return wpaComparator.compare(this, (W_P_A) that);
 		}
 
 		@Override
 		public String toString()
 		{
-			return String.format("(%s,%s,%s)", lemma, typeOrPos, Arrays.toString(pronunciations));
+			return String.format("(%s,%s,%s)", word, posType, Arrays.toString(pronunciations));
 		}
 
 		public String toLongString()
 		{
-			return String.format("KEY %s", this);
+			return String.format("KEY %s %s", this, this.getClass().getSimpleName());
 		}
 	}
 
 	/**
-	 * Current key
+	 * (Word, PosOrType, Discriminant) - Shallow key
 	 */
-	class OEWN extends Base implements Mono
+	class W_P_D extends W_P
 	{
-		public static OEWN of(final Lex lex)
+		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> W_P_D of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
 		{
-			return new OEWN(lex);
+			return new W_P_D(wordExtractor.apply(lex), posTypeExtractor.apply(lex), lex.getDiscriminant());
 		}
 
-		public static OEWN from(final String lemma, final Character type, final Pronunciation... pronunciations)
+		public static W_P_D of_t(final Lex lex)
 		{
-			return new OEWN(lemma, type, pronunciations);
+			return W_P_D.of(lex, Lex::getLemma, Lex::getType);
 		}
 
-		public OEWN(final String lemma, final Character type, final Pronunciation... pronunciations)
+		public static W_P_D of_p(final Lex lex)
 		{
-			super(lemma, type, pronunciations);
+			return W_P_D.of(lex, Lex::getLemma, Lex::getPartOfSpeech);
 		}
 
-		private OEWN(final Lex lex)
+		public static W_P_D of_lc_t(final Lex lex)
 		{
-			this(lex.getLemma(), lex.getType(), lex.getPronunciations());
+			return W_P_D.of(lex, Lex::getLCLemma, Lex::getType);
 		}
 
-		public Character getType()
+		public static W_P_D of_lc_p(final Lex lex)
 		{
-			return getTypeOrPos();
+			return W_P_D.of(lex, Lex::getLCLemma, Lex::getPartOfSpeech);
 		}
 
-		public String toLongString()
+		public static W_P_D from(final String lemma, final Character type, final String discriminant)
 		{
-			return String.format("KEY OEWN %s", this);
+			return new W_P_D(lemma, type, discriminant);
 		}
 
-		@Override
-		public Lex apply(final CoreModel model)
-		{
-			return Finder.getLexHavingPronunciations(Finder.getLexesHavingType(model, lemma, getType()), pronunciations);
-		}
-	}
+		protected final String discriminant;
 
-	/**
-	 * Current shallow key, returns unique value
-	 */
-	class Shallow implements Mono, Comparable<Shallow>
-	{
-		public static Shallow of(final Lex lex)
+		public W_P_D(final String word, final Character posType, final String discriminant)
 		{
-			return new Shallow(lex);
-		}
-
-		public static Shallow from(final String lemma, final Character type, final String discriminant)
-		{
-			return new Shallow(lemma, type, discriminant);
-		}
-
-		private final String lemma;
-		private final Character type;
-		private final String discriminant;
-
-		public Shallow(final String lemma, final Character type, final String discriminant)
-		{
-			this.lemma = lemma;
-			this.type = type;
+			super(word, posType);
 			this.discriminant = discriminant;
-		}
-
-		private Shallow(final Lex lex)
-		{
-			this(lex.getLemma(), lex.getType(), lex.getDiscriminant());
-		}
-
-		public String getLemma()
-		{
-			return lemma;
-		}
-
-		public Character getType()
-		{
-			return type;
 		}
 
 		public String getDiscriminant()
@@ -217,12 +331,12 @@ public interface Key<R> extends Function<CoreModel, R>
 			{
 				return false;
 			}
-			Shallow that = (Shallow) o;
-			if (!this.lemma.equals(that.lemma))
+			W_P_D that = (W_P_D) o;
+			if (!this.word.equals(that.word))
 			{
 				return false;
 			}
-			if (this.type != that.type)
+			if (this.posType != that.posType)
 			{
 				return false;
 			}
@@ -232,254 +346,32 @@ public interface Key<R> extends Function<CoreModel, R>
 		@Override
 		public int hashCode()
 		{
-			return Objects.hash(lemma, type, discriminant);
+			return Objects.hash(word, posType, discriminant);
 		}
 
+		public static final Comparator<W_P_D> wpdComparator = Comparator.comparing(W_P_D::getWord) //
+				.thenComparing(W_P_D::getPosType) //
+				.thenComparing(W_P_D::getDiscriminant, Comparator.nullsFirst(Comparator.naturalOrder()));
+
 		@Override
-		public int compareTo(final Shallow that)
+		public int compareTo(final W_P that)
 		{
 			if (this.equals(that))
 			{
 				return 0;
 			}
-			return Comparator.comparing(Shallow::getLemma) //
-					.thenComparing(Shallow::getType) //
-					.thenComparing(Shallow::getDiscriminant, Comparator.nullsFirst(Comparator.naturalOrder())) //
-					.compare(this, that);
+			return wpdComparator.compare(this, (W_P_D) that);
 		}
 
 		@Override
 		public String toString()
 		{
-			return String.format("(%s,%s,%s)", lemma, type, discriminant);
+			return String.format("(%s,%s,%s)", word, posType, discriminant);
 		}
 
 		public String toLongString()
 		{
-			return String.format("KEY SHALLOW %s", this);
-		}
-
-		@Override
-		public Lex apply(final CoreModel model)
-		{
-			return Finder.getLexHavingDiscriminant(Finder.getLcLexesHavingType(model, lemma, type), discriminant);
-		}
-	}
-
-	/**
-	 * Part-of-Speech (a-s merge) deep key, returns first value
-	 */
-	class Pos extends Base implements Mono
-	{
-		public static Pos of(final Lex lex)
-		{
-			return new Pos(lex);
-		}
-
-		public static Pos from(final String lemma, final Character pos, final Pronunciation... pronunciations)
-		{
-			return new Pos(lemma, pos, pronunciations);
-		}
-
-		public Pos(final String lemma, final Character pos, final Pronunciation... pronunciations)
-		{
-			super(lemma, pos, pronunciations);
-		}
-
-		private Pos(final Lex lex)
-		{
-			this(lex.getLemma(), lex.getPartOfSpeech(), lex.getPronunciations());
-		}
-
-		public Character getPos()
-		{
-			return getTypeOrPos();
-		}
-
-		public String toLongString()
-		{
-			return String.format("KEY POS %s", this);
-		}
-
-		@Override
-		public Lex apply(final CoreModel model)
-		{
-			return Finder.getLexHavingPronunciations(Finder.getLexesHavingPos(model, lemma, getPos()), pronunciations);
-		}
-	}
-
-	/**
-	 * Part-of-Speech lemma ignore case deep key, returns values
-	 */
-	class IC extends Base implements Multi
-	{
-		public static IC of(final Lex lex)
-		{
-			return new IC(lex);
-		}
-
-		public static IC from(final String lemma, final Character type, Pronunciation... pronunciations)
-		{
-			return new IC(lemma, type, pronunciations);
-		}
-
-		public IC(final String lemma, final Character typeOrPos, Pronunciation... pronunciations)
-		{
-			super(lemma, typeOrPos, pronunciations);
-		}
-
-		private IC(final Lex lex)
-		{
-			this(lex.getLemma(), lex.getType(), lex.getPronunciations());
-		}
-
-		public String getLcLemma()
-		{
-			return lemma.toLowerCase(Locale.ENGLISH);
-		}
-
-		public Character getType()
-		{
-			return getTypeOrPos();
-		}
-
-		public Character getPos()
-		{
-			return getTypeOrPos();
-		}
-
-		public Pronunciation[] getPronunciations()
-		{
-			return pronunciations;
-		}
-
-		@Override
-		public boolean equals(final Object o)
-		{
-			if (this == o)
-			{
-				return true;
-			}
-			if (o == null || getClass() != o.getClass())
-			{
-				return false;
-			}
-			IC that = (IC) o;
-			if (!this.getLcLemma().equals(that.getLcLemma()))
-			{
-				return false;
-			}
-			if (this.getTypeOrPos() != that.getTypeOrPos())
-			{
-				return false;
-			}
-			return Objects.equals(Utils.toSet(this.pronunciations), Utils.toSet(that.pronunciations));
-		}
-
-		@Override
-		public int hashCode()
-		{
-			return Objects.hash(getLcLemma(), getTypeOrPos(), Arrays.hashCode(pronunciations));
-		}
-
-		public String toLongString()
-		{
-			return String.format("KEY IGNORE CASE %s", this);
-		}
-
-		@Override
-		public Lex[] apply(final CoreModel model)
-		{
-			return Finder.getLexesHavingPronunciations(Finder.getLcLexesHavingTypeOrPos(model, getLcLemma(), getTypeOrPos()), pronunciations);
-		}
-	}
-
-	/**
-	 * Princeton WordNet key, returns values
-	 */
-	class PWN implements Multi, Comparable<PWN>
-	{
-		public static PWN of(final Lex lex)
-		{
-			return new PWN(lex);
-		}
-
-		private final String lemma;
-		private final Character pos;
-
-		public PWN(final String lemma, final Character pos)
-		{
-			this.lemma = lemma;
-			this.pos = pos;
-		}
-
-		private PWN(final Lex lex)
-		{
-			this(lex.getLemma(), lex.getPartOfSpeech());
-		}
-
-		public String getLemma()
-		{
-			return lemma;
-		}
-
-		public Character getPos()
-		{
-			return pos;
-		}
-
-		@Override
-		public boolean equals(final Object o)
-		{
-			if (this == o)
-			{
-				return true;
-			}
-			if (o == null || getClass() != o.getClass())
-			{
-				return false;
-			}
-			PWN that = (PWN) o;
-			if (!this.lemma.equals(that.lemma))
-			{
-				return false;
-			}
-			return this.pos == that.pos;
-		}
-
-		@Override
-		public int hashCode()
-		{
-			return Objects.hash(lemma, pos);
-		}
-
-		@Override
-		public int compareTo(final PWN that)
-		{
-			if (this.equals(that))
-			{
-				return 0;
-			}
-			return Comparator.comparing(PWN::getLemma) //
-					.thenComparing(PWN::getPos) //
-					.compare(this, that);
-		}
-
-		@Override
-		public String toString()
-		{
-			return String.format("(%s,%s)", lemma, pos);
-		}
-
-		public String toLongString()
-		{
-			return String.format("KEY PWN %s", this);
-		}
-
-		@Override
-		public Lex[] apply(final CoreModel model)
-		{
-			return Finder.getLexesHavingPos(model, lemma, pos);
+			return String.format("KEY %s %s", this.getClass().getSimpleName(), this);
 		}
 	}
 }

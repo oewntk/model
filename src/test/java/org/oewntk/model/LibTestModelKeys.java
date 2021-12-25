@@ -5,7 +5,6 @@
 package org.oewntk.model;
 
 import java.io.PrintStream;
-import java.util.Collection;
 
 public class LibTestModelKeys
 {
@@ -13,53 +12,53 @@ public class LibTestModelKeys
 	{
 		Pronunciation pEarthGB = Pronunciation.ipa("ɜːθ", "GB");
 		Pronunciation pEarthUS = Pronunciation.ipa("ɝθ", "US");
-		Key.IC key_uc = new Key.IC("Earth", 'n', pEarthGB, pEarthUS);
-		Key.IC key_lc = new Key.IC("earth", 'n', pEarthGB, pEarthUS);
-		Key.IC key_pwn_uc = new Key.IC("Earth", 'n', pEarthGB, pEarthUS);
-		Key.IC key_pwn_lc = new Key.IC("earth", 'n', pEarthGB, pEarthUS);
-		return testLemmaKeysMulti(model, ps, "Earth", 'n', 'n', key_uc, key_lc, key_pwn_uc, key_pwn_lc);
+		var key_cs = KeyF.W_P_A_functional.Multi.from(Lex::getLemma, Lex::getType, "Earth", 'n', pEarthGB, pEarthUS);
+		var key_lc = KeyF.W_P_A_functional.Multi.from(Lex::getLCLemma, Lex::getType, "earth", 'n', pEarthGB, pEarthUS);
+		var key_pwn_cs = KeyF.W_P_functional.Multi.from(Lex::getLemma, Lex::getType, "Earth", 'n');
+		var key_pwn_lc = KeyF.W_P_functional.Multi.from(Lex::getLemma, Lex::getType, "earth", 'n');
+		return testLemmaKeysMulti(model, ps, "Earth", 'n', 'n', key_cs, key_lc, key_pwn_cs, key_pwn_lc);
 	}
 
 	public static int[] testEarthMultiNoPronunciation(final CoreModel model, final PrintStream ps)
 	{
-		Key.IC key_uc = new Key.IC("Earth", 'n');
-		Key.IC key_lc = new Key.IC("earth", 'n');
-		return testLemmaKeysMulti(model, ps, "Earth", 'n', 'n', key_uc, key_lc);
+		var key_cs = KeyF.W_P_functional.Multi.from(Lex::getLemma, Lex::getType, "Earth", 'n');
+		var key_lc = KeyF.W_P_functional.Multi.from(Lex::getLCLemma, Lex::getType, "earth", 'n');
+		return testLemmaKeysMulti(model, ps, "Earth", 'n', 'n', key_cs, key_lc);
 	}
 
 	public static int[] testEarthMono(final CoreModel model, final PrintStream ps)
 	{
 		Pronunciation pEarthGB = Pronunciation.ipa("ɜːθ", "GB");
 		Pronunciation pEarthUS = Pronunciation.ipa("ɝθ", "US");
-		Key.OEWN key_uc = new Key.OEWN("Earth", 'n', pEarthGB, pEarthUS);
-		Key.OEWN key_lc = new Key.OEWN("earth", 'n', pEarthGB, pEarthUS);
-		return testLemmaKeysMono(model, ps, "Earth", 'n', 'n', key_uc, key_lc);
+		var key_cs = KeyF.W_P_A_functional.Mono.from(Lex::getLemma, Lex::getType, "Earth", 'n', pEarthGB, pEarthUS);
+		var key_lc = KeyF.W_P_A_functional.Mono.from(Lex::getLemma, Lex::getType, "earth", 'n', pEarthGB, pEarthUS);
+		return testLemmaKeysMono(model, ps, "Earth", 'n', 'n', key_cs, key_lc);
 	}
 
 	public static int[] testEarthMonoNoPronunciation(final CoreModel model, final PrintStream ps)
 	{
-		Key.OEWN key_uc = new Key.OEWN("Earth", 'n');
-		Key.OEWN key_lc = new Key.OEWN("earth", 'n');
-		return testLemmaKeysMono(model, ps, "Earth", 'n', 'n', key_uc, key_lc);
+		var key_cs = KeyF.W_P_functional.Mono.from(Lex::getLemma, Lex::getType, "Earth", 'n');
+		var key_lc = KeyF.W_P_functional.Mono.from(Lex::getLCLemma, Lex::getType, "earth", 'n');
+		return testLemmaKeysMono(model, ps, "Earth", 'n', 'n', key_cs, key_lc);
 	}
 
 	public static int[] testBaroqueMulti(final CoreModel model, final PrintStream ps)
 	{
 		Pronunciation pBaroqueGB = Pronunciation.ipa("bəˈɹɒk", "GB");
 		Pronunciation pBaroqueUS = Pronunciation.ipa("bəˈɹoʊk", "US");
-		Key.IC key1_ic = new Key.IC("baroque", 'a', pBaroqueGB, pBaroqueUS);
-		Key.IC key2_ic = new Key.IC("baroque", 's', pBaroqueGB, pBaroqueUS);
-		Key.IC key3_ic = new Key.IC("baroque", 'a', pBaroqueUS, pBaroqueGB);
-		Key.IC key4_ic = new Key.IC("Baroque", 'a', pBaroqueUS, pBaroqueGB);
+		var key1_ic = KeyF.W_P_A_functional.Multi.from(Lex::getLemma, Lex::getPartOfSpeech, "baroque", 'a', pBaroqueGB, pBaroqueUS);
+		var key2_ic = KeyF.W_P_A_functional.Multi.from(Lex::getLemma, Lex::getType, "baroque", 's', pBaroqueGB, pBaroqueUS);
+		var key3_ic = KeyF.W_P_A_functional.Multi.from(Lex::getLCLemma, Lex::getType, "baroque", 'a', pBaroqueUS, pBaroqueGB);
+		var key4_ic = KeyF.W_P_A_functional.Multi.from(Lex::getLCLemma, Lex::getType, "Baroque", 'a', pBaroqueUS, pBaroqueGB);
 		return testLemmaKeysMulti(model, ps, "Baroque", 'a', 's', key1_ic, key2_ic, key3_ic, key4_ic);
 	}
 
 	public static int[] testBaroqueMultiNoPronunciation(final CoreModel model, final PrintStream ps)
 	{
-		Key.IC key1_ic = new Key.IC("baroque", 'a');
-		Key.IC key2_ic = new Key.IC("baroque", 's');
-		Key.IC key3_ic = new Key.IC("Baroque", 'a');
-		Key.IC key4_ic = new Key.IC("Baroque", 's');
+		var key1_ic = KeyF.W_P_functional.Multi.from(Lex::getLemma, Lex::getPartOfSpeech, "baroque", 'a');
+		var key2_ic = KeyF.W_P_functional.Multi.from(Lex::getLemma, Lex::getType, "baroque", 's');
+		var key3_ic = KeyF.W_P_functional.Multi.from(Lex::getLemma, Lex::getType, "Baroque", 'a');
+		var key4_ic = KeyF.W_P_functional.Multi.from(Lex::getLemma, Lex::getType, "Baroque", 's');
 		return testLemmaKeysMulti(model, ps, "Baroque", 'a', 's', key1_ic, key2_ic, key3_ic, key4_ic);
 	}
 
@@ -67,17 +66,17 @@ public class LibTestModelKeys
 	{
 		Pronunciation pBaroqueGB = Pronunciation.ipa("bəˈɹɒk", "GB");
 		Pronunciation pBaroqueUS = Pronunciation.ipa("bəˈɹoʊk", "US");
-		Key.OEWN key_uc = new Key.OEWN("Baroque", 'a', pBaroqueUS, pBaroqueGB);
-		Key.OEWN key_lc = new Key.OEWN("baroque", 'a', pBaroqueGB, pBaroqueUS);
-		return testLemmaKeysMono(model, ps, "Baroque", 'a', 's', key_uc, key_lc);
+		var key_cs = KeyF.W_P_A_functional.Mono.from(Lex::getLemma, Lex::getPartOfSpeech, "Baroque", 'a', pBaroqueUS, pBaroqueGB);
+		var key_lc = KeyF.W_P_A_functional.Mono.from(Lex::getLCLemma, Lex::getPartOfSpeech, "baroque", 'a', pBaroqueGB, pBaroqueUS);
+		return testLemmaKeysMono(model, ps, "Baroque", 'a', 's', key_cs, key_lc);
 	}
 
 	public static int[] testBaroqueMonoNoPronunciation(final CoreModel model, final PrintStream ps)
 	{
-		Key.OEWN key_auc = new Key.OEWN("Baroque", 'a');
-		Key.OEWN key_alc = new Key.OEWN("baroque", 'a');
-		Key.OEWN key_suc = new Key.OEWN("Baroque", 's');
-		Key.OEWN key_slc = new Key.OEWN("baroque", 's');
+		var key_auc = KeyF.W_P_A_functional.Mono.from(Lex::getLemma, Lex::getPartOfSpeech, "Baroque", 'a');
+		var key_alc = KeyF.W_P_A_functional.Mono.from(Lex::getLCLemma, Lex::getPartOfSpeech, "baroque", 'a');
+		var key_suc = KeyF.W_P_A_functional.Mono.from(Lex::getLemma, Lex::getType, "Baroque", 's');
+		var key_slc = KeyF.W_P_A_functional.Mono.from(Lex::getLCLemma, Lex::getType, "baroque", 's');
 		return testLemmaKeysMono(model, ps, "Baroque", 'a', 'a', key_auc, key_alc, key_suc, key_slc);
 	}
 
@@ -85,52 +84,53 @@ public class LibTestModelKeys
 	{
 		Pronunciation pMobileGB = Pronunciation.ipa("ˈməʊbaɪl", "GB");
 		Pronunciation pMobileUS = Pronunciation.ipa("ˈmoʊbil", "US");
-		Key.IC key1_ic = new Key.IC("mobile", 'n', pMobileGB, pMobileUS);
-		Key.IC key2_ic = new Key.IC("mobile", 'n', pMobileGB, pMobileUS);
-		Key.IC key1u_ic = new Key.IC("Mobile", 'n', pMobileGB, pMobileUS);
-		Key.IC key2u_ic = new Key.IC("Mobile", 'n', pMobileGB, pMobileUS);
-		Key.IC key3u_ic = new Key.IC("MOBILE", 'n', pMobileGB, pMobileUS);
+		var key1_ic = KeyF.W_P_A_functional.Multi.from(Lex::getLemma, Lex::getPartOfSpeech, "mobile", 'n', pMobileGB, pMobileUS);
+		var key2_ic = KeyF.W_P_A_functional.Multi.from(Lex::getLCLemma, Lex::getPartOfSpeech, "mobile", 'n', pMobileGB, pMobileUS);
+		var key1u_ic = KeyF.W_P_A_functional.Multi.from(Lex::getLCLemma, Lex::getPartOfSpeech, "Mobile", 'n', pMobileGB, pMobileUS);
+		var key2u_ic = KeyF.W_P_A_functional.Multi.from(Lex::getLCLemma, Lex::getPartOfSpeech, "Mobile", 'n', pMobileGB, pMobileUS);
+		var key3u_ic = KeyF.W_P_A_functional.Multi.from(Lex::getLCLemma, Lex::getPartOfSpeech, "MOBILE", 'n', pMobileGB, pMobileUS);
 		return testLemmaKeysMulti(model, ps, "mobile", 'n', 'n', key1_ic, key2_ic, key1u_ic, key2u_ic, key3u_ic);
 	}
 
 	public static int[] testRowMonoNoPronunciation(final CoreModel model, final PrintStream ps)
 	{
-		Key.OEWN key_oewn = new Key.OEWN("row", 'n');
-		Key.Shallow key_sh = new Key.Shallow("row", 'n', null);
-		Key.Pos key_pos = new Key.Pos("row", 'n');
+		var key_oewn = KeyF.W_P_A_functional.Mono.from(Lex::getLemma, Lex::getType, "row", 'n');
+		var key_sh = KeyF.W_P_D_functional.Mono.from(Lex::getLemma, Lex::getType, "row", 'n', null);
+		var key_pos = KeyF.W_P_A_functional.Mono.from(Lex::getLemma, Lex::getPartOfSpeech, "row", 'n');
 		return testLemmaKeysMono(model, ps, "row", 'n', 'n', key_oewn, key_sh, key_pos);
 	}
 
 	public static int[] testRowMultiNoPronunciation(final CoreModel model, final PrintStream ps)
 	{
-		Key.IC key_ic = new Key.IC("row", 'n');
-		Key.PWN key_pwn = new Key.PWN("row", 'n');
-		return testLemmaKeysMulti(model, ps, "row", 'n', 'n', key_ic, key_pwn);
+		var key_oewn = KeyF.W_P_A_functional.Multi.from(Lex::getLemma, Lex::getType, "row", 'n');
+		var key_sh = KeyF.W_P_D_functional.Multi.from(Lex::getLemma, Lex::getType, "row", 'n', null);
+		var key_pos = KeyF.W_P_A_functional.Multi.from(Lex::getLemma, Lex::getPartOfSpeech, "row", 'n');
+		return testLemmaKeysMulti(model, ps, "row", 'n', 'n', key_oewn, key_sh, key_pos);
 	}
 
 	public static int[] testBassMonoNoPronunciation(final CoreModel model, final PrintStream ps)
 	{
-		Key.OEWN key_oewn = new Key.OEWN("bass", 'n');
-		Key.Shallow key_sh = new Key.Shallow("bass", 'n', null);
-		Key.Pos key_pos = new Key.Pos("bass", 'n');
+		var key_oewn = KeyF.W_P_A_functional.Mono.from(Lex::getLemma, Lex::getType, "bass", 'n');
+		var key_sh = KeyF.W_P_D_functional.Mono.from(Lex::getLemma, Lex::getType, "bass", 'n', null);
+		var key_pos = KeyF.W_P_A_functional.Mono.from(Lex::getLemma, Lex::getPartOfSpeech, "bass", 'n');
 		return testLemmaKeysMono(model, ps, "bass", 'n', 'n', key_oewn, key_sh, key_pos);
 	}
 
 	public static int[] testBassMultiNoPronunciation(final CoreModel model, final PrintStream ps)
 	{
-		Key.IC key_ic = new Key.IC("bass", 'n');
-		Key.PWN key_pwn = new Key.PWN("bass", 'n');
-		return testLemmaKeysMulti(model, ps, "bass", 'n', 'n', key_ic, key_pwn);
+		var key_oewn = KeyF.W_P_A_functional.Multi.from(Lex::getLemma, Lex::getType, "bass", 'n');
+		var key_sh = KeyF.W_P_D_functional.Multi.from(Lex::getLemma, Lex::getType, "bass", 'n', null);
+		var key_pos = KeyF.W_P_A_functional.Multi.from(Lex::getLemma, Lex::getPartOfSpeech, "bass", 'n');
+		return testLemmaKeysMulti(model, ps, "bass", 'n', 'n', key_oewn, key_sh, key_pos);
 	}
 
 	public static int[] testMobileNoPronunciation(final CoreModel model, final PrintStream ps)
 	{
-		Key.IC key1_ic = new Key.IC("mobile", 'n');
-		Key.IC key2_ic = new Key.IC("Mobile", 'n');
-		Key.IC key3_ic = new Key.IC("MOBILE", 'n');
+		var key1_ic = KeyF.W_P_functional.Multi.from(Lex::getLCLemma, Lex::getType, "mobile", 'n');
+		var key2_ic = KeyF.W_P_functional.Multi.from(Lex::getLCLemma, Lex::getType, "Mobile", 'n');
+		var key3_ic = KeyF.W_P_functional.Multi.from(Lex::getLCLemma, Lex::getType, "MOBILE", 'n');
 		return testLemmaKeysMulti(model, ps, "mobile", 'n', 'n', key1_ic, key2_ic, key3_ic);
 	}
-
 
 	public static void testBassDeep(final CoreModel model, final PrintStream ps)
 	{
@@ -185,10 +185,10 @@ public class LibTestModelKeys
 		dump(lemma, pos, type, model, ps);
 		for (Pronunciation p : pronunciations)
 		{
-			Key.OEWN key1 = new Key.OEWN(lemma, type, p);
-			ps.println(key1.toLongString());
-			Lex lex1 = key1.apply(model);
-			ps.println("\t" + lex1);
+			var key = KeyF.W_P_functional.Mono.from(Lex::getLemma, Lex::getType, lemma, type);
+			ps.println(key.toLongString());
+			Lex lex = key.apply(model);
+			ps.println("\t" + lex);
 		}
 	}
 
@@ -197,10 +197,10 @@ public class LibTestModelKeys
 		dump(lemma, pos, type, model, ps);
 		for (String d : discriminants)
 		{
-			Key.Shallow key1_sh = new Key.Shallow(lemma, type, d);
-			ps.println(key1_sh.toLongString());
-			Lex lex1_sh = key1_sh.apply(model);
-			ps.println("\t" + lex1_sh);
+			var key = KeyF.W_P_D_functional.Mono.from(Lex::getLemma, Lex::getType, lemma, type, d);
+			ps.println(key.toLongString());
+			Lex lex = key.apply(model);
+			ps.println("\t" + lex);
 		}
 	}
 
@@ -209,28 +209,27 @@ public class LibTestModelKeys
 		dump(lemma, pos, type, model, ps);
 		for (Pronunciation p : pronunciations)
 		{
-			Key.Pos key_pos = new Key.Pos(lemma, pos, p);
-			ps.println(key_pos.toLongString());
-			Lex lex_pos = key_pos.apply(model); // find first
-			ps.println("\t" + lex_pos);
+			var key = KeyF.W_P_A_functional.Mono.from(Lex::getLemma, Lex::getPartOfSpeech, lemma, type, p);
+			ps.println(key.toLongString());
+			Lex lex = key.apply(model);
+			ps.println("\t" + lex);
 		}
 	}
 
 	public static void testLemmaPWN(final CoreModel model, final PrintStream ps, final String lemma, final char pos)
 	{
 		dump(lemma, pos, '\0', model, ps);
-
-		Key.PWN key_pwn = new Key.PWN(lemma, pos);
-		ps.println(key_pwn.toLongString());
-		Lex[] lexes_pwn = key_pwn.apply(model);
-		for (Lex lex_pwn : lexes_pwn)
+		var key = KeyF.W_P_functional.Multi.from(Lex::getLemma, Lex::getPartOfSpeech, lemma, pos);
+		ps.println(key.toLongString());
+		Lex[] lexes_pwn = key.apply(model);
+		for (Lex lex : lexes_pwn)
 		{
-			ps.println("\t" + lex_pwn);
+			ps.println("\t" + lex);
 		}
 	}
 
 	@SafeVarargs
-	public static int[] testLemmaKeysMono(final CoreModel model, final PrintStream ps, final String lemma, final char pos, final char type, final Key.Mono... keys)
+	public static int[] testLemmaKeysMono(final CoreModel model, final PrintStream ps, final String lemma, final char pos, final char type, final KeyF.MonoValued... keys)
 	{
 		dump(lemma, pos, type, model, ps);
 
@@ -255,7 +254,7 @@ public class LibTestModelKeys
 	}
 
 	@SafeVarargs
-	public static int[] testLemmaKeysMulti(final CoreModel model, final PrintStream ps, final String lemma, final char pos, final char type, final Key.Multi... keys)
+	public static int[] testLemmaKeysMulti(final CoreModel model, final PrintStream ps, final String lemma, final char pos, final char type, final KeyF.MultiValued... keys)
 	{
 		dump(lemma, pos, type, model, ps);
 
@@ -279,51 +278,27 @@ public class LibTestModelKeys
 	{
 		ps.println("----------");
 		ps.println("ALL LEMMAS " + lemma);
-		Collection<Lex> lexes = Finder.getLexes(model, lemma);
-		for (var lex : lexes)
-		{
-			ps.println("\t" + lex);
-		}
+		Finder.getLexes(model, lemma).forEach(lex -> ps.println("\t" + lex));
 
 		ps.println("ALL LEMMAS WITH POS " + posFilter + " " + lemma);
-		Lex[] lexes_p = Finder.getLexesHavingPos(model, lemma, posFilter);
-		for (var lex : lexes_p)
-		{
-			ps.println("\t" + lex);
-		}
+		Finder.getLexesHavingPos(model, lemma, posFilter).forEach(lex -> ps.println("\t" + lex));
 
 		if (typeFilter != '\0')
 		{
 			ps.println("ALL LEMMAS WITH TYPE " + typeFilter + " " + lemma);
-			Lex[] lexes_t = Finder.getLexesHavingType(model, lemma, typeFilter);
-			for (var lex : lexes_t)
-			{
-				ps.println("\t" + lex);
-			}
+			Finder.getLexesHavingType(model, lemma, typeFilter).forEach(lex -> ps.println("\t" + lex));
 		}
 
 		ps.println("ALL LEMMAS IGNORE CASE " + lemma);
-		Lex[] lexes_u = Finder.getLcLexes(model, lemma);
-		for (var lex : lexes_u)
-		{
-			ps.println("\t" + lex);
-		}
+		Finder.getLcLexes(model, lemma).forEach(lex -> ps.println("\t" + lex));
 
 		ps.println("ALL LEMMAS IGNORE CASE WITH POS " + posFilter + " " + lemma);
-		Lex[] lexes_up = Finder.getLcLexesHavingPos(model, lemma, posFilter);
-		for (var lex : lexes_up)
-		{
-			ps.println("\t" + lex);
-		}
+		Finder.getLcLexesHavingPos(model, lemma, posFilter).forEach(lex -> ps.println("\t" + lex));
 
 		if (typeFilter != '\0')
 		{
 			ps.println("ALL LEMMAS IGNORE CASE WITH TYPE " + typeFilter + " " + lemma);
-			Lex[] lexes_ut = Finder.getLcLexesHavingType(model, lemma, typeFilter);
-			for (var lex : lexes_ut)
-			{
-				ps.println("\t" + lex);
-			}
+			Finder.getLcLexesHavingType(model, lemma, typeFilter).forEach(lex -> ps.println("\t" + lex));
 		}
 		ps.println("----------");
 	}

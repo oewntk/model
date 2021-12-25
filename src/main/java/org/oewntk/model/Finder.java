@@ -4,7 +4,12 @@
 
 package org.oewntk.model;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class Finder
 {
@@ -13,7 +18,7 @@ public class Finder
 	 *
 	 * @param model model
 	 * @param lemma lemma (CS)
-	 * @return lexes
+	 * @return stream of lexes
 	 */
 	public static Collection<Lex> getLexes(final CoreModel model, final String lemma)
 	{
@@ -23,16 +28,31 @@ public class Finder
 	/**
 	 * Find lex matching word and type filter
 	 *
+	 * @param model         model
+	 * @param word          word
+	 * @param posTypeFilter posType filter
+	 * @return stream of lexes
+	 */
+	public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Stream<Lex> getLexesHaving(final CoreModel model, final String word, final char posTypeFilter, final L wordExtractor, final P posTypeExtractor)
+	{
+		return model.lexes.stream() //
+				.filter(lex -> word.equals(wordExtractor.apply(lex))) //
+				.filter(lex -> posTypeFilter == posTypeExtractor.apply(lex));
+	}
+
+	/**
+	 * Find lex matching word and type filter
+	 *
 	 * @param model      model
 	 * @param lemma      lemma (CS)
 	 * @param typeFilter type filter
-	 * @return lexes
+	 * @return stream of lexes
 	 */
-	public static Lex[] getLexesHavingType(final CoreModel model, final String lemma, final char typeFilter)
+	public static Stream<Lex> getLexesHavingType(final CoreModel model, final String lemma, final char typeFilter)
 	{
 		return model.getLexesByLemma().get(lemma) //
-				.stream().filter(lex -> lex.getType() == typeFilter) //
-				.toArray(Lex[]::new);
+				.stream() //
+				.filter(lex -> lex.getType() == typeFilter);
 	}
 
 	/**
@@ -41,13 +61,13 @@ public class Finder
 	 * @param model     model
 	 * @param lemma     lemma (cased)
 	 * @param posFilter part-of-speech filter
-	 * @return lexes
+	 * @return stream of lexes
 	 */
-	public static Lex[] getLexesHavingPos(final CoreModel model, final String lemma, final char posFilter)
+	public static Stream<Lex> getLexesHavingPos(final CoreModel model, final String lemma, final char posFilter)
 	{
 		return model.getLexesByLemma().get(lemma) //
-				.stream().filter(lex -> lex.getPartOfSpeech() == posFilter) //
-				.toArray(Lex[]::new);
+				.stream() //
+				.filter(lex -> lex.getPartOfSpeech() == posFilter);
 	}
 
 	/**
@@ -56,13 +76,12 @@ public class Finder
 	 * @param model      model
 	 * @param lcLemma    lower-cased lemma
 	 * @param typeFilter type filter
-	 * @return array of lexes
+	 * @return stream of lexes
 	 */
-	public static Lex[] getLcLexesHavingType(final CoreModel model, final String lcLemma, final Character typeFilter)
+	public static Stream<Lex> getLcLexesHavingType(final CoreModel model, final String lcLemma, final Character typeFilter)
 	{
 		return model.getLexesByLCLemma().get(lcLemma.toLowerCase(Locale.ENGLISH)).stream() //
-				.filter(lex -> lex.getType() == typeFilter) //
-				.toArray(Lex[]::new);
+				.filter(lex -> lex.getType() == typeFilter);
 	}
 
 	/**
@@ -71,28 +90,12 @@ public class Finder
 	 * @param model     model
 	 * @param lcLemma   lower-cased lemma
 	 * @param posFilter pos filter
-	 * @return array of lexes
+	 * @return stream of lexes
 	 */
-	public static Lex[] getLcLexesHavingPos(final CoreModel model, final String lcLemma, final Character posFilter)
+	public static Stream<Lex> getLcLexesHavingPos(final CoreModel model, final String lcLemma, final Character posFilter)
 	{
 		return model.getLexesByLCLemma().get(lcLemma.toLowerCase(Locale.ENGLISH)).stream() //
-				.filter(lex -> lex.getPartOfSpeech() == posFilter) //
-				.toArray(Lex[]::new);
-	}
-
-	/**
-	 * Find lexes matching lemma ignoring case and having the desired pos
-	 *
-	 * @param model           model
-	 * @param lcLemma         lower-cased lemma
-	 * @param posOrTypeFilter type or pos filter
-	 * @return array of lexes
-	 */
-	public static Lex[] getLcLexesHavingTypeOrPos(final CoreModel model, final String lcLemma, final Character posOrTypeFilter)
-	{
-		return model.getLexesByLCLemma().get(lcLemma.toLowerCase(Locale.ENGLISH)).stream() //
-				.filter(lex -> lex.getType() == posOrTypeFilter || lex.getPartOfSpeech() == posOrTypeFilter) //
-				.toArray(Lex[]::new);
+				.filter(lex -> lex.getPartOfSpeech() == posFilter);
 	}
 
 	/**
@@ -100,27 +103,11 @@ public class Finder
 	 *
 	 * @param model   model
 	 * @param lcLemma lower-cased lemma
-	 * @return array of lexes
+	 * @return stream of lexes
 	 */
-	public static Lex[] getLcLexes(final CoreModel model, final String lcLemma)
+	public static Stream<Lex> getLcLexes(final CoreModel model, final String lcLemma)
 	{
-		return model.getLexesByLCLemma().get(lcLemma.toLowerCase(Locale.ENGLISH)).toArray(Lex[]::new);
-	}
-
-	/**
-	 * Find lex matching pronunciations
-	 *
-	 * @param lexes          lexes
-	 * @param pronunciations pronunciations
-	 * @return lex
-	 * @throws IllegalArgumentException if not found
-	 */
-	public static Lex getLexHavingPronunciations(Lex[] lexes, final Pronunciation[] pronunciations)
-	{
-		Set<Pronunciation> set = Utils.toSet(pronunciations);
-		return Arrays.stream(lexes) //
-				.filter(lex -> compareAsSets(set, lex.getPronunciations())) //
-				.findFirst().orElseThrow(IllegalArgumentException::new);
+		return model.getLexesByLCLemma().get(lcLemma.toLowerCase(Locale.ENGLISH)).stream();
 	}
 
 	/**
@@ -128,15 +115,13 @@ public class Finder
 	 *
 	 * @param lexes          lexes
 	 * @param pronunciations pronunciations
-	 * @return lex
+	 * @return stream of lexes
 	 * @throws IllegalArgumentException if not found
 	 */
-	public static Lex[] getLexesHavingPronunciations(final Lex[] lexes, final Pronunciation[] pronunciations)
+	public static Stream<Lex> getLexesHavingPronunciations(Stream<Lex> lexes, final Pronunciation[] pronunciations)
 	{
 		Set<Pronunciation> set = Utils.toSet(pronunciations);
-		return Arrays.stream(lexes) //
-				.filter(lex -> compareAsSets(set, lex.getPronunciations())) //
-				.toArray(Lex[]::new);
+		return lexes.filter(lex -> compareAsSets(set, lex.getPronunciations()));
 	}
 
 	/**
@@ -144,14 +129,12 @@ public class Finder
 	 *
 	 * @param lexes        lexes
 	 * @param discriminant discriminant
-	 * @return lex
+	 * @return stream of lexes
 	 * @throws IllegalArgumentException if not found
 	 */
-	public static Lex getLexHavingDiscriminant(final Lex[] lexes, final String discriminant)
+	public static Stream<Lex> getLexesHavingDiscriminant(final Stream<Lex> lexes, final String discriminant)
 	{
-		return Arrays.stream(lexes) //
-				.filter(lex -> Objects.equals(lex.getDiscriminant(), discriminant)) //
-				.findFirst().orElseThrow(IllegalArgumentException::new);
+		return lexes.filter(lex -> Objects.equals(lex.getDiscriminant(), discriminant));
 	}
 
 	// Set comparison

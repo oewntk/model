@@ -268,8 +268,8 @@ public class Lex implements Serializable //, Comparable<Lex>
 
 	static public final Comparator<Lex> comparatorByKeyOEWN = (thisLex, thatLex) -> {
 
-		var thisKey = Key.OEWN.of(thisLex);
-		var thatKey = Key.OEWN.of(thatLex);
+		var thisKey = Key.W_P_A.of_t(thisLex);
+		var thatKey = Key.W_P_A.of_t(thatLex);
 		return thisKey.compareTo(thatKey);
 	};
 }

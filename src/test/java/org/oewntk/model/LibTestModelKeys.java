@@ -9,7 +9,7 @@ import java.util.Collection;
 
 public class LibTestModelKeys
 {
-	public static void testEarthMulti(final CoreModel model, final PrintStream ps)
+	public static int[] testEarthMulti(final CoreModel model, final PrintStream ps)
 	{
 		Pronunciation pEarthGB = Pronunciation.ipa("ɜːθ", "GB");
 		Pronunciation pEarthUS = Pronunciation.ipa("ɝθ", "US");
@@ -17,21 +17,33 @@ public class LibTestModelKeys
 		Key.IC key_lc = new Key.IC("earth", 'n', pEarthGB, pEarthUS);
 		Key.IC key_pwn_uc = new Key.IC("Earth", 'n', pEarthGB, pEarthUS);
 		Key.IC key_pwn_lc = new Key.IC("earth", 'n', pEarthGB, pEarthUS);
-
-		testLemmaKeysMulti(model, ps, "Earth", 'n', 'n', key_uc, key_lc, key_pwn_uc, key_pwn_lc);
+		return testLemmaKeysMulti(model, ps, "Earth", 'n', 'n', key_uc, key_lc, key_pwn_uc, key_pwn_lc);
 	}
 
-	public static void testEarthMono(final CoreModel model, final PrintStream ps)
+	public static int[] testEarthMultiNoPronunciation(final CoreModel model, final PrintStream ps)
+	{
+		Key.IC key_uc = new Key.IC("Earth", 'n');
+		Key.IC key_lc = new Key.IC("earth", 'n');
+		return testLemmaKeysMulti(model, ps, "Earth", 'n', 'n', key_uc, key_lc);
+	}
+
+	public static int[] testEarthMono(final CoreModel model, final PrintStream ps)
 	{
 		Pronunciation pEarthGB = Pronunciation.ipa("ɜːθ", "GB");
 		Pronunciation pEarthUS = Pronunciation.ipa("ɝθ", "US");
 		Key.OEWN key_uc = new Key.OEWN("Earth", 'n', pEarthGB, pEarthUS);
 		Key.OEWN key_lc = new Key.OEWN("earth", 'n', pEarthGB, pEarthUS);
-
-		testLemmaKeysMono(model, ps, "Earth", 'n', 'n', key_uc, key_lc);
+		return testLemmaKeysMono(model, ps, "Earth", 'n', 'n', key_uc, key_lc);
 	}
 
-	public static void testBaroqueMulti(final CoreModel model, final PrintStream ps)
+	public static int[] testEarthMonoNoPronunciation(final CoreModel model, final PrintStream ps)
+	{
+		Key.OEWN key_uc = new Key.OEWN("Earth", 'n');
+		Key.OEWN key_lc = new Key.OEWN("earth", 'n');
+		return testLemmaKeysMono(model, ps, "Earth", 'n', 'n', key_uc, key_lc);
+	}
+
+	public static int[] testBaroqueMulti(final CoreModel model, final PrintStream ps)
 	{
 		Pronunciation pBaroqueGB = Pronunciation.ipa("bəˈɹɒk", "GB");
 		Pronunciation pBaroqueUS = Pronunciation.ipa("bəˈɹoʊk", "US");
@@ -39,32 +51,84 @@ public class LibTestModelKeys
 		Key.IC key2_ic = new Key.IC("baroque", 's', pBaroqueGB, pBaroqueUS);
 		Key.IC key3_ic = new Key.IC("baroque", 'a', pBaroqueUS, pBaroqueGB);
 		Key.IC key4_ic = new Key.IC("Baroque", 'a', pBaroqueUS, pBaroqueGB);
-
-		testLemmaKeysMulti(model, ps, "Baroque", 'a', 's', key1_ic, key2_ic, key3_ic, key4_ic);
+		return testLemmaKeysMulti(model, ps, "Baroque", 'a', 's', key1_ic, key2_ic, key3_ic, key4_ic);
 	}
 
-	public static void testBaroqueMono(final CoreModel model, final PrintStream ps)
+	public static int[] testBaroqueMultiNoPronunciation(final CoreModel model, final PrintStream ps)
+	{
+		Key.IC key1_ic = new Key.IC("baroque", 'a');
+		Key.IC key2_ic = new Key.IC("baroque", 's');
+		Key.IC key3_ic = new Key.IC("Baroque", 'a');
+		Key.IC key4_ic = new Key.IC("Baroque", 's');
+		return testLemmaKeysMulti(model, ps, "Baroque", 'a', 's', key1_ic, key2_ic, key3_ic, key4_ic);
+	}
+
+	public static int[] testBaroqueMono(final CoreModel model, final PrintStream ps)
 	{
 		Pronunciation pBaroqueGB = Pronunciation.ipa("bəˈɹɒk", "GB");
 		Pronunciation pBaroqueUS = Pronunciation.ipa("bəˈɹoʊk", "US");
 		Key.OEWN key_uc = new Key.OEWN("Baroque", 'a', pBaroqueUS, pBaroqueGB);
 		Key.OEWN key_lc = new Key.OEWN("baroque", 'a', pBaroqueGB, pBaroqueUS);
-
-		testLemmaKeysMono(model, ps, "Baroque", 'a', 's', key_uc, key_lc);
+		return testLemmaKeysMono(model, ps, "Baroque", 'a', 's', key_uc, key_lc);
 	}
 
-	public static void testMobile(final CoreModel model, final PrintStream ps)
+	public static int[] testBaroqueMonoNoPronunciation(final CoreModel model, final PrintStream ps)
+	{
+		Key.OEWN key_auc = new Key.OEWN("Baroque", 'a');
+		Key.OEWN key_alc = new Key.OEWN("baroque", 'a');
+		Key.OEWN key_suc = new Key.OEWN("Baroque", 's');
+		Key.OEWN key_slc = new Key.OEWN("baroque", 's');
+		return testLemmaKeysMono(model, ps, "Baroque", 'a', 'a', key_auc, key_alc, key_suc, key_slc);
+	}
+
+	public static int[] testMobile(final CoreModel model, final PrintStream ps)
 	{
 		Pronunciation pMobileGB = Pronunciation.ipa("ˈməʊbaɪl", "GB");
 		Pronunciation pMobileUS = Pronunciation.ipa("ˈmoʊbil", "US");
-
 		Key.IC key1_ic = new Key.IC("mobile", 'n', pMobileGB, pMobileUS);
 		Key.IC key2_ic = new Key.IC("mobile", 'n', pMobileGB, pMobileUS);
 		Key.IC key1u_ic = new Key.IC("Mobile", 'n', pMobileGB, pMobileUS);
 		Key.IC key2u_ic = new Key.IC("Mobile", 'n', pMobileGB, pMobileUS);
 		Key.IC key3u_ic = new Key.IC("MOBILE", 'n', pMobileGB, pMobileUS);
+		return testLemmaKeysMulti(model, ps, "mobile", 'n', 'n', key1_ic, key2_ic, key1u_ic, key2u_ic, key3u_ic);
+	}
 
-		testLemmaKeysMulti(model, ps, "mobile", 'n', 'n', key1_ic, key2_ic, key1u_ic, key2u_ic, key3u_ic);
+	public static int[] testRowMonoNoPronunciation(final CoreModel model, final PrintStream ps)
+	{
+		Key.OEWN key_oewn = new Key.OEWN("row", 'n');
+		Key.Shallow key_sh = new Key.Shallow("row", 'n', null);
+		Key.Pos key_pos = new Key.Pos("row", 'n');
+		return testLemmaKeysMono(model, ps, "row", 'n', 'n', key_oewn, key_sh, key_pos);
+	}
+
+	public static int[] testRowMultiNoPronunciation(final CoreModel model, final PrintStream ps)
+	{
+		Key.IC key_ic = new Key.IC("row", 'n');
+		Key.PWN key_pwn = new Key.PWN("row", 'n');
+		return testLemmaKeysMulti(model, ps, "row", 'n', 'n', key_ic, key_pwn);
+	}
+
+	public static int[] testBassMonoNoPronunciation(final CoreModel model, final PrintStream ps)
+	{
+		Key.OEWN key_oewn = new Key.OEWN("bass", 'n');
+		Key.Shallow key_sh = new Key.Shallow("bass", 'n', null);
+		Key.Pos key_pos = new Key.Pos("bass", 'n');
+		return testLemmaKeysMono(model, ps, "bass", 'n', 'n', key_oewn, key_sh, key_pos);
+	}
+
+	public static int[] testBassMultiNoPronunciation(final CoreModel model, final PrintStream ps)
+	{
+		Key.IC key_ic = new Key.IC("bass", 'n');
+		Key.PWN key_pwn = new Key.PWN("bass", 'n');
+		return testLemmaKeysMulti(model, ps, "bass", 'n', 'n', key_ic, key_pwn);
+	}
+
+	public static int[] testMobileNoPronunciation(final CoreModel model, final PrintStream ps)
+	{
+		Key.IC key1_ic = new Key.IC("mobile", 'n');
+		Key.IC key2_ic = new Key.IC("Mobile", 'n');
+		Key.IC key3_ic = new Key.IC("MOBILE", 'n');
+		return testLemmaKeysMulti(model, ps, "mobile", 'n', 'n', key1_ic, key2_ic, key3_ic);
 	}
 
 
@@ -95,9 +159,19 @@ public class LibTestModelKeys
 		testLemmaDeep(model, ps, "critical", 'a', 'a', Pronunciation.ipa("ˈkɹɪtɪkəl"));
 	}
 
+	public static void testCriticalDeepNoPronunciation(final CoreModel model, final PrintStream ps)
+	{
+		testLemmaDeep(model, ps, "critical", 'a', 'a');
+	}
+
 	public static void testCriticalPos(final CoreModel model, final PrintStream ps)
 	{
 		testLemmaPos(model, ps, "critical", 'a', 's', Pronunciation.ipa("ˈkɹɪtɪkəl"));
+	}
+
+	public static void testCriticalPosNoPronunciation(final CoreModel model, final PrintStream ps)
+	{
+		testLemmaPos(model, ps, "critical", 'a', 's');
 	}
 
 	public static void testCriticalPWN(final CoreModel model, final PrintStream ps)
@@ -156,32 +230,49 @@ public class LibTestModelKeys
 	}
 
 	@SafeVarargs
-	public static void testLemmaKeysMono(final CoreModel model, final PrintStream ps, final String lemma, final char pos, final char type, final Key.Mono... keys)
+	public static int[] testLemmaKeysMono(final CoreModel model, final PrintStream ps, final String lemma, final char pos, final char type, final Key.Mono... keys)
 	{
 		dump(lemma, pos, type, model, ps);
+
+		int[] r = new int[keys.length];
+		int i = 0;
 		for (var k : keys)
 		{
 			ps.printf("Key %s %s%n", k.getClass().getSimpleName(), k);
-			Lex lex = k.apply(model);
-			assert lex != null;
-			ps.println("\t" + lex);
+			try
+			{
+				Lex lex = k.apply(model);
+				ps.println("\t" + lex);
+				r[i] = 1;
+			}
+			catch (Exception e)
+			{
+				r[i] = 0;
+			}
+			i++;
 		}
+		return r;
 	}
 
 	@SafeVarargs
-	public static void testLemmaKeysMulti(final CoreModel model, final PrintStream ps, final String lemma, final char pos, final char type, final Key.Multi... keys)
+	public static int[] testLemmaKeysMulti(final CoreModel model, final PrintStream ps, final String lemma, final char pos, final char type, final Key.Multi... keys)
 	{
 		dump(lemma, pos, type, model, ps);
+
+		int[] r = new int[keys.length];
+		int i = 0;
 		for (var k : keys)
 		{
 			ps.printf("Key %s %s%n", k.getClass().getSimpleName(), k);
 			Lex[] lexes = k.apply(model);
-			assert lexes.length >= 1;
+			r[i] = lexes == null ? 0 : lexes.length;
 			for (var lex : lexes)
 			{
 				ps.println("\t" + lex);
 			}
+			i++;
 		}
+		return r;
 	}
 
 	public static void dump(final String lemma, final char posFilter, final char typeFilter, final CoreModel model, final PrintStream ps)

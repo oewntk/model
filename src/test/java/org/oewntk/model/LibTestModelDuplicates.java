@@ -47,21 +47,21 @@ public class LibTestModelDuplicates
 
 	public static void testDuplicatesForKeyOEWN(final CoreModel model, final PrintStream ps)
 	{
-		testDuplicatesForKeyMono(model, lex-> KeyF.W_P_A_functional.Mono.of(Lex::getLemma, Lex::getType, lex), ps);
+		testDuplicatesForKeyMono(model, lex-> KeyF.F_W_P_A.Mono.of(Lex::getLemma, Lex::getType, lex), ps);
 	}
 
 	public static void testDuplicatesForKeyPos(final CoreModel model, final PrintStream ps)
 	{
-		testDuplicatesForKeyMono(model, lex-> KeyF.W_P_A_functional.Mono.of(Lex::getLemma, Lex::getPartOfSpeech, lex), ps);
+		testDuplicatesForKeyMono(model, lex-> KeyF.F_W_P_A.Mono.of(Lex::getLemma, Lex::getPartOfSpeech, lex), ps);
 	}
 
 	public static void testDuplicatesForKeyIC(final CoreModel model, final PrintStream ps)
 	{
-		testDuplicatesForKeyMulti(model, lex-> KeyF.W_P_A_functional.Multi.of(Lex::getLCLemma, Lex::getType, lex), ps);
+		testDuplicatesForKeyMulti(model, lex-> KeyF.F_W_P_A.Multi.of(Lex::getLCLemma, Lex::getType, lex), ps);
 	}
 
 	public static void testDuplicatesForKeyPWN(final CoreModel model, final PrintStream ps)
 	{
-		testDuplicatesForKeyMulti(model, lex-> KeyF.W_P_functional.Multi.of(Lex::getLCLemma, Lex::getType, lex), ps);
+		testDuplicatesForKeyMulti(model, lex-> KeyF.F_W_P.Multi.of(Lex::getLCLemma, Lex::getType, lex), ps);
 	}
 }

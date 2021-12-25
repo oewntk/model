@@ -16,27 +16,27 @@ public interface KeyF<R> extends Function<CoreModel, R>
 	{
 	}
 
-	class W_P_functional<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends Key.W_P
+	class F_W_P<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends Key.W_P
 	{
 		final L wordExtractor;
 
 		final P posTypeExtractor;
 
-		private W_P_functional(final String word, final char posType, final L wordExtractor, final P posTypeExtractor)
+		private F_W_P(final String word, final char posType, final L wordExtractor, final P posTypeExtractor)
 		{
 			super(word, posType);
 			this.wordExtractor = wordExtractor;
 			this.posTypeExtractor = posTypeExtractor;
 		}
 
-		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> W_P_functional<L, P> of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
+		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> F_W_P<L, P> of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
 		{
-			return new W_P_functional<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), wordExtractor, posTypeExtractor);
+			return new F_W_P<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), wordExtractor, posTypeExtractor);
 		}
 
-		public static class Mono<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends W_P_functional<L, P> implements MonoValued
+		public static class Mono<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends F_W_P<L, P> implements MonoValued
 		{
-			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Mono of(final L wordExtractor, final P posTypeExtractor, final Lex lex)
+			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Mono<L, P> of(final L wordExtractor, final P posTypeExtractor, final Lex lex)
 			{
 				return new Mono<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), wordExtractor, posTypeExtractor);
 			}
@@ -58,9 +58,9 @@ public interface KeyF<R> extends Function<CoreModel, R>
 			}
 		}
 
-		public static class Multi<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends W_P_functional<L, P> implements MultiValued
+		public static class Multi<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends F_W_P<L, P> implements MultiValued
 		{
-			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Multi of(final L wordExtractor, final P posTypeExtractor, final Lex lex)
+			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Multi<L, P> of(final L wordExtractor, final P posTypeExtractor, final Lex lex)
 			{
 				return new Multi<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), wordExtractor, posTypeExtractor);
 			}
@@ -83,25 +83,25 @@ public interface KeyF<R> extends Function<CoreModel, R>
 		}
 	}
 
-	class W_P_A_functional<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends Key.W_P_A
+	class F_W_P_A<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends Key.W_P_A
 	{
 		final L wordExtractor;
 
 		final P posTypeExtractor;
 
-		private W_P_A_functional(final String word, final char posType, final Pronunciation[] pronunciations, final L wordExtractor, final P posTypeExtractor)
+		private F_W_P_A(final String word, final char posType, final Pronunciation[] pronunciations, final L wordExtractor, final P posTypeExtractor)
 		{
 			super(word, posType, pronunciations);
 			this.wordExtractor = wordExtractor;
 			this.posTypeExtractor = posTypeExtractor;
 		}
 
-		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> W_P_A_functional<L, P> of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
+		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> F_W_P_A<L, P> of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
 		{
-			return new W_P_A_functional<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), lex.getPronunciations(), wordExtractor, posTypeExtractor);
+			return new F_W_P_A<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), lex.getPronunciations(), wordExtractor, posTypeExtractor);
 		}
 
-		public static class Mono<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends W_P_A_functional<L, P> implements MonoValued
+		public static class Mono<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends F_W_P_A<L, P> implements MonoValued
 		{
 			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Mono<L, P> of(final L wordExtractor, final P posTypeExtractor, final Lex lex)
 			{
@@ -125,7 +125,7 @@ public interface KeyF<R> extends Function<CoreModel, R>
 			}
 		}
 
-		public static class Multi<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends W_P_A_functional<L, P> implements MultiValued
+		public static class Multi<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends F_W_P_A<L, P> implements MultiValued
 		{
 			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Multi<L, P> of(final L wordExtractor, final P posTypeExtractor, final Lex lex)
 			{
@@ -150,25 +150,25 @@ public interface KeyF<R> extends Function<CoreModel, R>
 		}
 	}
 
-	class W_P_D_functional<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends Key.W_P_D
+	class F_W_P_D<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends Key.W_P_D
 	{
 		final L wordExtractor;
 
 		final P posTypeExtractor;
 
-		private W_P_D_functional(final String word, final char posType, final String discriminant, final L wordExtractor, final P posTypeExtractor)
+		private F_W_P_D(final String word, final char posType, final String discriminant, final L wordExtractor, final P posTypeExtractor)
 		{
 			super(word, posType, discriminant);
 			this.wordExtractor = wordExtractor;
 			this.posTypeExtractor = posTypeExtractor;
 		}
 
-		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> W_P_D_functional<L, P> of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
+		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> F_W_P_D<L, P> of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
 		{
-			return new W_P_D_functional<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), lex.getDiscriminant(), wordExtractor, posTypeExtractor);
+			return new F_W_P_D<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), lex.getDiscriminant(), wordExtractor, posTypeExtractor);
 		}
 
-		public static class Mono<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends W_P_D_functional<L, P> implements MonoValued
+		public static class Mono<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends F_W_P_D<L, P> implements MonoValued
 		{
 			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Mono<L, P> from(final L wordExtractor, final P posTypeExtractor, final String word, final char posType, final String discriminant)
 			{
@@ -187,7 +187,7 @@ public interface KeyF<R> extends Function<CoreModel, R>
 			}
 		}
 
-		public static class Multi<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends W_P_D_functional<L, P> implements MultiValued
+		public static class Multi<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends F_W_P_D<L, P> implements MultiValued
 		{
 			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Multi<L, P> from(final L wordExtractor, final P posTypeExtractor, final String word, final char posType, final String discriminant)
 			{

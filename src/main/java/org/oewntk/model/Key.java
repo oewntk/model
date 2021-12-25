@@ -143,25 +143,6 @@ public interface Key
 		{
 			return String.format("KEY %s %s", this, this.getClass().getSimpleName());
 		}
-
-		public class W_P_Mono implements KeyF.MonoValued
-		{
-			@Override
-			public Lex apply(final CoreModel model)
-			{
-				return Finder.getLexesHavingPos(model, word, posType).findFirst().orElseThrow(IllegalArgumentException::new);
-			}
-		}
-
-		public class W_P_Multi implements KeyF.MultiValued
-		{
-			@Override
-			public Lex[] apply(final CoreModel model)
-			{
-				return Finder.getLexesHavingPos(model, word, posType).toArray(Lex[]::new);
-			}
-		}
-
 	}
 
 	/**

@@ -74,6 +74,16 @@ public class LibTestModelKeys
 		return testShallow(model, ps, "row", 'n', 'n', "-1", "-2");
 	}
 
+	public static int[] testRowNoPronunciationDeep(final CoreModel model, final PrintStream ps)
+	{
+		return testPronunciations(model, ps, "row", 'n', 'n');
+	}
+
+	public static int[] testRowNoPronunciationShallow(final CoreModel model, final PrintStream ps)
+	{
+		return testShallow(model, ps, "row", 'n', 'n');
+	}
+
 	// B A S S
 
 	public static int[] testBassDeep(final CoreModel model, final PrintStream ps)
@@ -84,6 +94,16 @@ public class LibTestModelKeys
 	public static int[] testBassShallow(final CoreModel model, final PrintStream ps)
 	{
 		return testShallow(model, ps, "bass", 'n', 'n', "-1", "-2");
+	}
+
+	public static int[] testBassNoPronunciationDeep(final CoreModel model, final PrintStream ps)
+	{
+		return testPronunciations(model, ps, "bass", 'n', 'n');
+	}
+
+	public static int[] testBassNoPronunciationShallow(final CoreModel model, final PrintStream ps)
+	{
+		return testShallow(model, ps, "bass", 'n', 'n');
 	}
 
 	// W O R D    T E S T S

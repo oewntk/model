@@ -93,7 +93,7 @@ public class LibTestModelQueries
 
 	private static void dump(final Sense sense, final CoreModel model, final String indent, final PrintStream ps)
 	{
-		ps.printf("%ssk=%s type=%c pos=%c lemma='%s' index=%d adj=%s synset=%s%n", indent, sense.getSensekey(), sense.getType(), sense.getPartOfSpeech(), sense.getLemma(), sense.getLexIndex(), sense.getAdjPosition(), toShortSynset(sense.getSynsetId(), model));
+		ps.printf("%ssk=%s type=%c pos=%c lemma='%s' index=%d adj=%s synset=%s%n", indent, sense.getSensekey(), sense.getType(), sense.getPartOfSpeech(), sense.getLemma(), sense.getLexIndex() + 1, sense.getAdjPosition(), toShortSynset(sense.getSynsetId(), model));
 		dumpSynset(sense.getSynsetId(), model, indent + "\t", ps);
 
 		// relations

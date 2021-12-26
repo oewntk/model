@@ -10,10 +10,12 @@ public interface KeyF<R> extends Function<CoreModel, R>
 {
 	interface MonoValued extends KeyF<Lex>
 	{
+		String toLongString();
 	}
 
 	interface MultiValued extends KeyF<Lex[]>
 	{
+		String toLongString();
 	}
 
 	class F_W_P<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends Key.W_P
@@ -32,6 +34,12 @@ public interface KeyF<R> extends Function<CoreModel, R>
 		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> F_W_P<L, P> of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
 		{
 			return new F_W_P<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), wordExtractor, posTypeExtractor);
+		}
+
+		@Override
+		public String toLongString()
+		{
+			return String.format("KEYF %s WPD_%s_%s %s", this.getClass().getSimpleName(), Utils.toWordExtractorString(this.wordExtractor), Utils.toPosTypeExtractorString(this.posTypeExtractor), this);
 		}
 
 		public static class Mono<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends F_W_P<L, P> implements MonoValued
@@ -101,6 +109,12 @@ public interface KeyF<R> extends Function<CoreModel, R>
 			return new F_W_P_A<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), lex.getPronunciations(), wordExtractor, posTypeExtractor);
 		}
 
+		@Override
+		public String toLongString()
+		{
+			return String.format("KEYF %s WPA_%s_%s %s", this.getClass().getSimpleName(), Utils.toWordExtractorString(this.wordExtractor), Utils.toPosTypeExtractorString(this.posTypeExtractor), this);
+		}
+
 		public static class Mono<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends F_W_P_A<L, P> implements MonoValued
 		{
 			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Mono<L, P> of(final L wordExtractor, final P posTypeExtractor, final Lex lex)
@@ -168,6 +182,12 @@ public interface KeyF<R> extends Function<CoreModel, R>
 			return new F_W_P_D<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), lex.getDiscriminant(), wordExtractor, posTypeExtractor);
 		}
 
+		@Override
+		public String toLongString()
+		{
+			return String.format("KEYF %s WPD_%s_%s %s", this.getClass().getSimpleName(), Utils.toWordExtractorString(this.wordExtractor), Utils.toPosTypeExtractorString(this.posTypeExtractor), this);
+		}
+
 		public static class Mono<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends F_W_P_D<L, P> implements MonoValued
 		{
 			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Mono<L, P> from(final L wordExtractor, final P posTypeExtractor, final String word, final char posType, final String discriminant)
@@ -199,7 +219,6 @@ public interface KeyF<R> extends Function<CoreModel, R>
 				super(word, posType, discriminant, wordExtractor, posTypeExtractor);
 			}
 
-
 			@Override
 			public Lex[] apply(final CoreModel model)
 			{
@@ -207,4 +226,6 @@ public interface KeyF<R> extends Function<CoreModel, R>
 			}
 		}
 	}
+
+
 }

@@ -141,7 +141,7 @@ public interface Key
 
 		public String toLongString()
 		{
-			return String.format("KEY %s %s", this, this.getClass().getSimpleName());
+			return String.format("KEY WP %s %s", this.getClass().getSimpleName(), this);
 		}
 	}
 
@@ -249,7 +249,7 @@ public interface Key
 
 		public String toLongString()
 		{
-			return String.format("KEY %s %s", this, this.getClass().getSimpleName());
+			return String.format("KEY WPA %s %s", this.getClass().getSimpleName(), this);
 		}
 	}
 
@@ -352,7 +352,7 @@ public interface Key
 
 		public String toLongString()
 		{
-			return String.format("KEY %s %s", this.getClass().getSimpleName(), this);
+			return String.format("KEY WPD %s %s", this.getClass().getSimpleName(), this);
 		}
 	}
 }

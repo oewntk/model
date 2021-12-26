@@ -17,7 +17,7 @@ public class Sense implements Comparable<Sense>, Serializable
 	/**
 	 * Sense id, sensekey
 	 */
-	private final String senseId;
+	private final String sensekey;
 
 	/**
 	 * Lex this sense is contained in
@@ -35,7 +35,7 @@ public class Sense implements Comparable<Sense>, Serializable
 	private final char partOfSpeech;
 
 	/**
-	 * Index of this sense in lex list/array of senses
+	 * Index of this sense in lex list/array of senses (0-based)
 	 */
 	private final int indexInLex;
 
@@ -90,7 +90,7 @@ public class Sense implements Comparable<Sense>, Serializable
 	public Sense(final String senseId, final Lex lex, final char type, final int indexInLex, final String synsetId, final String[] examples, final String[] verbFrames, final String adjPosition, final Map<String, List<String>> relations)
 	{
 		this.lex = lex;
-		this.senseId = senseId;
+		this.sensekey = senseId;
 		this.indexInLex = indexInLex;
 		this.type = type;
 		this.partOfSpeech = this.type == 's' ? 'a' : this.type;
@@ -108,7 +108,7 @@ public class Sense implements Comparable<Sense>, Serializable
 	 */
 	public String getSenseId()
 	{
-		return senseId;
+		return sensekey;
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class Sense implements Comparable<Sense>, Serializable
 	 */
 	public String getSensekey()
 	{
-		return senseId;
+		return sensekey;
 	}
 
 	/**
@@ -182,7 +182,7 @@ public class Sense implements Comparable<Sense>, Serializable
 	}
 
 	/**
-	 * Get lex senses index
+	 * Get lex senses 0-based index
 	 *
 	 * @return index of this sense in lex
 	 */
@@ -338,7 +338,7 @@ public class Sense implements Comparable<Sense>, Serializable
 	 */
 	public int findLexid()
 	{
-		return Integer.parseInt(senseId.split("%")[1].split(":")[2]);
+		return Integer.parseInt(sensekey.split("%")[1].split(":")[2]);
 	}
 
 	// stringify
@@ -346,13 +346,13 @@ public class Sense implements Comparable<Sense>, Serializable
 	@Override
 	public String toString()
 	{
-		return String.format(" %s (%dth of '%s', %s %s) ", getSenseId(), getLexIndex(), getLex().getLemma(), getSynsetId(), getType());
+		return String.format(" %s (%dth of '%s', %s %s) ", getSensekey(), getLexIndex() + 1, getLex().getLemma(), getSynsetId(), getType());
 	}
 
 	public String toLongString()
 	{
 		String relationsStr = Formatter.join(getRelations(), ",");
-		return String.format("[%d] of '%s' %s %s %s {%s}", getLexIndex(), getLex().getLemma(), getSenseId(), getType(), getSynsetId(), relationsStr);
+		return String.format("[%d] of '%s' %s %s %s {%s}", getLexIndex() + 1, getLex().getLemma(), getSensekey(), getType(), getSynsetId(), relationsStr);
 	}
 
 	// identity
@@ -369,13 +369,13 @@ public class Sense implements Comparable<Sense>, Serializable
 			return false;
 		}
 		Sense sense = (Sense) o;
-		return senseId.equals(sense.senseId);
+		return sensekey.equals(sense.sensekey);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(senseId);
+		return Objects.hash(sensekey);
 	}
 
 	// ordering

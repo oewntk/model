@@ -34,6 +34,17 @@ public class InverseRelationFactory
 
 	private static final Set<String> INVERSE_SYNSET_RELATIONS_KEYS = INVERSE_SYNSET_RELATIONS.keySet();
 
+	private static final Map<String, String> INVERSE_SENSE_RELATIONS = new HashMap<>();
+
+	static
+	{
+		INVERSE_SENSE_RELATIONS.put("exemplifies", "is_exemplified_by");
+		INVERSE_SENSE_RELATIONS.put("domain_topic", "has_domain_topic");
+		INVERSE_SENSE_RELATIONS.put("domain_region", "has_domain_region");
+	}
+
+	private static final Set<String> INVERSE_SENSE_RELATIONS_KEYS = INVERSE_SENSE_RELATIONS.keySet();
+
 	private InverseRelationFactory()
 	{
 	}
@@ -43,8 +54,9 @@ public class InverseRelationFactory
 	 *
 	 * @param synsetsById synsets mapped by id
 	 */
-	public static void make(Map<String, Synset> synsetsById)
+	public static int makeSynsetRelations(Map<String, Synset> synsetsById)
 	{
+		int count = 0;
 		for (Map.Entry<String, Synset> entry : synsetsById.entrySet())
 		{
 			String sourceSynsetId = entry.getKey();
@@ -65,6 +77,7 @@ public class InverseRelationFactory
 							try
 							{
 								targetSynset.addInverseRelation(inverseType, sourceSynsetId);
+								count++;
 							}
 							catch (IllegalArgumentException e)
 							{
@@ -78,5 +91,51 @@ public class InverseRelationFactory
 				}
 			}
 		}
+		return count;
+	}
+
+	/**
+	 * Generate inverse sense relations
+	 *
+	 * @param sensesById senses mapped by id
+	 */
+	public static int makeSenseRelations(Map<String, Sense> sensesById)
+	{
+		int count = 0;
+		for (Map.Entry<String, Sense> entry : sensesById.entrySet())
+		{
+			String sourceSenseId = entry.getKey();
+			Sense sourceSense = entry.getValue();
+			Map<String, Set<String>> relations = sourceSense.getRelations();
+			if (relations != null && relations.size() > 0)
+			{
+				for (String type : INVERSE_SENSE_RELATIONS_KEYS)
+				{
+					Collection<String> targetSenseIds = relations.get(type);
+					if (targetSenseIds != null && targetSenseIds.size() > 0)
+					{
+						String inverseType = INVERSE_SENSE_RELATIONS.get(type);
+						for (String targetSenseId : targetSenseIds)
+						{
+							Sense targetSense = sensesById.get(targetSenseId);
+							assert targetSense != null;
+							try
+							{
+								targetSense.addInverseRelation(inverseType, sourceSenseId);
+								count++;
+							}
+							catch (IllegalArgumentException e)
+							{
+								if (LOG_ALREADY_PRESENT)
+								{
+									Tracing.psErr.printf("[W] %s%n", e.getMessage());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return count;
 	}
 }

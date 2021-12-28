@@ -5,9 +5,7 @@
 package org.oewntk.model;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Sense
@@ -72,7 +70,7 @@ public class Sense implements Comparable<Sense>, Serializable
 	/**
 	 * Sense relations
 	 */
-	private final Map<String, List<String>> relations;
+	private Map<String, Set<String>> relations;
 
 	/**
 	 * Constructor
@@ -87,7 +85,7 @@ public class Sense implements Comparable<Sense>, Serializable
 	 * @param adjPosition adjective position
 	 * @param relations   sense relations
 	 */
-	public Sense(final String senseId, final Lex lex, final char type, final int indexInLex, final String synsetId, final String[] examples, final String[] verbFrames, final String adjPosition, final Map<String, List<String>> relations)
+	public Sense(final String senseId, final Lex lex, final char type, final int indexInLex, final String synsetId, final String[] examples, final String[] verbFrames, final String adjPosition, final Map<String, Set<String>> relations)
 	{
 		this.lex = lex;
 		this.sensekey = senseId;
@@ -256,7 +254,7 @@ public class Sense implements Comparable<Sense>, Serializable
 	 *
 	 * @return sense relations
 	 */
-	public Map<String, List<String>> getRelations()
+	public Map<String, Set<String>> getRelations()
 	{
 		return relations;
 	}
@@ -271,7 +269,7 @@ public class Sense implements Comparable<Sense>, Serializable
 		return lex.getSource();
 	}
 
-	// non-final property delayed set
+	// mutation
 
 	/**
 	 * Set verb templates
@@ -297,6 +295,26 @@ public class Sense implements Comparable<Sense>, Serializable
 	{
 		this.tagCount = tagCount;
 		return this;
+	}
+
+	/**
+	 * Add inverse sense relations of this synset
+	 *
+	 * @param inverseType    inverse type
+	 * @param targetSensekey target sense id (sensekey)
+	 */
+	public void addInverseRelation(final String inverseType, final String targetSensekey)
+	{
+		if (relations == null)
+		{
+			relations = new HashMap<>();
+		}
+		var inverseRelations = relations.computeIfAbsent(inverseType, (k) -> new LinkedHashSet<>());
+		if (inverseRelations.contains(targetSensekey))
+		{
+			throw new IllegalArgumentException(String.format("Inverse relation %s from %s to %s was already there.", inverseType, getSynsetId(), targetSensekey));
+		}
+		inverseRelations.add(targetSensekey);
 	}
 
 	// computed

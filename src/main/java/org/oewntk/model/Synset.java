@@ -219,12 +219,12 @@ public class Synset implements Comparable<Synset>, Serializable
 		{
 			relations = new HashMap<>();
 		}
-		var rels = relations.computeIfAbsent(inverseType, (k) -> new LinkedHashSet<>());
-		if (rels.contains(targetSynsetId))
+		var inverseRelations = relations.computeIfAbsent(inverseType, (k) -> new LinkedHashSet<>());
+		if (inverseRelations.contains(targetSynsetId))
 		{
 			throw new IllegalArgumentException(String.format("Inverse relation %s from %s to %s was already there.", inverseType, getSynsetId(), targetSynsetId));
 		}
-		rels.add(targetSynsetId);
+		inverseRelations.add(targetSynsetId);
 	}
 
 	// computed

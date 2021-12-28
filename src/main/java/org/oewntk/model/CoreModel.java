@@ -14,6 +14,11 @@ import java.util.*;
 public class CoreModel implements Serializable
 {
 	/**
+	 * Format for count output
+	 */
+	private static final String countFormat = "%n%-50s: %6d";
+
+	/**
 	 * Lexical items
 	 */
 	public final Collection<Lex> lexes;
@@ -79,7 +84,14 @@ public class CoreModel implements Serializable
 	 */
 	public CoreModel generateInverseRelations()
 	{
-		InverseRelationFactory.make(getSynsetsById());
+		//Tracing.psInfo.print(reportRelations());
+		/*int addedSynsetRelations =*/
+		InverseRelationFactory.makeSynsetRelations(getSynsetsById());
+		//Tracing.psInfo.printf(countFormat, "added inverse relations", addedSynsetRelations);
+		/*int addedSenseRelations =*/
+		InverseRelationFactory.makeSenseRelations(getSensesById());
+		//Tracing.psInfo.printf(countFormat, "added inverse relations", addedSenseRelations);
+		//Tracing.psInfo.println(reportRelations());
 		return this;
 	}
 
@@ -172,11 +184,6 @@ public class CoreModel implements Serializable
 	}
 
 	/**
-	 * Format for count output
-	 */
-	private static final String countFormat = "%n%-50s: %6d";
-
-	/**
 	 * Computed count about this model
 	 *
 	 * @return info
@@ -201,20 +208,10 @@ public class CoreModel implements Serializable
 		long withPronunciationLexCount = lexes.stream().filter(lex -> lex.getPronunciations() != null).count();
 
 		long withRelationSenseCount = senses.stream().filter(sense -> sense.getRelations() != null).count();
-		long senseRelationSum = senses.stream().filter(sense -> sense.getRelations() != null).mapToLong(sense -> sense.getRelations().size()).sum();
+		long senseRelationSum = senses.stream().map(Sense::getRelations).filter(Objects::nonNull).flatMap(m -> m.values().stream()).mapToLong(Set::size).sum();
 
 		long withRelationSynsetCount = synsets.stream().filter(synset -> synset.getRelations() != null).count();
-		long synsetRelationSum = synsets.stream().filter(synset -> synset.getRelations() != null).mapToLong(synset -> synset.getRelations().size()).sum();
-		long[] acc = {0};
-		synsets.forEach(synset -> {
-					var r = synset.getRelations();
-					if (r != null && !r.isEmpty())
-					{
-						acc[0] += r.size();
-					}
-				}
-
-		);
+		long synsetRelationSum = synsets.stream().map(Synset::getRelations).filter(Objects::nonNull).flatMap(m -> m.values().stream()).mapToLong(Set::size).sum();
 		return String.format(countFormat, "lexes", lexes.size()) + //
 				String.format(countFormat, "lemmas (distinct CS)", csWordCount) + //
 				String.format(countFormat, "lemmas (distinct LC)", lcWordCount) + //
@@ -239,9 +236,7 @@ public class CoreModel implements Serializable
 
 				String.format(countFormat, "synsets", synsets.size()) + //
 				String.format(countFormat, "synsets with relations", withRelationSynsetCount) +  //
-				String.format(countFormat, "synset relations", synsetRelationSum) +
-				String.format(countFormat, "synset relations", acc[0]) //acc[0]
-				;
+				String.format(countFormat, "synset relations", synsetRelationSum);
 	}
 
 	/**
@@ -282,5 +277,31 @@ public class CoreModel implements Serializable
 				String.format(countFormat, "morphs", morphCount) + //
 				String.format(countFormat, "morph references", morphRefSum) //
 				;
+	}
+
+	private String reportRelations()
+	{
+		long[] acc = {0, 0};
+		synsets.forEach(synset -> {
+			var rr = synset.getRelations();
+			if (rr != null && !rr.isEmpty())
+			{
+				rr.forEach((r, v) -> acc[0] += v.size());
+			}
+		});
+		senses.forEach(sense -> {
+			var rr = sense.getRelations();
+			if (rr != null && !rr.isEmpty())
+			{
+				rr.forEach((r, v) -> acc[1] += v.size());
+			}
+		});
+		long synsetRelationSum = synsets.stream().map(Synset::getRelations).filter(Objects::nonNull) //
+				.flatMap(m -> m.values().stream()).mapToLong(Set::size).sum();
+		long senseRelationSum = senses.stream().map(Sense::getRelations).filter(Objects::nonNull) //
+				.flatMap(m -> m.values().stream()).mapToLong(Set::size).sum();
+		assert synsetRelationSum == acc[0] : String.format("synset relations %d %d discrepancy", synsetRelationSum, acc[0]);
+		assert senseRelationSum == acc[1] : String.format("sense relations %d %d discrepancy", senseRelationSum, acc[1]);
+		return String.format(countFormat, "synset relations", synsetRelationSum) + String.format(countFormat, "sense relations", senseRelationSum);
 	}
 }

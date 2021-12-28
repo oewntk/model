@@ -201,11 +201,20 @@ public class CoreModel implements Serializable
 		long withPronunciationLexCount = lexes.stream().filter(lex -> lex.getPronunciations() != null).count();
 
 		long withRelationSenseCount = senses.stream().filter(sense -> sense.getRelations() != null).count();
-		long senseRelationSum = senses.stream().filter(sense -> sense.getRelations() != null).distinct().mapToLong(sense -> sense.getRelations().size()).sum();
+		long senseRelationSum = senses.stream().filter(sense -> sense.getRelations() != null).mapToLong(sense -> sense.getRelations().size()).sum();
 
 		long withRelationSynsetCount = synsets.stream().filter(synset -> synset.getRelations() != null).count();
-		long synsetRelationSum = synsets.stream().filter(synset -> synset.getRelations() != null).distinct().mapToLong(synset -> synset.getRelations().size()).sum();
+		long synsetRelationSum = synsets.stream().filter(synset -> synset.getRelations() != null).mapToLong(synset -> synset.getRelations().size()).sum();
+		long[] acc = {0};
+		synsets.forEach(synset -> {
+					var r = synset.getRelations();
+					if (r != null && !r.isEmpty())
+					{
+						acc[0] += r.size();
+					}
+				}
 
+		);
 		return String.format(countFormat, "lexes", lexes.size()) + //
 				String.format(countFormat, "lemmas (distinct CS)", csWordCount) + //
 				String.format(countFormat, "lemmas (distinct LC)", lcWordCount) + //
@@ -230,7 +239,8 @@ public class CoreModel implements Serializable
 
 				String.format(countFormat, "synsets", synsets.size()) + //
 				String.format(countFormat, "synsets with relations", withRelationSynsetCount) +  //
-				String.format(countFormat, "synset relations", synsetRelationSum) //
+				String.format(countFormat, "synset relations", synsetRelationSum) +
+				String.format(countFormat, "synset relations", acc[0]) //acc[0]
 				;
 	}
 

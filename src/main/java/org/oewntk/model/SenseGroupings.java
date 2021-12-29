@@ -127,7 +127,14 @@ public class SenseGroupings
 		{
 			return -cmp1;
 		}
-		return Integer.compare(s1.getLexIndex(), s2.getLexIndex());
+		String lemma1 = s1.getLemma();
+		String lemma2 = s2.getLemma();
+		if (lemma1.equals(lemma2))
+		{
+			return Integer.compare(s1.getLexIndex(), s2.getLexIndex());
+		}
+		// upper-case first
+		return lemma1.compareTo(lemma2);
 	};
 
 	public static <K> void dumpSensesByDecreasingTagCount(List<Sense> senses, final PrintStream ps)

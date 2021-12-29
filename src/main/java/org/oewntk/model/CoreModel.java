@@ -212,6 +212,7 @@ public class CoreModel implements Serializable
 
 		long withRelationSynsetCount = synsets.stream().filter(synset -> synset.getRelations() != null).count();
 		long synsetRelationSum = synsets.stream().map(Synset::getRelations).filter(Objects::nonNull).flatMap(m -> m.values().stream()).mapToLong(Set::size).sum();
+
 		return String.format(countFormat, "lexes", lexes.size()) + //
 				String.format(countFormat, "lemmas (distinct CS)", csWordCount) + //
 				String.format(countFormat, "lemmas (distinct LC)", lcWordCount) + //

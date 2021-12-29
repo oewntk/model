@@ -54,6 +54,7 @@ public class InverseRelationFactory
 	 *
 	 * @param synsetsById synsets mapped by id
 	 */
+	@SuppressWarnings("UnusedReturnValue")
 	public static int makeSynsetRelations(Map<String, Synset> synsetsById)
 	{
 		int count = 0;
@@ -99,6 +100,7 @@ public class InverseRelationFactory
 	 *
 	 * @param sensesById senses mapped by id
 	 */
+	@SuppressWarnings("UnusedReturnValue")
 	public static int makeSenseRelations(Map<String, Sense> sensesById)
 	{
 		int count = 0;

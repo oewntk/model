@@ -108,7 +108,7 @@ public class LibTestModelKeys
 
 	// W O R D    T E S T S
 
-	private static int[] testWordMulti(final CoreModel model, final PrintStream ps, String cased, Pronunciation[] p, char... posTypes)
+	private static int[] testWordMulti(final CoreModel model, final PrintStream ps, @SuppressWarnings("SameParameterValue") String cased, Pronunciation[] p, @SuppressWarnings("SameParameterValue") char... posTypes)
 	{
 		String lc = cased.toLowerCase(Locale.ENGLISH);
 		boolean isCased = !lc.equals(cased);
@@ -309,7 +309,7 @@ public class LibTestModelKeys
 
 	// C O N T E X T
 
-	public static void dumpContext(final String lemma, final char posFilter, final char typeFilter, final CoreModel model, final PrintStream ps)
+	public static void dumpContext(final String lemma, @SuppressWarnings("unused") final char posFilter, @SuppressWarnings("unused") final char typeFilter, final CoreModel model, final PrintStream ps)
 	{
 		ps.println("----------");
 		/*

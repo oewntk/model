@@ -292,7 +292,7 @@ public class Synset implements Comparable<Synset>, Serializable
 	}
 
 	/**
-	 * Find index of member is members
+	 * Find 0-based index of member is members
 	 *
 	 * @param lemma member lemma
 	 * @return index of member is members, -1 if not found

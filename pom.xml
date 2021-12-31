@@ -8,12 +8,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>io.github.x-englishwordnet</groupId>
+	<groupId>io.github.oewntk</groupId>
 	<artifactId>model</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>model</name>
 	<description>Wordnet model.</description>
-	<url>https://github.com/x-englishwordnet/model</url>
+	<url>https://github.com/oewntk/model</url>
 
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -59,6 +59,19 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+				<configuration>
+					<systemProperties>
+						<property>
+							<name>SILENT</name>
+						</property>
+					</systemProperties>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.2.0</version>
 				<executions>
@@ -79,15 +92,6 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>3.2.0</version>
 				<executions>
-					<!--
-					<execution>
-						<id>model</id>
-						<phase>package</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-					-->
 					<execution>
 						<id>model-test</id>
 						<phase>package</phase>
@@ -153,8 +157,8 @@
 				<version>1.6.7</version>
 				<extensions>true</extensions>
 				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<serverId>ossrh_oewntk</serverId>
+					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
 					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
@@ -164,26 +168,26 @@
 
 	<distributionManagement>
 		<repository>
-			<id>ossrh</id>
+			<id>ossrh_oewntk</id>
 			<name>Maven Central Staging Repository</name>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 		<snapshotRepository>
-			<id>ossrh</id>
+			<id>ossrh_oewntk</id>
 			<name>Maven Central Snapshot Repository</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
 	<scm>
-		<url>https://github.com/x-englishwordnet/model</url>
-		<connection>scm:git:git://github.com/x-englishwordnet/model.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:x-englishwordnet/model.git</developerConnection>
+		<url>https://github.com/oewntk/model</url>
+		<connection>scm:git:git://github.com/oewntk/model.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com:oewntk/model.git</developerConnection>
 	</scm>
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/x-englishwordnet/model/issues</url>
+		<url>https://github.com/oewntk/model/issues</url>
 	</issueManagement>
 
 	<licenses>
@@ -195,8 +199,8 @@
 	</licenses>
 
 	<organization>
-		<name>com.github.x-englishwordnet</name>
-		<url>https://github.com/x-englishwordnet</url>
+		<name>com.github.oewntk</name>
+		<url>https://github.com/oewntk</url>
 	</organization>
 
 	<developers>

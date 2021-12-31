@@ -98,7 +98,7 @@ public class CoreModel implements Serializable
 	/**
 	 * Cached
 	 */
-	private volatile Map<String, Collection<Lex>> lexesByLemma = null;
+	private transient Map<String, Collection<Lex>> lexesByLemma = null;
 
 	/**
 	 * Lexical units mapped by lemma written form.
@@ -118,7 +118,7 @@ public class CoreModel implements Serializable
 	/**
 	 * Cached
 	 */
-	private volatile Map<String, Collection<Lex>> lexesByLCLemma = null;
+	private transient Map<String, Collection<Lex>> lexesByLCLemma = null;
 
 	/**
 	 * Lexical units mapped by lemma lower-cased written form.
@@ -138,7 +138,7 @@ public class CoreModel implements Serializable
 	/**
 	 * Cached
 	 */
-	private volatile Map<String, Sense> sensesById = null;
+	private transient Map<String, Sense> sensesById = null;
 
 	/**
 	 * Senses mapped by id (sensekey)
@@ -157,7 +157,7 @@ public class CoreModel implements Serializable
 	/**
 	 * Cached
 	 */
-	private volatile Map<String, Synset> synsetsById = null;
+	private transient Map<String, Synset> synsetsById = null;
 
 	/**
 	 * Synsets mapped by id (synset id)

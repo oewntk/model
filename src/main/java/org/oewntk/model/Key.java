@@ -4,6 +4,7 @@
 
 package org.oewntk.model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Objects;
@@ -21,7 +22,7 @@ public interface Key
 	/**
 	 * (Word, PosOrType)
 	 */
-	class W_P implements Key, Comparable<W_P>
+	class W_P implements Key, Comparable<W_P>, Serializable
 	{
 		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> W_P of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
 		{

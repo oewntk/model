@@ -9,7 +9,7 @@
 
 This library contains the classes that model the objects (lexical entries, senses, synsets, relations, etc...) in a wordnet.
 
-Project [model](https://github.com/x-englishwordnet/model)
+Project [model](https://github.com/oewntk/model)
 
 ## Dataflow
 
@@ -17,6 +17,6 @@ Project [model](https://github.com/x-englishwordnet/model)
 
 ## Maven Central
 
-		<groupId>io.github.x-englishwordnet</groupId>
+		<groupId>io.github.oewntk</groupId>
 		<artifactId>model</artifactId>
 		<version>1.0.0-SNAPSHOT</version>

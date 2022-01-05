@@ -4,9 +4,7 @@
 
 package org.oewntk.model;
 
-import java.io.PrintStream;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.function.Function;
 
 public class SenseGroupings
@@ -114,82 +112,18 @@ public class SenseGroupings
 
 	// C O M P A R A T O R
 
-	public static final Comparator<Sense> byDecreasingTagCount = (s1, s2) -> {
+	public static final Comparator<Sense> BY_DECREASING_TAGCOUNT = (s1, s2) -> {
 
-		// sense are equal
-		if (s1.equals(s2))
-		{
-			return 0;
-		}
 		// tag count
 		int c1 = s1.getIntTagCount();
 		int c2 = s2.getIntTagCount();
-		int cmpTagCount = Integer.compare(c1, c2);
-		if (cmpTagCount != 0)
+		int cmp = Integer.compare(c1, c2);
+		if (cmp != 0)
 		{
-			// tag counts differ
-			return -cmpTagCount;
+			// tag counts differ, more frequent (larger count) first
+			return -cmp;
 		}
-		// same tag count, possibly zero
-		String lemma1 = s1.getLemma();
-		String lemma2 = s2.getLemma();
-		/*
-		if (!lemma1.equalsIgnoreCase(lemma2))
-		{
-			throw new IllegalArgumentException(lemma1 + "-"+ lemma2);
-		}
-		*/
-
-		// type a before s
-		if (s1.getType() != s2.getType())
-		{
-			return Character.compare(s1.getType(), s2.getType());
-		}
-
-		// different lemmas, upper-case first
-		int cmpCase = lemma1.compareTo(lemma2);
-		if (cmpCase != 0)
-		{
-			// different lemmas, upper-case first
-			return cmpCase;
-		}
-
-		// index in lex
-		int cmpLexIndex = Integer.compare(s1.getLexIndex(), s2.getLexIndex());
-		if (cmpLexIndex != 0)
-		{
-			// lex indexes differ
-			return cmpLexIndex;
-		}
-
-		// compare sensekey
-		int cmpSensekey = s1.getSensekey().compareTo(s2.getSensekey());
-		if (cmpSensekey != 0)
-		{
-			return cmpSensekey;
-		}
-		throw new IllegalArgumentException(s1 + "-" + s2);
+		// fail, to be chained with thenComparing
+		return 0;
 	};
-
-	public static <K> void dumpSensesByDecreasingTagCount(List<Sense> senses, final PrintStream ps)
-	{
-		senses.sort(byDecreasingTagCount);
-		dumpSenses(senses, ps);
-	}
-
-	public static <K> void dumpSensesByDecreasingTagCount(Entry<K, List<Sense>> sensesWithKey, final PrintStream ps)
-	{
-		var k = sensesWithKey.getKey();
-		var senses2 = sensesWithKey.getValue();
-		ps.printf("%s:%n", k);
-		dumpSensesByDecreasingTagCount(senses2, ps);
-		ps.println();
-	}
-
-	public static <K> void dumpSenses(List<Sense> senses, final PrintStream ps)
-	{
-		final int[] i = {0};
-		senses.forEach(s -> ps.printf("\t[%d] %2d %s%n", i[0]++, s.getIntTagCount(), s));
-		ps.println();
-	}
 }

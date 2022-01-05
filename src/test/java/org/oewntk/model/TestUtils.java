@@ -31,7 +31,7 @@ public class TestUtils
 
 		StringWriter sw = new StringWriter();
 		senses.stream() //
-				.sorted(SenseGroupings.byDecreasingTagCount) //
+				.sorted(SenseGroupings.BY_DECREASING_TAGCOUNT.thenComparing(Sense::getSensekey)) //
 				.forEach(sense -> sw.write(String.format("\t%d %s%n", sense.getIntTagCount(), sense)));
 		return sw.toString();
 	}

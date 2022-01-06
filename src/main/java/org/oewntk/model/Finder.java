@@ -11,6 +11,9 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+/**
+ * Lex finder
+ */
 public class Finder
 {
 	/**
@@ -28,9 +31,13 @@ public class Finder
 	/**
 	 * Find lex matching word and type filter
 	 *
-	 * @param model         model
-	 * @param word          word
-	 * @param posTypeFilter posType filter
+	 * @param model            model
+	 * @param word             word
+	 * @param posTypeFilter    posType filter
+	 * @param wordExtractor    word extractor
+	 * @param posTypeExtractor posType extractor
+	 * @param <L>              lemma extractor type
+	 * @param <P>              posType extractor type
 	 * @return stream of lexes
 	 */
 	public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Stream<Lex> getLexesHaving(final CoreModel model, final String word, final char posTypeFilter, final L wordExtractor, final P posTypeExtractor)
@@ -139,12 +146,28 @@ public class Finder
 
 	// Set comparison
 
+	/**
+	 * Compare two arrays as sets
+	 *
+	 * @param array1 array 1
+	 * @param array2 array 2
+	 * @param <T>    type of element
+	 * @return true if equals
+	 */
 	public static <T> boolean compareAsSets(T[] array1, T[] array2)
 	{
 		Set<T> set1 = Utils.toSet(array1);
 		return compareAsSets(set1, array2);
 	}
 
+	/**
+	 * Compare set to array as set
+	 *
+	 * @param set1   set
+	 * @param array2 array
+	 * @param <T>    type of element
+	 * @return true if equals
+	 */
 	public static <T> boolean compareAsSets(Set<T> set1, T[] array2)
 	{
 		Set<T> set2 = Utils.toSet(array2);

@@ -76,7 +76,7 @@ public class TestKeys
 
 		assertNotEquals(Key.W_P_A.of_t(lexEarthL), Key.W_P_A.of_t(lexEarthU));
 		assertNotEquals(Key.W_P_D.of_t(lexEarthL), Key.W_P_D.of_t(lexEarthU));
-		assertNotEquals(Key.W_P.of_lc_t(lexEarthL), Key.W_P.of_lc_t(lexEarthU));
+		assertEquals(Key.W_P.of_lc_t(lexEarthL), Key.W_P.of_lc_t(lexEarthU));
 		assertEquals(Key.W_P_A.of_lc_t(lexEarthL), Key.W_P_A.of_lc_t(lexEarthU));
 	}
 

@@ -22,7 +22,7 @@ public class Lex implements Serializable //, Comparable<Lex>
 	 */
 	private final String lemma;
 
-	// par-of-speech / synset type
+	// part-of-speech / synset type
 
 	/**
 	 * Synset type ss_type {n, v, a, r, s}

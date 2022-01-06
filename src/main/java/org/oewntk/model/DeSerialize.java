@@ -4,15 +4,19 @@
 
 package org.oewntk.model;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
+import java.io.*;
 
 public class DeSerialize
 {
-	public static CoreModel deSerializeCoreModel(final File file) throws IOException,ClassNotFoundException
+	/**
+	 * Deserialize core model from file
+	 *
+	 * @param file file
+	 * @return core model
+	 * @throws IOException            io exception
+	 * @throws ClassNotFoundException class not found exception
+	 */
+	public static CoreModel deSerializeCoreModel(final File file) throws IOException, ClassNotFoundException
 	{
 		try (InputStream is = new FileInputStream(file))
 		{
@@ -20,7 +24,15 @@ public class DeSerialize
 		}
 	}
 
-	public static Model deSerializeModel(final File file) throws IOException,ClassNotFoundException
+	/**
+	 * Deserialize model from file
+	 *
+	 * @param file file
+	 * @return model
+	 * @throws IOException            io exception
+	 * @throws ClassNotFoundException class not found exception
+	 */
+	public static Model deSerializeModel(final File file) throws IOException, ClassNotFoundException
 	{
 		try (InputStream is = new FileInputStream(file))
 		{
@@ -28,17 +40,41 @@ public class DeSerialize
 		}
 	}
 
-	public static CoreModel deSerializeCoreModel(final InputStream is) throws IOException,ClassNotFoundException
+	/**
+	 * Deserialize core model from file
+	 *
+	 * @param is input stream
+	 * @return core model
+	 * @throws IOException            io exception
+	 * @throws ClassNotFoundException class not found exception
+	 */
+	public static CoreModel deSerializeCoreModel(final InputStream is) throws IOException, ClassNotFoundException
 	{
 		return (CoreModel) deSerialize(is);
 	}
 
-	public static Model deSerializeModel(final InputStream is) throws IOException,ClassNotFoundException
+	/**
+	 * Deserialize model from file
+	 *
+	 * @param is input stream
+	 * @return model
+	 * @throws IOException            io exception
+	 * @throws ClassNotFoundException class not found exception
+	 */
+	public static Model deSerializeModel(final InputStream is) throws IOException, ClassNotFoundException
 	{
 		return (Model) deSerialize(is);
 	}
 
-	private static Object deSerialize(final InputStream is) throws IOException,ClassNotFoundException
+	/**
+	 * Deserialize object
+	 *
+	 * @param is input stream
+	 * @return object
+	 * @throws IOException            io exception
+	 * @throws ClassNotFoundException class not found exception
+	 */
+	private static Object deSerialize(final InputStream is) throws IOException, ClassNotFoundException
 	{
 		try (ObjectInputStream ois = new ObjectInputStream(is))
 		{

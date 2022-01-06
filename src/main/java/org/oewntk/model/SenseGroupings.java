@@ -7,6 +7,9 @@ package org.oewntk.model;
 import java.util.*;
 import java.util.function.Function;
 
+/**
+ * Sense grouping
+ */
 public class SenseGroupings
 {
 	// L O W E R - C A S E   A N D   P O S   K E Y   ( P W N )
@@ -82,11 +85,23 @@ public class SenseGroupings
 
 	// S E N S E   M A P S
 
+	/**
+	 * Senses grouped and mapped by lower-cased lemma and part-of-speech
+	 *
+	 * @param senses senses
+	 * @return collections of senses grouped by and mapped by lower-cased lemma and part-of-speech
+	 */
 	public static Map<KeyLCLemmaAndPos, Collection<Sense>> sensesByLCLemmaAndPos(final Collection<Sense> senses)
 	{
 		return Groupings.groupBy(senses.stream(), KeyLCLemmaAndPos::new);
 	}
 
+	/**
+	 * Senses grouped and mapped by lower-cased lemma
+	 *
+	 * @param senses senses
+	 * @return collections of senses grouped by and mapped by lower-cased lemma
+	 */
 	public static Map<String, Collection<Sense>> sensesByLCLemma(final Collection<Sense> senses)
 	{
 		return Groupings.groupBy(senses.stream(), Sense::getLCLemma);
@@ -95,16 +110,40 @@ public class SenseGroupings
 	// S E N S E S  F O R
 	// for debug as it makes a fresh map every time
 
+	/**
+	 * Find senses matching key built from sense
+	 *
+	 * @param senses           senses
+	 * @param groupingFunction map sense to key
+	 * @param k                key
+	 * @param <K>              type of key
+	 * @return senses matching this key
+	 */
 	public static <K> Collection<Sense> sensesFor(final Collection<Sense> senses, final Function<Sense, K> groupingFunction, K k)
 	{
 		return Groupings.groupBy(senses.stream(), groupingFunction).get(k);
 	}
 
+	/**
+	 * Find senses for target lower-cased lemma and part-of-speech
+	 *
+	 * @param senses  senses
+	 * @param lcLemma target lower-cased lemma
+	 * @param pos     target part-of-speech
+	 * @return collection of senses for this target lower-cased lemma and part-of-speech
+	 */
 	public static Collection<Sense> sensesForLCLemmaAndPos(final Collection<Sense> senses, final String lcLemma, final char pos)
 	{
 		return sensesFor(senses, KeyLCLemmaAndPos::new, KeyLCLemmaAndPos.of(lcLemma, pos));
 	}
 
+	/**
+	 * Find senses for target lower-cased lemma
+	 *
+	 * @param senses  senses
+	 * @param lcLemma target lower-cased lemma
+	 * @return collection of senses for this target lower-cased lemma
+	 */
 	public static Collection<Sense> sensesForLCLemma(final Collection<Sense> senses, final String lcLemma)
 	{
 		return sensesFor(senses, Sense::getLCLemma, lcLemma);
@@ -112,6 +151,9 @@ public class SenseGroupings
 
 	// C O M P A R A T O R
 
+	/**
+	 * Order senses by decreasing frequency order, does not define a total order, must be chained with thenComparing to define a total order, returns 0 if tag counts cannot make one more or less frequent
+	 */
 	public static final Comparator<Sense> BY_DECREASING_TAGCOUNT = (s1, s2) -> {
 
 		// tag count

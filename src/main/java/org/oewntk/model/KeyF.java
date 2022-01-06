@@ -6,6 +6,11 @@ package org.oewntk.model;
 
 import java.util.function.Function;
 
+/**
+ * Keys extended with a functional interface
+ *
+ * @param <R> result
+ */
 public interface KeyF<R> extends Function<CoreModel, R>
 {
 	interface MonoValued extends KeyF<Lex>
@@ -18,6 +23,9 @@ public interface KeyF<R> extends Function<CoreModel, R>
 		String toLongString();
 	}
 
+	/**
+	 * (Word, PosOrType)
+	 */
 	class F_W_P<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends Key.W_P
 	{
 		final L wordExtractor;
@@ -91,6 +99,9 @@ public interface KeyF<R> extends Function<CoreModel, R>
 		}
 	}
 
+	/**
+	 * (Word, PosOrType, Pronunciations)
+	 */
 	class F_W_P_A<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends Key.W_P_A
 	{
 		final L wordExtractor;
@@ -164,6 +175,9 @@ public interface KeyF<R> extends Function<CoreModel, R>
 		}
 	}
 
+	/**
+	 * (Word, PosOrType, Discriminant) - Shallow key
+	 */
 	class F_W_P_D<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends Key.W_P_D
 	{
 		final L wordExtractor;

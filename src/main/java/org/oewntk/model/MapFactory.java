@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toMap;
  */
 public class MapFactory
 {
-	private static final boolean LOG_DUPLICATE_VALUES = true;
+	private static final boolean LOG_DUPLICATE_VALUES = false;
 
 	// G E N E R I C   M A P   F A C T O R Y
 

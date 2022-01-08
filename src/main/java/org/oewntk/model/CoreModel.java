@@ -16,7 +16,7 @@ public class CoreModel implements Serializable
 	/**
 	 * Format for count output
 	 */
-	private static final String countFormat = "%n%-50s: %6d";
+	private static final String countFormat = "%-50s: %6d%n";
 
 	/**
 	 * Lexical items

@@ -1,6 +1,6 @@
 # LexUnits and Keys
 
-Bernard Bou, bbou at ac-toulouse.fr
+Bernard Bou, 1313ou at gmail.com
 November 2021
 
 ## Notation

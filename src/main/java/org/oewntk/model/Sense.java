@@ -87,6 +87,8 @@ public class Sense implements Comparable<Sense>, Serializable
 	 */
 	public Sense(final String senseId, final Lex lex, final char type, final int indexInLex, final String synsetId, final String[] examples, final String[] verbFrames, final String adjPosition, final Map<String, Set<String>> relations)
 	{
+		assert senseId != null;
+		assert synsetId != null;
 		this.lex = lex;
 		this.sensekey = senseId;
 		this.indexInLex = indexInLex;

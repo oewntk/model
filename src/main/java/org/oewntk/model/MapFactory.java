@@ -37,7 +37,7 @@ public class MapFactory
 				{
 					if (LOG_DUPLICATE_VALUES)
 					{
-						Tracing.psInfo.printf("[W] Duplicate values %s and %s, keeping first%n", existing, replacement);
+						Tracing.psErr.printf("[W] Duplicate values %s and %s, keeping first%n", existing, replacement);
 					}
 					//throw new IllegalArgumentException(existing + "," + replacement);
 				}
@@ -61,7 +61,7 @@ public class MapFactory
 				{
 					if (LOG_DUPLICATE_VALUES)
 					{
-						Tracing.psInfo.printf("[W] Duplicate values %s and %s, replacing first%n", existing, replacement);
+						Tracing.psErr.printf("[W] Duplicate values %s and %s, replacing first%n", existing, replacement);
 					}
 					//throw new IllegalArgumentException(existing + "," + replacement);
 				}
@@ -121,7 +121,7 @@ public class MapFactory
 			{
 				if (LOG_DUPLICATE_VALUES)
 				{
-					Tracing.psInfo.printf("[W] Duplicate values %s and %s, merging to %s%n", existing, replacement, merged);
+					Tracing.psErr.printf("[W] Duplicate values %s and %s, merging to %s%n", existing, replacement, merged);
 				}
 			}
 			return merged;

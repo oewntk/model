@@ -325,7 +325,7 @@ with mappings like
 
 ## Key classes
 
-Keys have been developped in software that, when applied to data D, yield the lexunits.
+Keys have been developed in software that, when applied to data D, yield the lexunits.
 
 #### k.apply(D) = {lexunit+} = {[s1,...],..} = {[s1,...]+}
 

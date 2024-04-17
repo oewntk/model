@@ -72,7 +72,7 @@ class Lex(
     /**
      * Senses
      */
-    val senses: MutableList<Sense> = ArrayList()
+    lateinit var senses: MutableList<Sense>
 
     /**
      * Set senses
@@ -127,7 +127,7 @@ class Lex(
      * @param pronunciations pronunciations
      * @return this
      */
-    fun setPronunciations(pronunciations: Array<Pronunciation>): Lex {
+    fun setPronunciations(pronunciations: Array<Pronunciation>?): Lex {
         this.pronunciations = pronunciations
         return this
     }

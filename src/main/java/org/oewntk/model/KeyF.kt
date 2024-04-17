@@ -1,100 +1,135 @@
 /*
  * Copyright (c) 2021. Bernard Bou.
  */
+package org.oewntk.model
 
-package org.oewntk.model;
+import org.oewntk.model.Key.*
 
-import java.util.function.Function;
+typealias WordExtractor = (Lex) -> String
+typealias PosExtractor = (Lex) -> String
 
 /**
  * Keys extended with a functional interface
  *
  * @param <R> result
- */
-public interface KeyF<R> extends Function<CoreModel, R>
-{
-	interface MonoValued extends KeyF<Lex>
-	{
-		String toLongString();
+</R> */
+interface KeyF<R> : (CoreModel) -> R {
+
+	interface MonoValued : KeyF<Lex> {
+		fun toLongString(): String?
 	}
 
-	interface MultiValued extends KeyF<Lex[]>
-	{
-		String toLongString();
+	interface MultiValued : KeyF<Array<Lex>> {
+		fun toLongString(): String?
 	}
 
 	/**
 	 * (Word, PosOrType)
 	 */
-	class F_W_P<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends Key.W_P
-	{
-		final L wordExtractor;
+	open class F_W_P private constructor(
+		word: String,
+		posType: Char,
+		val wordExtractor: (Lex) -> String,
+		val posTypeExtractor: (Lex) -> Char
+	) : W_P(word, posType) {
 
-		final P posTypeExtractor;
-
-		private F_W_P(final String word, final char posType, final L wordExtractor, final P posTypeExtractor)
-		{
-			super(word, posType);
-			this.wordExtractor = wordExtractor;
-			this.posTypeExtractor = posTypeExtractor;
+		override fun toLongString(): String {
+			return String.format(
+				"KEYF %s WPD_%s_%s %s",
+				javaClass.simpleName,
+				Utils.toWordExtractorString(wordExtractor),
+				Utils.toPosTypeExtractorString(posTypeExtractor),
+				this
+			)
 		}
 
-		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> F_W_P<L, P> of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
-		{
-			return new F_W_P<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), wordExtractor, posTypeExtractor);
+		class Mono private constructor(
+			word: String,
+			posType: Char,
+			wordExtractor: (Lex) -> String,
+			posTypeExtractor: (Lex) -> Char
+		) : F_W_P(word, posType, wordExtractor, posTypeExtractor), MonoValued {
+
+			override fun invoke(model: CoreModel): Lex {
+				return Finder.getLexesHaving(model, word, posType, wordExtractor, posTypeExtractor).findFirst()
+					.orElseThrow { IllegalArgumentException() }
+			}
+
+			companion object {
+
+				fun of(
+					wordExtractor: (Lex) -> String,
+					posTypeExtractor: (Lex) -> Char,
+					lex: Lex
+				): Mono {
+					return Mono(
+						wordExtractor.invoke(lex),
+						posTypeExtractor.invoke(lex),
+						wordExtractor,
+						posTypeExtractor
+					)
+				}
+
+				fun from(
+					wordExtractor: (Lex) -> String,
+					posTypeExtractor: (Lex) -> Char,
+					word: String,
+					posType: Char
+				): Mono {
+					return Mono(word, posType, wordExtractor, posTypeExtractor)
+				}
+			}
 		}
 
-		@Override
-		public String toLongString()
-		{
-			return String.format("KEYF %s WPD_%s_%s %s", this.getClass().getSimpleName(), Utils.toWordExtractorString(this.wordExtractor), Utils.toPosTypeExtractorString(this.posTypeExtractor), this);
+		class Multi private constructor(
+			word: String,
+			posType: Char,
+			wordExtractor: (Lex) -> String,
+			posTypeExtractor: (Lex) -> Char
+		) : F_W_P(word, posType, wordExtractor, posTypeExtractor), MultiValued {
+
+			override fun invoke(model: CoreModel): Array<Lex> {
+				return Finder.getLexesHaving(model, word, posType, wordExtractor, posTypeExtractor)
+					.toArray { arrayOf<Lex>() }
+			}
+
+			companion object {
+				fun of(
+					wordExtractor: (Lex) -> String,
+					posTypeExtractor: (Lex) -> Char,
+					lex: Lex
+				): Multi {
+					return Multi(
+						wordExtractor.invoke(lex),
+						posTypeExtractor.invoke(lex),
+						wordExtractor,
+						posTypeExtractor
+					)
+				}
+
+				fun from(
+					wordExtractor: (Lex) -> String,
+					posTypeExtractor: (Lex) -> Char,
+					word: String,
+					posType: Char
+				): Multi {
+					return Multi(word, posType, wordExtractor, posTypeExtractor)
+				}
+			}
 		}
 
-		public static class Mono<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends F_W_P<L, P> implements MonoValued
-		{
-			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Mono<L, P> of(final L wordExtractor, final P posTypeExtractor, final Lex lex)
-			{
-				return new Mono<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), wordExtractor, posTypeExtractor);
-			}
-
-			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Mono<L, P> from(final L wordExtractor, final P posTypeExtractor, final String word, final char posType)
-			{
-				return new Mono<>(word, posType, wordExtractor, posTypeExtractor);
-			}
-
-			private Mono(final String word, final char posType, final L wordExtractor, final P posTypeExtractor)
-			{
-				super(word, posType, wordExtractor, posTypeExtractor);
-			}
-
-			@Override
-			public Lex apply(final CoreModel model)
-			{
-				return Finder.getLexesHaving(model, word, posType, wordExtractor, posTypeExtractor).findFirst().orElseThrow(IllegalArgumentException::new);
-			}
-		}
-
-		public static class Multi<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends F_W_P<L, P> implements MultiValued
-		{
-			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Multi<L, P> of(final L wordExtractor, final P posTypeExtractor, final Lex lex)
-			{
-				return new Multi<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), wordExtractor, posTypeExtractor);
-			}
-
-			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Multi<L, P> from(final L wordExtractor, final P posTypeExtractor, final String word, final char posType)
-			{
-				return new Multi<>(word, posType, wordExtractor, posTypeExtractor);
-			}
-
-			private Multi(final String word, final char posType, final L wordExtractor, final P posTypeExtractor)
-			{
-				super(word, posType, wordExtractor, posTypeExtractor);
-			}
-
-			@Override
-			public Lex[] apply(final CoreModel model)
-			{
-				return Finder.getLexesHaving(model, word, posType, wordExtractor, posTypeExtractor).toArray(Lex[]::new);
+		companion object {
+			fun <L : (Lex) -> String, P : (Lex) -> Char> of(
+				lex: Lex,
+				wordExtractor: L,
+				posTypeExtractor: (Lex) -> Char
+			): F_W_P {
+				return F_W_P(
+					wordExtractor.invoke(lex),
+					posTypeExtractor.invoke(lex),
+					wordExtractor,
+					posTypeExtractor
+				)
 			}
 		}
 	}
@@ -102,75 +137,129 @@ public interface KeyF<R> extends Function<CoreModel, R>
 	/**
 	 * (Word, PosOrType, Pronunciations)
 	 */
-	class F_W_P_A<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends Key.W_P_A
-	{
-		final L wordExtractor;
+	open class F_W_P_A private constructor(
+		word: String,
+		posType: Char,
+		pronunciations: Array<Pronunciation>?,
+		val wordExtractor: (Lex) -> String,
+		val posTypeExtractor: (Lex) -> Char
+	) : W_P_A(word, posType, pronunciations) {
 
-		final P posTypeExtractor;
-
-		private F_W_P_A(final String word, final char posType, final Pronunciation[] pronunciations, final L wordExtractor, final P posTypeExtractor)
-		{
-			super(word, posType, pronunciations);
-			this.wordExtractor = wordExtractor;
-			this.posTypeExtractor = posTypeExtractor;
+		override fun toLongString(): String {
+			return String.format(
+				"KEYF %s WPA_%s_%s %s", this.javaClass.simpleName, Utils.toWordExtractorString(
+					this.wordExtractor
+				), Utils.toPosTypeExtractorString(this.posTypeExtractor), this
+			)
 		}
 
-		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> F_W_P_A<L, P> of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
-		{
-			return new F_W_P_A<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), lex.getPronunciations(), wordExtractor, posTypeExtractor);
+		class Mono private constructor(
+			word: String,
+			posType: Char,
+			pronunciations: Array<Pronunciation>?,
+			wordExtractor: (Lex) -> String,
+			posTypeExtractor: (Lex) -> Char
+		) : F_W_P_A(word, posType, pronunciations, wordExtractor, posTypeExtractor), MonoValued {
+
+			override fun invoke(model: CoreModel): Lex {
+				return Finder.getLexesHavingPronunciations(
+					Finder.getLexesHaving(
+						model,
+						word,
+						posType,
+						wordExtractor,
+						posTypeExtractor
+					), pronunciations
+				).findFirst().orElseThrow { IllegalArgumentException() }
+			}
+
+			companion object {
+				fun of(
+					wordExtractor: (Lex) -> String,
+					posTypeExtractor: (Lex) -> Char,
+					lex: Lex
+				): Mono {
+					return Mono(
+						wordExtractor.invoke(lex),
+						posTypeExtractor.invoke(lex),
+						lex.pronunciations,
+						wordExtractor,
+						posTypeExtractor
+					)
+				}
+
+				fun from(
+					wordExtractor: (Lex) -> String,
+					posTypeExtractor: (Lex) -> Char,
+					word: String,
+					posType: Char,
+					pronunciations: Array<Pronunciation>
+				): Mono {
+					return Mono(word, posType, pronunciations, wordExtractor, posTypeExtractor)
+				}
+			}
 		}
 
-		@Override
-		public String toLongString()
-		{
-			return String.format("KEYF %s WPA_%s_%s %s", this.getClass().getSimpleName(), Utils.toWordExtractorString(this.wordExtractor), Utils.toPosTypeExtractorString(this.posTypeExtractor), this);
+		class Multi private constructor(
+			word: String,
+			posType: Char,
+			pronunciations: Array<Pronunciation>?,
+			wordExtractor: (Lex) -> String,
+			posTypeExtractor: (Lex) -> Char,
+		) : F_W_P_A(word, posType, pronunciations, wordExtractor, posTypeExtractor), MultiValued {
+
+			override fun invoke(model: CoreModel): Array<Lex> {
+				return Finder.getLexesHavingPronunciations(
+					Finder.getLexesHaving(
+						model,
+						word,
+						posType,
+						wordExtractor,
+						posTypeExtractor
+					), pronunciations
+				).toArray { arrayOf<Lex>() }
+			}
+
+			companion object {
+				fun of(
+					wordExtractor: (Lex) -> String,
+					posTypeExtractor: (Lex) -> Char,
+					lex: Lex
+				): Multi {
+					return Multi(
+						wordExtractor.invoke(lex),
+						posTypeExtractor.invoke(lex),
+						lex.pronunciations,
+						wordExtractor,
+						posTypeExtractor
+					)
+				}
+
+				fun from(
+					wordExtractor: (Lex) -> String,
+					posTypeExtractor: (Lex) -> Char,
+					word: String,
+					posType: Char,
+					pronunciations: Array<Pronunciation>
+				): Multi {
+					return Multi(word, posType, pronunciations, wordExtractor, posTypeExtractor)
+				}
+			}
 		}
 
-		public static class Mono<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends F_W_P_A<L, P> implements MonoValued
-		{
-			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Mono<L, P> of(final L wordExtractor, final P posTypeExtractor, final Lex lex)
-			{
-				return new Mono<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), lex.getPronunciations(), wordExtractor, posTypeExtractor);
-			}
-
-			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Mono<L, P> from(final L wordExtractor, final P posTypeExtractor, final String word, final char posType, final Pronunciation... pronunciations)
-			{
-				return new Mono<>(word, posType, pronunciations, wordExtractor, posTypeExtractor);
-			}
-
-			private Mono(final String word, final char posType, final Pronunciation[] pronunciations, final L wordExtractor, final P posTypeExtractor)
-			{
-				super(word, posType, pronunciations, wordExtractor, posTypeExtractor);
-			}
-
-			@Override
-			public Lex apply(final CoreModel model)
-			{
-				return Finder.getLexesHavingPronunciations(Finder.getLexesHaving(model, word, posType, wordExtractor, posTypeExtractor), pronunciations).findFirst().orElseThrow(IllegalArgumentException::new);
-			}
-		}
-
-		public static class Multi<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends F_W_P_A<L, P> implements MultiValued
-		{
-			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Multi<L, P> of(final L wordExtractor, final P posTypeExtractor, final Lex lex)
-			{
-				return new Multi<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), lex.getPronunciations(), wordExtractor, posTypeExtractor);
-			}
-
-			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Multi<L, P> from(final L wordExtractor, final P posTypeExtractor, final String word, final char posType, final Pronunciation... pronunciations)
-			{
-				return new Multi<>(word, posType, pronunciations, wordExtractor, posTypeExtractor);
-			}
-
-			private Multi(final String word, final char posType, final Pronunciation[] pronunciations, final L wordExtractor, final P posTypeExtractor)
-			{
-				super(word, posType, pronunciations, wordExtractor, posTypeExtractor);
-			}
-
-			@Override
-			public Lex[] apply(final CoreModel model)
-			{
-				return Finder.getLexesHavingPronunciations(Finder.getLexesHaving(model, word, posType, wordExtractor, posTypeExtractor), pronunciations).toArray(Lex[]::new);
+		companion object {
+			fun of(
+				lex: Lex,
+				wordExtractor: (Lex) -> String,
+				posTypeExtractor: (Lex) -> Char
+			): F_W_P_A {
+				return F_W_P_A(
+					wordExtractor.invoke(lex),
+					posTypeExtractor.invoke(lex),
+					lex.pronunciations,
+					wordExtractor,
+					posTypeExtractor
+				)
 			}
 		}
 	}
@@ -178,68 +267,102 @@ public interface KeyF<R> extends Function<CoreModel, R>
 	/**
 	 * (Word, PosOrType, Discriminant) - Shallow key
 	 */
-	class F_W_P_D<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends Key.W_P_D
-	{
-		final L wordExtractor;
+	open class F_W_P_D private constructor(
+		word: String,
+		posType: Char,
+		discriminant: String?,
+		val wordExtractor: (Lex) -> String,
+		val posTypeExtractor: (Lex) -> Char
+	) : W_P_D(word, posType, discriminant) {
 
-		final P posTypeExtractor;
-
-		private F_W_P_D(final String word, final char posType, final String discriminant, final L wordExtractor, final P posTypeExtractor)
-		{
-			super(word, posType, discriminant);
-			this.wordExtractor = wordExtractor;
-			this.posTypeExtractor = posTypeExtractor;
+		override fun toLongString(): String {
+			return String.format(
+				"KEYF %s WPD_%s_%s %s", this.javaClass.simpleName, Utils.toWordExtractorString(
+					this.wordExtractor
+				), Utils.toPosTypeExtractorString(this.posTypeExtractor), this
+			)
 		}
 
-		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> F_W_P_D<L, P> of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
-		{
-			return new F_W_P_D<>(wordExtractor.apply(lex), posTypeExtractor.apply(lex), lex.getDiscriminant(), wordExtractor, posTypeExtractor);
+		class Mono private constructor(
+			word: String,
+			posType: Char,
+			discriminant: String,
+			wordExtractor: (Lex) -> String,
+			posTypeExtractor: (Lex) -> Char
+		) : F_W_P_D(word, posType, discriminant, wordExtractor, posTypeExtractor), MonoValued {
+
+			override fun invoke(model: CoreModel): Lex {
+				return Finder.getLexesHavingDiscriminant(
+					Finder.getLexesHaving(
+						model,
+						word,
+						posType,
+						wordExtractor,
+						posTypeExtractor
+					), discriminant
+				).findFirst().orElseThrow { IllegalArgumentException() }
+			}
+
+			companion object {
+				fun from(
+					wordExtractor: (Lex) -> String,
+					posTypeExtractor: (Lex) -> Char,
+					word: String,
+					posType: Char,
+					discriminant: String
+				): Mono {
+					return Mono(word, posType, discriminant, wordExtractor, posTypeExtractor)
+				}
+			}
 		}
 
-		@Override
-		public String toLongString()
-		{
-			return String.format("KEYF %s WPD_%s_%s %s", this.getClass().getSimpleName(), Utils.toWordExtractorString(this.wordExtractor), Utils.toPosTypeExtractorString(this.posTypeExtractor), this);
+		class Multi private constructor(
+			word: String,
+			posType: Char,
+			discriminant: String,
+			wordExtractor: (Lex) -> String,
+			posTypeExtractor: (Lex) -> Char
+		) : F_W_P_D(word, posType, discriminant, wordExtractor, posTypeExtractor), MultiValued {
+
+			override fun invoke(model: CoreModel): Array<Lex> {
+				return Finder.getLexesHavingDiscriminant(
+					Finder.getLexesHaving(
+						model,
+						word,
+						posType,
+						wordExtractor,
+						posTypeExtractor
+					), discriminant
+				).toArray { arrayOf<Lex>() }
+			}
+
+			companion object {
+				fun from(
+					wordExtractor: (Lex) -> String,
+					posTypeExtractor: (Lex) -> Char,
+					word: String,
+					posType: Char,
+					discriminant: String
+				): Multi {
+					return Multi(word, posType, discriminant, wordExtractor, posTypeExtractor)
+				}
+			}
 		}
 
-		public static class Mono<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends F_W_P_D<L, P> implements MonoValued
-		{
-			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Mono<L, P> from(final L wordExtractor, final P posTypeExtractor, final String word, final char posType, final String discriminant)
-			{
-				return new Mono<>(word, posType, discriminant, wordExtractor, posTypeExtractor);
-			}
-
-			private Mono(final String word, final char posType, final String discriminant, final L wordExtractor, final P posTypeExtractor)
-			{
-				super(word, posType, discriminant, wordExtractor, posTypeExtractor);
-			}
-
-			@Override
-			public Lex apply(final CoreModel model)
-			{
-				return Finder.getLexesHavingDiscriminant(Finder.getLexesHaving(model, word, posType, wordExtractor, posTypeExtractor), discriminant).findFirst().orElseThrow(IllegalArgumentException::new);
-			}
-		}
-
-		public static class Multi<L extends Function<Lex, String>, P extends Function<Lex, Character>> extends F_W_P_D<L, P> implements MultiValued
-		{
-			public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> Multi<L, P> from(final L wordExtractor, final P posTypeExtractor, final String word, final char posType, final String discriminant)
-			{
-				return new Multi<>(word, posType, discriminant, wordExtractor, posTypeExtractor);
-			}
-
-			private Multi(final String word, final char posType, final String discriminant, final L wordExtractor, final P posTypeExtractor)
-			{
-				super(word, posType, discriminant, wordExtractor, posTypeExtractor);
-			}
-
-			@Override
-			public Lex[] apply(final CoreModel model)
-			{
-				return Finder.getLexesHavingDiscriminant(Finder.getLexesHaving(model, word, posType, wordExtractor, posTypeExtractor), discriminant).toArray(Lex[]::new);
+		companion object {
+			fun <L : (Lex) -> String, P : (Lex) -> Char> of(
+				lex: Lex,
+				wordExtractor: (Lex) -> String,
+				posTypeExtractor: (Lex) -> Char,
+			): F_W_P_D {
+				return F_W_P_D(
+					wordExtractor.invoke(lex),
+					posTypeExtractor.invoke(lex),
+					lex.discriminant,
+					wordExtractor,
+					posTypeExtractor
+				)
 			}
 		}
 	}
-
-
 }

@@ -1,14 +1,10 @@
 /*
  * Copyright (c) 2021. Bernard Bou.
  */
+package org.oewntk.model
 
-package org.oewntk.model;
+object Utils {
 
-import java.util.Set;
-import java.util.function.Function;
-
-public class Utils
-{
 	// Set
 
 	/**
@@ -17,23 +13,22 @@ public class Utils
 	 * @param objects array of objects
 	 * @param <T>     type of objects
 	 * @return set of objects
-	 */
-	static <T> Set<T> toSet(final T[] objects)
-	{
-		if (objects == null)
-		{
-			return Set.of();
+	</T> */
+	@JvmStatic
+	fun <T> toSet(objects: Array<T>?): Set<T> {
+		if (objects == null) {
+			return setOf()
 		}
-		return Set.of(objects);
+		return mutableSetOf(*objects)
 	}
 
 	// Name for extractor
 
-	private static final String dummyUpper = "CASE";
+	private const val dummyUpper = "CASE"
 
-	private static final char dummySatellite = 's';
+	private const val dummySatellite = 's'
 
-	private static final Lex dummyLex = new Lex(dummyUpper, Character.toString(dummySatellite), null);
+	private val dummyLex = Lex(dummyUpper, dummySatellite.toString(), null)
 
 	/**
 	 * Name a word extractor (by applying dummy data)
@@ -42,9 +37,8 @@ public class Utils
 	 * @param <L>           word extractor type
 	 * @return name
 	 */
-	public static <L extends Function<Lex, String>> String toWordExtractorString(final L wordExtractor)
-	{
-		return wordExtractor.apply(dummyLex).equals(dummyUpper) ? "cs" : "lc";
+	fun toWordExtractorString(wordExtractor: (Lex) -> String): String {
+		return if (wordExtractor.invoke(dummyLex) == dummyUpper) "cs" else "lc"
 	}
 
 	/**
@@ -54,8 +48,7 @@ public class Utils
 	 * @param <P>              posType extractor type
 	 * @return name
 	 */
-	public static <P extends Function<Lex, Character>> Object toPosTypeExtractorString(final P posTypeExtractor)
-	{
-		return posTypeExtractor.apply(dummyLex).equals(dummySatellite) ? "t" : "p";
+	fun toPosTypeExtractorString(posTypeExtractor: (Lex) -> Char): String {
+		return if (posTypeExtractor.invoke(dummyLex) == dummySatellite) "t" else "p"
 	}
 }

@@ -54,7 +54,7 @@ public class LibTestModel
 	{
 		// stream of lexes
 		Stream<Key> lexKeyStream = model.lexes.stream().peek(lex -> {
-			if (testWords.contains(lex.getLemma()))
+			if (testWords.contains(lex.lemma))
 			{
 				if (peekTestWords)
 				{

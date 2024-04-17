@@ -1,53 +1,36 @@
 /*
  * Copyright (c) 2021-2021. Bernard Bou.
  */
-
-package org.oewntk.model;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+package org.oewntk.model
 
 /**
  * Generator of inverse synset relations
  */
-public class InverseRelationFactory
-{
-	private static final boolean LOG_ALREADY_PRESENT = false;
+object InverseRelationFactory {
+	private const val LOG_ALREADY_PRESENT = false
 
-	private static final Map<String, String> INVERSE_SYNSET_RELATIONS = new HashMap<>();
+	private val INVERSE_SYNSET_RELATIONS = mapOf(
+		"hypernym" to "hyponym",
+		"instance_hypernym" to "instance_hyponym",
+		"mero_part" to "holo_part",
+		"mero_member" to "holo_member",
+		"mero_substance" to "holo_substance",
+		"causes" to "is_caused_by",
+		"entails" to "is_entailed_by",
+		"exemplifies" to "is_exemplified_by",
+		"domain_topic" to "has_domain_topic",
+		"domain_region" to "has_domain_region",
+	)
 
-	static
-	{
-		INVERSE_SYNSET_RELATIONS.put("hypernym", "hyponym");
-		INVERSE_SYNSET_RELATIONS.put("instance_hypernym", "instance_hyponym");
-		INVERSE_SYNSET_RELATIONS.put("mero_part", "holo_part");
-		INVERSE_SYNSET_RELATIONS.put("mero_member", "holo_member");
-		INVERSE_SYNSET_RELATIONS.put("mero_substance", "holo_substance");
-		INVERSE_SYNSET_RELATIONS.put("causes", "is_caused_by");
-		INVERSE_SYNSET_RELATIONS.put("entails", "is_entailed_by");
-		INVERSE_SYNSET_RELATIONS.put("exemplifies", "is_exemplified_by");
-		INVERSE_SYNSET_RELATIONS.put("domain_topic", "has_domain_topic");
-		INVERSE_SYNSET_RELATIONS.put("domain_region", "has_domain_region");
-	}
+	private val INVERSE_SYNSET_RELATIONS_KEYS = INVERSE_SYNSET_RELATIONS.keys
 
-	private static final Set<String> INVERSE_SYNSET_RELATIONS_KEYS = INVERSE_SYNSET_RELATIONS.keySet();
+	private val INVERSE_SENSE_RELATIONS = mapOf(
+		"exemplifies" to "is_exemplified_by",
+		"domain_topic" to "has_domain_topic",
+		"domain_region" to "has_domain_region",
+	)
 
-	private static final Map<String, String> INVERSE_SENSE_RELATIONS = new HashMap<>();
-
-	static
-	{
-		INVERSE_SENSE_RELATIONS.put("exemplifies", "is_exemplified_by");
-		INVERSE_SENSE_RELATIONS.put("domain_topic", "has_domain_topic");
-		INVERSE_SENSE_RELATIONS.put("domain_region", "has_domain_region");
-	}
-
-	private static final Set<String> INVERSE_SENSE_RELATIONS_KEYS = INVERSE_SENSE_RELATIONS.keySet();
-
-	private InverseRelationFactory()
-	{
-	}
+	private val INVERSE_SENSE_RELATIONS_KEYS: Set<String> = INVERSE_SENSE_RELATIONS.keys
 
 	/**
 	 * Generate inverse synset relations
@@ -55,37 +38,23 @@ public class InverseRelationFactory
 	 * @param synsetsById synsets mapped by id
 	 * @return count
 	 */
-	@SuppressWarnings("UnusedReturnValue")
-	public static int makeSynsetRelations(Map<String, Synset> synsetsById)
-	{
-		int count = 0;
-		for (Map.Entry<String, Synset> entry : synsetsById.entrySet())
-		{
-			String sourceSynsetId = entry.getKey();
-			Synset sourceSynset = entry.getValue();
-			Map<String, Set<String>> relations = sourceSynset.getRelations();
-			if (relations != null && relations.size() > 0)
-			{
-				for (String type : INVERSE_SYNSET_RELATIONS_KEYS)
-				{
-					Collection<String> targetSynsetIds = relations.get(type);
-					if (targetSynsetIds != null && targetSynsetIds.size() > 0)
-					{
-						String inverseType = INVERSE_SYNSET_RELATIONS.get(type);
-						for (String targetSynsetId : targetSynsetIds)
-						{
-							Synset targetSynset = synsetsById.get(targetSynsetId);
-							assert targetSynset != null;
-							try
-							{
-								targetSynset.addInverseRelation(inverseType, sourceSynsetId);
-								count++;
-							}
-							catch (IllegalArgumentException e)
-							{
-								if (LOG_ALREADY_PRESENT)
-								{
-									Tracing.psErr.printf("[W] %s%n", e.getMessage());
+	fun makeSynsetRelations(synsetsById: Map<String, Synset>): Int {
+		var count = 0
+		for ((sourceSynsetId, sourceSynset) in synsetsById) {
+			val relations: Map<String, Set<String>>? = sourceSynset.relations
+			if (!relations.isNullOrEmpty()) {
+				for (type in INVERSE_SYNSET_RELATIONS_KEYS) {
+					val targetSynsetIds: Collection<String>? = relations[type]
+					if (!targetSynsetIds.isNullOrEmpty()) {
+						val inverseType = INVERSE_SYNSET_RELATIONS[type]
+						for (targetSynsetId in targetSynsetIds) {
+							val targetSynset = checkNotNull(synsetsById[targetSynsetId])
+							try {
+								targetSynset.addInverseRelation(inverseType!!, sourceSynsetId)
+								count++
+							} catch (e: IllegalArgumentException) {
+								if (LOG_ALREADY_PRESENT) {
+									Tracing.psErr.printf("[W] %s%n", e.message)
 								}
 							}
 						}
@@ -93,7 +62,7 @@ public class InverseRelationFactory
 				}
 			}
 		}
-		return count;
+		return count
 	}
 
 	/**
@@ -102,37 +71,23 @@ public class InverseRelationFactory
 	 * @param sensesById senses mapped by id
 	 * @return count
 	 */
-	@SuppressWarnings("UnusedReturnValue")
-	public static int makeSenseRelations(Map<String, Sense> sensesById)
-	{
-		int count = 0;
-		for (Map.Entry<String, Sense> entry : sensesById.entrySet())
-		{
-			String sourceSenseId = entry.getKey();
-			Sense sourceSense = entry.getValue();
-			Map<String, Set<String>> relations = sourceSense.getRelations();
-			if (relations != null && relations.size() > 0)
-			{
-				for (String type : INVERSE_SENSE_RELATIONS_KEYS)
-				{
-					Collection<String> targetSenseIds = relations.get(type);
-					if (targetSenseIds != null && targetSenseIds.size() > 0)
-					{
-						String inverseType = INVERSE_SENSE_RELATIONS.get(type);
-						for (String targetSenseId : targetSenseIds)
-						{
-							Sense targetSense = sensesById.get(targetSenseId);
-							assert targetSense != null;
-							try
-							{
-								targetSense.addInverseRelation(inverseType, sourceSenseId);
-								count++;
-							}
-							catch (IllegalArgumentException e)
-							{
-								if (LOG_ALREADY_PRESENT)
-								{
-									Tracing.psErr.printf("[W] %s%n", e.getMessage());
+	fun makeSenseRelations(sensesById: Map<String, Sense>): Int {
+		var count = 0
+		for ((sourceSenseId, sourceSense) in sensesById) {
+			val relations: Map<String, Set<String>>? = sourceSense.relations
+			if (!relations.isNullOrEmpty()) {
+				for (type in INVERSE_SENSE_RELATIONS_KEYS) {
+					val targetSenseIds: Collection<String>? = relations[type]
+					if (!targetSenseIds.isNullOrEmpty()) {
+						val inverseType = INVERSE_SENSE_RELATIONS[type]
+						for (targetSenseId in targetSenseIds) {
+							val targetSense = checkNotNull(sensesById[targetSenseId])
+							try {
+								targetSense.addInverseRelation(inverseType!!, sourceSenseId)
+								count++
+							} catch (e: IllegalArgumentException) {
+								if (LOG_ALREADY_PRESENT) {
+									Tracing.psErr.printf("[W] %s%n", e.message)
 								}
 							}
 						}
@@ -140,6 +95,6 @@ public class InverseRelationFactory
 				}
 			}
 		}
-		return count;
+		return count
 	}
 }

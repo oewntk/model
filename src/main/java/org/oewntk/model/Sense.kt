@@ -1,408 +1,250 @@
 /*
  * Copyright (c) 2021-2021. Bernard Bou.
  */
+package org.oewntk.model
 
-package org.oewntk.model;
-
-import java.io.Serializable;
-import java.util.*;
+import java.io.Serializable
+import java.util.*
 
 /**
  * Sense
+ *
+ * @property senseId     sense id / sensekey
+ * @property lex         lexical item
+ * @property type        {n,v,a,r,s}
+ * @property synsetId    synset id
+ * @property examples    examples
+ * @property verbFrames  verb frames
+ * @property adjPosition adjective position
+ * @property relations   sense relations
+ *
+ * @property senseKey    sense id / sensekey
+ * @property lemma       lemma
+ * @property lCLemma     lower-casef lemma
+ * @property tagCount    tag count
+ * @property intTagCount integer tag count
+ * @param    indexInLex  index of this sense in lex
  */
-public class Sense implements Comparable<Sense>, Serializable
-{
-	/**
-	 * Sense id, sensekey
-	 */
-	private final String sensekey;
+class Sense(
+    senseId: String?,
+    lex: Lex,
+    type: Char,
+    indexInLex: Int,
+    synsetId: String?,
+    examples: Array<String>,
+    verbFrames: Array<String>,
+    adjPosition: String,
+    relations: MutableMap<String, MutableSet<String>>?
+) : Comparable<Sense>, Serializable {
+    /**
+     * Sense id or sensekey
+     */
+    private val senseId: String
 
-	/**
-	 * Lex this sense is contained in
-	 */
-	private final Lex lex;
+    /**
+     * Sense id, sensekey
+     */
+    val senseKey: String
+        get() = senseId
 
-	/**
-	 * Synset type ss_type {n, v, a, r, s}
-	 */
-	private final char type;
+    /**
+     * Lexical item, lex this sense is contained in
+     */
+    @JvmField
+    val lex: Lex
 
-	/**
-	 * Synset type ss_type {n, v, a, r, s}
-	 */
-	private final char partOfSpeech;
+    /**
+     * Synset type ss_type {'n', 'v', 'a', 'r', 's'}
+     */
+    @JvmField
+    val type: Char
 
-	/**
-	 * Index of this sense in lex list/array of senses (0-based)
-	 */
-	private final int indexInLex;
+    /**
+     * Synset part-of-speech ss_type {'n', 'v', 'a', 'r'}
+     */
+    @JvmField
+    val partOfSpeech: Char
 
-	/**
-	 * Synset id
-	 */
-	private final String synsetId;
+    /**
+     * Zero-based index of this sense in lex list/array of senses
+     */
+    val lexIndex: Int
 
-	/**
-	 * Examples
-	 */
-	private final String[] examples;
+    /**
+     * Synset id
+     */
+    @JvmField
+    val synsetId: String
 
-	/**
-	 * Verb frames
-	 */
-	private final String[] verbFrames;
+    /**
+     * Examples
+     */
+    @JvmField
+    val examples: Array<String>?
 
-	/**
-	 * Verb sentence templates
-	 */
-	private int[] verbTemplates;
+    /**
+     * Verb frames
+     */
+    @JvmField
+    val verbFrames: Array<String>?
 
-	/**
-	 * Adjective position {a, ip, p} meaning {attribute,immediate postnominal,predicate}
-	 */
-	private final String adjPosition;
+    /**
+     * Verb sentence templates
+     */
+    var verbTemplates: IntArray? = null
 
-	/**
-	 * Tag count
-	 */
-	private TagCount tagCount;
+    /**
+     * Adjective position in {'a', 'ip', 'p'} meaning {attribute,immediate postnominal,predicate}
+     */
+    @JvmField
+    val adjPosition: String
 
-	/**
-	 * Sense relations
-	 */
-	private Map<String, Set<String>> relations;
+    /**
+     * Tag count
+     */
+    var tagCount: TagCount? = null
 
-	/**
-	 * Constructor
-	 *
-	 * @param senseId     sense id / sensekey
-	 * @param lex         lexical item
-	 * @param type        {n,v,a,r,s}
-	 * @param indexInLex  index of this sense in lex
-	 * @param synsetId    synset id
-	 * @param examples    examples
-	 * @param verbFrames  verb frames
-	 * @param adjPosition adjective position
-	 * @param relations   sense relations
-	 */
-	public Sense(final String senseId, final Lex lex, final char type, final int indexInLex, final String synsetId, final String[] examples, final String[] verbFrames, final String adjPosition, final Map<String, Set<String>> relations)
-	{
-		assert senseId != null;
-		assert synsetId != null;
-		this.lex = lex;
-		this.sensekey = senseId;
-		this.indexInLex = indexInLex;
-		this.type = type;
-		this.partOfSpeech = this.type == 's' ? 'a' : this.type;
-		this.synsetId = synsetId;
-		this.examples = examples;
-		this.verbFrames = verbFrames;
-		this.adjPosition = adjPosition;
-		this.relations = relations;
-	}
+    /**
+     * Sense relations
+     */
+    var relations: MutableMap<String, MutableSet<String>>?
 
-	/**
-	 * Get sense id or sensekey
-	 *
-	 * @return sense id or sensekey
-	 */
-	public String getSenseId()
-	{
-		return sensekey;
-	}
+    /**
+     * Lemma
+     */
+    val lemma: String
+        get() = lex.lemma
 
-	/**
-	 * Get sensekey
-	 *
-	 * @return sensekey
-	 */
-	public String getSensekey()
-	{
-		return sensekey;
-	}
+    /**
+     * Lower-case lemma
+     */
+    val lCLemma: String
+        get() = lex.lCLemma
 
-	/**
-	 * Get lexical item
-	 *
-	 * @return lexical item
-	 */
-	public Lex getLex()
-	{
-		return lex;
-	}
+    /**
+     * Int tag count
+     */
+    val intTagCount: Int
+        get() = if (tagCount == null) 0 else tagCount!!.count
 
-	/**
-	 * Get lemma
-	 *
-	 * @return lemma
-	 */
-	public String getLemma()
-	{
-		return lex.getLemma();
-	}
+    /**
+     * Source file
+     */
+    val source: String
+        get() = lex.source
 
-	/**
-	 * Get lower-case lemma
-	 *
-	 * @return lower-case lemma
-	 */
-	public String getLCLemma()
-	{
-		return lex.getLCLemma();
-	}
+    // init
 
-	/**
-	 * Get type
-	 *
-	 * @return type
-	 */
-	public char getType()
-	{
-		return type;
-	}
+    init {
+        checkNotNull(senseId)
+        checkNotNull(synsetId)
+        this.lex = lex
+        this.senseId = senseId
+        this.lexIndex = indexInLex
+        this.type = type
+        this.partOfSpeech = if (this.type == 's') 'a' else this.type
+        this.synsetId = synsetId
+        this.examples = examples
+        this.verbFrames = verbFrames
+        this.adjPosition = adjPosition
+        this.relations = relations
+    }
 
-	/**
-	 * Get part-of-speech
-	 *
-	 * @return part-of-speech
-	 */
-	public char getPartOfSpeech()
-	{
-		return partOfSpeech;
-	}
+    // mutation
 
-	/**
-	 * Get synset id
-	 *
-	 * @return synset id
-	 */
-	public String getSynsetId()
-	{
-		return synsetId;
-	}
+    /**
+     * Add inverse sense relations of this synset
+     *
+     * @param inverseType    inverse type
+     * @param targetSensekey target sense id (sensekey)
+     */
+    fun addInverseRelation(inverseType: String, targetSensekey: String) {
+        if (relations == null) {
+            relations = HashMap()
+        }
+        val inverseRelations = relations!!.computeIfAbsent(inverseType) { _: String? -> LinkedHashSet() }
+        require(!inverseRelations.contains(targetSensekey)) { "Inverse relation $inverseType from $synsetId to $targetSensekey was already there." }
+        inverseRelations.add(targetSensekey)
+    }
 
-	/**
-	 * Get lex senses 0-based index
-	 *
-	 * @return index of this sense in lex
-	 */
-	public int getLexIndex()
-	{
-		return indexInLex;
-	}
+    // computed
 
-	/**
-	 * Get examples
-	 *
-	 * @return examples
-	 */
-	public String[] getExamples()
-	{
-		return examples;
-	}
+    /**
+     * Find synset member index
+     *
+     * @param synsetsById synsets mapped by id
+     * @return index of this sense in synset members
+     */
+    fun findSynsetIndex(synsetsById: Map<String?, Synset?>): Int {
+        val synset = synsetsById[synsetId]
+        return synset!!.findIndexOfMember(lex.lemma)
+    }
 
-	/**
-	 * Get verb frames
-	 *
-	 * @return verb frames
-	 */
-	public String[] getVerbFrames()
-	{
-		return verbFrames;
-	}
+    /**
+     * Find lexid
+     * WNDB
+     * One digit hexadecimal integer that, when appended onto lemma , uniquely identifies a sense within a lexicographer file.
+     * lex_id numbers usually start with 0 , and are incremented as additional senses of the word are added to the same file,
+     * although there is no requirement that the numbers be consecutive or begin with 0 .
+     * Note that a value of 0 is the default, and therefore is not present in lexicographer files.
+     * synset = synset_offset  lex_filenum  ss_type  w_cnt  word  lex_id  [word  lex_id...] ...
+     *
+     *
+     * SENSEIDX
+     * Two digit decimal integer that, when appended onto lemma , uniquely identifies a sense within a lexicographer file.
+     * lex_id numbers usually start with 00 , and are incremented as additional senses of the word are added to the same file,
+     * although there is no requirement that the numbers be consecutive or begin with 00 .
+     * Note that a value of 00 is the default, and therefore is not present in lexicographer files. (senseidx)
+     * sensekey = ss_type:lex_filenum:lex_id:head_word:head_id
+     *
+     *
+     * SENSEKEY
+     * lemma % lex_sense
+     * where lex_sense is encoded as:
+     * ss_type:lex_filenum:lex_id:head_word:head_id
+     *
+     * @return lexid
+     */
+    fun findLexid(): Int {
+        return senseId.split("%".toRegex())
+            .dropLastWhile { it.isEmpty() }
+            .toTypedArray()[1]
+            .split(":".toRegex())
+            .dropLastWhile { it.isEmpty() }
+            .toTypedArray()[2].toInt()
+    }
 
-	/**
-	 * Get verb templates
-	 *
-	 * @return verb templates
-	 */
-	public int[] getVerbTemplates()
-	{
-		return verbTemplates;
-	}
+    // stringify
 
-	/**
-	 * Get adjective position (attribute, immediate post-nominal, predicate)
-	 *
-	 * @return adjective position (a|ip|p)
-	 */
-	public String getAdjPosition()
-	{
-		return adjPosition;
-	}
+    override fun toString(): String {
+        return " $senseId (${lexIndex + 1}th of '${lex.lemma}', $synsetId $type)"
+    }
 
-	/**
-	 * Get tag count
-	 *
-	 * @return tag count
-	 */
-	public TagCount getTagCount()
-	{
-		return tagCount;
-	}
+    fun toLongString(): String {
+        val relationsStr = Formatter.join(relations, ",")
+        return "[${lexIndex + 1}] of '${lex.lemma}' $senseId $type $synsetId {$relationsStr}"
+    }
 
-	/**
-	 * Get int tag count
-	 *
-	 * @return tag count integer
-	 */
-	public int getIntTagCount()
-	{
-		return tagCount == null ? 0 : tagCount.getCount();
-	}
+    // identity
 
-	/**
-	 * Get sense relations
-	 *
-	 * @return sense relations
-	 */
-	public Map<String, Set<String>> getRelations()
-	{
-		return relations;
-	}
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (other == null || javaClass != other.javaClass) {
+            return false
+        }
+        val sense = other as Sense
+        return senseId == sense.senseId
+    }
 
-	/**
-	 * Get source file
-	 *
-	 * @return source file
-	 */
-	public String getSource()
-	{
-		return lex.getSource();
-	}
+    override fun hashCode(): Int {
+        return Objects.hash(senseId)
+    }
 
-	// mutation
+    // ordering
 
-	/**
-	 * Set verb templates
-	 *
-	 * @param verbTemplates verb templates
-	 * @return this
-	 */
-	@SuppressWarnings("UnusedReturnValue")
-	public Sense setVerbTemplates(final int[] verbTemplates)
-	{
-		this.verbTemplates = verbTemplates;
-		return this;
-	}
-
-	/**
-	 * Set tag count
-	 *
-	 * @param tagCount tag count
-	 * @return this
-	 */
-	@SuppressWarnings("UnusedReturnValue")
-	public Sense setTagCount(final TagCount tagCount)
-	{
-		this.tagCount = tagCount;
-		return this;
-	}
-
-	/**
-	 * Add inverse sense relations of this synset
-	 *
-	 * @param inverseType    inverse type
-	 * @param targetSensekey target sense id (sensekey)
-	 */
-	public void addInverseRelation(final String inverseType, final String targetSensekey)
-	{
-		if (relations == null)
-		{
-			relations = new HashMap<>();
-		}
-		var inverseRelations = relations.computeIfAbsent(inverseType, (k) -> new LinkedHashSet<>());
-		if (inverseRelations.contains(targetSensekey))
-		{
-			throw new IllegalArgumentException(String.format("Inverse relation %s from %s to %s was already there.", inverseType, getSynsetId(), targetSensekey));
-		}
-		inverseRelations.add(targetSensekey);
-	}
-
-	// computed
-
-	/**
-	 * Find synset member index
-	 *
-	 * @param synsetsById synsets mapped by id
-	 * @return index of this sense in synset members
-	 */
-	public int findSynsetIndex(Map<String, Synset> synsetsById)
-	{
-		Synset synset = synsetsById.get(getSynsetId());
-		return synset.findIndexOfMember(getLex().getLemma());
-	}
-
-	/**
-	 * Find lexid
-	 * WNDB
-	 * One digit hexadecimal integer that, when appended onto lemma , uniquely identifies a sense within a lexicographer file.
-	 * lex_id numbers usually start with 0 , and are incremented as additional senses of the word are added to the same file,
-	 * although there is no requirement that the numbers be consecutive or begin with 0 .
-	 * Note that a value of 0 is the default, and therefore is not present in lexicographer files.
-	 * synset = synset_offset  lex_filenum  ss_type  w_cnt  word  lex_id  [word  lex_id...] ...
-	 * <p>
-	 * SENSEIDX
-	 * Two digit decimal integer that, when appended onto lemma , uniquely identifies a sense within a lexicographer file.
-	 * lex_id numbers usually start with 00 , and are incremented as additional senses of the word are added to the same file,
-	 * although there is no requirement that the numbers be consecutive or begin with 00 .
-	 * Note that a value of 00 is the default, and therefore is not present in lexicographer files. (senseidx)
-	 * sensekey = ss_type:lex_filenum:lex_id:head_word:head_id
-	 * <p>
-	 * SENSEKEY
-	 * lemma % lex_sense
-	 * where lex_sense is encoded as:
-	 * ss_type:lex_filenum:lex_id:head_word:head_id
-	 *
-	 * @return lexid
-	 */
-	public int findLexid()
-	{
-		return Integer.parseInt(sensekey.split("%")[1].split(":")[2]);
-	}
-
-	// stringify
-
-	@Override
-	public String toString()
-	{
-		return String.format(" %s (%dth of '%s', %s %s) ", getSensekey(), getLexIndex() + 1, getLex().getLemma(), getSynsetId(), getType());
-	}
-
-	public String toLongString()
-	{
-		String relationsStr = Formatter.join(getRelations(), ",");
-		return String.format("[%d] of '%s' %s %s %s {%s}", getLexIndex() + 1, getLex().getLemma(), getSensekey(), getType(), getSynsetId(), relationsStr);
-	}
-
-	// identity
-
-	@Override
-	public boolean equals(final Object o)
-	{
-		if (this == o)
-		{
-			return true;
-		}
-		if (o == null || getClass() != o.getClass())
-		{
-			return false;
-		}
-		Sense sense = (Sense) o;
-		return sensekey.equals(sense.sensekey);
-	}
-
-	@Override
-	public int hashCode()
-	{
-		return Objects.hash(sensekey);
-	}
-
-	// ordering
-
-	@Override
-	public int compareTo(final Sense that)
-	{
-		return getSensekey().compareTo(that.getSensekey());
-	}
+    override fun compareTo(other: Sense): Int {
+        return senseId.compareTo(other.senseId)
+    }
 }

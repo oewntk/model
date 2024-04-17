@@ -1,16 +1,11 @@
-/*
- * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-")2021. Bernard Bou.
- */
+package org.oewntk.model
 
-package org.oewntk.model;
-
-import java.io.*;
+import java.io.*
 
 /**
  * Serialize models
  */
-public class Serialize
-{
+object Serialize {
 	/**
 	 * Serialize model to file
 	 *
@@ -18,11 +13,10 @@ public class Serialize
 	 * @param file  file
 	 * @throws IOException io exception
 	 */
-	static public void serializeModel(final Model model, final File file) throws IOException
-	{
-		try (OutputStream os = new FileOutputStream(file))
-		{
-			serializeModel(os, model);
+	@Throws(IOException::class)
+	fun serializeModel(model: Model, file: File) {
+		FileOutputStream(file).use { os ->
+			serializeModel(os, model)
 		}
 	}
 
@@ -33,9 +27,9 @@ public class Serialize
 	 * @param os    output stream
 	 * @throws IOException io exception
 	 */
-	public static void serializeModel(final OutputStream os, final Model model) throws IOException
-	{
-		serialize(os, model);
+	@Throws(IOException::class)
+	fun serializeModel(os: OutputStream, model: Model) {
+		serialize(os, model)
 	}
 
 	/**
@@ -45,11 +39,11 @@ public class Serialize
 	 * @param file  file
 	 * @throws IOException io exception
 	 */
-	static public void serializeCoreModel(final CoreModel model, final File file) throws IOException
-	{
-		try (OutputStream os = new FileOutputStream(file))
-		{
-			serializeCoreModel(os, model);
+	@JvmStatic
+	@Throws(IOException::class)
+	fun serializeCoreModel(model: CoreModel, file: File) {
+		FileOutputStream(file).use { os ->
+			serializeCoreModel(os, model)
 		}
 	}
 
@@ -60,9 +54,9 @@ public class Serialize
 	 * @param os    output stream
 	 * @throws IOException io exception
 	 */
-	public static void serializeCoreModel(final OutputStream os, final CoreModel model) throws IOException
-	{
-		serialize(os, model);
+	@Throws(IOException::class)
+	fun serializeCoreModel(os: OutputStream, model: CoreModel?) {
+		serialize(os, model)
 	}
 
 	/**
@@ -72,11 +66,10 @@ public class Serialize
 	 * @param object object
 	 * @throws IOException io exception
 	 */
-	private static void serialize(final OutputStream os, final Object object) throws IOException
-	{
-		try (ObjectOutputStream oos = new ObjectOutputStream(os))
-		{
-			oos.writeObject(object);
+	@Throws(IOException::class)
+	private fun serialize(os: OutputStream, `object`: Any?) {
+		ObjectOutputStream(os).use { oos ->
+			oos.writeObject(`object`)
 		}
 	}
 }

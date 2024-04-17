@@ -1,39 +1,34 @@
 /*
  * Copyright (c) 2021. Bernard Bou.
  */
-
-package org.oewntk.model;
-
-import java.util.Comparator;
+package org.oewntk.model
 
 /**
  * Lexicographic Order
  */
-public class LexicographicOrder
-{
+object LexicographicOrder {
+
 	/**
 	 * Lower-case first
 	 */
-	public static final Comparator<String> lowerFirst = (s1, s2) -> {
-		int c = s1.compareToIgnoreCase(s2);
-		if (c != 0)
-		{
-			return c;
+    @JvmField
+    val lowerFirst: Comparator<String> = Comparator { s1: String, s2: String ->
+		val c = s1.compareTo(s2, ignoreCase = true)
+		if (c != 0) {
+			return@Comparator c
 		}
-		// same lower-case map
-		return -s1.compareTo(s2);
-	};
+		-s1.compareTo(s2)
+	}
 
 	/**
 	 * Upper-case first
 	 */
-	public static final Comparator<String> upperFirst = (s1, s2) -> {
-		int c = s1.compareToIgnoreCase(s2);
-		if (c != 0)
-		{
-			return c;
+    @JvmField
+    val upperFirst: Comparator<String> = Comparator { s1: String, s2: String ->
+		val c = s1.compareTo(s2, ignoreCase = true)
+		if (c != 0) {
+			return@Comparator c
 		}
-		// same lower-case map
-		return s1.compareTo(s2);
-	};
+		s1.compareTo(s2)
+	}
 }

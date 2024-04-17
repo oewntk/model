@@ -1,21 +1,18 @@
 /*
  * Copyright (c) 2021. Bernard Bou.
  */
+package org.oewntk.model
 
-package org.oewntk.model;
-
-import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.*;
+import java.util.*
+import java.util.function.Predicate
+import java.util.stream.Collectors
+import java.util.stream.Stream
 
 /**
  * Generic grouping factory
  */
-public class Groupings
-{
+object Groupings {
+
 	// group by
 
 	/**
@@ -23,13 +20,12 @@ public class Groupings
 	 *
 	 * @param things           collection of elements
 	 * @param groupingFunction map element to key
-	 * @param <K>              type of key
-	 * @param <V>              type of element
+	 * @param K             type of key
+	 * @param V             type of element
 	 * @return collections of elements grouped by and mapped by key
 	 */
-	public static <K, V> Map<K, Collection<V>> groupBy(final Collection<V> things, final Function<V, K> groupingFunction)
-	{
-		return groupBy(things.stream(), groupingFunction);
+	fun <K, V> groupBy(things: Collection<V>, groupingFunction: (V) -> K): Map<K, Collection<V>> {
+		return groupBy(things.stream(), groupingFunction)
 	}
 
 	/**
@@ -37,14 +33,13 @@ public class Groupings
 	 *
 	 * @param stream           stream of elements
 	 * @param groupingFunction map element to key
-	 * @param <K>              type of key
-	 * @param <V>              type of element
+	 * @param K             type of key
+	 * @param V             type of element
 	 * @return collections of elements grouped by and mapped by key
 	 */
-	public static <K, V> Map<K, Collection<V>> groupBy(final Stream<V> stream, final Function<V, K> groupingFunction)
-	{
-		return stream //
-				.collect(groupingBy(groupingFunction, toCollection(HashSet::new)));
+	fun <K, V> groupBy(stream: Stream<V>, groupingFunction: (V) -> K): Map<K, Collection<V>> {
+		return stream
+			.collect(Collectors.groupingBy(groupingFunction, Collectors.toCollection { HashSet() }))
 	}
 
 	// counts
@@ -54,14 +49,19 @@ public class Groupings
 	 *
 	 * @param stream           stream of elements
 	 * @param groupingFunction map element to key
-	 * @param <K>              type of key
-	 * @param <V>              type of element
+	 * @param K             type of key
+	 * @param V             type of element
 	 * @return count for each key/group
 	 */
-	public static <K, V> Map<K, Long> countsBy(final Stream<V> stream, final Function<V, K> groupingFunction)
-	{
-		return stream //
-				.collect(groupingBy(groupingFunction, TreeMap::new, counting()));
+	fun <K, V> countsBy(stream: Stream<V>, groupingFunction: (V) -> K): Map<K, Long> {
+		return stream
+			.collect(
+				Collectors.groupingBy(
+					groupingFunction,
+					{ TreeMap() },
+					Collectors.counting()
+				)
+			)
 	}
 
 	/**
@@ -69,19 +69,23 @@ public class Groupings
 	 *
 	 * @param stream           stream of elements
 	 * @param groupingFunction map element to key
-	 * @param <K>              type of key
-	 * @param <V>              type of element
+	 * @param K              type of key
+	 * @param V              type of element
 	 * @return count for each key/group
 	 */
-	public static <K, V> Map<K, Long> multipleCountsBy(final Stream<V> stream, final Function<V, K> groupingFunction)
-	{
-		return stream //
-				.collect(collectingAndThen( //
-						groupingBy(groupingFunction, TreeMap::new, counting()), //
-						m -> {
-							m.values().removeIf(v -> v <= 1L);
-							return m;
-						}));
+	fun <K, V> multipleCountsBy(stream: Stream<V>, groupingFunction: (V) -> K): Map<K, Long> {
+		val c = Collectors.collectingAndThen(
+			Collectors.groupingBy(
+				groupingFunction,
+				{ TreeMap() },
+				Collectors.counting()
+			)
+		) {
+			it.values.removeIf { it2 -> it2 <= 1L }
+			it
+		}
+		return stream
+			.collect(c)
 	}
 
 	// group by having
@@ -92,19 +96,27 @@ public class Groupings
 	 * @param stream           stream of elements
 	 * @param groupingFunction map element to key
 	 * @param predicate        having clause
-	 * @param <K>              grouping key
-	 * @param <V>              type of elements
+	 * @param K             grouping key
+	 * @param V             type of elements
 	 * @return list of elements grouped and mapped by key
 	 */
-	public static <K, V> Map<K, List<V>> groupByHaving(final Stream<V> stream, final Function<V, K> groupingFunction, final Predicate<List<V>> predicate)
-	{
-		return stream //
-				.collect(collectingAndThen( //
-						groupingBy(groupingFunction, TreeMap::new, toList()), //
-						map -> {
-							map.values().removeIf(predicate);
-							return map;
-						}));
+	private fun <K, V> groupByHaving(
+		stream: Stream<V>,
+		groupingFunction: (V) -> K,
+		predicate: Predicate<List<V>>?
+	): Map<K, List<V>> {
+		val c = Collectors.collectingAndThen(
+			Collectors.groupingBy(
+				groupingFunction,
+				{ TreeMap() },
+				Collectors.toList()
+			)
+		) {
+			it.values.removeIf(predicate!!)
+			it
+		}
+		return stream
+			.collect(c)
 	}
 
 	/**
@@ -112,12 +124,11 @@ public class Groupings
 	 *
 	 * @param stream           stream of elements
 	 * @param groupingFunction map element to key
-	 * @param <K>              grouping key
-	 * @param <V>              type of elements
+	 * @param K             grouping key
+	 * @param V             type of elements
 	 * @return list of elements grouped and mapped by key
 	 */
-	public static <K, V> Map<K, List<V>> groupByHavingMultipleCount(final Stream<V> stream, final Function<V, K> groupingFunction)
-	{
-		return groupByHaving(stream, groupingFunction, values -> values.size() <= 1L);
+	fun <K, V> groupByHavingMultipleCount(stream: Stream<V>, groupingFunction: (V) -> K): Map<K, List<V>> {
+		return groupByHaving(stream, groupingFunction) { values -> values.size <= 1L }
 	}
 }

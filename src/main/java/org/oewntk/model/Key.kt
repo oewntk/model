@@ -1,359 +1,275 @@
 /*
  * Copyright (c) 2021. Bernard Bou.
  */
+package org.oewntk.model
 
-package org.oewntk.model;
+import java.io.Serializable
+import java.util.*
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Function;
-
-public interface Key
-{
-	Comparator<Pronunciation[]> pronunciationsComparator = (pa1, pa2) -> {
-		var ps1 = Utils.toSet(pa1);
-		var ps2 = Utils.toSet(pa2);
-		return ps1.equals(ps2) ? 0 : ps1.toString().compareTo(ps2.toString());
-	};
+interface Key {
 
 	/**
 	 * (Word, PosOrType)
+	 *
+	 * @param word    word: lemma or LC lemma
+	 * @param posType pos type: part-of-speech or type
 	 */
-	class W_P implements Key, Comparable<W_P>, Serializable
-	{
-		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> W_P of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
-		{
-			return new W_P(wordExtractor.apply(lex), posTypeExtractor.apply(lex));
-		}
-
-		public static W_P of_t(final Lex lex)
-		{
-			return W_P.of(lex, Lex::getLemma, Lex::getType);
-		}
-
-		public static W_P of_p(final Lex lex)
-		{
-			return W_P.of(lex, Lex::getLemma, Lex::getPartOfSpeech);
-		}
-
-		public static W_P of_lc_t(final Lex lex)
-		{
-			return W_P.of(lex, Lex::getLCLemma, Lex::getType);
-		}
-
-		public static W_P of_lc_p(final Lex lex)
-		{
-			return W_P.of(lex, Lex::getLCLemma, Lex::getPartOfSpeech);
-		}
-
-		public static W_P from(final String word, final Character posType)
-		{
-			return new W_P(word, posType);
-		}
-
+	open class W_P(
 		/**
 		 * Word: Lemma or LC lemma
 		 */
-		protected final String word;
-
+		@JvmField val word: String,
 		/**
 		 * PosType: part-of-speech or type
 		 */
-		protected final Character posType;
+		@JvmField val posType: Char
 
-		/**
-		 * Constructor
-		 *
-		 * @param word    word: lemma or LC lemma
-		 * @param posType pos type: part-of-speech or type
-		 */
-		protected W_P(final String word, final Character posType)
-		{
-			this.word = word;
-			this.posType = posType;
-		}
+	) : Key, Comparable<W_P>, Serializable {
 
-		/**
-		 * Get word
-		 *
-		 * @return word
-		 */
-		public String getWord()
-		{
-			return word;
-		}
-
-		/**
-		 * Get pos type
-		 *
-		 * @return pos type
-		 */
-		public Character getPosType()
-		{
-			return posType;
-		}
-
-		@Override
-		public boolean equals(final Object o)
-		{
-			if (this == o)
-			{
-				return true;
+		override fun equals(other: Any?): Boolean {
+			if (this === other) {
+				return true
 			}
-			if (o == null || getClass() != o.getClass())
-			{
-				return false;
+			if (other == null || javaClass != other.javaClass) {
+				return false
 			}
-			W_P that = (W_P) o;
-			if (!this.word.equals(that.word))
-			{
-				return false;
+			val that = other as W_P
+			if (word != that.word) {
+				return false
 			}
-			return this.posType == that.posType;
+			return this.posType == that.posType
 		}
 
-		@Override
-		public int hashCode()
-		{
-			return Objects.hash(word, posType);
+		override fun hashCode(): Int {
+			return Objects.hash(word, posType)
 		}
 
-		public static final Comparator<W_P> wpComparator = Comparator.comparing(W_P::getWord) //
-				.thenComparing(W_P::getPosType);
-
-		@Override
-		public int compareTo(final W_P that)
-		{
-			if (this.equals(that))
-			{
-				return 0;
+		override fun compareTo(other: W_P): Int {
+			if (this == other) {
+				return 0
 			}
-			return wpComparator.compare(this, that);
+			return wpComparator.compare(this, other)
 		}
 
-		@Override
-		public String toString()
-		{
-			return String.format("(%s,%s)", word, posType);
+		override fun toString(): String {
+			return String.format("(%s,%s)", word, posType)
 		}
 
-		public String toLongString()
-		{
-			return String.format("KEY WP %s %s", this.getClass().getSimpleName(), this);
+		open fun toLongString(): String {
+			return "KEY WP ${javaClass.simpleName} $this"
+		}
+
+		companion object {
+
+			fun of(
+				lex: Lex,
+				wordExtractor: (Lex) -> String,
+				posTypeExtractor: (Lex) -> Char
+			): W_P {
+				return W_P(wordExtractor(lex), posTypeExtractor(lex))
+			}
+
+			@JvmStatic
+			fun of_t(lex: Lex): W_P {
+				return of(lex, Lex::lemma, Lex::type)
+			}
+
+			@JvmStatic
+			fun of_p(lex: Lex): W_P {
+				return of(lex, Lex::lemma, Lex::partOfSpeech)
+			}
+
+			@JvmStatic
+			fun of_lc_t(lex: Lex): W_P {
+				return of(lex, Lex::lCLemma, Lex::type)
+			}
+
+			@JvmStatic
+			fun of_lc_p(lex: Lex): W_P {
+				return of(lex, Lex::lCLemma, Lex::partOfSpeech)
+			}
+
+			@JvmStatic
+			fun from(word: String, posType: Char): W_P {
+				return W_P(word, posType)
+			}
+
+			val wpComparator: Comparator<W_P> = Comparator.comparing { obj: W_P -> obj.word } //
+				.thenComparing { obj: W_P -> obj.posType }
 		}
 	}
 
 	/**
 	 * (Word, PosOrType, Pronunciations)
 	 */
-	class W_P_A extends W_P
-	{
-		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> W_P_A of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
-		{
-			return new W_P_A(wordExtractor.apply(lex), posTypeExtractor.apply(lex), lex.getPronunciations());
-		}
+	open class W_P_A(
+		word: String,
+		posType: Char,
+		@JvmField val pronunciations: Array<Pronunciation>?
+	) : W_P(word, posType) {
 
-		public static W_P_A of_t(final Lex lex)
-		{
-			return W_P_A.of(lex, Lex::getLemma, Lex::getType);
-		}
+		val pronunciationSet: Set<Pronunciation>
+			get() = Utils.toSet(pronunciations)
 
-		public static W_P_A of_p(final Lex lex)
-		{
-			return W_P_A.of(lex, Lex::getLemma, Lex::getPartOfSpeech);
-		}
-
-		public static W_P_A of_lc_t(final Lex lex)
-		{
-			return W_P_A.of(lex, Lex::getLCLemma, Lex::getType);
-		}
-
-		public static W_P_A of_lc_p(final Lex lex)
-		{
-			return W_P_A.of(lex, Lex::getLCLemma, Lex::getPartOfSpeech);
-		}
-
-		public static W_P_A from(final String lemma, final Character type, final Pronunciation... pronunciations)
-		{
-			return new W_P_A(lemma, type, pronunciations);
-		}
-
-		protected final Pronunciation[] pronunciations;
-
-		protected W_P_A(final String word, final Character posType, final Pronunciation[] pronunciations)
-		{
-			super(word, posType);
-			this.pronunciations = pronunciations;
-		}
-
-		public Pronunciation[] getPronunciations()
-		{
-			return pronunciations;
-		}
-
-		public Set<Pronunciation> getPronunciationSet()
-		{
-			return Utils.toSet(pronunciations);
-		}
-
-		@Override
-		public boolean equals(final Object o)
-		{
-			if (this == o)
-			{
-				return true;
+		override fun equals(other: Any?): Boolean {
+			if (this === other) {
+				return true
 			}
-			if (o == null || getClass() != o.getClass())
-			{
-				return false;
+			if (other == null || javaClass != other.javaClass) {
+				return false
 			}
-			W_P_A that = (W_P_A) o;
-			if (!this.word.equals(that.word))
-			{
-				return false;
+			val that = other as W_P_A
+			if (word != that.word) {
+				return false
 			}
-			if (this.posType != that.posType)
-			{
-				return false;
+			if (this.posType != that.posType) {
+				return false
 			}
-			return Objects.equals(Utils.toSet(this.pronunciations), Utils.toSet(that.pronunciations));
+			return Utils.toSet(this.pronunciations) == Utils.toSet(that.pronunciations)
 		}
 
-		@Override
-		public int hashCode()
-		{
-			return Objects.hash(word, posType, Arrays.hashCode(pronunciations));
+		override fun hashCode(): Int {
+			return Objects.hash(word, posType, pronunciations.contentHashCode())
 		}
 
-		public static final Comparator<W_P_A> wpaComparator = Comparator.comparing(W_P_A::getWord) //
-				.thenComparing(W_P_A::getPosType) //
-				.thenComparing(W_P_A::getPronunciations, Comparator.nullsFirst(pronunciationsComparator));
-
-		@Override
-		public int compareTo(final W_P that)
-		{
-			if (this.equals(that))
-			{
-				return 0;
+		override fun compareTo(other: W_P): Int {
+			if (this == other) {
+				return 0
 			}
-			return wpaComparator.compare(this, (W_P_A) that);
+			return wpaComparator.compare(this, other as W_P_A)
 		}
 
-		@Override
-		public String toString()
-		{
-			return String.format("(%s,%s,%s)", word, posType, Arrays.toString(pronunciations));
+		override fun toString(): String {
+			return String.format("(%s,%s,%s)", word, posType, pronunciations.contentToString())
 		}
 
-		public String toLongString()
-		{
-			return String.format("KEY WPA %s %s", this.getClass().getSimpleName(), this);
+		override fun toLongString(): String {
+			return String.format("KEY WPA %s %s", this.javaClass.simpleName, this)
+		}
+
+		companion object {
+
+			fun of(
+				lex: Lex,
+				wordExtractor: (Lex) -> String,
+				posTypeExtractor: (Lex) -> Char,
+			): W_P_A {
+				return W_P_A(wordExtractor(lex), posTypeExtractor(lex), lex.pronunciations)
+			}
+
+			@JvmStatic
+			fun of_t(lex: Lex): W_P_A {
+				return of(lex, Lex::lemma, Lex::type)
+			}
+
+			@JvmStatic
+			fun of_p(lex: Lex): W_P_A {
+				return of(lex, Lex::lemma, Lex::partOfSpeech)
+			}
+
+			@JvmStatic
+			fun of_lc_t(lex: Lex): W_P_A {
+				return of(lex, Lex::lCLemma, Lex::type)
+			}
+
+			fun of_lc_p(lex: Lex): W_P_A {
+				return of(lex, Lex::lCLemma, Lex::partOfSpeech)
+			}
+
+			fun from(lemma: String, type: Char, pronunciations: Array<Pronunciation>): W_P_A {
+				return W_P_A(lemma, type, pronunciations)
+			}
+
+			val wpaComparator = compareBy<W_P_A> { it.word }
+				.thenBy { it.posType }
+				.thenBy(nullsFirst(pronunciationsComparator)) { it.pronunciations }
 		}
 	}
 
 	/**
 	 * (Word, PosOrType, Discriminant) - Shallow key
 	 */
-	class W_P_D extends W_P
-	{
-		public static <L extends Function<Lex, String>, P extends Function<Lex, Character>> W_P_D of(final Lex lex, final L wordExtractor, final P posTypeExtractor)
-		{
-			return new W_P_D(wordExtractor.apply(lex), posTypeExtractor.apply(lex), lex.getDiscriminant());
-		}
+	open class W_P_D(word: String, posType: Char, @JvmField val discriminant: String?) : W_P(word, posType) {
 
-		public static W_P_D of_t(final Lex lex)
-		{
-			return W_P_D.of(lex, Lex::getLemma, Lex::getType);
-		}
-
-		public static W_P_D of_p(final Lex lex)
-		{
-			return W_P_D.of(lex, Lex::getLemma, Lex::getPartOfSpeech);
-		}
-
-		public static W_P_D of_lc_t(final Lex lex)
-		{
-			return W_P_D.of(lex, Lex::getLCLemma, Lex::getType);
-		}
-
-		public static W_P_D of_lc_p(final Lex lex)
-		{
-			return W_P_D.of(lex, Lex::getLCLemma, Lex::getPartOfSpeech);
-		}
-
-		public static W_P_D from(final String lemma, final Character type, final String discriminant)
-		{
-			return new W_P_D(lemma, type, discriminant);
-		}
-
-		protected final String discriminant;
-
-		public W_P_D(final String word, final Character posType, final String discriminant)
-		{
-			super(word, posType);
-			this.discriminant = discriminant;
-		}
-
-		public String getDiscriminant()
-		{
-			return discriminant;
-		}
-
-		@Override
-		public boolean equals(final Object o)
-		{
-			if (this == o)
-			{
-				return true;
+		override fun equals(other: Any?): Boolean {
+			if (this === other) {
+				return true
 			}
-			if (o == null || getClass() != o.getClass())
-			{
-				return false;
+			if (other == null || javaClass != other.javaClass) {
+				return false
 			}
-			W_P_D that = (W_P_D) o;
-			if (!this.word.equals(that.word))
-			{
-				return false;
+			val that = other as W_P_D
+			if (word != that.word) {
+				return false
 			}
-			if (this.posType != that.posType)
-			{
-				return false;
+			if (this.posType != that.posType) {
+				return false
 			}
-			return Objects.equals(this.discriminant, that.discriminant);
+			return this.discriminant == that.discriminant
 		}
 
-		@Override
-		public int hashCode()
-		{
-			return Objects.hash(word, posType, discriminant);
+		override fun hashCode(): Int {
+			return Objects.hash(word, posType, discriminant)
 		}
 
-		public static final Comparator<W_P_D> wpdComparator = Comparator.comparing(W_P_D::getWord) //
-				.thenComparing(W_P_D::getPosType) //
-				.thenComparing(W_P_D::getDiscriminant, Comparator.nullsFirst(Comparator.naturalOrder()));
-
-		@Override
-		public int compareTo(final W_P that)
-		{
-			if (this.equals(that))
-			{
-				return 0;
+		override fun compareTo(other: W_P): Int {
+			if (this == other) {
+				return 0
 			}
-			return wpdComparator.compare(this, (W_P_D) that);
+			return wpdComparator.compare(this, other as W_P_D)
 		}
 
-		@Override
-		public String toString()
-		{
-			return String.format("(%s,%s,%s)", word, posType, discriminant);
+		override fun toString(): String {
+			return String.format("(%s,%s,%s)", word, posType, discriminant)
 		}
 
-		public String toLongString()
-		{
-			return String.format("KEY WPD %s %s", this.getClass().getSimpleName(), this);
+		override fun toLongString(): String {
+			return String.format("KEY WPD %s %s", this.javaClass.simpleName, this)
 		}
+
+		companion object {
+			fun of(
+				lex: Lex,
+				wordExtractor: (Lex) -> String,
+				posTypeExtractor: (Lex) -> Char
+			): W_P_D {
+				return W_P_D(wordExtractor(lex), posTypeExtractor(lex), lex.discriminant)
+			}
+
+			@JvmStatic
+			fun of_t(lex: Lex): W_P_D {
+				return of(lex, Lex::lemma, Lex::type)
+			}
+
+			fun of_p(lex: Lex): W_P_D {
+				return of(lex, Lex::lemma, Lex::partOfSpeech)
+			}
+
+			@JvmStatic
+			fun of_lc_t(lex: Lex): W_P_D {
+				return of(lex, Lex::lCLemma, Lex::type)
+			}
+
+			fun of_lc_p(lex: Lex): W_P_D {
+				return of(lex, Lex::lCLemma, Lex::partOfSpeech)
+			}
+
+			fun from(lemma: String, type: Char, discriminant: String?): W_P_D {
+				return W_P_D(lemma, type, discriminant)
+			}
+
+			val wpdComparator: Comparator<W_P_D> = compareBy<W_P_D> { it.word }
+				.thenBy { it.posType }
+				.thenBy(nullsFirst(Comparator.naturalOrder())) { it.discriminant }
+		}
+	}
+
+	companion object {
+		val pronunciationsComparator: Comparator<Array<Pronunciation>?> =
+			Comparator { pa1: Array<Pronunciation>?, pa2: Array<Pronunciation>? ->
+				val ps1 = Utils.toSet(pa1)
+				val ps2 = Utils.toSet(pa2)
+				if (ps1 == ps2) 0 else ps1.toString().compareTo(ps2.toString())
+			}
 	}
 }

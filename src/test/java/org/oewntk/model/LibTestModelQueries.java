@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.joining;
 
 public class LibTestModelQueries
 {
-	private static final Function<Lex, Optional<String>> nullableDiscriminant = lex -> Optional.ofNullable(lex.getDiscriminant());
+	private static final Function<Lex, Optional<String>> nullableDiscriminant = lex -> Optional.ofNullable(lex.discriminant);
 
 	private static final Function<Lex, Optional<Pronunciation[]>> nullablePronunciations = lex -> Optional.ofNullable(lex.getPronunciations());
 
@@ -93,8 +93,8 @@ public class LibTestModelQueries
 
 	private static void dump(final Sense sense, final CoreModel model, final String indent, final PrintStream ps)
 	{
-		ps.printf("%ssk=%s type=%c pos=%c lemma='%s' index=%d adj=%s synset=%s%n", indent, sense.getSensekey(), sense.getType(), sense.getPartOfSpeech(), sense.getLemma(), sense.getLexIndex() + 1, sense.getAdjPosition(), toShortSynset(sense.getSynsetId(), model));
-		dumpSynset(sense.getSynsetId(), model, indent + "\t", ps);
+		ps.printf("%ssk=%s type=%c pos=%c lemma='%s' index=%d adj=%s synset=%s%n", indent, sense.getSensekey(), sense.type, sense.partOfSpeech, sense.getLemma(), sense.getLexIndex() + 1, sense.adjPosition, toShortSynset(sense.synsetId, model));
+		dumpSynset(sense.synsetId, model, indent + "\t", ps);
 
 		// relations
 		var relations = sense.getRelations();
@@ -104,7 +104,7 @@ public class LibTestModelQueries
 		}
 
 		// verbframes
-		var verbFrames = sense.getVerbFrames();
+		var verbFrames = sense.verbFrames;
 		if (verbFrames != null)
 		{
 			ps.printf("%sframes: [%s]%n", indent, String.join(",", verbFrames));
@@ -132,7 +132,7 @@ public class LibTestModelQueries
 
 	private static String toShort(final Synset synset)
 	{
-		return String.format("%s %s '%s'", synset.getSynsetId(), Arrays.toString(synset.getMembers()), toShortDefinition(synset));
+		return String.format("%s %s '%s'", synset.synsetId, Arrays.toString(synset.members), toShortDefinition(synset));
 	}
 
 	private static String toShortDefinition(final Synset synset)
@@ -147,9 +147,9 @@ public class LibTestModelQueries
 
 	private static void dump(final Synset synset, final String indent, final PrintStream ps)
 	{
-		ps.printf("%s%s%n", indent, synset.getSynsetId());
-		ps.printf("%s{%s}%n", indent + "\t", String.join(",", synset.getMembers()));
-		ps.printf("%s%s%n", indent + "\t", String.join(",", synset.getDefinitions()));
+		ps.printf("%s%s%n", indent, synset.synsetId);
+		ps.printf("%s{%s}%n", indent + "\t", String.join(",", synset.members));
+		ps.printf("%s%s%n", indent + "\t", String.join(",", synset.definitions));
 		var relations = synset.getRelations();
 		if (relations != null)
 		{

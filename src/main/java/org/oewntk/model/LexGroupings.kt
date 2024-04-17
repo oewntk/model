@@ -1,24 +1,22 @@
 /*
  * Copyright (c) 2021. Bernard Bou.
  */
+package org.oewntk.model
 
-package org.oewntk.model;
+import org.oewntk.model.Lex
+import java.util.*
+import java.util.stream.Collectors
 
-import java.util.*;
+object LexGroupings {
 
-import static java.util.stream.Collectors.*;
-
-public class LexGroupings
-{
 	/**
 	 * Group lexes by CS lemma
 	 *
 	 * @param lexes lexes
 	 * @return lexes grouped by CS lemma
 	 */
-	public static Map<String, Collection<Lex>> lexesByLemma(final Collection<Lex> lexes)
-	{
-		return Groupings.groupBy(lexes, Lex::getLemma);
+	fun lexesByLemma(lexes: Collection<Lex>): Map<String, Collection<Lex>> {
+		return Groupings.groupBy(lexes, Lex::lemma)
 	}
 
 	/**
@@ -27,9 +25,8 @@ public class LexGroupings
 	 * @param lexes lexes
 	 * @return lexes grouped by LCS lemma
 	 */
-	public static Map<String, Collection<Lex>> lexesByLCLemma(final Collection<Lex> lexes)
-	{
-		return Groupings.groupBy(lexes, Lex::getLCLemma);
+	fun lexesByLCLemma(lexes: Collection<Lex>): Map<String, Collection<Lex>> {
+		return Groupings.groupBy(lexes, Lex::lCLemma)
 	}
 
 	/**
@@ -38,10 +35,15 @@ public class LexGroupings
 	 * @param model model
 	 * @return 2-tier hypermap (LCLemma -&gt; CSLemma -&gt; lexes)
 	 */
-	public static Map<String, Map<String, Collection<Lex>>> hyperMapByLCLemmaByLemma(final CoreModel model)
-	{
-		return model.getLexesByLemma().entrySet().stream() //
-				.collect(groupingBy(e -> e.getKey().toLowerCase(Locale.ENGLISH), toMap(Map.Entry::getKey, Map.Entry::getValue)));
+	@JvmStatic
+	fun hyperMapByLCLemmaByLemma(model: CoreModel): MutableMap<String, Map<String, Collection<Lex>>> {
+		return model.lexesByLemma!!.entries.stream()
+			.collect(
+				Collectors.groupingBy(
+					{ it.key.lowercase() },
+					Collectors.toMap({ it.key }, { it.value })
+				)
+			)
 	}
 
 	/**
@@ -51,11 +53,17 @@ public class LexGroupings
 	 * @param model model
 	 * @return CS lemmas by LC lemmas
 	 */
-	public static Map<String, List<String>> cSLemmasByLCLemma(final CoreModel model)
-	{
-		return model.lexes.stream() //
-				.map(Lex::getLemma) //
-				.collect(groupingBy(l -> l.toLowerCase(Locale.ENGLISH), TreeMap::new, toList()));
+	@JvmStatic
+	fun cSLemmasByLCLemma(model: CoreModel): Map<String, List<String>> {
+		return model.lexes.stream()
+			.map(Lex::lemma)
+			.collect(
+				Collectors.groupingBy(
+					{ it.lowercase(Locale.ENGLISH) },
+					{ TreeMap() },
+					Collectors.toList()
+				)
+			)
 	}
 
 	/**
@@ -65,9 +73,8 @@ public class LexGroupings
 	 * @param lcLemma lower-cased lemma
 	 * @return CS lemmas for given LC lemma
 	 */
-	public static List<String> cSLemmasForLCLemma(final CoreModel model, final String lcLemma)
-	{
-		return cSLemmasByLCLemma(model).get(lcLemma);
+	fun cSLemmasForLCLemma(model: CoreModel, lcLemma: String): List<String> {
+		return cSLemmasByLCLemma(model)[lcLemma]!!
 	}
 
 	// counts
@@ -78,9 +85,11 @@ public class LexGroupings
 	 * @param model model
 	 * @return counts of CS lemmas by LC lemmas
 	 */
-	public static Map<String, Long> countsByLCLemma(final CoreModel model)
-	{
-		return Groupings.countsBy(model.lexes.stream().map(Lex::getLemma), lemma -> lemma.toLowerCase(Locale.ENGLISH));
+	@JvmStatic
+	fun countsByLCLemma(model: CoreModel): Map<String, Long> {
+		return Groupings.countsBy(
+			model.lexes.stream().map(Lex::lemma)
+		) { it.lowercase(Locale.ENGLISH) }
 	}
 
 	/**
@@ -89,9 +98,11 @@ public class LexGroupings
 	 * @param model model
 	 * @return counts of CS lemmas by LC lemmas, with count &gt; 2
 	 */
-	public static Map<String, Long> multipleCountsByICLemma(final CoreModel model)
-	{
-		return Groupings.multipleCountsBy(model.lexes.stream().map(Lex::getLemma), lemma -> lemma.toLowerCase(Locale.ENGLISH));
+	@JvmStatic
+	fun multipleCountsByICLemma(model: CoreModel): Map<String, Long> {
+		return Groupings.multipleCountsBy(
+			model.lexes.stream().map(Lex::lemma)
+		) { it.lowercase(Locale.ENGLISH) }
 	}
 
 	/**
@@ -100,8 +111,10 @@ public class LexGroupings
 	 * @param model model
 	 * @return CS lemmas by LC lemmas, with count &gt; 2
 	 */
-	public static Map<String, List<String>> cSLemmasByLCLemmaHavingMultipleCount(final CoreModel model)
-	{
-		return Groupings.groupByHavingMultipleCount(model.lexes.stream().map(Lex::getLemma), lemma -> lemma.toLowerCase(Locale.ENGLISH));
+	@JvmStatic
+	fun cSLemmasByLCLemmaHavingMultipleCount(model: CoreModel): Map<String, List<String>> {
+		return Groupings.groupByHavingMultipleCount(
+			model.lexes.stream().map(Lex::lemma)
+		) { it.lowercase() }
 	}
 }

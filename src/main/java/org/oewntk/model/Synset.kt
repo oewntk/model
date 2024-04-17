@@ -1,348 +1,212 @@
 /*
  * Copyright (c) 2021-2021. Bernard Bou.
  */
+package org.oewntk.model
 
-package org.oewntk.model;
-
-import java.io.Serializable;
-import java.util.*;
+import java.io.Serializable
+import java.util.*
 
 /**
  * Synset
+ *
+ * @property synsetId    synset id
+ * @property type        type: {n,v,a,r,s}
+ * @property domain      source file
+ * @property members     synset members
+ * @property definitions definitions
+ * @property examples    examples
+ * @property wikidata    wiki data
+ * @property relations   synset relations
  */
-public class Synset implements Comparable<Synset>, Serializable
-{
-	/**
-	 * Synset id
-	 */
-	private final String synsetId;
+class Synset(
+    /**
+     * Synset id
+     */
+    @JvmField val synsetId: String,
 
-	/**
-	 * Synset type ss_type {n, v, a, r, s}
-	 */
-	private final char type;
+    /**
+     * Synset type ss_type {'n', 'v', 'a', 'r', 's'}
+     */
+    @JvmField val type: Char,
 
-	/**
-	 * Lemma members
-	 */
-	private final String[] members;
+    /**
+     * Source file
+     */
+    val domain: String,
 
-	/**
-	 * Definitions
-	 */
-	private final String[] definitions;
+    /**
+     * Lemma members
+     */
+    @JvmField val members: Array<String>,
 
-	/**
-	 * Examples
-	 */
-	private final String[] examples;
+    /**
+     * Definitions
+     */
+    @JvmField val definitions: Array<String>?,
 
-	/**
-	 * Wiki data
-	 */
-	private final String wikidata;
+    /**
+     * Examples
+     */
+    @JvmField val examples: Array<String>?,
 
-	/**
-	 * Synset relations
-	 */
-	private Map<String, Set<String>> relations;
+    /**
+     * Wiki data
+     */
+    val wikidata: String,
 
-	/**
-	 * Source file
-	 */
-	private final String domain;
+    /**
+     * Synset relations
+     */
+    var relations: MutableMap<String, MutableSet<String>>?
 
-	/**
-	 * Constructor
-	 *
-	 * @param synsetId    synset id
-	 * @param type        type: {n,v,a,r,s}
-	 * @param domain      source file
-	 * @param members     synset members
-	 * @param definitions definitions
-	 * @param examples    examples
-	 * @param wikidata    wiki data
-	 * @param relations   synset relations
-	 */
-	public Synset(final String synsetId, final char type, final String domain, final String[] members, final String[] definitions, final String[] examples, final String wikidata, final Map<String, Set<String>> relations)
-	{
-		this.synsetId = synsetId;
-		this.type = type;
-		this.domain = domain;
-		this.members = members;
-		this.definitions = definitions;
-		this.examples = examples;
-		this.wikidata = wikidata;
-		this.relations = relations;
-	}
+) : Comparable<Synset>, Serializable {
 
-	/**
-	 * Get synset id
-	 *
-	 * @return synset id
-	 */
-	public String getSynsetId()
-	{
-		return synsetId;
-	}
+    /**
+     * Part-of-speech
+     */
+    val partOfSpeech: Char
+        get() {
+            if (type == 's') {
+                return 'a'
+            }
+            return type
+        }
 
-	/**
-	 * Get type
-	 *
-	 * @return type
-	 */
-	public char getType()
-	{
-		return type;
-	}
+    /**
+     * First definition
+     */
+    val definition: String?
+        get() {
+            if (!definitions.isNullOrEmpty()) {
+                return definitions[0]
+            }
+            return null
+        }
 
-	/**
-	 * Get part-of-speech
-	 *
-	 * @return part-of-speech
-	 */
-	public char getPartOfSpeech()
-	{
-		if (type == 's')
-		{
-			return 'a';
-		}
-		return type;
-	}
+    /**
+     * Lex file
+     */
+    val lexfile: String?
+        get() {
+            when (partOfSpeech) {
+                'n' -> return "noun.$domain"
+                'v' -> return "verb.$domain"
+                'a' -> return "adj.$domain"
+                'r' -> return "adv.$domain"
+            }
+            return null
+        }
 
-	/**
-	 * Get member lemmas
-	 *
-	 * @return member lemmas
-	 */
-	public String[] getMembers()
-	{
-		return members;
-	}
+    // mutation
 
-	/**
-	 * Get definitions
-	 *
-	 * @return definitions
-	 */
-	public String[] getDefinitions()
-	{
-		return definitions;
-	}
+    /**
+     * Add inverse synset relations of this synset
+     *
+     * @param inverseType    inverse type
+     * @param targetSynsetId target synset id
+     */
+    fun addInverseRelation(inverseType: String, targetSynsetId: String) {
+        if (relations == null) {
+            relations = HashMap()
+        }
+        val inverseRelations = relations!!.computeIfAbsent(inverseType) { _: String? -> LinkedHashSet() }
+        require(!inverseRelations.contains(targetSynsetId)) { "Inverse relation $inverseType from $synsetId to $targetSynsetId was already there." }
+        inverseRelations.add(targetSynsetId)
+    }
 
-	/**
-	 * Get first definition
-	 *
-	 * @return first definition
-	 */
-	public String getDefinition()
-	{
-		if (definitions != null && definitions.length > 0)
-		{
-			return definitions[0];
-		}
-		return null;
-	}
+    // computed
 
-	/**
-	 * Get examples
-	 *
-	 * @return examples
-	 */
-	public String[] getExamples()
-	{
-		return examples;
-	}
+    /**
+     * Find senses of this synset
+     *
+     * @param lexesByLemma lexes
+     * @return senses of this synset
+     */
+    fun findSenses(lexesByLemma: Map<String?, Collection<Lex>>): Array<Sense?> {
+        val members = members
+        val senses = arrayOfNulls<Sense>(members.size)
+        var i = 0
+        for (member in members) {
+            for (lex in lexesByLemma[member]!!) {
+                if (lex.partOfSpeech != partOfSpeech) {
+                    continue
+                }
+                for (sense in lex.senses) {
+                    if (sense.synsetId == synsetId) {
+                        senses[i] = sense
+                        i++
+                    }
+                }
+            }
+        }
+        assert(i == members.size)
+        return senses
+    }
 
-	/**
-	 * Get synset relations
-	 *
-	 * @return synset relations
-	 */
-	public Map<String, Set<String>> getRelations()
-	{
-		return relations;
-	}
+    /**
+     * Find sense of lemma in this synset
+     *
+     * @param lemma        lemma
+     * @param lexesByLemma lexes
+     * @return sense of lemma in this synset, null if not found
+     */
+    fun findSenseOf(lemma: String?, lexesByLemma: Map<String, Collection<Lex>?>): Sense? {
+        val lexes: Collection<Lex> = checkNotNull(lexesByLemma[lemma]) { "$lemma has no sense" }
+        for (lex in lexes) {
+            if (lex.partOfSpeech != partOfSpeech) {
+                continue
+            }
+            for (sense in lex.senses) {
+                if (sense.synsetId == synsetId) {
+                    return sense
+                }
+            }
+        }
+        // System.err.printf("lemma %s not found in synset %s%n", lemma, this);
+        return null
+    }
 
-	/**
-	 * Get wiki data
-	 *
-	 * @return wiki data
-	 */
-	public String getWikidata()
-	{
-		return wikidata;
-	}
+    /**
+     * Find 0-based index of member is members
+     *
+     * @param lemma member lemma
+     * @return index of member is members, -1 if not found
+     */
+    fun findIndexOfMember(lemma: String): Int {
+        val members = members
+        val memberList = listOf(*members)
+        return memberList.indexOf(lemma)
+    }
 
-	/**
-	 * Get domain
-	 *
-	 * @return source file
-	 */
-	public String getDomain()
-	{
-		return domain;
-	}
+    // stringify
 
-	/**
-	 * Get lex file
-	 *
-	 * @return lex file
-	 */
-	public String getLexfile()
-	{
-		switch (getPartOfSpeech())
-		{
-			case 'n':
-				return "noun." + domain;
-			case 'v':
-				return "verb." + domain;
-			case 'a':
-				return "adj." + domain;
-			case 'r':
-				return "adv." + domain;
-		}
-		return null;
-	}
+    override fun toString(): String {
+        val membersStr = Formatter.join(members, ",")
+        val relationsStr = Formatter.join(relations, ",")
+        return "$synsetId $type {$membersStr} '$definition' {$relationsStr}"
+    }
 
-	// mutation
+    // identity
 
-	/**
-	 * Add inverse synset relations of this synset
-	 *
-	 * @param inverseType    inverse type
-	 * @param targetSynsetId target synset id
-	 */
-	public void addInverseRelation(final String inverseType, final String targetSynsetId)
-	{
-		if (relations == null)
-		{
-			relations = new HashMap<>();
-		}
-		var inverseRelations = relations.computeIfAbsent(inverseType, (k) -> new LinkedHashSet<>());
-		if (inverseRelations.contains(targetSynsetId))
-		{
-			throw new IllegalArgumentException(String.format("Inverse relation %s from %s to %s was already there.", inverseType, getSynsetId(), targetSynsetId));
-		}
-		inverseRelations.add(targetSynsetId);
-	}
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (other == null || javaClass != other.javaClass) {
+            return false
+        }
+        val synset = other as Synset
+        return synsetId == synset.synsetId
+    }
 
-	// computed
+    override fun hashCode(): Int {
+        return Objects.hash(synsetId)
+    }
 
-	/**
-	 * Find senses of this synset
-	 *
-	 * @param lexesByLemma lexes
-	 * @return senses of this synset
-	 */
-	public Sense[] findSenses(Map<String, Collection<Lex>> lexesByLemma)
-	{
-		String[] members = getMembers();
-		Sense[] senses = new Sense[members.length];
-		int i = 0;
-		for (String member : members)
-		{
-			for (Lex lex : lexesByLemma.get(member))
-			{
-				if (lex.getPartOfSpeech() != getPartOfSpeech())
-				{
-					continue;
-				}
-				for (Sense sense : lex.getSenses())
-				{
-					if (sense.getSynsetId().equals(getSynsetId()))
-					{
-						senses[i] = sense;
-						i++;
-					}
-				}
-			}
-		}
-		assert i == members.length;
-		return senses;
-	}
+    // ordering
 
-	/**
-	 * Find sense of lemma in this synset
-	 *
-	 * @param lemma        lemma
-	 * @param lexesByLemma lexes
-	 * @return sense of lemma in this synset, null if not found
-	 */
-	public Sense findSenseOf(String lemma, Map<String, Collection<Lex>> lexesByLemma)
-	{
-		var lexes = lexesByLemma.get(lemma);
-		assert lexes != null : String.format("%s has no sense", lemma);
-		for (Lex lex : lexes)
-		{
-			if (lex.getPartOfSpeech() != getPartOfSpeech())
-			{
-				continue;
-			}
-			for (Sense sense : lex.getSenses())
-			{
-				if (sense.getSynsetId().equals(getSynsetId()))
-				{
-					return sense;
-				}
-			}
-		}
-		// System.err.printf("lemma %s not found in synset %s%n", lemma, this);
-		return null;
-	}
-
-	/**
-	 * Find 0-based index of member is members
-	 *
-	 * @param lemma member lemma
-	 * @return index of member is members, -1 if not found
-	 */
-	public int findIndexOfMember(final String lemma)
-	{
-		String[] members = getMembers();
-		List<String> memberList = Arrays.asList(members);
-		return memberList.indexOf(lemma);
-	}
-
-	// stringify
-
-	@Override
-	public String toString()
-	{
-		String membersStr = Formatter.join(getMembers(), ",");
-		String relationsStr = Formatter.join(getRelations(), ",");
-		return String.format("%s %c {%s} '%s' {%s}", getSynsetId(), getType(), membersStr, getDefinition(), relationsStr);
-	}
-
-	// identity
-
-	@Override
-	public boolean equals(final Object o)
-	{
-		if (this == o)
-		{
-			return true;
-		}
-		if (o == null || getClass() != o.getClass())
-		{
-			return false;
-		}
-		Synset synset = (Synset) o;
-		return synsetId.equals(synset.synsetId);
-	}
-
-	@Override
-	public int hashCode()
-	{
-		return Objects.hash(synsetId);
-	}
-
-	// ordering
-
-	@Override
-	public int compareTo(final Synset that)
-	{
-		return getSynsetId().compareTo(that.getSynsetId());
-	}
+    override fun compareTo(other: Synset): Int {
+        return synsetId.compareTo(other.synsetId)
+    }
 }
 

@@ -1,63 +1,30 @@
 /*
  * Copyright (c) 2021-2021. Bernard Bou.
  */
+package org.oewntk.model
 
-package org.oewntk.model;
-
-import java.io.Serializable;
+import java.io.Serializable
 
 /**
  * Verb frame
+ *
+ * @property id    verb frame id
+ * @property frame verb frame
  */
-public class VerbFrame implements Serializable
-{
+class VerbFrame(
 	/**
 	 * Verb frame id
 	 */
-	private final String id;
+	@JvmField val id: String,
 
 	/**
 	 * Verb frame
 	 */
-	private final String frame;
+	@JvmField val frame: String
 
-	/**
-	 * Constructor
-	 *
-	 * @param id    verb frame id
-	 * @param frame verb frame
-	 */
-	public VerbFrame(final String id, final String frame)
-	{
-		this.id = id;
-		this.frame = frame;
-	}
+) : Serializable {
 
-	/**
-	 * Get verb frame id
-	 *
-	 * @return verb frame id
-	 */
-	public String getId()
-	{
-		return id;
-	}
-
-	/**
-	 * Get verb frame
-	 *
-	 * @return verb frame
-	 */
-	public String getFrame()
-	{
-		return frame;
-	}
-
-	// stringify
-
-	@Override
-	public String toString()
-	{
-		return String.format("%s '%s'", getId(), getFrame());
+	override fun toString(): String {
+		return "$id '$frame'"
 	}
 }

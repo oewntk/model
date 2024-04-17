@@ -1,57 +1,32 @@
 /*
  * Copyright (c) 2021-2021. Bernard Bou.
  */
+package org.oewntk.model
 
-package org.oewntk.model;
-
-import java.io.Serializable;
+import java.io.Serializable
 
 /**
  * Tag count
+ *
+ * @property senseNum sense num
+ * @property count    tag count
  */
-public class TagCount implements Serializable
-{
-	private final int senseNum;
-
-	private final int count;
-
+class TagCount(
 	/**
-	 * Constructor
-	 *
-	 * @param senseNum sense num
-	 * @param count    tag count
+	 * Get sense number
 	 */
-	public TagCount(final int senseNum, final int count)
-	{
-		this.senseNum = senseNum;
-		this.count = count;
-	}
+	private val senseNum: Int,
 
 	/**
 	 * Get tag count
 	 *
 	 * @return tag count
 	 */
-	public int getCount()
-	{
-		return count;
-	}
+	@JvmField val count: Int
 
-	/**
-	 * Get sense number for that sensekey (index of sense in pos)
-	 *
-	 * @return sense num
-	 */
-	public int getSenseNum()
-	{
-		return senseNum;
-	}
+) : Serializable {
 
-	// stringify
-
-	@Override
-	public String toString()
-	{
-		return Integer.toString(getCount());
+	override fun toString(): String {
+		return count.toString()
 	}
 }

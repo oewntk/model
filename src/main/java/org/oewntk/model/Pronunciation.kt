@@ -1,94 +1,63 @@
 /*
  * Copyright (c) 2021-2021. Bernard Bou.
  */
+package org.oewntk.model
 
-package org.oewntk.model;
-
-import java.io.Serializable;
-import java.util.Objects;
+import java.io.Serializable
+import java.util.*
 
 /**
  * Pronunciation
+ *
+ * @property value   value in IPA
+ * @property variety variety
  */
-public class Pronunciation implements Serializable
-{
-	private final String value;
+class Pronunciation(
+    /**
+     * Value in IPA
+     */
+    @JvmField val value: String,
 
-	private final String variety;
+    /**
+     * Variety
+     */
+    @JvmField val variety: String?
 
-	public static Pronunciation ipa(final String value)
-	{
-		return new Pronunciation(value, null);
-	}
+) : Serializable {
 
-	public static Pronunciation ipa(final String value, final String variety)
-	{
-		return new Pronunciation(value, variety);
-	}
+    // identify
 
-	/**
-	 * Constructor
-	 *
-	 * @param value   value in IPA
-	 * @param variety variety
-	 */
-	public Pronunciation(final String value, final String variety)
-	{
-		this.value = value;
-		this.variety = variety;
-	}
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (other == null || javaClass != other.javaClass) {
+            return false
+        }
+        val that = other as Pronunciation
+        return value == that.value && variety == that.variety
+    }
 
-	/**
-	 * Get value in IPA
-	 *
-	 * @return value in IPA
-	 */
-	public String getValue()
-	{
-		return value;
-	}
+    override fun hashCode(): Int {
+        return Objects.hash(value, variety)
+    }
 
-	/**
-	 * Get variety
-	 *
-	 * @return variety
-	 */
-	public String getVariety()
-	{
-		return variety;
-	}
+    // stringify
 
-	@Override
-	public boolean equals(final Object o)
-	{
-		if (this == o)
-		{
-			return true;
-		}
-		if (o == null || getClass() != o.getClass())
-		{
-			return false;
-		}
-		Pronunciation that = (Pronunciation) o;
-		return Objects.equals(value, that.value) && Objects.equals(variety, that.variety);
-	}
+    override fun toString(): String {
+        return if (variety != null) "[$variety] $value" else "/$value/"
+    }
 
-	@Override
-	public int hashCode()
-	{
-		return Objects.hash(value, variety);
-	}
+    companion object {
 
-	// stringify
+        @JvmStatic
+        fun ipa(value: String): Pronunciation {
+            return Pronunciation(value, null)
+        }
 
-	@Override
-	public String toString()
-	{
-		String value = "/" + this.value + '/';
-		if (variety != null)
-		{
-			return String.format("[%s] %s", variety, value);
-		}
-		return value;
-	}
+        @JvmStatic
+        fun ipa(value: String, variety: String?): Pronunciation {
+            return Pronunciation(value, variety)
+        }
+    }
 }

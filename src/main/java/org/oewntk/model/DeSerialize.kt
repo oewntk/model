@@ -1,26 +1,21 @@
-/*
- * Copyright (c) $originalComment.match("Copyright \(c\) (\d+)", 1, "-")2021. Bernard Bou.
- */
+package org.oewntk.model
 
-package org.oewntk.model;
+import java.io.*
 
-import java.io.*;
-
-public class DeSerialize
-{
+object DeSerialize {
 	/**
 	 * Deserialize core model from file
 	 *
 	 * @param file file
 	 * @return core model
-	 * @throws IOException            io exception
+	 * @throws IOException io exception
 	 * @throws ClassNotFoundException class not found exception
 	 */
-	public static CoreModel deSerializeCoreModel(final File file) throws IOException, ClassNotFoundException
-	{
-		try (InputStream is = new FileInputStream(file))
-		{
-			return deSerializeCoreModel(is);
+	@JvmStatic
+	@Throws(IOException::class, ClassNotFoundException::class)
+	fun deSerializeCoreModel(file: File): CoreModel {
+		FileInputStream(file).use { `is` ->
+			return deSerializeCoreModel(`is`)
 		}
 	}
 
@@ -29,14 +24,14 @@ public class DeSerialize
 	 *
 	 * @param file file
 	 * @return model
-	 * @throws IOException            io exception
+	 * @throws IOException io exception
 	 * @throws ClassNotFoundException class not found exception
 	 */
-	public static Model deSerializeModel(final File file) throws IOException, ClassNotFoundException
-	{
-		try (InputStream is = new FileInputStream(file))
-		{
-			return deSerializeModel(is);
+	@JvmStatic
+	@Throws(IOException::class, ClassNotFoundException::class)
+	fun deSerializeModel(file: File): Model {
+		FileInputStream(file).use { `is` ->
+			return deSerializeModel(`is`)
 		}
 	}
 
@@ -45,12 +40,12 @@ public class DeSerialize
 	 *
 	 * @param is input stream
 	 * @return core model
-	 * @throws IOException            io exception
+	 * @throws IOException io exception
 	 * @throws ClassNotFoundException class not found exception
 	 */
-	public static CoreModel deSerializeCoreModel(final InputStream is) throws IOException, ClassNotFoundException
-	{
-		return (CoreModel) deSerialize(is);
+	@Throws(IOException::class, ClassNotFoundException::class)
+	fun deSerializeCoreModel(`is`: InputStream): CoreModel {
+		return deSerialize(`is`) as CoreModel
 	}
 
 	/**
@@ -58,12 +53,12 @@ public class DeSerialize
 	 *
 	 * @param is input stream
 	 * @return model
-	 * @throws IOException            io exception
+	 * @throws IOException io exception
 	 * @throws ClassNotFoundException class not found exception
 	 */
-	public static Model deSerializeModel(final InputStream is) throws IOException, ClassNotFoundException
-	{
-		return (Model) deSerialize(is);
+	@Throws(IOException::class, ClassNotFoundException::class)
+	fun deSerializeModel(`is`: InputStream): Model {
+		return deSerialize(`is`) as Model
 	}
 
 	/**
@@ -71,14 +66,13 @@ public class DeSerialize
 	 *
 	 * @param is input stream
 	 * @return object
-	 * @throws IOException            io exception
+	 * @throws IOException io exception
 	 * @throws ClassNotFoundException class not found exception
 	 */
-	private static Object deSerialize(final InputStream is) throws IOException, ClassNotFoundException
-	{
-		try (ObjectInputStream ois = new ObjectInputStream(is))
-		{
-			return ois.readObject();
+	@Throws(IOException::class, ClassNotFoundException::class)
+	private fun deSerialize(`is`: InputStream): Any {
+		ObjectInputStream(`is`).use { ois ->
+			return ois.readObject()
 		}
 	}
 }

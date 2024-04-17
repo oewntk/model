@@ -56,7 +56,7 @@ open class CoreModel( //
 	 * @param source source
 	 * @return this
 	 */
-	fun setSource(source: File?): CoreModel {
+	fun setModelSource(source: File?): CoreModel {
 		this.source = source
 		return this
 	}

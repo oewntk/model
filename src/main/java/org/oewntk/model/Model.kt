@@ -111,8 +111,8 @@ class Model( //
 	 * @return this
 	 */
 	fun setSources(vararg sources: File?): Model {
-	if (sources.isNotEmpty()) {
-			this.setSource(sources[0])
+		if (sources.isNotEmpty()) {
+			this.source = sources[0]
 		}
 		if (sources.size > 1) {
 			this.source2 = sources[1]

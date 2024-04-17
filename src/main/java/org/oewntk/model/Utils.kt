@@ -24,11 +24,11 @@ object Utils {
 
 	// Name for extractor
 
-	private const val dummyUpper = "CASE"
+	private const val DUMMY_UPPER = "CASE"
 
-	private const val dummySatellite = 's'
+	private const val DUMMY_SATELLITE = 's'
 
-	private val dummyLex = Lex(dummyUpper, dummySatellite.toString(), null)
+	private val dummyLex = Lex(DUMMY_UPPER, DUMMY_SATELLITE.toString(), null)
 
 	/**
 	 * Name a word extractor (by applying dummy data)
@@ -38,7 +38,7 @@ object Utils {
 	 * @return name
 	 */
 	fun toWordExtractorString(wordExtractor: (Lex) -> String): String {
-		return if (wordExtractor.invoke(dummyLex) == dummyUpper) "cs" else "lc"
+		return if (wordExtractor.invoke(dummyLex) == DUMMY_UPPER) "cs" else "lc"
 	}
 
 	/**
@@ -49,6 +49,6 @@ object Utils {
 	 * @return name
 	 */
 	fun toPosTypeExtractorString(posTypeExtractor: (Lex) -> Char): String {
-		return if (posTypeExtractor.invoke(dummyLex) == dummySatellite) "t" else "p"
+		return if (posTypeExtractor.invoke(dummyLex) == DUMMY_SATELLITE) "t" else "p"
 	}
 }

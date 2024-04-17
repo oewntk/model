@@ -13,7 +13,7 @@ import java.util.stream.Collectors
 
 object LibTestModelDuplicates {
 
-	fun testDuplicatesForKeyMono(model: CoreModel, key: Function<Lex?, MonoValued>?, ps: PrintStream) {
+	private fun testDuplicatesForKeyMono(model: CoreModel, key: Function<Lex?, MonoValued>?, ps: PrintStream) {
 		val dups = model.lexes //
 			.stream() // stream of lexes
 			.map(key) // stream of values
@@ -29,7 +29,7 @@ object LibTestModelDuplicates {
 		Assert.assertEquals(0, dups.size.toLong())
 	}
 
-	fun testDuplicatesForKeyMulti(model: CoreModel, key: Function<Lex?, MultiValued>?, ps: PrintStream) {
+	private fun testDuplicatesForKeyMulti(model: CoreModel, key: Function<Lex?, MultiValued>?, ps: PrintStream) {
 		val dups = model.lexes //
 			.stream() // stream of lexes
 			.map(key) // stream of keys

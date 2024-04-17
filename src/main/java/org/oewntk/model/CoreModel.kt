@@ -4,7 +4,6 @@
 package org.oewntk.model
 
 import org.oewntk.model.Key.*
-import org.oewntk.model.Lex
 import org.oewntk.model.MapFactory.sensesById
 import org.oewntk.model.MapFactory.synsetsById
 import java.io.File
@@ -50,7 +49,6 @@ open class CoreModel( //
 	 * Input directory
 	 */
 	var source: File? = null
-		protected set
 
 	/**
 	 * Record input directories
@@ -230,36 +228,36 @@ open class CoreModel( //
 			.mapToLong { it.size.toLong() }
 			.sum()
 
-		return String.format(countFormat, "lexes", lexes.size) + String.format(
-			countFormat,
+		return String.format(COUNT_TEMPLATE, "lexes", lexes.size) + String.format(
+			COUNT_TEMPLATE,
 			"lemmas (distinct CS)",
 			csWordCount
 		) + String.format(
-			countFormat, "lemmas (distinct LC)", lcWordCount
-		) + String.format(countFormat, "lemmas (cased)", casedCount) + String.format(
-			countFormat, "discriminant types", discriminantCount
-		) + String.format(countFormat, "lexes with discriminant", withDiscriminantLexCount) + String.format(
-			countFormat, "lexes with pronunciation", withPronunciationLexCount
-		) + String.format(countFormat, "lexes with multi senses", withMultiSenseLexCount) + String.format(
-			countFormat, "distinct lexes by key W_P_A_type (deep)", distinctByKeyOEWNLexCount
+			COUNT_TEMPLATE, "lemmas (distinct LC)", lcWordCount
+		) + String.format(COUNT_TEMPLATE, "lemmas (cased)", casedCount) + String.format(
+			COUNT_TEMPLATE, "discriminant types", discriminantCount
+		) + String.format(COUNT_TEMPLATE, "lexes with discriminant", withDiscriminantLexCount) + String.format(
+			COUNT_TEMPLATE, "lexes with pronunciation", withPronunciationLexCount
+		) + String.format(COUNT_TEMPLATE, "lexes with multi senses", withMultiSenseLexCount) + String.format(
+			COUNT_TEMPLATE, "distinct lexes by key W_P_A_type (deep)", distinctByKeyOEWNLexCount
 		) + String.format(
-			countFormat, "distinct lexes by key W_P_D_type (shallow)", distinctByKeyShallowLexCount
+			COUNT_TEMPLATE, "distinct lexes by key W_P_D_type (shallow)", distinctByKeyShallowLexCount
 		) + String.format(
-			countFormat, "distinct lexes by key W_P_A_pos (pos)", distinctByKeyPOSLexCount
+			COUNT_TEMPLATE, "distinct lexes by key W_P_A_pos (pos)", distinctByKeyPOSLexCount
 		) + String.format(
-			countFormat,
+			COUNT_TEMPLATE,
 			"distinct lexes by key W_P_A_lc_type (ic)",
 			distinctByKeyICLexCount
 		) + String.format(
-			countFormat, "distinct lexes by key W_P_lc_pos (pwn)", distinctByKeyPWNLexCount
-		) + String.format(countFormat, "senses", senses.size) + String.format(
-			countFormat, "distinct sense sets in lexes", distinctSenseGroupsCount
-		) + String.format(countFormat, "senses in sense sets", sensesInSenseGroupsSum) + String.format(
-			countFormat, "senses with relations", withRelationSenseCount
-		) + String.format(countFormat, "sense relations", senseRelationSum) + String.format(
-			countFormat, "synsets", synsets.size
-		) + String.format(countFormat, "synsets with relations", withRelationSynsetCount) + String.format(
-			countFormat, "synset relations", synsetRelationSum
+			COUNT_TEMPLATE, "distinct lexes by key W_P_lc_pos (pwn)", distinctByKeyPWNLexCount
+		) + String.format(COUNT_TEMPLATE, "senses", senses.size) + String.format(
+			COUNT_TEMPLATE, "distinct sense sets in lexes", distinctSenseGroupsCount
+		) + String.format(COUNT_TEMPLATE, "senses in sense sets", sensesInSenseGroupsSum) + String.format(
+			COUNT_TEMPLATE, "senses with relations", withRelationSenseCount
+		) + String.format(COUNT_TEMPLATE, "sense relations", senseRelationSum) + String.format(
+			COUNT_TEMPLATE, "synsets", synsets.size
+		) + String.format(COUNT_TEMPLATE, "synsets with relations", withRelationSynsetCount) + String.format(
+			COUNT_TEMPLATE, "synset relations", synsetRelationSum
 		)
 	}
 
@@ -314,17 +312,17 @@ open class CoreModel( //
 			.mapToLong { it.examples!!.size.toLong() }
 			.sum()
 
-		return String.format(countFormat, "lexes with morphs", withMorphLexCount) +
-				String.format(countFormat, "senses with verb frames", withVerbFramesSenseCount) +
-				String.format(countFormat, "senses with verb templates", withVerbTemplatesSenseCount) +
-				String.format(countFormat, "senses with tag count", withTagCountSenseCount) +
-				String.format(countFormat, "senses with examples", withExamplesSenseCount) +
-				String.format(countFormat, "synsets with examples", withSamplesSynsetCount) +
-				String.format(countFormat, "synset examples", sampleSum) +
-				String.format(countFormat, "pronunciations", pronunciationCount) +
-				String.format(countFormat, "pronunciation references", pronunciationRefSum) +
-				String.format(countFormat, "morphs", morphCount) +
-				String.format(countFormat, "morph references", morphRefSum)
+		return String.format(COUNT_TEMPLATE, "lexes with morphs", withMorphLexCount) +
+				String.format(COUNT_TEMPLATE, "senses with verb frames", withVerbFramesSenseCount) +
+				String.format(COUNT_TEMPLATE, "senses with verb templates", withVerbTemplatesSenseCount) +
+				String.format(COUNT_TEMPLATE, "senses with tag count", withTagCountSenseCount) +
+				String.format(COUNT_TEMPLATE, "senses with examples", withExamplesSenseCount) +
+				String.format(COUNT_TEMPLATE, "synsets with examples", withSamplesSynsetCount) +
+				String.format(COUNT_TEMPLATE, "synset examples", sampleSum) +
+				String.format(COUNT_TEMPLATE, "pronunciations", pronunciationCount) +
+				String.format(COUNT_TEMPLATE, "pronunciation references", pronunciationRefSum) +
+				String.format(COUNT_TEMPLATE, "morphs", morphCount) +
+				String.format(COUNT_TEMPLATE, "morph references", morphRefSum)
 	}
 
 	private fun reportRelations(): String {
@@ -366,8 +364,8 @@ open class CoreModel( //
 				acc[1]
 			)
 		}
-		return String.format(countFormat, "synset relations", synsetRelationSum) + String.format(
-			countFormat,
+		return String.format(COUNT_TEMPLATE, "synset relations", synsetRelationSum) + String.format(
+			COUNT_TEMPLATE,
 			"sense relations",
 			senseRelationSum
 		)
@@ -377,6 +375,6 @@ open class CoreModel( //
 		/**
 		 * Format for count output
 		 */
-		private const val countFormat = "%-50s: %6d%n"
+		private const val COUNT_TEMPLATE = "%-50s: %6d%n"
 	}
 }

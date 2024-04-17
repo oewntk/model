@@ -13,51 +13,51 @@ import java.util.*
  * @property variety variety
  */
 class Pronunciation(
-	/**
-	 * Value in IPA
-	 */
-	@JvmField val value: String,
+    /**
+     * Value in IPA
+     */
+    @JvmField val value: String,
 
-	/**
-	 * Variety
-	 */
-	@JvmField val variety: String?
+    /**
+     * Variety
+     */
+    @JvmField val variety: String?
 
 ) : Serializable {
 
-	// identify
+    // identify
 
-	override fun equals(other: Any?): Boolean {
-		if (this === other) {
-			return true
-		}
-		if (other == null || javaClass != other.javaClass) {
-			return false
-		}
-		val that = other as Pronunciation
-		return value == that.value && variety == that.variety
-	}
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
+        }
+        if (other == null || javaClass != other.javaClass) {
+            return false
+        }
+        val that = other as Pronunciation
+        return value == that.value && variety == that.variety
+    }
 
-	override fun hashCode(): Int {
-		return Objects.hash(value, variety)
-	}
+    override fun hashCode(): Int {
+        return Objects.hash(value, variety)
+    }
 
-	// stringify
+    // stringify
 
-	override fun toString(): String {
-		return if (variety != null) "[$variety] $value" else "/$value/"
-	}
+    override fun toString(): String {
+        return if (variety != null) "[$variety] $value" else "/$value/"
+    }
 
-	companion object {
+    companion object {
 
-		@JvmStatic
-		fun ipa(value: String): Pronunciation {
-			return Pronunciation(value, null)
-		}
+        @JvmStatic
+        fun ipa(value: String): Pronunciation {
+            return Pronunciation(value, null)
+        }
 
-		@JvmStatic
-		fun ipa(value: String, variety: String?): Pronunciation {
-			return Pronunciation(value, variety)
-		}
-	}
+        @JvmStatic
+        fun ipa(value: String, variety: String?): Pronunciation {
+            return Pronunciation(value, variety)
+        }
+    }
 }

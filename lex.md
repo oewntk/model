@@ -95,7 +95,7 @@ Now a key is usually a **tuple**:
 
 #### k = (q1,...) = (q+)
 
-So the lay out is:
+So the lay-out is:
 
 	q1a:
 	  q2a:

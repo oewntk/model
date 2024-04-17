@@ -307,7 +307,7 @@ object LibTestModelKeys {
 				r[i] = 0
 			}
 		}
-		dumpContext(lemma, pos, type, model, ps)
+		dumpContext(lemma, model, ps)
 		return r
 	}
 
@@ -329,7 +329,7 @@ object LibTestModelKeys {
 				ps.println("\t" + lex)
 			}
 		}
-		dumpContext(lemma, pos, type, model, ps)
+		dumpContext(lemma, model, ps)
 		return r
 	}
 
@@ -337,36 +337,11 @@ object LibTestModelKeys {
 
 	private fun dumpContext(
 		lemma: String,
-		posFilter: Char,
-		typeFilter: Char,
 		model: CoreModel?,
 		ps: PrintStream
 	) {
 		ps.println("----------")
-		/*
-		ps.println("ALL LEMMAS " + lemma);
-		Finder.getLexes(model, lemma).forEach(lex -> ps.println("\t" + lex));
-
-		ps.println("ALL LEMMAS WITH POS " + posFilter + " " + lemma);
-		Finder.getLexesHavingPos(model, lemma, posFilter).forEach(lex -> ps.println("\t" + lex));
-
-		if (typeFilter != '\0')
-		{
-			ps.println("ALL LEMMAS WITH TYPE " + typeFilter + " " + lemma);
-			Finder.getLexesHavingType(model, lemma, typeFilter).forEach(lex -> ps.println("\t" + lex));
-		}
-		*/
 		ps.println("ALL LEMMAS IGNORE CASE $lemma")
 		getLcLexes(model!!, lemma).forEach { lex: Lex -> ps.println("\t" + lex) }
-		/*
-		ps.println("ALL LEMMAS IGNORE CASE WITH POS " + posFilter + " " + lemma)
-		Finder.getLcLexesHavingPos(model, lemma, posFilter).forEach(lex -> ps.println("\t" + lex))
-
-		if (typeFilter != '\0')
-		{
-			ps.println("ALL LEMMAS IGNORE CASE WITH TYPE " + typeFilter + " " + lemma)
-			Finder.getLcLexesHavingType(model, lemma, typeFilter).forEach(lex -> ps.println("\t" + lex))
-		}
-		*/
 	}
 }

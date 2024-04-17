@@ -36,7 +36,7 @@ class Model( //
 	/**
 	 * Verb templates
 	 */
-	val verbTemplates: Collection<VerbTemplate> = Collections.unmodifiableCollection(verbTemplates)
+	private val verbTemplates: Collection<VerbTemplate> = Collections.unmodifiableCollection(verbTemplates)
 
 	/**
 	 * Extra input directory
@@ -111,7 +111,7 @@ class Model( //
 	 * @return this
 	 */
 	fun setSources(vararg sources: File?): Model {
-		if (sources.size > 0) {
+	if (sources.isNotEmpty()) {
 			this.setSource(sources[0])
 		}
 		if (sources.size > 1) {

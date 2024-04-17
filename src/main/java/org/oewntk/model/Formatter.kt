@@ -91,9 +91,9 @@ object Formatter {
 	}
 
 	/**
-	 * Join array of ints
+	 * Join array of integers
 	 *
-	 * @param items  array of ints
+	 * @param items  array of integers
 	 * @param delim  delimiter
 	 * @param format format
 	 * @return joined string representation of each item

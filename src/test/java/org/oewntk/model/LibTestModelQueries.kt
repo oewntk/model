@@ -142,7 +142,7 @@ object LibTestModelQueries {
 		)
 	}
 
-	private fun toShortDefinition(synset: Synset?): String? {
+	private fun toShortDefinition(synset: Synset?): String {
 		val definition = synset!!.definition
 		if (definition!!.length > 32) {
 			return definition.substring(0, 32) + "..."

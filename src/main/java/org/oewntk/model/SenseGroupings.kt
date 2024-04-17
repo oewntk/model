@@ -4,7 +4,6 @@
 package org.oewntk.model
 
 import java.util.*
-import java.util.function.Function
 
 /**
  * Sense grouping
@@ -19,6 +18,7 @@ object SenseGroupings {
 	 * @param senses senses
 	 * @return collections of senses grouped by and mapped by lower-cased lemma and part-of-speech
 	 */
+	@JvmStatic
 	fun sensesByLCLemmaAndPos(senses: Collection<Sense>): Map<KeyLCLemmaAndPos, Collection<Sense>> {
 		return Groupings.groupBy(senses.stream()) { sense: Sense -> KeyLCLemmaAndPos(sense) }
 	}
@@ -29,6 +29,7 @@ object SenseGroupings {
 	 * @param senses senses
 	 * @return collections of senses grouped by and mapped by lower-cased lemma
 	 */
+	@JvmStatic
 	fun sensesByLCLemma(senses: Collection<Sense>): Map<String, Collection<Sense>> {
 		return Groupings.groupBy(senses.stream(), Sense::lCLemma)
 	}
@@ -47,7 +48,7 @@ object SenseGroupings {
 	</K> */
 	private fun <K> sensesFor(
 		senses: Collection<Sense>,
-		groupingFunction: Function<Sense, K>?,
+		groupingFunction: (Sense) -> K,
 		k: K
 	): Collection<Sense> {
 		return Groupings.groupBy(senses.stream(), groupingFunction)[k]!!

@@ -13,41 +13,48 @@ See notation at the bottom, for the symbols used.
 
 ### Group of senses
 
-Lexical units are defined as the **basic container of senses**. They **group senses in an ordered set**. 
+Lexical units are defined as the **basic container of senses**. They **group senses in an ordered set**.
 
-####	lexunit = [s1,..]
+#### lexunit = [s1,..]
 
-Where the XML version of OEWN uses _LexicalEntry_ it is more appropriate to use the term *unit* here (because it is nearer to *group*, or *set*, or *block*) and use the term *entry* for the first-level member of the tuple key which is indeed an entry point (q1 below). That follows the use that FrameNet makes of the term *lexunit*: lexunits are containers that group semantic roles, their realisations and references to semantic frames. 
+Where the XML version of OEWN uses _LexicalEntry_ it is more appropriate to use the term *unit* here (because it is
+nearer to *group*, or *set*, or *block*) and use the term *entry* for the first-level member of the tuple key which is
+indeed an entry point (q1 below). That follows the use that FrameNet makes of the term *lexunit*: lexunits are
+containers that group semantic roles, their realisations and references to semantic frames.
 
 ### Key
 
 Lexical units group senses **according to a key**:
 
-####	k -> lexunit
-####	k -> [s1,..]
-####	k -> [s+]
+#### k -> lexunit
 
-A key **uniquely** determines a group of senses (if the data conform to this key): 
+#### k -> [s1,..]
 
-####	k1 -> [sa1,..]
-####	k2 -> [sb1,..]
+#### k -> [s+]
+
+A key **uniquely** determines a group of senses (if the data conform to this key):
+
+#### k1 -> [sa1,..]
+
+#### k2 -> [sb1,..]
 
 If we define **a sense as the pair of a key with a synset**
 
-####	s = (k,S)
+#### s = (k,S)
 
 and this pair represents the membership bifunction
 
-####	memberOf(k,S)
- 
- or
- 
-####	k ∈ S
+#### memberOf(k,S)
+
+or
+
+#### k ∈ S
 
 then a lexunit or group of senses uniquely maps to a key (so the relation is bijective, a one-one mapping)
 
-####	k1 <- [s1,..]
-####	k1 <-> [s1,..]
+#### k1 <- [s1,..]
+
+#### k1 <-> [s1,..]
 
 A case in point is :
 
@@ -57,12 +64,12 @@ A case in point is :
 each a singleton group of senses.
 
 Now if we take it that a sense is the pair of a key with a synset,
- 
+
 	s1 = baroque%3:01:00:: = (baroque,02985568-a)
 	s2 = baroque%3:01:01:: = (Baroque,02985568-a)
 
- meaning 
- 
+meaning
+
 	 baroque%3:01:00:: ∈ 02985568-a
 	 baroque%3:01:01:: ∈ 02985568-a
 
@@ -75,8 +82,9 @@ In this context there are two senses, with different IDs, that map to the same s
 
 	baroque%3:01:00:: -> 02985568-a
 	baroque%3:01:01:: -> 02985568-a
-	
-But if we understand *sense* to mean **the concept expressed by a synset** then the relation between the key and the synset is no longer one-one.
+
+But if we understand *sense* to mean **the concept expressed by a synset** then the relation between the key and the
+synset is no longer one-one.
 
 	(Baroque,a) -> 02985568-a = "of or relating to or characteristic of the elaborately ornamented style  of architecture and music ..."
 	(baroque,a) -> 02985568-a = "of or relating to or characteristic of the elaborately ornamented style  of architecture and music ..."
@@ -85,7 +93,7 @@ But if we understand *sense* to mean **the concept expressed by a synset** then 
 
 Now a key is usually a **tuple**:
 
-####	k = (q1,...) = (q+)
+#### k = (q1,...) = (q+)
 
 So the lay out is:
 
@@ -105,8 +113,7 @@ So the lay out is:
 	  ...
 	...	
 
-
-Some groupings, hence some keys, are more or less natural like *(lemma, part-of-speech)*,  others arbitrary.
+Some groupings, hence some keys, are more or less natural like *(lemma, part-of-speech)*, others arbitrary.
 
 ## OEWN
 
@@ -141,7 +148,7 @@ This is the layout to be found in the YAML version of OEWN:
 	    sense:
 	     id: 'row%2:38:00::'
 	     synset: 01950855-v
-	
+
 This can be simplified to:
 
 	row:
@@ -155,14 +162,14 @@ This can be simplified to:
 	    pronunciation ɹəʊ
 	    lexunit 3
 
-
-The containers (and so the lexical units) appear at level of indentation 3 where ordered lists of senses are to be found.
+The containers (and so the lexical units) appear at level of indentation 3 where ordered lists of senses are to be
+found.
 There are 3 *(q1,q2) -> [s+]* mappings:
 
 	(row,n-1) -> [row%1:14:00::,row%1:17:00::,row%1:06:00::,row%1:14:01::,row%1:07:00::,row%1:04:00::] = lexunit1
 	(row,n-2) -> [row%1:10:00::] = lexunit2
 	(row,v) -> [row%2:38:00::] = lexunit3
-	
+
 or
 
 	(row,n-1) -> lexunit1
@@ -174,9 +181,11 @@ or
 	(row,n,1) -> lexunit1
 	(row,n,2) -> lexunit2
 	(row,v,{}) -> lexunit3
-	
-where the third element of the triple is a discriminant whose possible values are currently in {1,2,{}} range across OEWN.
-It turns out the discriminant currently distinguishes/fleshes out different pronunciations of the lemmas. So this is equivalent to:
+
+where the third element of the triple is a discriminant whose possible values are currently in {1,2,{}} range across
+OEWN.
+It turns out the discriminant currently distinguishes/fleshes out different pronunciations of the lemmas. So this is
+equivalent to:
 
 	(row,n,{/ɹəʊ/}) -> lexunit1
 	(row,n,{/ɹaʊ/}) -> lexunit2
@@ -194,13 +203,12 @@ so the scheme could be a 4-tier layout:
 	    {}:
 	    	lexunit 3
 
-
-
-Note that the pronunciation of the verb, although present, does not discriminate among verb lexunits, so it's irrelevant as a discriminant key but could be present.
+Note that the pronunciation of the verb, although present, does not discriminate among verb lexunits, so it's irrelevant
+as a discriminant key but could be present.
 
 Which leads us to define the key in OEWN (current version) as:
 
-####	**k=(w,t,{v\*})**
+#### **k=(w,t,{v\*})**
 
 where w is the case-sensitive lemma, t the synset type, and {v*} the set of pronunciations
 
@@ -208,7 +216,7 @@ In the case of *critical* this leads us to two separate lexunits:
 
 	(critical,a) -> [s1,s2,s3,s5,s6] 
 	(critical,s) -> [s4,s7] 
-	
+
 where
 
 	s1 = oewn-critical%3:00:01:: synset=oewn-00650564-a def=marked by a tendency to find and call attention to errors
@@ -223,7 +231,7 @@ where
 
 Even if we leave aside pronunciation, the Princeton WordNet PWN key is different from the OEWN key:
 
-####	**k=(w,p)**
+#### **k=(w,p)**
 
 in that the part-of-speech *p* takes part in grouping the senses, not the synset type *t*:
 
@@ -247,44 +255,46 @@ Now this seems natural as the grouping by part-of-speech is more natural than by
 
 If we extend this remark to OEWN, it seems desirable for OEWN to have
 
-####	**k=(w,p,{v\*})**
+#### **k=(w,p,{v\*})**
 
-instead of its current key, which leads to merging adjective lexunits of types *a* and *s* into a single sense groups. The problem is how to build the new order of senses which should not consist in appending the satellites to the heads: some intermingling is needed if we want to stick to decreasing usage frequency ordering.
+instead of its current key, which leads to merging adjective lexunits of types *a* and *s* into a single sense groups.
+The problem is how to build the new order of senses which should not consist in appending the satellites to the heads:
+some intermingling is needed if we want to stick to decreasing usage frequency ordering.
 
 ## Other keys
 
 Please note that another possible key could be
 
-####	**k=(u,cc(u),p,{v\*})**
+#### **k=(u,cc(u),p,{v\*})**
 
 with mappings like
 
 	(earth,Earth,n,{}) ->  unique lexunit
 	(baroque,Baroque,n,{}) -> unique lexunit
 
-
 Some other examples:
 
-####	**k=(uc(w),p)**
+#### **k=(uc(w),p)**
 
 with mappings like (in the French Robert dictionary)
 
 	(ÉTÉ,n) -> unique lexunit
 	(CAFÉ,n) -> unique lexunit
 
+#### **k=(u,cc(u),p)**
 
-####	**k=(u,cc(u),p)**
-####	**k=(w,lc(w),p)**
+#### **k=(w,lc(w),p)**
 
 with mappings like
 
 	(earth,Earth,n) -> ...
 	(Earth,earth,n) -> ...
 
+#### **k=(w,rd(w),p)**
 
-####	**k=(w,rd(w),p)**
-####	**k=(ad(a),a,p)**
-####	**k=(a,ad(a),p)**
+#### **k=(ad(a),a,p)**
+
+#### **k=(a,ad(a),p)**
 
 with mappings like
 
@@ -292,23 +302,22 @@ with mappings like
 	(café,cafe,n) -> unique lexunit
 	(cafe,café,n) -> unique lexunit
 
-	
-####	**k=(w,us(w),p)**
-####	**k=(w,gb(w),p)**
+#### **k=(w,us(w),p)**
+
+#### **k=(w,gb(w),p)**
 
 with mappings like
 
 	(colour,color,n) -> unique lexunit
 	(color,colour,n) -> unique lexunit
 
-
-####	**k=(w,sz(w),p)**
+#### **k=(w,sz(w),p)**
 
 with mappings like
 
 	(realise,realize,v) -> unique lexunit
-	
-####	**k=(w,sz(w),p)**
+
+#### **k=(w,sz(w),p)**
 
 with mappings like
 
@@ -318,31 +327,36 @@ with mappings like
 
 Keys have been developped in software that, when applied to data D, yield the lexunits.
 
-####	k.apply(D) = {lexunit+} = {[s1,...],..} = {[s1,...]+}
+#### k.apply(D) = {lexunit+} = {[s1,...],..} = {[s1,...]+}
 
-In relation to a given set of data, they can have **single-value** output (the first two keys below, with OEWN) or **multi-value** results, in which case some lexunits in the data would have to be merged if the data were to conform to the key. If a key produces the empty set, it fails.
+In relation to a given set of data, they can have **single-value** output (the first two keys below, with OEWN) or *
+*multi-value** results, in which case some lexunits in the data would have to be merged if the data were to conform to
+the key. If a key produces the empty set, it fails.
 
-####	k.apply(D) = lexunit, D conforms to k
+#### k.apply(D) = lexunit, D conforms to k
 
-####	k.apply(D) = {lexunit+}, D does not conform to k
+#### k.apply(D) = {lexunit+}, D does not conform to k
 
-**Key.OEWN** is the current OEWN implementation and has the intended handling of case and pronunciations. It is a deep key in that it handles the pronunciation sets as part of the key.
-	
+**Key.OEWN** is the current OEWN implementation and has the intended handling of case and pronunciations. It is a deep
+key in that it handles the pronunciation sets as part of the key.
+
 	new Key.OEWN("row", 'n', Pronunciation.ipa("ɹəʊ" ))	
-   	
+
 yields a unique result when applied to the data.
-	
-**Key.Shallow** is the current OEWN implementation and has the intended handling of case and pronunciations but, unlike the previous key, operates with a discriminant, not the set pronunciations.
+
+**Key.Shallow** is the current OEWN implementation and has the intended handling of case and pronunciations but, unlike
+the previous key, operates with a discriminant, not the set pronunciations.
 
    	Key.Shallow("row", 'n', "-1")
-   	
+
 also yields a unique result when applied to the data.
 
 **Key.Pos** is like Key.OEWN but the second element is the part-of-speech, not the synset type.
 
    	Key.Pos("critical", 'a', {})
-   	
-yields multiple results when applied to the current OEWN data. OEWN's next move is now to merge the *a* and *s* lexunits so that they produce a single output. The next OEWN will conform to this key.
+
+yields multiple results when applied to the current OEWN data. OEWN's next move is now to merge the *a* and *s* lexunits
+so that they produce a single output. The next OEWN will conform to this key.
 
 **Key.IC** ignores case in the lemma and with the current OEWN data, it is a multivalue key
 
@@ -352,10 +366,10 @@ yields multiple results when applied to the current OEWN data. OEWN's next move 
 
 all yield the same 2 values.
 
-**Key.PWN** uses part-of-speech the way Princeton WordNet does, rather than synset type and with the current OEWN data it is a multivalue key
-    
-    new Key.Pos("critical", 'a', Pronunciation.ipa("ˈkɹɪtɪkəl"))
+**Key.PWN** uses part-of-speech the way Princeton WordNet does, rather than synset type and with the current OEWN data
+it is a multivalue key
 
+    new Key.Pos("critical", 'a', Pronunciation.ipa("ˈkɹɪtɪkəl"))
 
 ## Coding and testing
 
@@ -470,14 +484,15 @@ yields:
 
 **f(e)** is the result of applying function f to e
 
-**t:e** is the element tagged by tag, it is equivalent to the pair **(e,t)** 
+**t:e** is the element tagged by tag, it is equivalent to the pair **(e,t)**
 
-**e** can be thought of as tagged by {} in some contexts, it is equivalent to the pair **(e,{})** 
+**e** can be thought of as tagged by {} in some contexts, it is equivalent to the pair **(e,{})**
 
 **D** stands for the set of data, OEWN or PWN
 
 **w** stands for an element of type **case-sensitive written form**
-*play*,*Shakespeare*,*baroque*,*Baroque*,*realize*,*realise*,*color*,*colour*,*battle of Verdun*,*Battle of Verdun*,*naive*,*naïve*,*cafe*,*café*
+*play*,*Shakespeare*,*baroque*,*Baroque*,*realize*,*realise*,*color*,*colour*,*battle of Verdun*,*Battle of Verdun*,
+*naive*,*naïve*,*cafe*,*café*
 Note that capitalisation and use of diacritics make different elements.
 
 **u** stands for **lower cased written form**
@@ -516,7 +531,8 @@ The untagged case being *{}: /ˈfæðəɹ/*
 *cc(shakespeare)=Shakespeare*
 *cc(william shakespeare)=William Shakespeare*
 *cc(baroque)=Baroque*
-Note that not necessarily the first character, not necessarily all those at word-start position are upper-cased and this transformation can yield multiple results (as such it does not seem to be very predictable):
+Note that not necessarily the first character, not necessarily all those at word-start position are upper-cased and this
+transformation can yield multiple results (as such it does not seem to be very predictable):
 *cc(dod)=DoD*
 *cc(battle of Verdun)={battle of Verdun,Battle of Verdun}*
 *cc(ddi)={DDI,ddI}*

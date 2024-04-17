@@ -1,144 +1,138 @@
 /*
  * Copyright (c) 2021. Bernard Bou.
  */
+package org.oewntk.model
 
-package org.oewntk.model;
+import org.junit.Assert
+import org.oewntk.model.LexGroupings.cSLemmasByLCLemma
+import org.oewntk.model.LexGroupings.cSLemmasByLCLemmaHavingMultipleCount
+import org.oewntk.model.LexGroupings.countsByLCLemma
+import org.oewntk.model.LexGroupings.hyperMapByLCLemmaByLemma
+import org.oewntk.model.LexGroupings.multipleCountsByICLemma
+import org.oewntk.model.SenseGroupings.sensesForLCLemma
+import org.oewntk.model.SenseGroupings.sensesForLCLemmaAndPos
+import org.oewntk.model.TestUtils.lexHypermapForLemmaToString
+import org.oewntk.model.TestUtils.lexesToString
+import org.oewntk.model.TestUtils.sensesToString
+import java.io.PrintStream
 
-import java.io.PrintStream;
-import java.util.Locale;
-
-import static org.junit.Assert.assertEquals;
-import static org.oewntk.model.SenseGroupings.sensesForLCLemma;
-import static org.oewntk.model.SenseGroupings.sensesForLCLemmaAndPos;
-
-public class LibTestModelLexGroups
-{
-	public static void testCIMultipleAll(final CoreModel model, final PrintStream ps)
-	{
-		LexGroupings.cSLemmasByLCLemmaHavingMultipleCount(model) //
-				.forEach((u, cs) -> ps.printf("%s {%s}%n", u, String.join(",", cs)));
+object LibTestModelLexGroups {
+	@JvmStatic
+	fun testCIMultipleAll(model: CoreModel, ps: PrintStream) {
+		cSLemmasByLCLemmaHavingMultipleCount(model) //
+			.forEach { (u: String?, cs: List<String?>?) -> ps.printf("%s {%s}%n", u, java.lang.String.join(",", cs)) }
 	}
 
-	public static void testCILemmas(final CoreModel model, final String word, final PrintStream ps)
-	{
-		var lemmas = LexGroupings.cSLemmasByLCLemma(model).get(word);
-		ps.printf("%s {%s}%n", word, String.join(",", lemmas));
+	@JvmStatic
+	fun testCILemmas(model: CoreModel, word: String, ps: PrintStream) {
+		val lemmas = cSLemmasByLCLemma(model)[word]
+		ps.printf("%s {%s}%n", word, java.lang.String.join(",", lemmas))
 	}
 
-	public static void testCICounts(final CoreModel model, final String word, final PrintStream ps)
-	{
-		var count = LexGroupings.countsByLCLemma(model).get(word);
-		ps.printf("%s %d%n", word, count);
+	@JvmStatic
+	fun testCICounts(model: CoreModel, word: String, ps: PrintStream) {
+		val count = countsByLCLemma(model)[word]
+		ps.printf("%s %d%n", word, count)
 	}
 
-	public static void testCICountsFromMap(final CoreModel model, final String word, final PrintStream ps)
-	{
-		var count = LexGroupings.multipleCountsByICLemma(model).get(word);
-		ps.printf("%s %d%n", word, count);
+	@JvmStatic
+	fun testCICountsFromMap(model: CoreModel, word: String, ps: PrintStream) {
+		val count = multipleCountsByICLemma(model)[word]
+		ps.printf("%s %d%n", word, count)
 	}
 
-	public static void testCIHypermap3(final CoreModel model, String word, final PrintStream ps)
-	{
-		String s1 = testCIHypermapString(model, word);
-		ps.printf("ci '%s'%n", word);
-		ps.println(s1);
+	@JvmStatic
+	fun testCIHypermap3(model: CoreModel, word: String, ps: PrintStream) {
+		var word2 = word
+		val s1 = testCIHypermapString(model, word2)
+		ps.printf("ci '%s'%n", word2)
+		ps.println(s1)
 
-		word = word.toLowerCase(Locale.ENGLISH);
-		String s2 = testCIHypermapString(model, word);
-		ps.printf("ci '%s'%n", word);
-		ps.println(s2);
+		word2 = word2.lowercase()
+		val s2 = testCIHypermapString(model, word2)
+		ps.printf("ci '%s'%n", word2)
+		ps.println(s2)
 
-		word = word.toUpperCase(Locale.ENGLISH);
-		String s3 = testCIHypermapString(model, word);
-		ps.printf("ci '%s'%n", word);
-		ps.println(s3);
+		word2 = word2.uppercase()
+		val s3 = testCIHypermapString(model, word2)
+		ps.printf("ci '%s'%n", word2)
+		ps.println(s3)
 
-		assertEquals(s1, s2);
-		assertEquals(s2, s3);
+		Assert.assertEquals(s1, s2)
+		Assert.assertEquals(s2, s3)
 	}
 
-	public static void testCILexesFor3(final CoreModel model, String word, final PrintStream ps)
-	{
-		String s1 = testCILexesString(model, word);
-		ps.printf("ci '%s'%n", word);
-		ps.println(s1);
+	@JvmStatic
+	fun testCILexesFor3(model: CoreModel, word: String, ps: PrintStream) {
+		var word2 = word
+		val s1 = testCILexesString(model, word2)
+		ps.printf("ci '%s'%n", word2)
+		ps.println(s1)
 
-		word = word.toLowerCase(Locale.ENGLISH);
-		String s2 = testCILexesString(model, word);
-		ps.printf("ci '%s'%n", word);
-		ps.println(s2);
+		word2 = word2.lowercase()
+		val s2 = testCILexesString(model, word2)
+		ps.printf("ci '%s'%n", word2)
+		ps.println(s2)
 
-		word = word.toUpperCase(Locale.ENGLISH);
-		String s3 = testCILexesString(model, word);
-		ps.printf("ci '%s'%n", word);
-		ps.println(s3);
+		word2 = word2.uppercase()
+		val s3 = testCILexesString(model, word2)
+		ps.printf("ci '%s'%n", word2)
+		ps.println(s3)
 
-		assertEquals(s1, s2);
-		assertEquals(s2, s3);
+		Assert.assertEquals(s1, s2)
+		Assert.assertEquals(s2, s3)
 	}
 
-	public static void testCIHypermap(final CoreModel model, final String word, final PrintStream ps)
-	{
-		ps.printf("ci '%s'%n", word);
-		ps.println(testCIHypermapString(model, word));
+	@JvmStatic
+	fun testCIHypermap(model: CoreModel, word: String, ps: PrintStream) {
+		ps.printf("ci '%s'%n", word)
+		ps.println(testCIHypermapString(model, word))
 	}
 
-	public static void testCILexes(final CoreModel model, final String word, final PrintStream ps)
-	{
-		ps.printf("ci '%s'%n", word);
-		ps.println(testCILexesString(model, word));
+	fun testCILexes(model: CoreModel, word: String, ps: PrintStream) {
+		ps.printf("ci '%s'%n", word)
+		ps.println(testCILexesString(model, word))
 	}
 
-	public static void testCILexesFor(final CoreModel model, final String word, final PrintStream ps)
-	{
-		ps.printf("ci '%s'%n", word);
-		ps.println(testCILexesForWordString(model, word));
+	@JvmStatic
+	fun testCILexesFor(model: CoreModel, word: String, ps: PrintStream) {
+		ps.printf("ci '%s'%n", word)
+		ps.println(testCILexesForWordString(model, word))
 	}
 
-	public static String testCIHypermapString(final CoreModel model, final String lemma)
-	{
-		var lexHypermap = LexGroupings.hyperMapByLCLemmaByLemma(model);
-		assert lexHypermap != null;
-		return TestUtils.lexHypermapForLemmaToString(lexHypermap, lemma);
+	private fun testCIHypermapString(model: CoreModel, lemma: String): String {
+		val lexHypermap = hyperMapByLCLemmaByLemma(model)
+		return lexHypermapForLemmaToString(lexHypermap, lemma)
 	}
 
-	public static String testCILexesString(final CoreModel model, final String word)
-	{
-		final var map = model.getLexesByLCLemma();
-		assert map != null;
-		final var lexes = map.get(word.toLowerCase(Locale.ENGLISH));
-		assert lexes != null;
-		return TestUtils.lexesToString(lexes);
+	private fun testCILexesString(model: CoreModel, word: String): String {
+		val map = checkNotNull(model.lexesByLCLemma)
+		val lexes = checkNotNull(map[word.lowercase()])
+		return lexesToString(lexes)
 	}
 
-	public static String testCILexesForWordString(final CoreModel model, final String word)
-	{
-		final var lexes = model.getLexesByLCLemma().get(word);
-		assert lexes != null;
-		return TestUtils.lexesToString(lexes);
+	private fun testCILexesForWordString(model: CoreModel, word: String): String {
+		val lexes = checkNotNull(model.lexesByLCLemma!![word])
+		return lexesToString(lexes)
 	}
 
-	public static void testCISensesGroupingByLCLemmaAndPos(final CoreModel model, final String word, final char pos, final PrintStream ps)
-	{
-		ps.printf("ci '%s' %s%n", word, pos);
-		ps.println(testCISensesGroupingByLCLemmaAndPosString(model, word, pos));
+	fun testCISensesGroupingByLCLemmaAndPos(model: CoreModel, word: String, pos: Char, ps: PrintStream) {
+		ps.printf("ci '%s' %s%n", word, pos)
+		ps.println(testCISensesGroupingByLCLemmaAndPosString(model, word, pos))
 	}
 
-	public static void testCISensesGroupingByLCLemma(final CoreModel model, final String word, final PrintStream ps)
-	{
-		ps.printf("ci '%s'%n", word);
-		ps.println(testCISensesGroupingByLCLemmaString(model, word));
+	fun testCISensesGroupingByLCLemma(model: CoreModel, word: String, ps: PrintStream) {
+		ps.printf("ci '%s'%n", word)
+		ps.println(testCISensesGroupingByLCLemmaString(model, word))
 	}
 
-	private static String testCISensesGroupingByLCLemmaString(final CoreModel model, final String word)
-	{
-		final var senses = sensesForLCLemma(model.senses, word);
-		return TestUtils.sensesToString(senses);
+	private fun testCISensesGroupingByLCLemmaString(model: CoreModel, word: String): String {
+		val senses = sensesForLCLemma(model.senses, word)
+		return sensesToString(senses)
 	}
 
-	private static String testCISensesGroupingByLCLemmaAndPosString(final CoreModel model, final String word, final char pos)
-	{
-		final var senses = sensesForLCLemmaAndPos(model.senses, word, pos);
-		return TestUtils.sensesToString(senses);
+	private fun testCISensesGroupingByLCLemmaAndPosString(model: CoreModel, word: String, pos: Char): String {
+		val senses = sensesForLCLemmaAndPos(model.senses, word, pos)
+		return sensesToString(senses)
 	}
 }

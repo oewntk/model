@@ -7,7 +7,8 @@
 
 # OEWN model
 
-This library contains the classes that model the objects (lexical entries, senses, synsets, relations, etc...) in a wordnet.
+This library contains the classes that model the objects (lexical entries, senses, synsets, relations, etc...) in a
+wordnet.
 
 Project [model](https://github.com/oewntk/model)
 

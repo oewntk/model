@@ -69,8 +69,8 @@ open class CoreModel( //
 	 * @return this model
 	 */
 	fun generateInverseRelations(): CoreModel {
-		InverseRelationFactory.makeSynsetRelations(synsetsById)
-		InverseRelationFactory.makeSenseRelations(sensesById)
+		InverseRelationFactory.makeSynsetRelations(synsetsById!!)
+		InverseRelationFactory.makeSenseRelations(sensesById!!)
 		return this
 	}
 
@@ -331,14 +331,14 @@ open class CoreModel( //
 		val acc = longArrayOf(0, 0)
 		synsets.forEach(Consumer { synset: Synset ->
 			val rr: Map<String, Set<String>>? = synset.relations
-			if (rr != null && !rr.isEmpty()) {
-				rr.forEach(BiConsumer { r: String?, v: Set<String> -> acc[0] += v.size.toLong() })
+			if (!rr.isNullOrEmpty()) {
+				rr.forEach(BiConsumer { _: String?, v: Set<String> -> acc[0] += v.size.toLong() })
 			}
 		})
 		senses.forEach(Consumer { sense: Sense ->
 			val rr: Map<String, Set<String>>? = sense.relations
-			if (rr != null && !rr.isEmpty()) {
-				rr.forEach(BiConsumer { r: String?, v: Set<String> -> acc[1] += v.size.toLong() })
+			if (!rr.isNullOrEmpty()) {
+				rr.forEach(BiConsumer { _: String?, v: Set<String> -> acc[1] += v.size.toLong() })
 			}
 		})
 		val synsetRelationSum = synsets.stream()

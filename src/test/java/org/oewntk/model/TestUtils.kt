@@ -1,61 +1,49 @@
 /*
  * Copyright (c) 2021. Bernard Bou.
  */
+package org.oewntk.model
 
-package org.oewntk.model;
+import java.io.StringWriter
+import java.util.function.Consumer
 
-import java.io.StringWriter;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Map;
+object TestUtils {
 
-public class TestUtils
-{
-	public static String sensesToString(final Collection<Sense> senses)
-	{
-		if (senses == null || senses.isEmpty())
-		{
-			return "\t<none>";
+	fun sensesToString(senses: Collection<Sense?>?): String {
+		if (senses.isNullOrEmpty()) {
+			return "\t<none>"
 		}
-		StringWriter sw = new StringWriter();
-		senses.forEach(sense -> sw.write(String.format("\t%s%n", sense)));
-		return sw.toString();
+		val sw = StringWriter()
+		senses.forEach(Consumer { sense: Sense? -> sw.write(String.format("\t%s%n", sense)) })
+		return sw.toString()
 	}
 
-	public static String sensesToStringByDecreasingTagCount(final Collection<Sense> senses)
-	{
-		if (senses == null || senses.isEmpty())
-		{
-			return "\t<none>";
+	fun sensesToStringByDecreasingTagCount(senses: Collection<Sense>?): String {
+		if (senses.isNullOrEmpty()) {
+			return "\t<none>"
 		}
-
-		StringWriter sw = new StringWriter();
+		val sw = StringWriter()
 		senses.stream() //
-				.sorted(SenseGroupings.BY_DECREASING_TAGCOUNT.thenComparing(Sense::getSensekey)) //
-				.forEach(sense -> sw.write(String.format("\t%d %s%n", sense.getIntTagCount(), sense)));
-		return sw.toString();
+			.sorted(SenseGroupings.BY_DECREASING_TAGCOUNT.thenComparing(Sense::senseKey)) //
+			.forEach { sense: Sense -> sw.write(String.format("\t%d %s%n", sense.intTagCount, sense)) }
+		return sw.toString()
 	}
 
-	public static String lexesToString(final Collection<Lex> lexes)
-	{
-		if (lexes == null || lexes.isEmpty())
-		{
-			return "\t<none>";
+	fun lexesToString(lexes: Collection<Lex>): String {
+		if (lexes.isEmpty()) {
+			return "\t<none>"
 		}
-		StringWriter sw = new StringWriter();
-		lexes.forEach(lex -> sw.write(String.format("\t%s%n", lex)));
-		return sw.toString();
+		val sw = StringWriter()
+		lexes.forEach(Consumer { lex: Lex? -> sw.write(String.format("\t%s%n", lex)) })
+		return sw.toString()
 	}
 
-	public static String lexHypermapForLemmaToString(final Map<String, Map<String, Collection<Lex>>> lexHypermap, final String lemma)
-	{
-		final var map = lexHypermap.get(lemma.toLowerCase(Locale.ENGLISH));
-		StringWriter sw = new StringWriter();
-		map.keySet().forEach(cs -> {
-			sw.write(String.format("\tcs '%s'%n", cs));
-			map.get(cs) //
-					.forEach(s -> sw.write(String.format("\t\t%s%n", s)));
-		});
-		return sw.toString();
+	fun lexHypermapForLemmaToString(lexHypermap: Map<String, Map<String, Collection<Lex>>>, lemma: String): String {
+		val map = lexHypermap[lemma.lowercase()]!!
+		val sw = StringWriter()
+		map.keys.forEach(Consumer { cs: String? ->
+			sw.write(String.format("\tcs '%s'%n", cs))
+			map[cs]?.forEach(Consumer { s: Lex? -> sw.write(String.format("\t\t%s%n", s)) })
+		})
+		return sw.toString()
 	}
 }

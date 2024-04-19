@@ -188,12 +188,6 @@ interface KeyF<R> : (CoreModel) -> R {
 					)
 				}
 
-				fun of_t(
-					lex: Lex
-				): Mono {
-					return of(Lex::lemma, Lex::type, lex)
-				}
-
 				fun from(
 					wordExtractor: (Lex) -> String,
 					posTypeExtractor: (Lex) -> Char,

@@ -99,7 +99,7 @@ object SenseGroupings {
 	// L O W E R - C A S E   A N D   P O S   K E Y   ( P W N )
 
 	/**
-	 * Key that matches how indexes are built in PWN (index.sense and index.noun|verb|adj|adv
+	 * Key that matches how indexes are built in PWN (index.sense and index.(noun|verb|adj|adv)
 	 */
 	class KeyLCLemmaAndPos(lemma: String, @JvmField val pos: Char) : Comparable<KeyLCLemmaAndPos> {
 		@JvmField

@@ -57,43 +57,43 @@ object LibTestModelKeys {
 	// R O W
 	@JvmStatic
 	fun testRowDeep(model: CoreModel?, ps: PrintStream): IntArray {
-		return testPronunciations(model, ps, "row", 'n', 'n', ipa("ɹəʊ"), ipa("ɹaʊ"))
+		return testPronunciations(model, ps, "row", 'n', ipa("ɹəʊ"), ipa("ɹaʊ"))
 	}
 
 	@JvmStatic
 	fun testRowShallow(model: CoreModel?, ps: PrintStream): IntArray {
-		return testShallow(model, ps, "row", 'n', 'n', "-1", "-2")
+		return testShallow(model, ps, "row", 'n', "-1", "-2")
 	}
 
 	@JvmStatic
 	fun testRowNoPronunciationDeep(model: CoreModel?, ps: PrintStream): IntArray {
-		return testPronunciations(model, ps, "row", 'n', 'n')
+		return testPronunciations(model, ps, "row", 'n')
 	}
 
 	@JvmStatic
 	fun testRowNoPronunciationShallow(model: CoreModel?, ps: PrintStream): IntArray {
-		return testShallow(model, ps, "row", 'n', 'n')
+		return testShallow(model, ps, "row", 'n')
 	}
 
 	// B A S S
 	@JvmStatic
 	fun testBassDeep(model: CoreModel?, ps: PrintStream): IntArray {
-		return testPronunciations(model, ps, "bass", 'n', 'n', ipa("beɪs"), ipa("bæs"))
+		return testPronunciations(model, ps, "bass", 'n', ipa("beɪs"), ipa("bæs"))
 	}
 
 	@JvmStatic
 	fun testBassShallow(model: CoreModel?, ps: PrintStream): IntArray {
-		return testShallow(model, ps, "bass", 'n', 'n', "-1", "-2")
+		return testShallow(model, ps, "bass", 'n', "-1", "-2")
 	}
 
 	@JvmStatic
 	fun testBassNoPronunciationDeep(model: CoreModel?, ps: PrintStream): IntArray {
-		return testPronunciations(model, ps, "bass", 'n', 'n')
+		return testPronunciations(model, ps, "bass", 'n')
 	}
 
 	@JvmStatic
 	fun testBassNoPronunciationShallow(model: CoreModel?, ps: PrintStream): IntArray {
-		return testShallow(model, ps, "bass", 'n', 'n')
+		return testShallow(model, ps, "bass", 'n')
 	}
 
 	// W O R D    T E S T S
@@ -131,8 +131,6 @@ object LibTestModelKeys {
 			model,
 			ps,
 			cased,
-			posTypes[0],
-			posTypes[if (posTypes.size > 1) 1 else 0],
 			*keys.toTypedArray<MultiValued>()
 		)
 	}
@@ -167,8 +165,6 @@ object LibTestModelKeys {
 			model,
 			ps,
 			cased,
-			posTypes[0],
-			posTypes[if (posTypes.size > 1) 1 else 0],
 			*keys.toTypedArray<MultiValued>()
 		)
 	}
@@ -208,8 +204,6 @@ object LibTestModelKeys {
 			model,
 			ps,
 			cased,
-			posTypes[0],
-			posTypes[if (posTypes.size > 1) 1 else 0],
 			*keys.toTypedArray<MonoValued>()
 		)
 	}
@@ -245,8 +239,6 @@ object LibTestModelKeys {
 			model,
 			ps,
 			cased,
-			posTypes[0],
-			posTypes[if (posTypes.size > 1) 1 else 0],
 			*keys.toTypedArray<MonoValued>()
 		)
 	}
@@ -257,7 +249,6 @@ object LibTestModelKeys {
 		model: CoreModel?,
 		ps: PrintStream,
 		lemma: String,
-		pos: Char,
 		type: Char,
 		vararg discriminants: String?
 	): IntArray {
@@ -266,14 +257,13 @@ object LibTestModelKeys {
 			keys.add(KeyF.F_W_P_D.Multi.from(Lex::lemma, Lex::type, lemma, type, d!!))
 		}
 		keys.add(KeyF.F_W_P.Multi.from(Lex::lemma, Lex::type, lemma, type))
-		return testKeysMulti(model, ps, lemma, pos, type, *keys.toTypedArray<MultiValued>())
+		return testKeysMulti(model, ps, lemma, *keys.toTypedArray<MultiValued>())
 	}
 
 	private fun testPronunciations(
 		model: CoreModel?,
 		ps: PrintStream,
 		lemma: String,
-		pos: Char,
 		type: Char,
 		vararg pronunciations: Pronunciation?
 	): IntArray {
@@ -282,7 +272,7 @@ object LibTestModelKeys {
 			keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::partOfSpeech, lemma, type, arrayOf(p!!)))
 		}
 		keys.add(KeyF.F_W_P.Multi.from(Lex::lemma, Lex::type, lemma, type))
-		return testKeysMulti(model, ps, lemma, pos, type, *keys.toTypedArray<MultiValued>())
+		return testKeysMulti(model, ps, lemma, *keys.toTypedArray<MultiValued>())
 	}
 
 	// M O N O / M U L T I    T E S T S
@@ -292,8 +282,6 @@ object LibTestModelKeys {
 		model: CoreModel?,
 		ps: PrintStream,
 		lemma: String,
-		pos: Char,
-		type: Char,
 		vararg keys: MonoValued
 	): IntArray {
 		val r = IntArray(keys.size)
@@ -316,8 +304,6 @@ object LibTestModelKeys {
 		model: CoreModel?,
 		ps: PrintStream,
 		lemma: String,
-		pos: Char,
-		type: Char,
 		vararg keys: MultiValued
 	): IntArray {
 		val r = IntArray(keys.size)

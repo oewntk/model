@@ -12,10 +12,11 @@ import java.io.Serializable
  * @property frame verb frame
  */
 class VerbFrame(
+
 	/**
 	 * Verb frame id
 	 */
-	@JvmField val id: String,
+	@JvmField val id: VerbFrameType,
 
 	/**
 	 * Verb frame

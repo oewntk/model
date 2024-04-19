@@ -18,15 +18,16 @@ import java.util.*
  * @param    senseToVerbTemplates sensekey-to-verb template
  * @param    senseToTagCounts     sensekey-to-tagcount
  */
-class Model( //
-	lexes: Collection<Lex>?,  //
-	senses: Collection<Sense>?,  //
-	synsets: Collection<Synset>?,  //
-	verbFrames: Collection<VerbFrame>?,  //
-	verbTemplates: Collection<VerbTemplate>?,  //
-	senseToVerbTemplates: Collection<Map.Entry<String, IntArray>>,  //
-	senseToTagCounts: Collection<Map.Entry<String, TagCount>>
+class Model(
+	lexes: Collection<Lex>,
+	senses: Collection<Sense>,
+	synsets: Collection<Synset>,
+	verbFrames: Collection<VerbFrame>,
+	verbTemplates: Collection<VerbTemplate>,
+	senseToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateType>>>,
+	senseToTagCounts: Collection<Pair<SenseKey, TagCount>>
 ) : CoreModel(lexes, senses, synsets) {
+
 	/**
 	 * Verb frames
 	 */
@@ -72,10 +73,10 @@ class Model( //
 	 */
 	constructor(
 		coreModel: CoreModel,
-		verbFrames: Collection<VerbFrame>?,
-		verbTemplates: Collection<VerbTemplate>?,
-		sensesToVerbTemplates: Collection<Map.Entry<String, IntArray>>,
-		sensesToTagCounts: Collection<Map.Entry<String, TagCount>>
+		verbFrames: Collection<VerbFrame>,
+		verbTemplates: Collection<VerbTemplate>,
+		sensesToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateType>>>,
+		sensesToTagCounts: Collection<Pair<SenseKey, TagCount>>
 	) : this(
 		coreModel.lexes,
 		coreModel.senses,

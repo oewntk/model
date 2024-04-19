@@ -46,7 +46,7 @@ object MapFactory {
         groupingFunction: Function<V, K>?,
         mergingFunction: BinaryOperator<V>?
     ): Map<K, V> {
-        return things.stream() //
+        return things.stream() 
             .collect(Collectors.toMap(groupingFunction, Function.identity(), mergingFunction) { TreeMap() })
     }
 

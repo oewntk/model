@@ -81,7 +81,7 @@ object Finder {
 	 * @return stream of lexes
 	 */
 	fun getLcLexesHavingType(model: CoreModel, lcLemma: String, typeFilter: Char): Stream<Lex> {
-		return model.lexesByLCLemma!![lcLemma.lowercase()]!!.stream() //
+		return model.lexesByLCLemma!![lcLemma.lowercase()]!!.stream() 
 			.filter { lex: Lex -> lex.type == typeFilter }
 	}
 

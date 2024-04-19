@@ -20,9 +20,9 @@ import java.util.function.Consumer
  * @property synsets synsets
  * @property source  source
  */
-open class CoreModel( //
-	lexes: Collection<Lex>?,  //
-	senses: Collection<Sense>?,  //
+open class CoreModel( 
+	lexes: Collection<Lex>?,  
+	senses: Collection<Sense>?,  
 	synsets: Collection<Synset>?
 ) : Serializable {
 
@@ -347,7 +347,7 @@ open class CoreModel( //
 			.sum()
 		val senseRelationSum = senses.stream()
 			.map(Sense::relations)
-			.filter { Objects.nonNull(it) } //
+			.filter { Objects.nonNull(it) } 
 			.flatMap { it!!.values.stream() }
 			.mapToLong { it.size.toLong() }.sum()
 		assert(synsetRelationSum == acc[0]) {

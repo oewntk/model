@@ -12,16 +12,14 @@ import java.io.Serializable
  * @property template verb template
  */
 class VerbTemplate(
+
 	/**
 	 * Verb template id
-	 *
-	 * @return template id
 	 */
-	val id: Int,
+	val id: VerbTemplateType,
+
 	/**
 	 * Verb template
-	 *
-	 * @return template
 	 */
 	@JvmField val template: String
 

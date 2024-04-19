@@ -119,9 +119,9 @@ interface KeyF<R> : (CoreModel) -> R {
 		}
 
 		companion object {
-			fun <L : (Lex) -> String, P : (Lex) -> Char> of(
+			fun of(
 				lex: Lex,
-				wordExtractor: L,
+				wordExtractor: (Lex) -> String,
 				posTypeExtractor: (Lex) -> Char
 			): F_W_P {
 				return F_W_P(
@@ -186,6 +186,12 @@ interface KeyF<R> : (CoreModel) -> R {
 						wordExtractor,
 						posTypeExtractor
 					)
+				}
+
+				fun of_t(
+					lex: Lex
+				): Mono {
+					return of(Lex::lemma, Lex::type, lex)
 				}
 
 				fun from(
@@ -350,7 +356,7 @@ interface KeyF<R> : (CoreModel) -> R {
 		}
 
 		companion object {
-			fun <L : (Lex) -> String, P : (Lex) -> Char> of(
+			fun of(
 				lex: Lex,
 				wordExtractor: (Lex) -> String,
 				posTypeExtractor: (Lex) -> Char,

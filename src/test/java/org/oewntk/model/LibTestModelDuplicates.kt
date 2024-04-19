@@ -7,7 +7,6 @@ import org.junit.Assert
 import org.oewntk.model.KeyF.MonoValued
 import org.oewntk.model.KeyF.MultiValued
 import java.io.PrintStream
-import java.util.function.Consumer
 import java.util.function.Function
 import java.util.stream.Collectors
 
@@ -19,13 +18,13 @@ object LibTestModelDuplicates {
 			.map(key) // stream of values
 			.collect(Collectors.groupingBy(Function.identity(), Collectors.counting())) // map(key, count)
 			.entries.stream() // stream of pairs(key,count)
-			.filter { m: Map.Entry<MonoValued, Long> -> m.value > 1 } // if map value > 1, duplicate element
-			.sorted(Comparator.comparing { e: Map.Entry<MonoValued, Long> -> e.key.toString() }) //
+			.filter { it.value > 1 } // if map value > 1, duplicate element
+			.sorted(Comparator.comparing { it.key.toString() }) //
 			.collect(
 				Collectors.toCollection { LinkedHashSet() }
 			)
 		ps.println(dups.size)
-		dups.forEach(Consumer { x: Map.Entry<MonoValued, Long>? -> ps.println(x) })
+		dups.forEach { ps.println(it) }
 		Assert.assertEquals(0, dups.size.toLong())
 	}
 
@@ -35,11 +34,11 @@ object LibTestModelDuplicates {
 			.map(key) // stream of keys
 			.collect(Collectors.groupingBy(Function.identity(), Collectors.counting())) // map(key, count));
 			.entries.stream() // stream of map entries
-			.filter { m: Map.Entry<MultiValued, Long> -> m.value > 1 } // if map value > 1, duplicate element
-			.sorted(Comparator.comparing { e: Map.Entry<MultiValued, Long> -> e.key.toString() }) //
+			.filter { it.value > 1 } // if map value > 1, duplicate element
+			.sorted(Comparator.comparing { it.key.toString() }) //
 			.collect(Collectors.toCollection { LinkedHashSet() })
 		ps.println(dups.size)
-		dups.forEach(Consumer { x: Map.Entry<MultiValued, Long>? -> ps.println(x) })
+		dups.forEach { ps.println(it) }
 	}
 
 	@JvmStatic

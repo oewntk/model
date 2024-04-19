@@ -118,7 +118,7 @@ object LibTestModelQueries {
 		// verbtemplates
 		val verbTemplates = sense.verbTemplates
 		if (verbTemplates != null) {
-			ps.printf("%stemplates: [%s]%n", indent, Arrays.stream(verbTemplates).mapToObj { i: Int -> i.toString() }
+			ps.printf("%stemplates: [%s]%n", indent, Arrays.stream(verbTemplates).map { it.toString() }
 				.collect(Collectors.joining(",")))
 		}
 	}

@@ -94,7 +94,7 @@ interface Key {
 				return W_P(word, posType)
 			}
 
-			val wpComparator: Comparator<W_P> = Comparator.comparing { obj: W_P -> obj.word } //
+			val wpComparator: Comparator<W_P> = Comparator.comparing { obj: W_P -> obj.word } 
 				.thenComparing { obj: W_P -> obj.posType }
 		}
 	}

@@ -7,82 +7,81 @@ import org.oewntk.model.Key.W_P_A.Companion.of_p
 import java.io.PrintStream
 import java.util.*
 import java.util.AbstractMap.SimpleEntry
-import java.util.function.Function
 import java.util.stream.Collectors
 import java.util.stream.Stream
 
 object LibTestModel {
+
 	@JvmStatic
-	fun makeIndexMap(stream: Stream<Key?>): Map<Key?, Int> {
-		val i = intArrayOf(0)
-		val map = stream //
-			.sequential() //
-			.peek { _: Key? -> i[0]++ } //
-			.map { item: Key? -> SimpleEntry(item, i[0]) } //
+	fun makeIndexMap(stream: Stream<Key>): Map<out Key, Int> {
+		var i = 0
+		return stream
+			.sequential()
+			.peek { i++ }
+			.map { item -> SimpleEntry(item, i) }
 			.collect(
 				Collectors.toMap(
-					{ obj: SimpleEntry<Key?, Int> -> obj.key },
-					{ obj: SimpleEntry<Key?, Int> -> obj.value })
+					{ it.key },
+					{ it.value })
 			)
-		return map
 	}
 
 	@JvmStatic
-	fun makeSortedIndexMap(stream: Stream<Key?>): Map<Key, Int> {
-		val i = intArrayOf(0)
-		val map: Map<Key, Int> = stream //
-			.sequential() //
-			.peek { _: Key? -> i[0]++ } //
-			.map { item: Key? -> SimpleEntry(item, i[0]) } //
+	fun makeSortedIndexMap(stream: Stream<Key>): Map<out Key, Int> {
+		var i = 0
+		return stream
+			.sequential()
+			.peek { i++ }
+			.map { SimpleEntry(it, i) }
 			.collect(
-				Collectors.toMap( //
-					{ obj: SimpleEntry<Key?, Int> -> obj.key },  //
-					{ obj: SimpleEntry<Key?, Int> -> obj.value },  //
-					{ existing: Int, replacement: Int ->
+				Collectors.toMap(
+					{ it.key },
+					{ it.value },
+					{ existing, replacement ->
 						require(existing != replacement) { "$existing,$replacement" }
 						existing
-					},  //
+					},
 					{ TreeMap() })
 			)
-		// map.forEach((k, v) -> ps.printf("%s %s%n", k, v));
-		return map
 	}
 
 	@JvmStatic
 	fun testScanLexesForTestWords(
 		model: CoreModel,
-		keyGetter: Function<Lex?, Key>,
-		indexerByKey: Function<Stream<Key>?, Map<Key?, Int?>>,
-		testWords: Set<String?>,
+		keyGetter: (Lex) -> Key,
+		indexerByKey: (Stream<Key>) -> Map<out Key, Int>,
+		testWords: Set<String>,
 		peekTestWords: Boolean,
 		ps: PrintStream
 	) {
 		// stream of lexes
-		val lexKeyStream = model.lexes.stream().peek { lex: Lex ->
-			if (testWords.contains(lex.lemma)) {
-				if (peekTestWords) {
-					ps.println("@$lex")
+		val lexKeyStream = model.lexes.stream()
+			.peek { lex: Lex ->
+				if (testWords.contains(lex.lemma)) {
+					if (peekTestWords) {
+						ps.println("@$lex")
+					}
 				}
 			}
-		}.map(keyGetter)
+			.map(keyGetter)
 
 		// make lex-to-index map
-		val lexKeyToIndex = indexerByKey.apply(lexKeyStream)
+		val lexKeyToIndex = indexerByKey.invoke(lexKeyStream)
 
 		// test map
 		ps.printf("%-12s %s%n", "index", "lex")
 		for (word in testWords) {
-			val lexes = model.lexesByLemma!![word!!]!!
+			val lexes = model.lexesByLemma!![word]!!
 			for (lex in lexes) {
-				ps.printf("%-12d %s%n", lexKeyToIndex[keyGetter.apply(lex)], lex)
+				ps.printf("%-12d %s%n", lexKeyToIndex[keyGetter.invoke(lex)], lex)
 			}
 		}
 	}
 
 	@JvmStatic
-	fun testWords(model: CoreModel, ps: PrintStream, vararg words: String?) {
+	fun testWords(model: CoreModel, ps: PrintStream, vararg words: String) {
 		for (word in words) {
-			val lexes = model.lexesByLemma!![word!!]!!
+			val lexes = model.lexesByLemma!![word]!!
 			for (lex in lexes) {
 				ps.println(lex)
 				dumpKeys(lex, ps)
@@ -91,8 +90,8 @@ object LibTestModel {
 	}
 
 	@JvmStatic
-	fun testWord(lemma: String?, model: CoreModel?, ps: PrintStream) {
-		val lexes = getLexes(model!!, lemma)
+	fun testWord(lemma: String, model: CoreModel, ps: PrintStream) {
+		val lexes = getLexes(model, lemma)
 		for (lex in lexes) {
 			ps.println(lex)
 			dumpKeys(lex, ps)
@@ -100,17 +99,15 @@ object LibTestModel {
 	}
 
 	@JvmStatic
-	fun testWord(lemma: String?, posFilter: Char, model: CoreModel?, ps: PrintStream) {
-		val lexes = getLexesHavingPos(model!!, lemma!!, posFilter)!!.toArray<Lex> { arrayOf() }
+	fun testWord(lemma: String, posFilter: Char, model: CoreModel, ps: PrintStream) {
+		val lexes = getLexesHavingPos(model, lemma, posFilter)!!.toArray<Lex> { arrayOf() }
 		for ((i, lex) in lexes.withIndex()) {
 			ps.printf("[%d] %s%n", i + 1, lex)
 			dumpKeys(lex, ps)
 		}
-
 		if (lexes.size > 1) {
 			ps.println()
 			ps.printf("comparing keys equals() for [%d] and [%d]%n", 1, 2)
-
 			ps.println(lexes[0])
 			ps.println(lexes[1])
 			dumpKeyEquals(lexes[0], lexes[1], ps)

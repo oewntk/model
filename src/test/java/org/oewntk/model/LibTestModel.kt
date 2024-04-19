@@ -6,7 +6,6 @@ import org.oewntk.model.Key.W_P.Companion.of_lc_p
 import org.oewntk.model.Key.W_P_A.Companion.of_p
 import java.io.PrintStream
 import java.util.*
-import java.util.AbstractMap.SimpleEntry
 import java.util.stream.Collectors
 import java.util.stream.Stream
 
@@ -18,11 +17,11 @@ object LibTestModel {
 		return stream
 			.sequential()
 			.peek { i++ }
-			.map { item -> SimpleEntry(item, i) }
+			.map { it to i }
 			.collect(
 				Collectors.toMap(
-					{ it.key },
-					{ it.value })
+					{ it.first },
+					{ it.second })
 			)
 	}
 
@@ -32,11 +31,11 @@ object LibTestModel {
 		return stream
 			.sequential()
 			.peek { i++ }
-			.map { SimpleEntry(it, i) }
+			.map { it to i }
 			.collect(
 				Collectors.toMap(
-					{ it.key },
-					{ it.value },
+					{ it.first },
+					{ it.second },
 					{ existing, replacement ->
 						require(existing != replacement) { "$existing,$replacement" }
 						existing

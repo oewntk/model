@@ -91,13 +91,13 @@ class Model(
 	 * Verb frames mapped by id
 	 */
 	val verbFramesById: Map<String, VerbFrame>
-		get() = map(verbFrames) { obj: VerbFrame -> obj.id }
+		get() = map(verbFrames) { it.id }
 
 	/**
 	 * Verb templates mapped by id
 	 */
 	val verbTemplatesById: Map<Int, VerbTemplate>
-		get() = map(verbTemplates) { obj: VerbTemplate -> obj.id }
+		get() = map(verbTemplates) { it.id }
 
 	/**
 	 * Input sources

@@ -3,7 +3,6 @@
  */
 package org.oewntk.model
 
-import org.oewntk.model.Lex
 import java.util.*
 import java.util.stream.Collectors
 

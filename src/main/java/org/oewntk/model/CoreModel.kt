@@ -9,8 +9,6 @@ import org.oewntk.model.MapFactory.synsetsById
 import java.io.File
 import java.io.Serializable
 import java.util.*
-import java.util.function.BiConsumer
-import java.util.function.Consumer
 
 /**
  * Base language model
@@ -20,10 +18,10 @@ import java.util.function.Consumer
  * @property synsets synsets
  * @property source  source
  */
-open class CoreModel( 
-	lexes: Collection<Lex>?,  
-	senses: Collection<Sense>?,  
-	synsets: Collection<Synset>?
+open class CoreModel(
+	lexes: Collection<Lex>,
+	senses: Collection<Sense>,
+	synsets: Collection<Synset>
 ) : Serializable {
 
 	/**
@@ -118,14 +116,10 @@ open class CoreModel(
 
 	/**
 	 * Cached
+	 * Synsets mapped by id (synset id)
 	 */
 	@Transient
 	var synsetsById: Map<String, Synset>? = null
-		/**
-		 * Synsets mapped by id (synset id)
-		 *
-		 * @return synsets mapped by id (synset id)
-		 */
 		get() {
 			if (field == null) {
 				field = synsetsById(synsets)
@@ -149,116 +143,95 @@ open class CoreModel(
 	 * @return info
 	 */
 	fun counts(): String {
-		val csWordCount = lexes.stream()
-			.map(Lex::lemma)
+		val csWordCount = lexes
+			.map { it.lemma }
 			.distinct()
 			.count()
-		val lcWordCount = lexes.stream()
-			.map(Lex::lCLemma)
+		val lcWordCount = lexes
+			.map { it.lCLemma }
 			.distinct()
 			.count()
-		val casedCount = lexes.stream()
-			.map(Lex::lemma)
+		val casedCount = lexes
+			.map { it.lemma }
 			.filter { it != it.lowercase() }
 			.distinct()
 			.count()
 
-		val distinctByKeyOEWNLexCount = lexes.stream()
+		val distinctByKeyOEWNLexCount = lexes
 			.map { W_P_A.of_t(it) }
 			.distinct()
 			.count()
-		val distinctByKeyShallowLexCount = lexes.stream()
+		val distinctByKeyShallowLexCount = lexes
 			.map { W_P_D.of_t(it) }
 			.distinct()
 			.count()
-		val distinctByKeyPOSLexCount = lexes.stream()
+		val distinctByKeyPOSLexCount = lexes
 			.map { W_P_A.of_p(it) }
 			.distinct()
 			.count()
-		val distinctByKeyICLexCount = lexes.stream()
+		val distinctByKeyICLexCount = lexes
 			.map { W_P_A.of_lc_t(it) }
 			.distinct()
 			.count()
-		val distinctByKeyPWNLexCount = lexes.stream()
+		val distinctByKeyPWNLexCount = lexes
 			.map { W_P.of_lc_p(it) }
 			.distinct()
 			.count()
-		val distinctSenseGroupsCount = lexes.stream()
-			.map(Lex::sensesAsSet)
+		val distinctSenseGroupsCount = lexes
+			.map { it.sensesAsSet }
 			.distinct()
 			.count()
-		val sensesInSenseGroupsSum = lexes.stream()
-			.map(Lex::sensesAsSet)
+		val sensesInSenseGroupsSum = lexes
+			.map { it.sensesAsSet }
 			.distinct()
-			.mapToLong { obj: Set<Sense> -> obj.size.toLong() }
-			.sum()
+			.sumOf { it.size.toLong() }
 
-		val withMultiSenseLexCount = lexes.stream()
-			.filter { lex: Lex -> lex.senses.size > 1 }
-			.count()
-		val discriminantCount = lexes.stream()
-			.map(Lex::discriminant)
-			.filter { Objects.nonNull(it) }
+		val withMultiSenseLexCount = lexes
+			.count { it.senses.size > 1 }
+		val discriminantCount = lexes
+			.mapNotNull { it.discriminant }
 			.distinct()
 			.count()
-		val withDiscriminantLexCount = lexes.stream()
-			.filter { it.discriminant != null }
-			.count()
-		val withPronunciationLexCount = lexes.stream()
-			.filter { it.pronunciations != null }
-			.count()
+		val withDiscriminantLexCount = lexes
+			.count { it.discriminant != null }
+		val withPronunciationLexCount = lexes
+			.count { it.pronunciations != null }
 
-		val withRelationSenseCount = senses.stream()
-			.filter { it.relations != null }
-			.count()
-		val senseRelationSum = senses.stream()
-			.map(Sense::relations)
-			.filter { Objects.nonNull(it) }
-			.flatMap { it!!.values.stream() }
-			.mapToLong { it.size.toLong() }
-			.sum()
+		val withRelationSenseCount = senses
+			.count { it.relations != null }
+		val senseRelationSum = senses
+			.mapNotNull { it.relations }
+			.flatMap { it.values }
+			.sumOf { it.size.toLong() }
 
-		val withRelationSynsetCount = synsets.stream()
-			.filter { it.relations != null }
-			.count()
-		val synsetRelationSum = synsets.stream()
-			.map(Synset::relations)
-			.filter { Objects.nonNull(it) }
-			.flatMap { it!!.values.stream() }
-			.mapToLong { it.size.toLong() }
-			.sum()
+		val withRelationSynsetCount = synsets
+			.count { it.relations != null }
+		val synsetRelationSum = synsets
+			.mapNotNull { it.relations }
+			.flatMap { it.values }
+			.sumOf { it.size.toLong() }
 
-		return String.format(COUNT_TEMPLATE, "lexes", lexes.size) + String.format(
-			COUNT_TEMPLATE,
-			"lemmas (distinct CS)",
-			csWordCount
-		) + String.format(
-			COUNT_TEMPLATE, "lemmas (distinct LC)", lcWordCount
-		) + String.format(COUNT_TEMPLATE, "lemmas (cased)", casedCount) + String.format(
-			COUNT_TEMPLATE, "discriminant types", discriminantCount
-		) + String.format(COUNT_TEMPLATE, "lexes with discriminant", withDiscriminantLexCount) + String.format(
-			COUNT_TEMPLATE, "lexes with pronunciation", withPronunciationLexCount
-		) + String.format(COUNT_TEMPLATE, "lexes with multi senses", withMultiSenseLexCount) + String.format(
-			COUNT_TEMPLATE, "distinct lexes by key W_P_A_type (deep)", distinctByKeyOEWNLexCount
-		) + String.format(
-			COUNT_TEMPLATE, "distinct lexes by key W_P_D_type (shallow)", distinctByKeyShallowLexCount
-		) + String.format(
-			COUNT_TEMPLATE, "distinct lexes by key W_P_A_pos (pos)", distinctByKeyPOSLexCount
-		) + String.format(
-			COUNT_TEMPLATE,
-			"distinct lexes by key W_P_A_lc_type (ic)",
-			distinctByKeyICLexCount
-		) + String.format(
-			COUNT_TEMPLATE, "distinct lexes by key W_P_lc_pos (pwn)", distinctByKeyPWNLexCount
-		) + String.format(COUNT_TEMPLATE, "senses", senses.size) + String.format(
-			COUNT_TEMPLATE, "distinct sense sets in lexes", distinctSenseGroupsCount
-		) + String.format(COUNT_TEMPLATE, "senses in sense sets", sensesInSenseGroupsSum) + String.format(
-			COUNT_TEMPLATE, "senses with relations", withRelationSenseCount
-		) + String.format(COUNT_TEMPLATE, "sense relations", senseRelationSum) + String.format(
-			COUNT_TEMPLATE, "synsets", synsets.size
-		) + String.format(COUNT_TEMPLATE, "synsets with relations", withRelationSynsetCount) + String.format(
-			COUNT_TEMPLATE, "synset relations", synsetRelationSum
-		)
+		return String.format(COUNT_TEMPLATE, "lexes", lexes.size) +
+				String.format(COUNT_TEMPLATE, "lemmas (distinct CS)", csWordCount) +
+				String.format(COUNT_TEMPLATE, "lemmas (distinct LC)", lcWordCount) +
+				String.format(COUNT_TEMPLATE, "lemmas (cased)", casedCount) +
+				String.format(COUNT_TEMPLATE, "discriminant types", discriminantCount) +
+				String.format(COUNT_TEMPLATE, "lexes with discriminant", withDiscriminantLexCount) +
+				String.format(COUNT_TEMPLATE, "lexes with pronunciation", withPronunciationLexCount) +
+				String.format(COUNT_TEMPLATE, "lexes with multi senses", withMultiSenseLexCount) +
+				String.format(COUNT_TEMPLATE, "distinct lexes by key W_P_A_type (deep)", distinctByKeyOEWNLexCount) +
+				String.format(COUNT_TEMPLATE, "distinct lexes by key W_P_D_type (shallow)", distinctByKeyShallowLexCount) +
+				String.format(COUNT_TEMPLATE, "distinct lexes by key W_P_A_pos (pos)", distinctByKeyPOSLexCount) +
+				String.format(COUNT_TEMPLATE, "distinct lexes by key W_P_A_lc_type (ic)", distinctByKeyICLexCount) +
+				String.format(COUNT_TEMPLATE, "distinct lexes by key W_P_lc_pos (pwn)", distinctByKeyPWNLexCount) +
+				String.format(COUNT_TEMPLATE, "senses", senses.size) +
+				String.format(COUNT_TEMPLATE, "distinct sense sets in lexes", distinctSenseGroupsCount) +
+				String.format(COUNT_TEMPLATE, "senses in sense sets", sensesInSenseGroupsSum) +
+				String.format(COUNT_TEMPLATE, "senses with relations", withRelationSenseCount) +
+				String.format(COUNT_TEMPLATE, "sense relations", senseRelationSum) +
+				String.format(COUNT_TEMPLATE, "synsets", synsets.size) +
+				String.format(COUNT_TEMPLATE, "synsets with relations", withRelationSynsetCount) +
+				String.format(COUNT_TEMPLATE, "synset relations", synsetRelationSum)
 	}
 
 	/**
@@ -269,48 +242,39 @@ open class CoreModel(
 	fun xCounts(): String {
 		counts()
 
-		val pronunciationRefSum = lexes.stream()
+		val pronunciationRefSum = lexes
 			.filter { it.pronunciations != null }
-			.mapToLong { it.pronunciations!!.size.toLong() }
-			.sum()
-		val pronunciationCount = lexes.stream()
+			.sumOf { it.pronunciations!!.size.toLong() }
+		val pronunciationCount = lexes
 			.filter { it.pronunciations != null }
-			.flatMap { Arrays.stream(it.pronunciations) }
+			.flatMap { it.pronunciations!!.asSequence() }
 			.distinct()
 			.count()
-		val withMorphLexCount = lexes.stream()
+		val withMorphLexCount = lexes
+			.count { it.forms != null }
+		val morphRefSum = lexes
 			.filter { it.forms != null }
-			.count()
-		val morphRefSum = lexes.stream()
+			.sumOf { it.forms!!.size.toLong() }
+		val morphCount = lexes
 			.filter { it.forms != null }
-			.mapToLong { it.forms!!.size.toLong() }
-			.sum()
-		val morphCount = lexes.stream()
-			.filter { it.forms != null }
-			.flatMap { lex: Lex -> Arrays.stream(lex.forms) }
+			.flatMap { it.forms!!.asSequence() }
 			.distinct()
 			.count()
 
-		val withExamplesSenseCount = senses.stream()
-			.filter { !it.examples.isNullOrEmpty() }
-			.count()
-		val withVerbFramesSenseCount = senses.stream()
-			.filter { !it.verbFrames.isNullOrEmpty() }
-			.count()
-		val withVerbTemplatesSenseCount = senses.stream()
-			.filter { it.verbTemplates != null }
-			.count()
-		val withTagCountSenseCount = senses.stream()
-			.filter { it.tagCount != null }
-			.count()
+		val withExamplesSenseCount = senses
+			.count { !it.examples.isNullOrEmpty() }
+		val withVerbFramesSenseCount = senses
+			.count { !it.verbFrames.isNullOrEmpty() }
+		val withVerbTemplatesSenseCount = senses
+			.count { it.verbTemplates != null }
+		val withTagCountSenseCount = senses
+			.count { it.tagCount != null }
 
-		val withSamplesSynsetCount = synsets.stream()
+		val withSamplesSynsetCount = synsets
+			.count { !it.examples.isNullOrEmpty() }
+		val sampleSum = synsets
 			.filter { !it.examples.isNullOrEmpty() }
-			.count()
-		val sampleSum = synsets.stream()
-			.filter { !it.examples.isNullOrEmpty() }
-			.mapToLong { it.examples!!.size.toLong() }
-			.sum()
+			.sumOf { it.examples!!.size.toLong() }
 
 		return String.format(COUNT_TEMPLATE, "lexes with morphs", withMorphLexCount) +
 				String.format(COUNT_TEMPLATE, "senses with verb frames", withVerbFramesSenseCount) +
@@ -326,49 +290,16 @@ open class CoreModel(
 	}
 
 	private fun reportRelations(): String {
-		val acc = longArrayOf(0, 0)
-		synsets.forEach(Consumer { synset: Synset ->
-			val rr: Map<String, Set<String>>? = synset.relations
-			if (!rr.isNullOrEmpty()) {
-				rr.forEach(BiConsumer { _: String?, v: Set<String> -> acc[0] += v.size.toLong() })
-			}
-		})
-		senses.forEach(Consumer { sense: Sense ->
-			val rr: Map<String, Set<String>>? = sense.relations
-			if (!rr.isNullOrEmpty()) {
-				rr.forEach(BiConsumer { _: String?, v: Set<String> -> acc[1] += v.size.toLong() })
-			}
-		})
-		val synsetRelationSum = synsets.stream()
-			.map(Synset::relations)
-			.filter { Objects.nonNull(it) }
-			.flatMap { it!!.values.stream() }
-			.mapToLong { it.size.toLong() }
-			.sum()
-		val senseRelationSum = senses.stream()
-			.map(Sense::relations)
-			.filter { Objects.nonNull(it) } 
-			.flatMap { it!!.values.stream() }
-			.mapToLong { it.size.toLong() }.sum()
-		assert(synsetRelationSum == acc[0]) {
-			String.format(
-				"synset relations %d %d discrepancy",
-				synsetRelationSum,
-				acc[0]
-			)
-		}
-		assert(senseRelationSum == acc[1]) {
-			String.format(
-				"sense relations %d %d discrepancy",
-				senseRelationSum,
-				acc[1]
-			)
-		}
-		return String.format(COUNT_TEMPLATE, "synset relations", synsetRelationSum) + String.format(
-			COUNT_TEMPLATE,
-			"sense relations",
-			senseRelationSum
-		)
+		val synsetRelationSum = synsets
+			.mapNotNull { it.relations }
+			.flatMap { it.values }
+			.sumOf { it.size.toLong() }
+		val senseRelationSum = senses
+			.mapNotNull { it.relations }
+			.flatMap { it.values }
+			.sumOf { it.size.toLong() }
+		return String.format(COUNT_TEMPLATE, "synset relations", synsetRelationSum) +
+				String.format(COUNT_TEMPLATE, "sense relations", senseRelationSum)
 	}
 
 	companion object {

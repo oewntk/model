@@ -16,12 +16,14 @@ class Pronunciation(
     /**
      * Value in IPA
      */
-    @JvmField val value: String,
+    @JvmField
+    val value: String,
 
     /**
      * Variety
      */
-    @JvmField val variety: String?
+    @JvmField
+    val variety: String?
 
 ) : Serializable {
 

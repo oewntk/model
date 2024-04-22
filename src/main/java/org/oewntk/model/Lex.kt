@@ -110,7 +110,7 @@ class Lex(
      * @param forms morphological forms
      * @return this
      */
-    fun setForms(vararg forms: String): Lex {
+    fun setForms(forms: Array<String>?): Lex {
         this.forms = forms
         return this
     }

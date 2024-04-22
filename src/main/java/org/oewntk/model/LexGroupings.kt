@@ -87,7 +87,8 @@ object LexGroupings {
 	@JvmStatic
 	fun countsByLCLemma(model: CoreModel): Map<String, Long> {
 		return Groupings.countsBy(
-			model.lexes.stream().map(Lex::lemma)
+			model.lexes.stream()
+				.map(Lex::lemma)
 		) { it.lowercase(Locale.ENGLISH) }
 	}
 
@@ -100,7 +101,8 @@ object LexGroupings {
 	@JvmStatic
 	fun multipleCountsByICLemma(model: CoreModel): Map<String, Long> {
 		return Groupings.multipleCountsBy(
-			model.lexes.stream().map(Lex::lemma)
+			model.lexes.stream()
+				.map(Lex::lemma)
 		) { it.lowercase(Locale.ENGLISH) }
 	}
 
@@ -113,7 +115,8 @@ object LexGroupings {
 	@JvmStatic
 	fun cSLemmasByLCLemmaHavingMultipleCount(model: CoreModel): Map<String, List<String>> {
 		return Groupings.groupByHavingMultipleCount(
-			model.lexes.stream().map(Lex::lemma)
+			model.lexes.stream()
+				.map(Lex::lemma)
 		) { it.lowercase() }
 	}
 }

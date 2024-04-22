@@ -99,7 +99,9 @@ object LibTestModel {
 
 	@JvmStatic
 	fun testWord(lemma: String, posFilter: Char, model: CoreModel, ps: PrintStream) {
-		val lexes = getLexesHavingPos(model, lemma, posFilter)!!.toArray<Lex> { arrayOf() }
+		val lexes = getLexesHavingPos(model, lemma, posFilter)!!
+			.toList()
+			.toTypedArray()
 		for ((i, lex) in lexes.withIndex()) {
 			ps.printf("[%d] %s%n", i + 1, lex)
 			dumpKeys(lex, ps)

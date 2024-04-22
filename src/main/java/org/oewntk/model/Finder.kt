@@ -4,7 +4,6 @@
 package org.oewntk.model
 
 import org.oewntk.model.Utils.toSet
-import java.util.stream.Stream
 
 /**
  * Lex finder
@@ -16,7 +15,7 @@ object Finder {
 	 *
 	 * @param model model
 	 * @param lemma lemma (CS)
-	 * @return stream of lexes
+	 * @return sequence of lexes
 	 */
 	@JvmStatic
 	fun getLexes(model: CoreModel, lemma: String?): Collection<Lex> {
@@ -31,9 +30,7 @@ object Finder {
 	 * @param posTypeFilter    posType filter
 	 * @param wordExtractor    word extractor
 	 * @param posTypeExtractor posType extractor
-	 * @param <L>              lemma extractor type
-	 * @param <P>              posType extractor type
-	 * @return stream of lexes
+	 * @return sequence of lexes
 	 */
 	fun getLexesHaving(
 		model: CoreModel,
@@ -41,8 +38,8 @@ object Finder {
 		posTypeFilter: Char,
 		wordExtractor: (Lex) -> String,
 		posTypeExtractor: (Lex) -> Char
-	): Stream<Lex> {
-		return model.lexes.stream()
+	): Sequence<Lex> {
+		return model.lexes.asSequence()
 			.filter { word == wordExtractor.invoke(it) }
 			.filter { posTypeFilter == posTypeExtractor.invoke(it) }
 	}
@@ -53,10 +50,11 @@ object Finder {
 	 * @param model      model
 	 * @param lemma      lemma (CS)
 	 * @param typeFilter type filter
-	 * @return stream of lexes
+	 * @return sequence of lexes
 	 */
-	fun getLexesHavingType(model: CoreModel, lemma: String, typeFilter: Char): Stream<Lex>? {
-		return model.lexesByLemma!![lemma]?.stream()?.filter { it.type == typeFilter }
+	fun getLexesHavingType(model: CoreModel, lemma: String, typeFilter: Char): Sequence<Lex>? {
+		return model.lexesByLemma!![lemma]?.asSequence()
+			?.filter { it.type == typeFilter }
 	}
 
 	/**
@@ -65,11 +63,13 @@ object Finder {
 	 * @param model     model
 	 * @param lemma     lemma (cased)
 	 * @param posFilter part-of-speech filter
-	 * @return stream of lexes
+	 * @return sequence of lexes
 	 */
 	@JvmStatic
-	fun getLexesHavingPos(model: CoreModel, lemma: String, posFilter: Char): Stream<Lex>? {
-		return model.lexesByLemma!![lemma]?.stream()?.filter { it.partOfSpeech == posFilter }
+	fun getLexesHavingPos(model: CoreModel, lemma: String, posFilter: Char): Sequence<Lex>? {
+		return model.lexesByLemma!![lemma]
+			?.asSequence()
+			?.filter { it.partOfSpeech == posFilter }
 	}
 
 	/**
@@ -78,10 +78,11 @@ object Finder {
 	 * @param model      model
 	 * @param lcLemma    lower-cased lemma
 	 * @param typeFilter type filter
-	 * @return stream of lexes
+	 * @return sequence of lexes
 	 */
-	fun getLcLexesHavingType(model: CoreModel, lcLemma: String, typeFilter: Char): Stream<Lex> {
-		return model.lexesByLCLemma!![lcLemma.lowercase()]!!.stream()
+	fun getLcLexesHavingType(model: CoreModel, lcLemma: String, typeFilter: Char): Sequence<Lex> {
+		return model.lexesByLCLemma!![lcLemma.lowercase()]!!
+			.asSequence()
 			.filter { it.type == typeFilter }
 	}
 
@@ -91,10 +92,11 @@ object Finder {
 	 * @param model     model
 	 * @param lcLemma   lower-cased lemma
 	 * @param posFilter pos filter
-	 * @return stream of lexes
+	 * @return sequence of lexes
 	 */
-	fun getLcLexesHavingPos(model: CoreModel, lcLemma: String, posFilter: Char): Stream<Lex> {
-		return model.lexesByLCLemma!![lcLemma.lowercase()]!!.stream()
+	fun getLcLexesHavingPos(model: CoreModel, lcLemma: String, posFilter: Char): Sequence<Lex> {
+		return model.lexesByLCLemma!![lcLemma.lowercase()]!!
+			.asSequence()
 			.filter { it.partOfSpeech == posFilter }
 	}
 
@@ -103,11 +105,12 @@ object Finder {
 	 *
 	 * @param model   model
 	 * @param lcLemma lower-cased lemma
-	 * @return stream of lexes
+	 * @return sequence of lexes
 	 */
 	@JvmStatic
-	fun getLcLexes(model: CoreModel, lcLemma: String): Stream<Lex> {
-		return model.lexesByLCLemma!![lcLemma.lowercase()]!!.stream()
+	fun getLcLexes(model: CoreModel, lcLemma: String): Sequence<Lex> {
+		return model.lexesByLCLemma!![lcLemma.lowercase()]!!
+			.asSequence()
 	}
 
 	/**
@@ -115,12 +118,13 @@ object Finder {
 	 *
 	 * @param lexes          lexes
 	 * @param pronunciations pronunciations
-	 * @return stream of lexes
+	 * @return sequence of lexes
 	 * @throws IllegalArgumentException if not found
 	 */
-	fun getLexesHavingPronunciations(lexes: Stream<Lex>, pronunciations: Array<Pronunciation>?): Stream<Lex> {
+	fun getLexesHavingPronunciations(lexes: Sequence<Lex>, pronunciations: Array<Pronunciation>?): Sequence<Lex> {
 		val set = toSet(pronunciations)
-		return lexes.filter { compareAsSets(set, it.pronunciations) }
+		return lexes
+			.filter { compareAsSets(set, it.pronunciations) }
 	}
 
 	/**
@@ -128,14 +132,16 @@ object Finder {
 	 *
 	 * @param lexes        lexes
 	 * @param discriminant discriminant
-	 * @return stream of lexes
+	 * @return sequence of lexes
 	 * @throws IllegalArgumentException if not found
 	 */
-	fun getLexesHavingDiscriminant(lexes: Stream<Lex>, discriminant: String?): Stream<Lex> {
-		return lexes.filter { it.discriminant == discriminant }
+	fun getLexesHavingDiscriminant(lexes: Sequence<Lex>, discriminant: String?): Sequence<Lex> {
+		return lexes
+			.filter { it.discriminant == discriminant }
 	}
 
 	// Set comparison
+	
 	/**
 	 * Compare two arrays as sets
 	 *
@@ -143,7 +149,7 @@ object Finder {
 	 * @param array2 array 2
 	 * @param T type of element
 	 * @return true if equals
-	</T> */
+	 */
 	fun <T> compareAsSets(array1: Array<T>?, array2: Array<T>?): Boolean {
 		val set1 = toSet(array1)
 		return compareAsSets(set1, array2)
@@ -156,7 +162,7 @@ object Finder {
 	 * @param array2 array
 	 * @param T type of element
 	 * @return true if equals
-	</T> */
+	 */
 	private fun <T> compareAsSets(set1: Set<T>, array2: Array<T>?): Boolean {
 		val set2 = toSet(array2)
 		return set1 == set2

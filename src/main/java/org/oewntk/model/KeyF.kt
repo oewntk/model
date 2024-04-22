@@ -5,9 +5,6 @@ package org.oewntk.model
 
 import org.oewntk.model.Key.*
 
-typealias WordExtractor = (Lex) -> String
-typealias PosExtractor = (Lex) -> String
-
 /**
  * Keys extended with a functional interface
  *
@@ -51,8 +48,8 @@ interface KeyF<R> : (CoreModel) -> R {
 		) : F_W_P(word, posType, wordExtractor, posTypeExtractor), MonoValued {
 
 			override fun invoke(model: CoreModel): Lex {
-				return Finder.getLexesHaving(model, word, posType, wordExtractor, posTypeExtractor).findFirst()
-					.orElseThrow { IllegalArgumentException() }
+				return Finder.getLexesHaving(model, word, posType, wordExtractor, posTypeExtractor)
+					.firstOrNull() ?: throw IllegalArgumentException()
 			}
 
 			companion object {
@@ -90,7 +87,8 @@ interface KeyF<R> : (CoreModel) -> R {
 
 			override fun invoke(model: CoreModel): Array<Lex> {
 				return Finder.getLexesHaving(model, word, posType, wordExtractor, posTypeExtractor)
-					.toArray { arrayOf<Lex>() }
+					.toList()
+					.toTypedArray()
 			}
 
 			companion object {
@@ -170,7 +168,7 @@ interface KeyF<R> : (CoreModel) -> R {
 						wordExtractor,
 						posTypeExtractor
 					), pronunciations
-				).findFirst().orElseThrow { IllegalArgumentException() }
+				).firstOrNull() ?: throw IllegalArgumentException()
 			}
 
 			companion object {
@@ -217,10 +215,13 @@ interface KeyF<R> : (CoreModel) -> R {
 						wordExtractor,
 						posTypeExtractor
 					), pronunciations
-				).toArray { arrayOf<Lex>() }
+				)
+					.toList()
+					.toTypedArray()
 			}
 
 			companion object {
+
 				fun of(
 					wordExtractor: (Lex) -> String,
 					posTypeExtractor: (Lex) -> Char,
@@ -300,7 +301,8 @@ interface KeyF<R> : (CoreModel) -> R {
 						wordExtractor,
 						posTypeExtractor
 					), discriminant
-				).findFirst().orElseThrow { IllegalArgumentException() }
+				)
+					.firstOrNull() ?: throw IllegalArgumentException()
 			}
 
 			companion object {
@@ -333,7 +335,9 @@ interface KeyF<R> : (CoreModel) -> R {
 						wordExtractor,
 						posTypeExtractor
 					), discriminant
-				).toArray { arrayOf<Lex>() }
+				)
+					.toList()
+					.toTypedArray()
 			}
 
 			companion object {

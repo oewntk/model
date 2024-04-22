@@ -20,7 +20,7 @@ object LibTestModelLexGroups {
 	@JvmStatic
 	fun testCIMultipleAll(model: CoreModel, ps: PrintStream) {
 		cSLemmasByLCLemmaHavingMultipleCount(model) //
-			.forEach { (u: String?, cs: List<String?>?) -> ps.printf("%s {%s}%n", u, java.lang.String.join(",", cs)) }
+			.forEach { (u: String?, cs: Set<String>?) -> ps.printf("%s {%s}%n", u, java.lang.String.join(",", cs)) }
 	}
 
 	@JvmStatic

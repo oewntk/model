@@ -15,7 +15,8 @@ object LexGroupings {
 	 * @return lexes grouped by CS lemma
 	 */
 	fun lexesByLemma(lexes: Collection<Lex>): Map<String, Collection<Lex>> {
-		return Groupings.groupBy(lexes, Lex::lemma)
+		return lexes.groupBy(Lex::lemma)
+			.mapValues { it.value.toSet() }
 	}
 
 	/**
@@ -25,7 +26,9 @@ object LexGroupings {
 	 * @return lexes grouped by LCS lemma
 	 */
 	fun lexesByLCLemma(lexes: Collection<Lex>): Map<String, Collection<Lex>> {
-		return Groupings.groupBy(lexes, Lex::lCLemma)
+		return lexes
+			.groupBy { it.lCLemma }
+			.mapValues { it.value.toSet() }
 	}
 
 	/**
@@ -53,16 +56,11 @@ object LexGroupings {
 	 * @return CS lemmas by LC lemmas
 	 */
 	@JvmStatic
-	fun cSLemmasByLCLemma(model: CoreModel): Map<String, List<String>> {
-		return model.lexes.stream()
+	fun cSLemmasByLCLemma(model: CoreModel): Map<String, Set<String>> {
+		return model.lexes
 			.map(Lex::lemma)
-			.collect(
-				Collectors.groupingBy(
-					{ it.lowercase(Locale.ENGLISH) },
-					{ TreeMap() },
-					Collectors.toList()
-				)
-			)
+			.groupBy { it.lowercase(Locale.ENGLISH) }
+			.mapValues { it.value.toSortedSet() }
 	}
 
 	/**
@@ -72,7 +70,7 @@ object LexGroupings {
 	 * @param lcLemma lower-cased lemma
 	 * @return CS lemmas for given LC lemma
 	 */
-	fun cSLemmasForLCLemma(model: CoreModel, lcLemma: String): List<String> {
+	fun cSLemmasForLCLemma(model: CoreModel, lcLemma: String): Set<String> {
 		return cSLemmasByLCLemma(model)[lcLemma]!!
 	}
 
@@ -86,24 +84,29 @@ object LexGroupings {
 	 */
 	@JvmStatic
 	fun countsByLCLemma(model: CoreModel): Map<String, Long> {
-		return Groupings.countsBy(
-			model.lexes.stream()
-				.map(Lex::lemma)
-		) { it.lowercase(Locale.ENGLISH) }
+		return model.lexes
+			.map(Lex::lemma)
+			.groupBy { it.lowercase(Locale.ENGLISH) }
+			.toSortedMap(naturalOrder())
+			.mapValues { it.value.toSet().size.toLong() }
 	}
 
 	/**
-	 * Counts of CS lemmas by LC lemma, sme as above but retain entries that have count &gt; 2
+	 * Counts of CS lemmas by LC lemma, same as above but retain entries that have count &gt; 2
 	 *
 	 * @param model model
 	 * @return counts of CS lemmas by LC lemmas, with count &gt; 2
 	 */
 	@JvmStatic
 	fun multipleCountsByICLemma(model: CoreModel): Map<String, Long> {
-		return Groupings.multipleCountsBy(
-			model.lexes.stream()
-				.map(Lex::lemma)
-		) { it.lowercase(Locale.ENGLISH) }
+		return model.lexes
+			.map(Lex::lemma)
+			.groupBy { it.lowercase(Locale.ENGLISH) }
+			.mapValues { it.value.toSet().size.toLong() }
+			.toList()
+			.filter { it.second > 1L }
+			.toMap()
+			.toSortedMap(naturalOrder())
 	}
 
 	/**
@@ -113,10 +116,7 @@ object LexGroupings {
 	 * @return CS lemmas by LC lemmas, with count &gt; 2
 	 */
 	@JvmStatic
-	fun cSLemmasByLCLemmaHavingMultipleCount(model: CoreModel): Map<String, List<String>> {
-		return Groupings.groupByHavingMultipleCount(
-			model.lexes.stream()
-				.map(Lex::lemma)
-		) { it.lowercase() }
+	fun cSLemmasByLCLemmaHavingMultipleCount(model: CoreModel): Map<String, Set<String>> {
+		return Groupings.groupByHavingMultipleCount(model.lexes.map(Lex::lemma)) { it.lowercase() }
 	}
 }

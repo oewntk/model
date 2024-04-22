@@ -20,7 +20,9 @@ object SenseGroupings {
 	 */
 	@JvmStatic
 	fun sensesByLCLemmaAndPos(senses: Collection<Sense>): Map<KeyLCLemmaAndPos, Collection<Sense>> {
-		return Groupings.groupBy(senses.stream()) { sense: Sense -> KeyLCLemmaAndPos(sense) }
+		return senses
+			.groupBy { KeyLCLemmaAndPos(it) }
+			.mapValues { it.value.toSet() }
 	}
 
 	/**
@@ -31,7 +33,9 @@ object SenseGroupings {
 	 */
 	@JvmStatic
 	fun sensesByLCLemma(senses: Collection<Sense>): Map<String, Collection<Sense>> {
-		return Groupings.groupBy(senses.stream(), Sense::lCLemma)
+		return senses
+			.groupBy(Sense::lCLemma)
+			.mapValues { it.value.toSet() }
 	}
 
 	// S E N S E S  F O R
@@ -51,7 +55,7 @@ object SenseGroupings {
 		groupingFunction: (Sense) -> K,
 		k: K
 	): Collection<Sense> {
-		return Groupings.groupBy(senses.stream(), groupingFunction)[k]!!
+		return senses.groupBy(groupingFunction)[k]!!
 	}
 
 	/**

@@ -4,7 +4,6 @@
 package org.oewntk.model
 
 import java.io.PrintStream
-import java.util.function.Consumer
 
 object LibDumpSenses {
 
@@ -22,8 +21,11 @@ object LibDumpSenses {
 	}
 
 	private fun dumpSenses(senses: List<Sense>, ps: PrintStream) {
-		val i = intArrayOf(0)
-		senses.forEach(Consumer { s: Sense -> ps.printf("\t[%d] %2d %s%n", i[0]++, s.intTagCount, s) })
+		senses
+			.withIndex()
+			.forEach { (index, sense) ->
+				ps.printf("\t[%d] %2d %s%n", index, sense.intTagCount, sense)
+			}
 		ps.println()
 	}
 }

@@ -76,11 +76,11 @@ object LibTestModelQueries {
 		}
 	}
 
-	private fun dump(senses: List<Sense>, model: CoreModel, indent: String, ps: PrintStream) {
-		senses.forEach(Consumer { sense: Sense ->
+	private fun dump(senses: Collection<Sense>, model: CoreModel, indent: String, ps: PrintStream) {
+		senses.forEach { sense: Sense ->
 			ps.printf("%s%s%n", indent, sense)
 			dump(sense, model, indent + "\t", ps)
-		})
+		}
 	}
 
 	private fun dump(sense: Sense, model: CoreModel, indent: String, ps: PrintStream) {

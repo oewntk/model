@@ -178,11 +178,11 @@ open class CoreModel(
 			.distinct()
 			.count()
 		val distinctSenseGroupsCount = lexes
-			.map { it.sensesAsSet }
+			.map { it.senses.toSet() }
 			.distinct()
 			.count()
 		val sensesInSenseGroupsSum = lexes
-			.map { it.sensesAsSet }
+			.map { it.senses.toSet() }
 			.distinct()
 			.sumOf { it.size.toLong() }
 

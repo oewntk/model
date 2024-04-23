@@ -4,7 +4,6 @@
 package org.oewntk.model
 
 import java.util.*
-import java.util.stream.Collectors
 
 object LexGroupings {
 
@@ -35,23 +34,27 @@ object LexGroupings {
 	 * Hypermap (LCLemma -&gt; CSLemma -&gt; lexes)
 	 *
 	 * @param model model
-	 * @return 2-tier hypermap (LCLemma -&gt; CSLemma -&gt; lexes)
+	 * @return 2-tier hypermap
+	 * ```
+	 * (LCLemma -> CSLemma -> lexes)
+	 * ```
 	 */
 	@JvmStatic
-	fun hyperMapByLCLemmaByLemma(model: CoreModel): MutableMap<String, Map<String, Collection<Lex>>> {
-		return model.lexesByLemma!!.entries.stream()
-			.collect(
-				Collectors.groupingBy(
-					{ it.key.lowercase() },
-					Collectors.toMap({ it.key }, { it.value })
-				)
-			)
+	fun hyperMapByLCLemmaByLemma(model: CoreModel): Map<String, Map<String, Collection<Lex>>> {
+		return model.lexesByLemma!!.entries
+			.groupBy { it.key.lowercase() }
+			.mapValues {
+				it.value
+					.associateBy { it2 -> it2.key }
+					.mapValues { it3 -> it3.value.value }
+			}
 	}
 
 	/**
 	 * CSLemmas grouped by LCLemma
+	 * ```
 	 * baroque -&gt; (Baroque, baroque)
-	 *
+	 *```
 	 * @param model model
 	 * @return CS lemmas by LC lemmas
 	 */

@@ -5,59 +5,46 @@ import org.oewntk.model.Finder.getLexesHavingPos
 import org.oewntk.model.Key.W_P.Companion.of_lc_p
 import org.oewntk.model.Key.W_P_A.Companion.of_p
 import java.io.PrintStream
-import java.util.*
-import java.util.stream.Collectors
-import java.util.stream.Stream
 
 object LibTestModel {
 
 	@JvmStatic
-	fun makeIndexMap(stream: Stream<Key>): Map<out Key, Int> {
-		var i = 0
-		return stream
-			.sequential()
-			.peek { i++ }
-			.map { it to i }
-			.collect(
-				Collectors.toMap(
-					{ it.first },
-					{ it.second })
-			)
+	fun makeIndexMap(seq: Sequence<Key>): Map<out Key, Int> {
+		return seq
+			.withIndex()
+			.map { it.value to it.index }
+			.groupBy { it.first }
+			.mapValues { (_, values) ->
+				values
+					.map { it.second }
+					.reduce { existing, replacement ->
+						require(existing != replacement) { "$existing,$replacement" }
+						existing
+					}
+			}
 	}
 
 	@JvmStatic
-	fun makeSortedIndexMap(stream: Stream<Key>): Map<out Key, Int> {
-		var i = 0
-		return stream
-			.sequential()
-			.peek { i++ }
-			.map { it to i }
-			.collect(
-				Collectors.toMap(
-					{ it.first },
-					{ it.second },
-					{ existing, replacement ->
-						require(existing != replacement) { "$existing,$replacement" }
-						existing
-					},
-					{ TreeMap() })
-			)
+	fun makeSortedIndexMap(seq: Sequence<Key>): Map<Key, Int> {
+		return makeIndexMap(seq)
+			.toSortedMap(Comparator.comparing { it.toString() })
 	}
 
 	@JvmStatic
 	fun testScanLexesForTestWords(
 		model: CoreModel,
 		keyGetter: (Lex) -> Key,
-		indexerByKey: (Stream<Key>) -> Map<out Key, Int>,
+		indexerByKey: (Sequence<Key>) -> Map<out Key, Int>,
 		testWords: Set<String>,
-		peekTestWords: Boolean,
+		printTestWords: Boolean,
 		ps: PrintStream
 	) {
 		// stream of lexes
-		val lexKeyStream = model.lexes.stream()
-			.peek { lex: Lex ->
+		val lexKeySeq = model.lexes
+			.asSequence()
+			.onEach { lex: Lex ->
 				if (testWords.contains(lex.lemma)) {
-					if (peekTestWords) {
+					if (printTestWords) {
 						ps.println("@$lex")
 					}
 				}
@@ -65,7 +52,7 @@ object LibTestModel {
 			.map(keyGetter)
 
 		// make lex-to-index map
-		val lexKeyToIndex = indexerByKey.invoke(lexKeyStream)
+		val lexKeyToIndex = indexerByKey.invoke(lexKeySeq)
 
 		// test map
 		ps.printf("%-12s %s%n", "index", "lex")

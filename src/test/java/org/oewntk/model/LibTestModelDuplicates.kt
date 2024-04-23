@@ -7,36 +7,32 @@ import org.junit.Assert
 import org.oewntk.model.KeyF.MonoValued
 import org.oewntk.model.KeyF.MultiValued
 import java.io.PrintStream
-import java.util.function.Function
-import java.util.stream.Collectors
 
 object LibTestModelDuplicates {
 
-	private fun testDuplicatesForKeyMono(model: CoreModel, key: Function<Lex?, MonoValued>?, ps: PrintStream) {
-		val dups = model.lexes //
-			.stream() // stream of lexes
-			.map(key) // stream of values
-			.collect(Collectors.groupingBy(Function.identity(), Collectors.counting())) // map(key, count)
-			.entries.stream() // stream of pairs(key,count)
+	private fun testDuplicatesForKeyMono(model: CoreModel, keyGetter: (Lex) -> MonoValued, ps: PrintStream) {
+		val dups = model.lexes
+			.map(keyGetter) // stream of values
+			.groupBy { it }
+			.mapValues { it.value.size } // map(key, count)
+			.entries // sequence of (key,count) entries
 			.filter { it.value > 1 } // if map value > 1, duplicate element
-			.sorted(Comparator.comparing { it.key.toString() }) //
-			.collect(
-				Collectors.toCollection { LinkedHashSet() }
-			)
+			.sortedBy { it.key.toString() }
+			.toSet()
 		ps.println(dups.size)
 		dups.forEach { ps.println(it) }
 		Assert.assertEquals(0, dups.size.toLong())
 	}
 
-	private fun testDuplicatesForKeyMulti(model: CoreModel, key: Function<Lex?, MultiValued>?, ps: PrintStream) {
+	private fun testDuplicatesForKeyMulti(model: CoreModel, keyGetter: (Lex) -> MultiValued, ps: PrintStream) {
 		val dups = model.lexes //
-			.stream() // stream of lexes
-			.map(key) // stream of keys
-			.collect(Collectors.groupingBy(Function.identity(), Collectors.counting())) // map(key, count));
-			.entries.stream() // stream of map entries
+			.map(keyGetter) // stream of keys
+			.groupBy { it }
+			.mapValues { it.value.size } // map(key, count))
+			.entries // sequence  of (key,count) entries
 			.filter { it.value > 1 } // if map value > 1, duplicate element
-			.sorted(Comparator.comparing { it.key.toString() }) //
-			.collect(Collectors.toCollection { LinkedHashSet() })
+			.sortedBy { it.key.toString() } //
+			.toSet()
 		ps.println(dups.size)
 		dups.forEach { ps.println(it) }
 	}

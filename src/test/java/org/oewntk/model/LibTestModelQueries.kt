@@ -3,12 +3,9 @@
  */
 package org.oewntk.model
 
-import org.oewntk.model.Lex
 import java.io.PrintStream
 import java.util.*
 import java.util.function.Consumer
-import java.util.function.Function
-import java.util.stream.Collectors
 
 object LibTestModelQueries {
 
@@ -59,20 +56,22 @@ object LibTestModelQueries {
 
 	private fun <K> dump(
 		lexes: Collection<Lex>,
-		classifier2: Function<Lex, out K>,
-		classifier3: Function<Lex, out K>,
+		classifier2: (Lex) -> K,
+		classifier3: (Lex) -> K,
 		model: CoreModel,
 		ps: PrintStream
 	) {
-		val map2: Map<out K, List<Lex>> =
-			lexes.stream().collect((Collectors.groupingBy(classifier2, Collectors.toList())))
+		val map2: Map<out K, List<Lex>> = lexes
+			.groupBy(classifier2)
 		for (k2 in map2.keys) {
 			ps.printf("\t%s:%n", k2)
 			val map3: Map<out K, List<Lex>> = map2[k2]!!
-				.stream().collect((Collectors.groupingBy(classifier3, Collectors.toList())))
+				.groupBy(classifier3)
 			for (k3 in map3.keys) {
 				ps.printf("\t\t%s:%n", keyToString(k3))
-				map3[k3]!!.forEach(Consumer { lex: Lex -> dump(lex.senses, model, "\t\t\t", ps) })
+				map3[k3]!!.forEach {
+					dump(it.senses, model, "\t\t\t", ps)
+				}
 			}
 		}
 	}
@@ -118,8 +117,7 @@ object LibTestModelQueries {
 		// verbtemplates
 		val verbTemplates = sense.verbTemplates
 		if (verbTemplates != null) {
-			ps.printf("%stemplates: [%s]%n", indent, Arrays.stream(verbTemplates).map { it.toString() }
-				.collect(Collectors.joining(",")))
+			ps.printf("%stemplates: [%s]%n", indent, verbTemplates.joinToString(","))
 		}
 	}
 

@@ -22,9 +22,11 @@ object TestUtils {
 			return "\t<none>"
 		}
 		val sw = StringWriter()
-		senses.stream() //
-			.sorted(SenseGroupings.BY_DECREASING_TAGCOUNT.thenComparing(Sense::senseKey)) //
-			.forEach { sense: Sense -> sw.write(String.format("\t%d %s%n", sense.intTagCount, sense)) }
+		senses
+			.sortedWith(SenseGroupings.BY_DECREASING_TAGCOUNT.thenComparing(Sense::senseKey))
+			.forEach {
+				sw.write(String.format("\t%d %s%n", it.intTagCount, it))
+			}
 		return sw.toString()
 	}
 

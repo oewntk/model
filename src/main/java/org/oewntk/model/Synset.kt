@@ -53,7 +53,7 @@ class Synset(
 	/**
 	 * Wiki data
 	 */
-	val wikidata: String?,
+	private val wikidata: String?,
 
 	/**
 	 * Synset relations, mapped by type

@@ -12,13 +12,11 @@ import org.oewntk.model.Key.*
 </R> */
 interface KeyF<R> : (CoreModel) -> R {
 
-	interface MonoValued : KeyF<Lex> {
-		fun toLongString(): String?
-	}
+	fun toLongString(): String
 
-	interface MultiValued : KeyF<Array<Lex>> {
-		fun toLongString(): String?
-	}
+	interface MonoValued : KeyF<Lex>
+
+	interface MultiValued : KeyF<Array<Lex>>
 
 	/**
 	 * (Word, PosOrType)

@@ -8,6 +8,8 @@ import java.util.*
 
 interface Key {
 
+	fun toLongString(): String
+
 	/**
 	 * (Word, PosOrType)
 	 *
@@ -55,7 +57,7 @@ interface Key {
 			return String.format("(%s,%s)", word, posType)
 		}
 
-		open fun toLongString(): String {
+		override fun toLongString(): String {
 			return "KEY WP ${javaClass.simpleName} $this"
 		}
 

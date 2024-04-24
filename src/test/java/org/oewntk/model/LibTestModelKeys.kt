@@ -8,6 +8,7 @@ import java.io.PrintStream
 
 object LibTestModelKeys {
 	// M O B I L E
+
 	@JvmStatic
 	fun testMobile(model: CoreModel, ps: PrintStream): IntArray {
 		val pGB = ipa("ˈməʊbaɪl", "GB")
@@ -22,6 +23,7 @@ object LibTestModelKeys {
 	}
 
 	// E A R T H (case)
+
 	@JvmStatic
 	fun testEarthMulti(model: CoreModel, ps: PrintStream): IntArray {
 		return testWordNoPronunciationMulti(model, ps, "Earth", 'n')
@@ -33,6 +35,7 @@ object LibTestModelKeys {
 	}
 
 	// B A R O Q U E (case)
+
 	@JvmStatic
 	fun testBaroqueMulti(model: CoreModel, ps: PrintStream): IntArray {
 		return testWordNoPronunciationMulti(model, ps, "Baroque", 'a', 's')
@@ -55,6 +58,7 @@ object LibTestModelKeys {
 	}
 
 	// R O W
+
 	@JvmStatic
 	fun testRowDeep(model: CoreModel?, ps: PrintStream): IntArray {
 		return testPronunciations(model, ps, "row", 'n', ipa("ɹəʊ"), ipa("ɹaʊ"))
@@ -76,6 +80,7 @@ object LibTestModelKeys {
 	}
 
 	// B A S S
+
 	@JvmStatic
 	fun testBassDeep(model: CoreModel?, ps: PrintStream): IntArray {
 		return testPronunciations(model, ps, "bass", 'n', ipa("beɪs"), ipa("bæs"))
@@ -97,6 +102,7 @@ object LibTestModelKeys {
 	}
 
 	// W O R D    T E S T S
+
 	private fun testWordMulti(
 		model: CoreModel,
 		ps: PrintStream,

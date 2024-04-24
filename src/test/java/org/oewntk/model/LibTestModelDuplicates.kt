@@ -39,14 +39,14 @@ object LibTestModelDuplicates {
 
 	@JvmStatic
 	fun testDuplicatesForKeyOEWN(model: CoreModel, ps: PrintStream) {
-		testDuplicatesForKeyMono(model, { lex: Lex? -> KeyF.F_W_P_A.Mono.of(Lex::lemma, Lex::type, lex!!) }, ps)
+		testDuplicatesForKeyMono(model, { KeyF.F_W_P_A.Mono.of(Lex::lemma, Lex::type, it) }, ps)
 	}
 
 	@JvmStatic
 	fun testDuplicatesForKeyPos(model: CoreModel, ps: PrintStream) {
-		testDuplicatesForKeyMono(
+		testDuplicatesForKeyMulti(
 			model,
-			{ KeyF.F_W_P_A.Mono.of(Lex::lemma, Lex::partOfSpeech, it) },
+			{ KeyF.F_W_P_A.Multi.of(Lex::lemma, Lex::partOfSpeech, it) },
 			ps
 		)
 	}

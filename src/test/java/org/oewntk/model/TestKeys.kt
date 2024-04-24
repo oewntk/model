@@ -9,6 +9,7 @@ import org.junit.Test
 import kotlin.test.assertContentEquals
 
 class TestKeys {
+
 	@Test
 	fun testRow() {
 		val wordRow = "row"

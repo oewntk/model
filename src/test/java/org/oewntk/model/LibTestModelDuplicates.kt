@@ -12,7 +12,7 @@ object LibTestModelDuplicates {
 
 	private fun testDuplicatesForKeyMono(model: CoreModel, keyGetter: (Lex) -> MonoValued, ps: PrintStream) {
 		val dups = model.lexes
-			.map(keyGetter) // stream of values
+			.map(keyGetter) // sequence of keys
 			.groupBy { it }
 			.mapValues { it.value.size } // map(key, count)
 			.entries // sequence of (key,count) entries
@@ -26,7 +26,7 @@ object LibTestModelDuplicates {
 
 	private fun testDuplicatesForKeyMulti(model: CoreModel, keyGetter: (Lex) -> MultiValued, ps: PrintStream) {
 		val dups = model.lexes //
-			.map(keyGetter) // stream of keys
+			.map(keyGetter) // sequence of keys
 			.groupBy { it }
 			.mapValues { it.value.size } // map(key, count))
 			.entries // sequence  of (key,count) entries
@@ -46,7 +46,7 @@ object LibTestModelDuplicates {
 	fun testDuplicatesForKeyPos(model: CoreModel, ps: PrintStream) {
 		testDuplicatesForKeyMono(
 			model,
-			{ lex: Lex? -> KeyF.F_W_P_A.Mono.of(Lex::lemma, Lex::partOfSpeech, lex!!) },
+			{ KeyF.F_W_P_A.Mono.of(Lex::lemma, Lex::partOfSpeech, it) },
 			ps
 		)
 	}
@@ -55,7 +55,7 @@ object LibTestModelDuplicates {
 	fun testDuplicatesForKeyIC(model: CoreModel, ps: PrintStream) {
 		testDuplicatesForKeyMulti(
 			model,
-			{ lex: Lex? -> KeyF.F_W_P_A.Multi.of(Lex::lCLemma, Lex::type, lex!!) },
+			{ KeyF.F_W_P_A.Multi.of(Lex::lCLemma, Lex::type, it) },
 			ps
 		)
 	}
@@ -64,7 +64,7 @@ object LibTestModelDuplicates {
 	fun testDuplicatesForKeyPWN(model: CoreModel, ps: PrintStream) {
 		testDuplicatesForKeyMulti(
 			model,
-			{ lex: Lex? -> KeyF.F_W_P.Multi.of(Lex::lCLemma, Lex::type, lex!!) },
+			{ KeyF.F_W_P.Multi.of(Lex::lCLemma, Lex::type, it) },
 			ps
 		)
 	}

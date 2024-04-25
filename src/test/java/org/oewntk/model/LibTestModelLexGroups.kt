@@ -20,13 +20,14 @@ object LibTestModelLexGroups {
 	@JvmStatic
 	fun testCIMultipleAll(model: CoreModel, ps: PrintStream) {
 		cSLemmasByLCLemmaHavingMultipleCount(model) //
-			.forEach { (u: String?, cs: Set<String>?) -> ps.printf("%s {%s}%n", u, java.lang.String.join(",", cs)) }
+			.forEach { (u: String?, cs: Set<String>?) ->
+				ps.println("$u ${cs.joinToString(separator = ",", prefix="{", postfix="}")}") }
 	}
 
 	@JvmStatic
 	fun testCILemmas(model: CoreModel, word: String, ps: PrintStream) {
 		val lemmas = cSLemmasByLCLemma(model)[word]
-		ps.printf("%s {%s}%n", word, java.lang.String.join(",", lemmas))
+		ps.println("$word ${lemmas?.joinToString(separator = ",", prefix="{", postfix="}")}")
 	}
 
 	@JvmStatic

@@ -9,7 +9,7 @@ import java.io.PrintStream
 object LibTestModel {
 
 	@JvmStatic
-	fun makeIndexMap(seq: Sequence<Key>): Map<out Key, Int> {
+	fun makeIndexMap(seq: Sequence<Key>): Map<Key, Int> {
 		return seq
 			.withIndex()
 			.map { it.value to it.index }
@@ -34,7 +34,7 @@ object LibTestModel {
 	fun testScanLexesForTestWords(
 		model: CoreModel,
 		keyGetter: (Lex) -> Key,
-		indexerByKey: (Sequence<Key>) -> Map<out Key, Int>,
+		indexerByKey: (Sequence<Key>) -> Map<Key, Int>,
 		testWords: Set<String>,
 		printTestWords: Boolean,
 		ps: PrintStream

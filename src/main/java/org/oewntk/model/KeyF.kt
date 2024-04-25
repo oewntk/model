@@ -6,13 +6,11 @@ package org.oewntk.model
 import org.oewntk.model.Key.*
 
 /**
- * Keys extended with a functional interface
+ * Keys extended with a functional interface that extract data R from model
  *
- * @param <R> result
-</R> */
-interface KeyF<R> : (CoreModel) -> R {
-
-	fun toLongString(): String
+ * @param R result
+ */
+interface KeyF<R> : Key, (CoreModel) -> R {
 
 	interface MonoValued : KeyF<Lex>
 

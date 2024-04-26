@@ -104,14 +104,14 @@ object LibTestModelQueries {
 				"%s%-28s: [%s]%n",
 				indent,
 				type,
-				java.lang.String.join(",", relations[type])
+				relations[type]!!.joinToString(",")
 			)
 		})
 
 		// verbframes
 		val verbFrames = sense.verbFrames
 		if (verbFrames != null) {
-			ps.printf("%sframes: [%s]%n", indent, java.lang.String.join(",", *verbFrames))
+			ps.printf("%sframes: [%s]%n", indent, verbFrames.joinToString(","))
 		}
 
 		// verbtemplates
@@ -150,8 +150,8 @@ object LibTestModelQueries {
 
 	private fun dump(synset: Synset?, indent: String, ps: PrintStream) {
 		ps.printf("%s%s%n", indent, synset!!.synsetId)
-		ps.printf("%s{%s}%n", indent + "\t", java.lang.String.join(",", *synset.members))
-		ps.printf("%s%s%n", indent + "\t", java.lang.String.join(",", *synset.definitions))
+		ps.printf("%s{%s}%n", indent + "\t", synset.members.joinToString(","))
+		ps.printf("%s%s%n", indent + "\t", synset.definitions.joinToString(","))
 		val relations = synset.relations
 		relations?.keys?.forEach(Consumer { type: String ->
 			ps.printf(

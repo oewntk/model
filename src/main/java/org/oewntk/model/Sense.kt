@@ -41,7 +41,11 @@ class Sense(
 	 * Synset type ss_type {'n', 'v', 'a', 'r', 's'}
 	 */
 	@JvmField val type: PosType,
-	indexInLex: Int,
+
+	/**
+	 * Index in lex entry
+	 */
+	@JvmField val indexInLex: Int,
 
 	/**
 	 * Synset id

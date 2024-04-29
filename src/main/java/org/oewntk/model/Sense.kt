@@ -45,7 +45,7 @@ class Sense(
     /**
      * Index in lex entry
      */
-    val indexInLex: Int,
+    private val indexInLex: Int,
 
     /**
      * Synset id

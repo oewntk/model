@@ -12,21 +12,21 @@ import java.io.Serializable
  * @property count    tag count
  */
 class TagCount(
-	/**
-	 * Get sense number
-	 */
-	private val senseNum: Int,
+    /**
+     * Get sense number
+     */
+    private val senseNum: Int,
 
-	/**
-	 * Get tag count
-	 *
-	 * @return tag count
-	 */
-	val count: Int
+    /**
+     * Get tag count
+     *
+     * @return tag count
+     */
+    val count: Int,
 
-) : Serializable {
+    ) : Serializable {
 
-	override fun toString(): String {
-		return count.toString()
-	}
+    override fun toString(): String {
+        return count.toString()
+    }
 }

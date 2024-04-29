@@ -13,19 +13,19 @@ import java.io.Serializable
  */
 class VerbTemplate(
 
-	/**
-	 * Verb template id
-	 */
-	val id: VerbTemplateType,
+    /**
+     * Verb template id
+     */
+    val id: VerbTemplateType,
 
-	/**
-	 * Verb template
-	 */
-	val template: String
+    /**
+     * Verb template
+     */
+    val template: String,
 
-) : Serializable {
+    ) : Serializable {
 
-	override fun toString(): String {
-		return "[$id] '$template'"
-	}
+    override fun toString(): String {
+        return "[$id] '$template'"
+    }
 }

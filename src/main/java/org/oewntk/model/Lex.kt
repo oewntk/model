@@ -21,95 +21,96 @@ import java.util.*
  *
  */
 class Lex(
-	/**
-	 * Lemma written form
-	 */
-	val lemma: String,
+    /**
+     * Lemma written form
+     */
+    val lemma: String,
 
-	/**
-	 * Code
-	 */
-	code: String,
+    /**
+     * Code
+     */
+    code: String,
 
-	/**
-	 * Source file
-	 */
-	val source: String?
+    /**
+     * Source file
+     */
+    val source: String?,
 
-) : Serializable //, Comparable<Lex>
+    ) : Serializable //, Comparable<Lex>
 {
-	/**
-	 * Lemma lower-cased written form
-	 */
-	val lCLemma: String
-		get() = lemma.lowercase()
 
-	/**
-	 * Whether lemma has uppercase
-	 */
-	val isCased: Boolean
-		get() = lemma != lCLemma
+    /**
+     * Lemma lower-cased written form
+     */
+    val lCLemma: String
+        get() = lemma.lowercase()
 
-	/**
-	 * Synset type ss_type {n, v, a, r, s}
-	 */
-	val type: Char = code[0]
+    /**
+     * Whether lemma has uppercase
+     */
+    val isCased: Boolean
+        get() = lemma != lCLemma
 
-	/**
-	 * Part-of-speech (sme as part-of-speech except for satellite adjective)
-	 */
-	val partOfSpeech: Char
-		get() = if (this.type == 's') 'a' else this.type
+    /**
+     * Synset type ss_type {n, v, a, r, s}
+     */
+    val type: Char = code[0]
 
-	/**
-	 * Discriminant amongst same-type lexes appended to type that distinguishes same-type lexes (because of pronunciation or morphological forms )
-	 * Current values are '-1','-2'
-	 */
-	val discriminant: String? = if (code.length > 1) code.substring(1) else null
+    /**
+     * Part-of-speech (sme as part-of-speech except for satellite adjective)
+     */
+    val partOfSpeech: Char
+        get() = if (this.type == 's') 'a' else this.type
 
-	/**
-	 * Senses
-	 */
-	lateinit var senses: MutableList<Sense>
+    /**
+     * Discriminant amongst same-type lexes appended to type that distinguishes same-type lexes (because of pronunciation or morphological forms )
+     * Current values are '-1','-2'
+     */
+    val discriminant: String? = if (code.length > 1) code.substring(1) else null
 
-	/**
-	 * Morphological forms
-	 */
-	var forms: Array<out String>? = null
+    /**
+     * Senses
+     */
+    lateinit var senses: MutableList<Sense>
 
-	/**
-	 * Pronunciations
-	 */
-	var pronunciations: Array<Pronunciation>? = null
+    /**
+     * Morphological forms
+     */
+    var forms: Array<out String>? = null
 
-	// stringify
+    /**
+     * Pronunciations
+     */
+    var pronunciations: Array<Pronunciation>? = null
 
-	override fun toString(): String {
-		val pronunciationsStr = Formatter.join(pronunciations, ",")
-		val sensesStr = Formatter.join(senses, ",")
-		return "$lemma $type${discriminant ?: ""} $pronunciationsStr {$sensesStr}"
-	}
+    // stringify
 
-	// identify
+    override fun toString(): String {
+        val pronunciationsStr = Formatter.join(pronunciations, ",")
+        val sensesStr = Formatter.join(senses, ",")
+        return "$lemma $type${discriminant ?: ""} $pronunciationsStr {$sensesStr}"
+    }
 
-	override fun equals(other: Any?): Boolean {
-		throw UnsupportedOperationException("Either compare values using 'sensesAsSet' or keys using 'Key.OEWN.of', 'Key.PWN.of', etc")
-	}
+    // identify
 
-	override fun hashCode(): Int {
-		var result = Objects.hash(lemma, type, discriminant)
-		result = 31 * result + pronunciations.contentHashCode()
-		return result
-	}
+    override fun equals(other: Any?): Boolean {
+        throw UnsupportedOperationException("Either compare values using 'sensesAsSet' or keys using 'Key.OEWN.of', 'Key.PWN.of', etc")
+    }
 
-	companion object {
+    override fun hashCode(): Int {
+        var result = Objects.hash(lemma, type, discriminant)
+        result = 31 * result + pronunciations.contentHashCode()
+        return result
+    }
 
-		// ordering, this is used when sorted maps are made
+    companion object {
 
-		val comparatorByKeyOEWN: Comparator<Lex> = Comparator { thisLex: Lex, thatLex: Lex ->
-			val thisKey = W_P_A.of_t(thisLex)
-			val thatKey = W_P_A.of_t(thatLex)
-			thisKey.compareTo(thatKey)
-		}
-	}
+        // ordering, this is used when sorted maps are made
+
+        val comparatorByKeyOEWN: Comparator<Lex> = Comparator { thisLex: Lex, thatLex: Lex ->
+            val thisKey = W_P_A.of_t(thisLex)
+            val thatKey = W_P_A.of_t(thatLex)
+            thisKey.compareTo(thatKey)
+        }
+    }
 }

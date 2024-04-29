@@ -13,19 +13,19 @@ import java.io.Serializable
  */
 class VerbFrame(
 
-	/**
-	 * Verb frame id
-	 */
-	val id: VerbFrameType,
+    /**
+     * Verb frame id
+     */
+    val id: VerbFrameType,
 
-	/**
-	 * Verb frame
-	 */
-	val frame: String
+    /**
+     * Verb frame
+     */
+    val frame: String,
 
-) : Serializable {
+    ) : Serializable {
 
-	override fun toString(): String {
-		return "$id '$frame'"
-	}
+    override fun toString(): String {
+        return "$id '$frame'"
+    }
 }

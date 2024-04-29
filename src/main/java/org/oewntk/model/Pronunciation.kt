@@ -21,9 +21,9 @@ class Pronunciation(
     /**
      * Variety
      */
-    val variety: String?
+    val variety: String?,
 
-) : Serializable {
+    ) : Serializable {
 
     // identify
 

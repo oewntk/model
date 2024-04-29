@@ -16,13 +16,11 @@ class Pronunciation(
     /**
      * Value in IPA
      */
-    @JvmField
     val value: String,
 
     /**
      * Variety
      */
-    @JvmField
     val variety: String?
 
 ) : Serializable {
@@ -52,12 +50,10 @@ class Pronunciation(
 
     companion object {
 
-        @JvmStatic
         fun ipa(value: String): Pronunciation {
             return Pronunciation(value, null)
         }
 
-        @JvmStatic
         fun ipa(value: String, variety: String?): Pronunciation {
             return Pronunciation(value, variety)
         }

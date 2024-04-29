@@ -9,7 +9,6 @@ import java.io.PrintStream
 object LibTestModelKeys {
 	// M O B I L E
 
-	@JvmStatic
 	fun testMobile(model: CoreModel, ps: PrintStream): IntArray {
 		val pGB = ipa("ˈməʊbaɪl", "GB")
 		val pUS = ipa("ˈmoʊbil", "US")
@@ -17,86 +16,72 @@ object LibTestModelKeys {
 		return testWordMulti(model, ps, "Mobile", pronunciations, 'n')
 	}
 
-	@JvmStatic
 	fun testMobileNoPronunciation(model: CoreModel, ps: PrintStream): IntArray {
 		return testWordNoPronunciationMulti(model, ps, "Mobile", 'n')
 	}
 
 	// E A R T H (case)
 
-	@JvmStatic
 	fun testEarthMulti(model: CoreModel, ps: PrintStream): IntArray {
 		return testWordNoPronunciationMulti(model, ps, "Earth", 'n')
 	}
 
-	@JvmStatic
 	fun testEarthMono(model: CoreModel, ps: PrintStream): IntArray {
 		return testWordNoPronunciationMono(model, ps, "Earth", 'n')
 	}
 
 	// B A R O Q U E (case)
 
-	@JvmStatic
 	fun testBaroqueMulti(model: CoreModel, ps: PrintStream): IntArray {
 		return testWordNoPronunciationMulti(model, ps, "Baroque", 'a', 's')
 	}
 
-	@JvmStatic
 	fun testBaroqueMono(model: CoreModel, ps: PrintStream): IntArray {
 		return testWordNoPronunciationMono(model, ps, "Baroque", 'a', 's')
 	}
 
 	// C R I T I C A L (part-of-speech/type)
-	@JvmStatic
+
 	fun testCriticalMulti(model: CoreModel, ps: PrintStream): IntArray {
 		return testWordNoPronunciationMulti(model, ps, "critical", 'a', 's')
 	}
 
-	@JvmStatic
 	fun testCriticalMono(model: CoreModel, ps: PrintStream): IntArray {
 		return testWordNoPronunciationMono(model, ps, "critical", 'a', 's')
 	}
 
 	// R O W
 
-	@JvmStatic
 	fun testRowDeep(model: CoreModel?, ps: PrintStream): IntArray {
 		return testPronunciations(model, ps, "row", 'n', ipa("ɹəʊ"), ipa("ɹaʊ"))
 	}
 
-	@JvmStatic
 	fun testRowShallow(model: CoreModel?, ps: PrintStream): IntArray {
 		return testShallow(model, ps, "row", 'n', "-1", "-2")
 	}
 
-	@JvmStatic
 	fun testRowNoPronunciationDeep(model: CoreModel?, ps: PrintStream): IntArray {
 		return testPronunciations(model, ps, "row", 'n')
 	}
 
-	@JvmStatic
 	fun testRowNoPronunciationShallow(model: CoreModel?, ps: PrintStream): IntArray {
 		return testShallow(model, ps, "row", 'n')
 	}
 
 	// B A S S
 
-	@JvmStatic
 	fun testBassDeep(model: CoreModel?, ps: PrintStream): IntArray {
 		return testPronunciations(model, ps, "bass", 'n', ipa("beɪs"), ipa("bæs"))
 	}
 
-	@JvmStatic
 	fun testBassShallow(model: CoreModel?, ps: PrintStream): IntArray {
 		return testShallow(model, ps, "bass", 'n', "-1", "-2")
 	}
 
-	@JvmStatic
 	fun testBassNoPronunciationDeep(model: CoreModel?, ps: PrintStream): IntArray {
 		return testPronunciations(model, ps, "bass", 'n')
 	}
 
-	@JvmStatic
 	fun testBassNoPronunciationShallow(model: CoreModel?, ps: PrintStream): IntArray {
 		return testShallow(model, ps, "bass", 'n')
 	}

@@ -28,7 +28,6 @@ object LibTestModelQueries {
 		return k.toString()
 	}
 
-	@JvmStatic
 	fun testWordByType(model: CoreModel, lemma: String?, ps: PrintStream) {
 		ps.println(lemma)
 		val lexes = model.lexesByLemma!![lemma!!]!!
@@ -41,7 +40,6 @@ object LibTestModelQueries {
 		dump(lexes, Lex::partOfSpeech, nullableDiscriminant, model, ps)
 	}
 
-	@JvmStatic
 	fun testWordByTypeAndPronunciation(model: CoreModel, lemma: String?, ps: PrintStream) {
 		ps.println(lemma)
 		val lexes = model.lexesByLemma!![lemma!!]!!

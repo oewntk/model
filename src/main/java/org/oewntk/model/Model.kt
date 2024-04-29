@@ -31,7 +31,6 @@ class Model(
 	/**
 	 * Verb frames
 	 */
-	@JvmField
 	val verbFrames: Collection<VerbFrame> = Collections.unmodifiableCollection(verbFrames)
 
 	/**

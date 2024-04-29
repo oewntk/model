@@ -39,7 +39,6 @@ object LexGroupings {
 	 * (LCLemma -> CSLemma -> lexes)
 	 * ```
 	 */
-	@JvmStatic
 	fun hyperMapByLCLemmaByLemma(model: CoreModel): Map<String, Map<String, Collection<Lex>>> {
 		return model.lexesByLemma!!.entries
 			.groupBy { it.key.lowercase() }
@@ -58,7 +57,6 @@ object LexGroupings {
 	 * @param model model
 	 * @return CS lemmas by LC lemmas
 	 */
-	@JvmStatic
 	fun cSLemmasByLCLemma(model: CoreModel): Map<String, Set<String>> {
 		return model.lexes
 			.map(Lex::lemma)
@@ -85,7 +83,6 @@ object LexGroupings {
 	 * @param model model
 	 * @return counts of CS lemmas by LC lemmas
 	 */
-	@JvmStatic
 	fun countsByLCLemma(model: CoreModel): Map<String, Long> {
 		return model.lexes
 			.map(Lex::lemma)
@@ -100,7 +97,6 @@ object LexGroupings {
 	 * @param model model
 	 * @return counts of CS lemmas by LC lemmas, with count &gt; 2
 	 */
-	@JvmStatic
 	fun multipleCountsByICLemma(model: CoreModel): Map<String, Long> {
 		return model.lexes
 			.map(Lex::lemma)
@@ -118,7 +114,6 @@ object LexGroupings {
 	 * @param model model
 	 * @return CS lemmas by LC lemmas, with count &gt; 2
 	 */
-	@JvmStatic
 	fun cSLemmasByLCLemmaHavingMultipleCount(model: CoreModel): Map<String, Set<String>> {
 		return Groupings.groupByHavingMultipleCount(model.lexes.map(Lex::lemma)) { it.lowercase() }
 	}

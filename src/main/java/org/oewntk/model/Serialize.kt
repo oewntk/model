@@ -39,7 +39,6 @@ object Serialize {
 	 * @param file  file
 	 * @throws IOException io exception
 	 */
-	@JvmStatic
 	@Throws(IOException::class)
 	fun serializeCoreModel(model: CoreModel, file: File) {
 		FileOutputStream(file).use { os ->

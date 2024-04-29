@@ -21,7 +21,7 @@ class VerbTemplate(
 	/**
 	 * Verb template
 	 */
-	@JvmField val template: String
+	val template: String
 
 ) : Serializable {
 

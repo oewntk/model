@@ -27,19 +27,16 @@ open class CoreModel(
 	/**
 	 * Lexical items
 	 */
-	@JvmField
 	val lexes: Collection<Lex> = Collections.unmodifiableCollection(lexes)
 
 	/**
 	 * Senses
 	 */
-	@JvmField
 	val senses: Collection<Sense> = Collections.unmodifiableCollection(senses)
 
 	/**
 	 * Synsets
 	 */
-	@JvmField
 	val synsets: Collection<Synset> = Collections.unmodifiableCollection(synsets)
 
 	/**

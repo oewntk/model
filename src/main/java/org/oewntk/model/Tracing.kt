@@ -7,12 +7,10 @@ import java.io.OutputStream
 import java.io.PrintStream
 
 object Tracing {
-	@JvmField
 	val psInfo: PrintStream = System.out
 
 	val psErr: PrintStream = System.err
 
-	@JvmField
 	val psNull: PrintStream = PrintStream(object : OutputStream(
 	) {
 		override fun write(i: Int) {

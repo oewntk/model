@@ -18,7 +18,6 @@ object SenseGroupings {
 	 * @param senses senses
 	 * @return collections of senses grouped by and mapped by lower-cased lemma and part-of-speech
 	 */
-	@JvmStatic
 	fun sensesByLCLemmaAndPos(senses: Collection<Sense>): Map<KeyLCLemmaAndPos, Collection<Sense>> {
 		return senses
 			.groupBy { KeyLCLemmaAndPos(it) }
@@ -31,7 +30,6 @@ object SenseGroupings {
 	 * @param senses senses
 	 * @return collections of senses grouped by and mapped by lower-cased lemma
 	 */
-	@JvmStatic
 	fun sensesByLCLemma(senses: Collection<Sense>): Map<String, Collection<Sense>> {
 		return senses
 			.groupBy(Sense::lCLemma)
@@ -86,7 +84,6 @@ object SenseGroupings {
 	/**
 	 * Order senses by decreasing frequency order, does not define a total order, must be chained with thenComparing to define a total order, returns 0 if tag counts cannot make one more or less frequent
 	 */
-	@JvmField
 	val BY_DECREASING_TAGCOUNT: Comparator<Sense> = Comparator { s1: Sense, s2: Sense ->
 
 		// tag count
@@ -105,8 +102,7 @@ object SenseGroupings {
 	/**
 	 * Key that matches how indexes are built in PWN (index.sense and index.(noun|verb|adj|adv)
 	 */
-	class KeyLCLemmaAndPos(lemma: String, @JvmField val pos: Char) : Comparable<KeyLCLemmaAndPos> {
-		@JvmField
+	class KeyLCLemmaAndPos(lemma: String, val pos: Char) : Comparable<KeyLCLemmaAndPos> {
 		val lcLemma: String = lemma.lowercase()
 
 		constructor(sense: Sense) : this(sense.lemma, sense.partOfSpeech)
@@ -143,7 +139,6 @@ object SenseGroupings {
 				return KeyLCLemmaAndPos(lcLemma, pos)
 			}
 
-			@JvmStatic
 			fun of(sense: Sense): KeyLCLemmaAndPos {
 				return KeyLCLemmaAndPos(sense)
 			}

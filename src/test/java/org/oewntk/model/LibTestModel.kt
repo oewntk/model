@@ -8,7 +8,6 @@ import java.io.PrintStream
 
 object LibTestModel {
 
-	@JvmStatic
 	fun makeIndexMap(seq: Sequence<Key>): Map<Key, Int> {
 		return seq
 			.withIndex()
@@ -24,13 +23,11 @@ object LibTestModel {
 			}
 	}
 
-	@JvmStatic
 	fun makeSortedIndexMap(seq: Sequence<Key>): Map<Key, Int> {
 		return makeIndexMap(seq)
 			.toSortedMap(Comparator.comparing { it.toString() })
 	}
 
-	@JvmStatic
 	fun testScanLexesForTestWords(
 		model: CoreModel,
 		keyGetter: (Lex) -> Key,
@@ -64,7 +61,6 @@ object LibTestModel {
 		}
 	}
 
-	@JvmStatic
 	fun testWords(model: CoreModel, ps: PrintStream, vararg words: String) {
 		for (word in words) {
 			val lexes = model.lexesByLemma!![word]!!
@@ -75,7 +71,6 @@ object LibTestModel {
 		}
 	}
 
-	@JvmStatic
 	fun testWord(lemma: String, model: CoreModel, ps: PrintStream) {
 		val lexes = getLexes(model, lemma)
 		for (lex in lexes) {
@@ -84,7 +79,6 @@ object LibTestModel {
 		}
 	}
 
-	@JvmStatic
 	fun testWord(lemma: String, posFilter: Char, model: CoreModel, ps: PrintStream) {
 		val lexes = getLexesHavingPos(model, lemma, posFilter)!!
 			.toList()

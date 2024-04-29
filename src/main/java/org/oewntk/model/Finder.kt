@@ -17,7 +17,6 @@ object Finder {
 	 * @param lemma lemma (CS)
 	 * @return sequence of lexes
 	 */
-	@JvmStatic
 	fun getLexes(model: CoreModel, lemma: String?): Collection<Lex> {
 		return model.lexesByLemma!![lemma!!]!!
 	}
@@ -65,7 +64,6 @@ object Finder {
 	 * @param posFilter part-of-speech filter
 	 * @return sequence of lexes
 	 */
-	@JvmStatic
 	fun getLexesHavingPos(model: CoreModel, lemma: String, posFilter: Char): Sequence<Lex>? {
 		return model.lexesByLemma!![lemma]
 			?.asSequence()
@@ -107,7 +105,6 @@ object Finder {
 	 * @param lcLemma lower-cased lemma
 	 * @return sequence of lexes
 	 */
-	@JvmStatic
 	fun getLcLexes(model: CoreModel, lcLemma: String): Sequence<Lex> {
 		return model.lexesByLCLemma!![lcLemma.lowercase()]!!
 			.asSequence()

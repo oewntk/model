@@ -17,32 +17,29 @@ import org.oewntk.model.TestUtils.sensesToString
 import java.io.PrintStream
 
 object LibTestModelLexGroups {
-	@JvmStatic
+
 	fun testCIMultipleAll(model: CoreModel, ps: PrintStream) {
 		cSLemmasByLCLemmaHavingMultipleCount(model) //
 			.forEach { (u: String?, cs: Set<String>?) ->
-				ps.println("$u ${cs.joinToString(separator = ",", prefix="{", postfix="}")}") }
+				ps.println("$u ${cs.joinToString(separator = ",", prefix = "{", postfix = "}")}")
+			}
 	}
 
-	@JvmStatic
 	fun testCILemmas(model: CoreModel, word: String, ps: PrintStream) {
 		val lemmas = cSLemmasByLCLemma(model)[word]
-		ps.println("$word ${lemmas?.joinToString(separator = ",", prefix="{", postfix="}")}")
+		ps.println("$word ${lemmas?.joinToString(separator = ",", prefix = "{", postfix = "}")}")
 	}
 
-	@JvmStatic
 	fun testCICounts(model: CoreModel, word: String, ps: PrintStream) {
 		val count = countsByLCLemma(model)[word]
 		ps.printf("%s %d%n", word, count)
 	}
 
-	@JvmStatic
 	fun testCICountsFromMap(model: CoreModel, word: String, ps: PrintStream) {
 		val count = multipleCountsByICLemma(model)[word]
 		ps.printf("%s %d%n", word, count)
 	}
 
-	@JvmStatic
 	fun testCIHypermap3(model: CoreModel, word: String, ps: PrintStream) {
 		var word2 = word
 		val s1 = testCIHypermapString(model, word2)
@@ -63,7 +60,6 @@ object LibTestModelLexGroups {
 		Assert.assertEquals(s2, s3)
 	}
 
-	@JvmStatic
 	fun testCILexesFor3(model: CoreModel, word: String, ps: PrintStream) {
 		var word2 = word
 		val s1 = testCILexesString(model, word2)
@@ -84,7 +80,6 @@ object LibTestModelLexGroups {
 		Assert.assertEquals(s2, s3)
 	}
 
-	@JvmStatic
 	fun testCIHypermap(model: CoreModel, word: String, ps: PrintStream) {
 		ps.printf("ci '%s'%n", word)
 		ps.println(testCIHypermapString(model, word))
@@ -95,7 +90,6 @@ object LibTestModelLexGroups {
 		ps.println(testCILexesString(model, word))
 	}
 
-	@JvmStatic
 	fun testCILexesFor(model: CoreModel, word: String, ps: PrintStream) {
 		ps.printf("ci '%s'%n", word)
 		ps.println(testCILexesForWordString(model, word))

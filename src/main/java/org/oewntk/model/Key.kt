@@ -20,11 +20,12 @@ interface Key {
 		/**
 		 * Word: Lemma or LC lemma
 		 */
-		@JvmField val word: String,
+		val word: String,
+
 		/**
 		 * PosType: part-of-speech or type
 		 */
-		@JvmField val posType: Char
+		val posType: Char
 
 	) : Key, Comparable<W_P>, Serializable {
 
@@ -71,27 +72,22 @@ interface Key {
 				return W_P(wordExtractor(lex), posTypeExtractor(lex))
 			}
 
-			@JvmStatic
 			fun of_t(lex: Lex): W_P {
 				return of(lex, Lex::lemma, Lex::type)
 			}
 
-			@JvmStatic
 			fun of_p(lex: Lex): W_P {
 				return of(lex, Lex::lemma, Lex::partOfSpeech)
 			}
 
-			@JvmStatic
 			fun of_lc_t(lex: Lex): W_P {
 				return of(lex, Lex::lCLemma, Lex::type)
 			}
 
-			@JvmStatic
 			fun of_lc_p(lex: Lex): W_P {
 				return of(lex, Lex::lCLemma, Lex::partOfSpeech)
 			}
 
-			@JvmStatic
 			fun from(word: String, posType: Char): W_P {
 				return W_P(word, posType)
 			}
@@ -107,7 +103,7 @@ interface Key {
 	open class W_P_A(
 		word: String,
 		posType: Char,
-		@JvmField val pronunciations: Array<Pronunciation>?
+		val pronunciations: Array<Pronunciation>?
 	) : W_P(word, posType) {
 
 		val pronunciationSet: Set<Pronunciation>
@@ -159,17 +155,14 @@ interface Key {
 				return W_P_A(wordExtractor(lex), posTypeExtractor(lex), lex.pronunciations)
 			}
 
-			@JvmStatic
 			fun of_t(lex: Lex): W_P_A {
 				return of(lex, Lex::lemma, Lex::type)
 			}
 
-			@JvmStatic
 			fun of_p(lex: Lex): W_P_A {
 				return of(lex, Lex::lemma, Lex::partOfSpeech)
 			}
 
-			@JvmStatic
 			fun of_lc_t(lex: Lex): W_P_A {
 				return of(lex, Lex::lCLemma, Lex::type)
 			}
@@ -191,7 +184,7 @@ interface Key {
 	/**
 	 * (Word, PosOrType, Discriminant) - Shallow key
 	 */
-	open class W_P_D(word: String, posType: Char, @JvmField val discriminant: String?) : W_P(word, posType) {
+	open class W_P_D(word: String, posType: Char, val discriminant: String?) : W_P(word, posType) {
 
 		override fun equals(other: Any?): Boolean {
 			if (this === other) {
@@ -238,7 +231,6 @@ interface Key {
 				return W_P_D(wordExtractor(lex), posTypeExtractor(lex), lex.discriminant)
 			}
 
-			@JvmStatic
 			fun of_t(lex: Lex): W_P_D {
 				return of(lex, Lex::lemma, Lex::type)
 			}
@@ -247,7 +239,6 @@ interface Key {
 				return of(lex, Lex::lemma, Lex::partOfSpeech)
 			}
 
-			@JvmStatic
 			fun of_lc_t(lex: Lex): W_P_D {
 				return of(lex, Lex::lCLemma, Lex::type)
 			}

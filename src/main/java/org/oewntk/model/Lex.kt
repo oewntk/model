@@ -24,7 +24,7 @@ class Lex(
 	/**
 	 * Lemma written form
 	 */
-	@JvmField val lemma: String,
+	val lemma: String,
 
 	/**
 	 * Code
@@ -53,7 +53,6 @@ class Lex(
 	/**
 	 * Synset type ss_type {n, v, a, r, s}
 	 */
-	@JvmField
 	val type: Char = code[0]
 
 	/**
@@ -66,7 +65,6 @@ class Lex(
 	 * Discriminant amongst same-type lexes appended to type that distinguishes same-type lexes (because of pronunciation or morphological forms )
 	 * Current values are '-1','-2'
 	 */
-	@JvmField
 	val discriminant: String? = if (code.length > 1) code.substring(1) else null
 
 	/**

@@ -37,12 +37,10 @@ object LibTestModelDuplicates {
 		dups.forEach { ps.println(it) }
 	}
 
-	@JvmStatic
 	fun testDuplicatesForKeyOEWN(model: CoreModel, ps: PrintStream) {
 		testDuplicatesForKeyMono(model, { KeyF.F_W_P_A.Mono.of(Lex::lemma, Lex::type, it) }, ps)
 	}
 
-	@JvmStatic
 	fun testDuplicatesForKeyPos(model: CoreModel, ps: PrintStream) {
 		testDuplicatesForKeyMulti(
 			model,
@@ -51,7 +49,6 @@ object LibTestModelDuplicates {
 		)
 	}
 
-	@JvmStatic
 	fun testDuplicatesForKeyIC(model: CoreModel, ps: PrintStream) {
 		testDuplicatesForKeyMulti(
 			model,
@@ -60,7 +57,6 @@ object LibTestModelDuplicates {
 		)
 	}
 
-	@JvmStatic
 	fun testDuplicatesForKeyPWN(model: CoreModel, ps: PrintStream) {
 		testDuplicatesForKeyMulti(
 			model,

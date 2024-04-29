@@ -14,7 +14,6 @@ object Utils {
 	 * @param <T>     type of objects
 	 * @return set of objects
 	</T> */
-	@JvmStatic
 	fun <T> toSet(objects: Array<T>?): Set<T> {
 		if (objects == null) {
 			return setOf()

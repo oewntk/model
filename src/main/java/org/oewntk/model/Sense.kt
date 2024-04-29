@@ -35,37 +35,37 @@ class Sense(
 	/**
 	 * Lexical item, lex this sense is contained in
 	 */
-	@JvmField val lex: Lex,
+	val lex: Lex,
 
 	/**
 	 * Synset type ss_type {'n', 'v', 'a', 'r', 's'}
 	 */
-	@JvmField val type: PosType,
+	val type: PosType,
 
 	/**
 	 * Index in lex entry
 	 */
-	@JvmField val indexInLex: Int,
+	val indexInLex: Int,
 
 	/**
 	 * Synset id
 	 */
-	@JvmField val synsetId: SynsetId,
+	val synsetId: SynsetId,
 
 	/**
 	 * Examples
 	 */
-	@JvmField val examples: Array<String>?,
+	val examples: Array<String>?,
 
 	/**
 	 * Verb frames
 	 */
-	@JvmField val verbFrames: Array<VerbFrameType>?,
+	val verbFrames: Array<VerbFrameType>?,
 
 	/**
 	 * Adjective position in {'a', 'ip', 'p'} meaning {attribute,immediate postnominal,predicate}
 	 */
-	@JvmField val adjPosition: AdjPositionType?,
+	val adjPosition: AdjPositionType?,
 
 	/**
 	 * Sense relations mapped by type
@@ -83,7 +83,6 @@ class Sense(
 	/**
 	 * Synset part-of-speech ss_type {'n', 'v', 'a', 'r'}
 	 */
-	@JvmField
 	val partOfSpeech: Char = if (this.type == 's') 'a' else this.type
 
 	/**

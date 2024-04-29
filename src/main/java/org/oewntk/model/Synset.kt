@@ -23,12 +23,12 @@ class Synset(
 	/**
 	 * Synset id
 	 */
-	@JvmField val synsetId: SynsetId,
+	val synsetId: SynsetId,
 
 	/**
 	 * Synset type ss_type {'n', 'v', 'a', 'r', 's'}
 	 */
-	@JvmField val type: PosType,
+	val type: PosType,
 
 	/**
 	 * Source file
@@ -38,17 +38,17 @@ class Synset(
 	/**
 	 * Lemma members
 	 */
-	@JvmField val members: Array<String>,
+	val members: Array<String>,
 
 	/**
 	 * Definitions
 	 */
-	@JvmField val definitions: Array<String>,
+	val definitions: Array<String>,
 
 	/**
 	 * Examples
 	 */
-	@JvmField val examples: Array<String>?,
+	val examples: Array<String>?,
 
 	/**
 	 * Wiki data

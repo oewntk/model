@@ -11,7 +11,6 @@ object LexicographicOrder {
 	/**
 	 * Lower-case first
 	 */
-	@JvmField
 	val lowerFirst: Comparator<String> = Comparator { s1: String, s2: String ->
 		val c = s1.compareTo(s2, ignoreCase = true)
 		if (c != 0) {
@@ -23,7 +22,6 @@ object LexicographicOrder {
 	/**
 	 * Upper-case first
 	 */
-	@JvmField
 	val upperFirst: Comparator<String> = Comparator { s1: String, s2: String ->
 		val c = s1.compareTo(s2, ignoreCase = true)
 		if (c != 0) {

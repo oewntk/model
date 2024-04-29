@@ -11,7 +11,6 @@ object DeSerialize {
 	 * @throws IOException io exception
 	 * @throws ClassNotFoundException class not found exception
 	 */
-	@JvmStatic
 	@Throws(IOException::class, ClassNotFoundException::class)
 	fun deSerializeCoreModel(file: File): CoreModel {
 		FileInputStream(file).use { `is` ->
@@ -27,7 +26,6 @@ object DeSerialize {
 	 * @throws IOException io exception
 	 * @throws ClassNotFoundException class not found exception
 	 */
-	@JvmStatic
 	@Throws(IOException::class, ClassNotFoundException::class)
 	fun deSerializeModel(file: File): Model {
 		FileInputStream(file).use { `is` ->

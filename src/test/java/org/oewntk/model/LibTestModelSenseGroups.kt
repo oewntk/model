@@ -6,13 +6,12 @@ import org.oewntk.model.TestUtils.sensesToStringByDecreasingTagCount
 import java.io.PrintStream
 
 object LibTestModelSenseGroups {
-	@JvmStatic
+
 	fun testCISensesGroupingByLCLemmaAndPos(model: CoreModel, word: String, pos: Char, ps: PrintStream) {
 		ps.printf("ci '%s' %s%n", word, pos)
 		ps.println(testCISensesGroupingByLCLemmaAndPosString(model, word, pos))
 	}
 
-	@JvmStatic
 	fun testCISensesGroupingByLCLemma(model: CoreModel, word: String, ps: PrintStream) {
 		ps.printf("ci '%s'%n", word)
 		ps.println(testCISensesGroupingByLCLemmaString(model, word))

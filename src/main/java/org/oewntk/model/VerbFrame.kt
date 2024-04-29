@@ -16,12 +16,12 @@ class VerbFrame(
 	/**
 	 * Verb frame id
 	 */
-	@JvmField val id: VerbFrameType,
+	val id: VerbFrameType,
 
 	/**
 	 * Verb frame
 	 */
-	@JvmField val frame: String
+	val frame: String
 
 ) : Serializable {
 

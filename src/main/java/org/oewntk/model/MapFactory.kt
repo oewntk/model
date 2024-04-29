@@ -18,7 +18,6 @@ object MapFactory {
 	 * @param V                type of element
 	 * @return elements mapped by key
 	 */
-	@JvmStatic
 	fun <K : Comparable<K>, V> map(
 		things: Collection<V>,
 		groupingFunction: (V) -> K
@@ -45,7 +44,6 @@ object MapFactory {
 	 * @param V                type of element
 	 * @return elements mapped by key
 	 */
-	@JvmStatic
 	fun <K : Comparable<K>, V> map(
 		things: Collection<V>,
 		groupingFunction: (V) -> K,
@@ -65,7 +63,6 @@ object MapFactory {
 	 * @param senses senses
 	 * @return senses mapped by id
 	 */
-	@JvmStatic
 	fun sensesById(senses: Collection<Sense>): Map<String, Sense> {
 		val mergingFunction = { existing: Sense, replacement: Sense ->
 			val merged = if (replacement.lex.isCased) (if (existing.lex.isCased) existing else replacement) else existing
@@ -85,7 +82,6 @@ object MapFactory {
 	 * @param synsets synsets
 	 * @return synsets mapped by id
 	 */
-	@JvmStatic
 	fun synsetsById(synsets: Collection<Synset>): Map<String, Synset> {
 		val f = { s: Synset -> s.synsetId }
 		return map(synsets, f)

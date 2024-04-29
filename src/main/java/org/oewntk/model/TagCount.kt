@@ -22,7 +22,7 @@ class TagCount(
 	 *
 	 * @return tag count
 	 */
-	@JvmField val count: Int
+	val count: Int
 
 ) : Serializable {
 

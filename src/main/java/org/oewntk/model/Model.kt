@@ -41,7 +41,7 @@ class Model(
     /**
      * Extra input directory
      */
-    private var source2: File? = null
+    var source2: File? = null
 
     /**
      * Constructor
@@ -103,22 +103,6 @@ class Model(
      */
     val sources: Array<File?>
         get() = arrayOf(source, source2)
-
-    /**
-     * Record sources
-     *
-     * @param sources sources
-     * @return this
-     */
-    fun setSources(vararg sources: File?): Model {
-        if (sources.isNotEmpty()) {
-            this.source = sources[0]
-        }
-        if (sources.size > 1) {
-            this.source2 = sources[1]
-        }
-        return this
-    }
 
     /**
      * Info about this model

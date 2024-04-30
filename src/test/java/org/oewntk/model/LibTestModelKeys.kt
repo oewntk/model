@@ -323,6 +323,6 @@ object LibTestModelKeys {
     ) {
         ps.println("----------")
         ps.println("ALL LEMMAS IGNORE CASE $lemma")
-        getLcLexes(model!!, lemma).forEach { lex: Lex -> ps.println("\t" + lex) }
+        getLcLexes(model!!, lemma)?.forEach { lex: Lex -> ps.println("\t" + lex) }
     }
 }

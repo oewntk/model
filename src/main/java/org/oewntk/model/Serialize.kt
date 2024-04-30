@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2024-2024. Bernard Bou.
+ */
+
 package org.oewntk.model
 
 import java.io.*

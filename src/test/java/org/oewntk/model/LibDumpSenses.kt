@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022. Bernard Bou.
+ * Copyright (c) 2022-2024. Bernard Bou.
  */
 package org.oewntk.model
 

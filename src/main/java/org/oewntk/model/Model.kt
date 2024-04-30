@@ -48,7 +48,6 @@ class Model(
      */
     init {
         // set sense's verb templates
-        val sensesById = sensesById
         for ((sensekey, templatesIds) in senseToVerbTemplates) {
             val sense = sensesById?.get(sensekey)
             sense?.verbTemplates = templatesIds
@@ -89,14 +88,28 @@ class Model(
     /**
      * Verb frames mapped by id
      */
-    val verbFramesById: Map<String, VerbFrame>
-        get() = map(verbFrames) { it.id }
+    @Transient
+    var verbFramesById: Map<String, VerbFrame>? = null
+        get() {
+            if (field == null) {
+                field = map(verbFrames) { it.id }
+            }
+            return field
+        }
+        private set
 
     /**
      * Verb templates mapped by id
      */
-    val verbTemplatesById: Map<Int, VerbTemplate>
-        get() = map(verbTemplates) { it.id }
+    @Transient
+    var verbTemplatesById: Map<Int, VerbTemplate>? = null
+        get() {
+            if (field == null) {
+                field = map(verbTemplates) { it.id }
+            }
+            return field
+        }
+        private set
 
     /**
      * Input sources

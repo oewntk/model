@@ -8,18 +8,19 @@ import java.util.*
 object LexGroupings {
 
     /**
-     * Group lexes by CS lemma
+     * Group lexes by case-sensitive lemma
      *
      * @param lexes lexes
      * @return lexes grouped by CS lemma
      */
     fun lexesByLemma(lexes: Collection<Lex>): Map<String, Collection<Lex>> {
-        return lexes.groupBy(Lex::lemma)
+        return lexes
+            .groupBy(Lex::lemma)
             .mapValues { it.value.toSet() }
     }
 
     /**
-     * Group lexes by LC lemma
+     * Group lexes by lower-cased lemma
      *
      * @param lexes lexes
      * @return lexes grouped by LCS lemma
@@ -31,7 +32,7 @@ object LexGroupings {
     }
 
     /**
-     * Hypermap (LCLemma -&gt; CSLemma -&gt; lexes)
+     * Hypermap (LCLemma to CSLemma to lexes)
      *
      * @param model model
      * @return 2-tier hypermap
@@ -40,12 +41,12 @@ object LexGroupings {
      * ```
      */
     fun hyperMapByLCLemmaByLemma(model: CoreModel): Map<String, Map<String, Collection<Lex>>> {
-        return model.lexesByLemma!!.entries
-            .groupBy { it.key.lowercase() }
-            .mapValues {
-                it.value
-                    .associateBy { it2 -> it2.key }
-                    .mapValues { it3 -> it3.value.value }
+        return model.lexesByLemma!!.entries // entries: setOf(lemma to lexes)
+            .groupBy { entry -> entry.key.lowercase() } // groupBy: mapOf(lclemma to listOf(lemma to lexes)), entry: lemma to lexes
+            .mapValues { values -> // values: lcLemma to listOf(lemma to lexes))
+                values.value // value: listOf(lemma to lexes)
+                    .associateBy { it.key } // mapOf(lemma to lexes)
+                    .mapValues { it.value.value } // it: lemma to (lemma to lexes), it.value: lemma to lexes, it.value.value: lexes
             }
     }
 

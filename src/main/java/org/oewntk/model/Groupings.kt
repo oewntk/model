@@ -26,8 +26,8 @@ object Groupings {
         predicate: (Set<V>) -> Boolean,
     ): Map<K, Set<V>> {
         return collection
-            .groupBy(groupingFunction) // mapOf(K, listOf(V1, V2, ..))
-            .mapValues { it.value.toSet() } // mapOf(K, setOf(V1, V2, ..))
+            .groupBy(groupingFunction) // mapOf(K to listOf(V1, V2, ..))
+            .mapValues { it.value.toSet() } // mapOf(K to setOf(V1, V2, ..))
             .toList() // listOf(K to setOf(V1, V2, ..))
             .filterNot { predicate.invoke(it.second) } // filtered listOf(K to setOf(V1, V2, ..))
             .toMap() // mapOf(K to setOf(V1, V2, ..))
@@ -60,9 +60,9 @@ object Groupings {
      */
     fun <K : Comparable<K>, V> countsBy(collection: Collection<V>, groupingFunction: (V) -> K): Map<K, Long> {
         return collection
-            .groupBy(groupingFunction) // mapOf(K, listOf(V1, V2, ..))
-            .toSortedMap(naturalOrder()) // sortedMapOf(K, listOf(V1, V2, ..))
-            .mapValues { it.value.toSet().size.toLong() } // sortedMapOf(K, sizeOf(listOf(V1, V2, ..)))
+            .groupBy(groupingFunction) // mapOf(K to listOf(V1, V2, ..))
+            .toSortedMap(naturalOrder()) // sortedMapOf(K to listOf(V1, V2, ..))
+            .mapValues { it.value.toSet().size.toLong() } // sortedMapOf(K to sizeOf(listOf(V1, V2, ..)))
     }
 
     /**
@@ -76,8 +76,8 @@ object Groupings {
      */
     fun <K : Comparable<K>, V> multipleCountsBy(collection: Collection<V>, groupingFunction: (V) -> K): Map<K, Long> {
         return collection
-            .groupBy(groupingFunction) // mapOf(K, listOf(V1, V2, ..))
-            .mapValues { it.value.toSet().size.toLong() } // mapOf(K, setOf(V1, V2, ..).size)
+            .groupBy(groupingFunction) // mapOf(K to listOf(V1, V2, ..))
+            .mapValues { it.value.toSet().size.toLong() } // mapOf(K to setOf(V1, V2, ..).size)
             .toList() // listOf(K to size)
             .filter { it.second > 1L } // filtered listOf(K to size)
             .toMap() // mapOf(K to size)

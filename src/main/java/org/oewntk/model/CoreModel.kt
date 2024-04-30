@@ -12,6 +12,9 @@ import java.util.*
 /**
  * Base language model
  *
+ * @param lexes   lexical items
+ * @param senses  senses
+ * @param synsets synsets
  * @property lexes   lexical items
  * @property senses  senses
  * @property synsets synsets
@@ -39,8 +42,7 @@ open class CoreModel(
     val synsets: Collection<Synset> = Collections.unmodifiableCollection(synsets)
 
     /**
-     * Source
-     * Input directory
+     * Source, typically input directory
      */
     var source: File? = null
 

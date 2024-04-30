@@ -18,8 +18,8 @@ object DeSerialize {
      */
     @Throws(IOException::class, ClassNotFoundException::class)
     fun deSerializeCoreModel(file: File): CoreModel {
-        FileInputStream(file).use { `is` ->
-            return deSerializeCoreModel(`is`)
+        FileInputStream(file).use {
+            return deSerializeCoreModel(it)
         }
     }
 
@@ -33,49 +33,49 @@ object DeSerialize {
      */
     @Throws(IOException::class, ClassNotFoundException::class)
     fun deSerializeModel(file: File): Model {
-        FileInputStream(file).use { `is` ->
-            return deSerializeModel(`is`)
+        FileInputStream(file).use {
+            return deSerializeModel(it)
         }
     }
 
     /**
      * Deserialize core model from file
      *
-     * @param is input stream
+     * @param inputStream input stream
      * @return core model
      * @throws IOException io exception
      * @throws ClassNotFoundException class not found exception
      */
     @Throws(IOException::class, ClassNotFoundException::class)
-    fun deSerializeCoreModel(`is`: InputStream): CoreModel {
-        return deSerialize(`is`) as CoreModel
+    fun deSerializeCoreModel(inputStream: InputStream): CoreModel {
+        return deSerialize(inputStream) as CoreModel
     }
 
     /**
      * Deserialize model from file
      *
-     * @param is input stream
+     * @param inputStream input stream
      * @return model
      * @throws IOException io exception
      * @throws ClassNotFoundException class not found exception
      */
     @Throws(IOException::class, ClassNotFoundException::class)
-    fun deSerializeModel(`is`: InputStream): Model {
-        return deSerialize(`is`) as Model
+    fun deSerializeModel(inputStream: InputStream): Model {
+        return deSerialize(inputStream) as Model
     }
 
     /**
      * Deserialize object
      *
-     * @param is input stream
+     * @param inputStream input stream
      * @return object
      * @throws IOException io exception
      * @throws ClassNotFoundException class not found exception
      */
     @Throws(IOException::class, ClassNotFoundException::class)
-    private fun deSerialize(`is`: InputStream): Any {
-        ObjectInputStream(`is`).use { ois ->
-            return ois.readObject()
+    private fun deSerialize(inputStream: InputStream): Any {
+        ObjectInputStream(inputStream).use {
+            return it.readObject()
         }
     }
 }

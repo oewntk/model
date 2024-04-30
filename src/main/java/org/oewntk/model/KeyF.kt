@@ -12,12 +12,23 @@ import org.oewntk.model.Key.*
  */
 interface KeyF<R> : Key, (CoreModel) -> R {
 
+    /**
+     * Interface for single value output
+     */
     interface MonoValued : KeyF<Lex>
 
+    /**
+     * Interface for multiple values (array) output
+     */
     interface MultiValued : KeyF<Array<Lex>>
 
     /**
      * (Word, PosOrType)
+     *
+     * @param word    word: lemma or LC lemma
+     * @param posType pos type: part-of-speech or type
+     * @property wordExtractor word extractor function from lex
+     * @property posTypeExtractor part-of-speech or type extractor function from lex
      */
     open class F_W_P private constructor(
         word: String,
@@ -36,6 +47,9 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             )
         }
 
+        /**
+         * Functional part that yields single value
+         */
         class Mono private constructor(
             word: String,
             posType: Char,
@@ -74,6 +88,9 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             }
         }
 
+        /**
+         * Functional part that yields multiple values (array)
+         */
         class Multi private constructor(
             word: String,
             posType: Char,
@@ -132,6 +149,12 @@ interface KeyF<R> : Key, (CoreModel) -> R {
 
     /**
      * (Word, PosOrType, Pronunciations)
+     *
+     * @param word    word: lemma or LC lemma
+     * @param posType pos type: part-of-speech or type
+     * @param pronunciations pronunciations
+     * @property wordExtractor word extractor function from lex
+     * @property posTypeExtractor part-of-speech or type extractor function from lex
      */
     open class F_W_P_A private constructor(
         word: String,
@@ -149,6 +172,9 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             )
         }
 
+        /**
+         * Functional part that yields single value
+         */
         class Mono private constructor(
             word: String,
             posType: Char,
@@ -197,6 +223,9 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             }
         }
 
+        /**
+         * Functional part that yields multiple values (array)
+         */
         class Multi private constructor(
             word: String,
             posType: Char,
@@ -267,6 +296,12 @@ interface KeyF<R> : Key, (CoreModel) -> R {
 
     /**
      * (Word, PosOrType, Discriminant) - Shallow key
+     *
+     * @param word    word: lemma or LC lemma
+     * @param posType pos type: part-of-speech or type
+     * @param discriminant discriminat
+     * @property wordExtractor word extractor function from lex
+     * @property posTypeExtractor part-of-speech or type extractor function from lex
      */
     open class F_W_P_D private constructor(
         word: String,
@@ -284,6 +319,9 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             )
         }
 
+        /**
+         * Functional part that yields single value
+         */
         class Mono private constructor(
             word: String,
             posType: Char,
@@ -319,6 +357,9 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             }
         }
 
+        /**
+         * Functional part that yields multiple values (array)
+         */
         class Multi private constructor(
             word: String,
             posType: Char,

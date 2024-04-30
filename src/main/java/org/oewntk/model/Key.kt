@@ -13,21 +13,13 @@ interface Key {
     /**
      * (Word, PosOrType)
      *
-     * @param word    word: lemma or LC lemma
-     * @param posType pos type: part-of-speech or type
+     * @property word    word: lemma or LC lemma
+     * @property posType pos type: part-of-speech or type
      */
     open class W_P(
-        /**
-         * Word: Lemma or LC lemma
-         */
         val word: String,
-
-        /**
-         * PosType: part-of-speech or type
-         */
         val posType: Char,
-
-        ) : Key, Comparable<W_P>, Serializable {
+    ) : Key, Comparable<W_P>, Serializable {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -99,6 +91,10 @@ interface Key {
 
     /**
      * (Word, PosOrType, Pronunciations)
+     *
+     * @param word    word: lemma or LC lemma
+     * @param posType pos type: part-of-speech or type
+     * @property pronunciations pronunciations
      */
     open class W_P_A(
         word: String,
@@ -175,6 +171,13 @@ interface Key {
                 return W_P_A(lemma, type, pronunciations)
             }
 
+            private val pronunciationsComparator: Comparator<Array<Pronunciation>?> =
+                Comparator { pa1: Array<Pronunciation>?, pa2: Array<Pronunciation>? ->
+                    val ps1 = Utils.toSet(pa1)
+                    val ps2 = Utils.toSet(pa2)
+                    if (ps1 == ps2) 0 else ps1.toString().compareTo(ps2.toString())
+                }
+
             val wpaComparator = compareBy<W_P_A> { it.word }
                 .thenBy { it.posType }
                 .thenBy(nullsFirst(pronunciationsComparator)) { it.pronunciations }
@@ -183,8 +186,16 @@ interface Key {
 
     /**
      * (Word, PosOrType, Discriminant) - Shallow key
+     *
+     * @param word    word: lemma or LC lemma
+     * @param posType pos type: part-of-speech or type
+     * @property discriminant discriminant
      */
-    open class W_P_D(word: String, posType: Char, val discriminant: String?) : W_P(word, posType) {
+    open class W_P_D(
+        word: String,
+        posType: Char,
+        val discriminant: String?,
+    ) : W_P(word, posType) {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -256,15 +267,5 @@ interface Key {
                 .thenBy { it.posType }
                 .thenBy(nullsFirst(Comparator.naturalOrder())) { it.discriminant }
         }
-    }
-
-    companion object {
-
-        val pronunciationsComparator: Comparator<Array<Pronunciation>?> =
-            Comparator { pa1: Array<Pronunciation>?, pa2: Array<Pronunciation>? ->
-                val ps1 = Utils.toSet(pa1)
-                val ps2 = Utils.toSet(pa2)
-                if (ps1 == ps2) 0 else ps1.toString().compareTo(ps2.toString())
-            }
     }
 }

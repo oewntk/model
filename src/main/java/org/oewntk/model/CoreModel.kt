@@ -46,17 +46,6 @@ open class CoreModel(
     var source: File? = null
 
     /**
-     * Record input directories
-     *
-     * @param source source
-     * @return this
-     */
-    fun setModelSource(source: File?): CoreModel {
-        this.source = source
-        return this
-    }
-
-    /**
      * Generate inverse relations
      *
      * @return this model

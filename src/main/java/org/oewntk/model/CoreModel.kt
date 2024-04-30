@@ -59,6 +59,9 @@ open class CoreModel(
      * Cached
      * Lexical units mapped by lemma written form.
      * A multimap: each value is an array of lexes for the lemma.
+     * Emulates (@Transient not allowed for properties with delegates) :
+     * @Transient
+     * val lexesByLemma: Map<String, Collection<Lex>> by lazy { LexGroupings.lexesByLemma(lexes) }
      */
     @Transient
     var lexesByLemma: Map<String, Collection<Lex>>? = null
@@ -74,6 +77,9 @@ open class CoreModel(
      * Cached
      * Lexical units mapped by lemma lower-cased written form.
      * A multimap: each value is an array of lexes for the lemma.
+     * Emulates (@Transient not allowed for properties with delegates) :
+     * @Transient
+     * val lexesByLCLemma: Map<String, Collection<Lex>> by lazy { LexGroupings.lexesByLCLemma(lexes) }
      */
     @Transient
     var lexesByLCLemma: Map<String, Collection<Lex>>? = null
@@ -88,6 +94,9 @@ open class CoreModel(
     /**
      * Cached
      * Senses mapped by id (sensekey)
+     * Emulates (@Transient not allowed for properties with delegates) :
+     * @Transient
+     * val sensesById2: Map<String, Sense> by lazy { sensesById(senses) }
      */
     @Transient
     var sensesById: Map<String, Sense>? = null
@@ -102,6 +111,9 @@ open class CoreModel(
     /**
      * Cached
      * Synsets mapped by id (synset id)
+     * Emulates (@Transient not allowed for properties with delegates) :
+     * @Transient
+     * val synsetsById: Map<String, Synset> by lazy { synsetsById(synsets) }
      */
     @Transient
     var synsetsById: Map<String, Synset>? = null
@@ -112,6 +124,11 @@ open class CoreModel(
             return field
         }
         private set
+
+    // val lexesByLCLemma: Map<String, Collection<Lex>> by lazy { LexGroupings.lexesByLCLemma(lexes) }
+    // val lexesByLemma: Map<String, Collection<Lex>> by lazy { LexGroupings.lexesByLemma(lexes) }
+    // val sensesById: Map<String, Sense> by lazy { sensesById(senses) }
+    // val synsetsById: Map<String, Synset> by lazy { synsetsById(synsets) }
 
     /**
      * Info about this model

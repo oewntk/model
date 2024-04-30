@@ -19,7 +19,7 @@ import java.io.PrintStream
 object LibTestModelLexGroups {
 
     fun testCIMultipleAll(model: CoreModel, ps: PrintStream) {
-        cSLemmasByLCLemmaHavingMultipleCount(model) //
+        cSLemmasByLCLemmaHavingMultipleCount(model) 
             .forEach { (u: String?, cs: Set<String>?) ->
                 ps.println("$u ${cs.joinToString(separator = ",", prefix = "{", postfix = "}")}")
             }

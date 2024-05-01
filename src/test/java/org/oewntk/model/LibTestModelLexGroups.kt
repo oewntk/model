@@ -7,7 +7,6 @@ import org.junit.Assert
 import org.oewntk.model.LexGroupings.cSLemmasByLCLemma
 import org.oewntk.model.LexGroupings.cSLemmasByLCLemmaHavingMultipleCount
 import org.oewntk.model.LexGroupings.countsByLCLemma
-import org.oewntk.model.LexGroupings.hyperMapByLCLemmaByLemma
 import org.oewntk.model.LexGroupings.multipleCountsByICLemma
 import org.oewntk.model.SenseGroupings.sensesForLCLemma
 import org.oewntk.model.SenseGroupings.sensesForLCLemmaAndPos

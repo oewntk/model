@@ -31,7 +31,7 @@ import java.util.*
  * @property definition   first definition
  * @property lexfile      partOfSpeech.domain
  */
-class Synset(
+data class Synset(
 
     val synsetId: SynsetId,
     val type: PosType,

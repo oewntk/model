@@ -10,13 +10,26 @@ import java.util.*
 /**
  * Language model
  *
- * @property lexes                lexes
- * @property senses               senses
- * @property synsets              synsets
- * @property verbFrames           verb frames
- * @property verbTemplates        verb templates
- * @param    senseToVerbTemplates sensekey-to-verb template
- * @param    senseToTagCounts     sensekey-to-tagcount
+ * @param  lexes                  lexes
+ * @param  senses                 senses
+ * @param  synsets                synsets
+ * @param  verbFrames             verb frames
+ * @param  verbTemplates          verb templates
+ * @param  senseToVerbTemplates   sensekey-to-verb template
+ * @param  senseToTagCounts       sensekey-to-tagcount
+ *
+ * @property lexes                lexes (inherited, unmodifiable)
+ * @property senses               senses (inherited, unmodifiable)
+ * @property synsets              synsets (inherited, unmodifiable)
+ * @property source               source, typically input directory (inherited)
+ * @property lexesByLemma         transient lexical items mapped by lemma written form (inherited)
+ * @property lexesByLCLemma       transient lexical items mapped by lower-cased lemma written form (inherited)
+ * @property sensesById           transient senses mapped by sense id (sensekey) (inherited)
+ * @property synsetsById          transient synsets mapped by synset id (inherited)
+
+ * @property verbFrames           verb frames (unmodifiable)
+ * @property verbTemplates        verb templates (unmodifiable)
+ * @property source2              source2
  */
 class Model(
     lexes: Collection<Lex>,
@@ -28,23 +41,12 @@ class Model(
     senseToTagCounts: Collection<Pair<SenseKey, TagCount>>,
 ) : CoreModel(lexes, senses, synsets) {
 
-    /**
-     * Verb frames
-     */
     val verbFrames: Collection<VerbFrame> = Collections.unmodifiableCollection(verbFrames)
-
-    /**
-     * Verb templates
-     */
     private val verbTemplates: Collection<VerbTemplate> = Collections.unmodifiableCollection(verbTemplates)
-
-    /**
-     * Extra input directory
-     */
     var source2: File? = null
 
     /**
-     * Constructor
+     * Init
      */
     init {
         // set sense's verb templates

@@ -27,7 +27,6 @@ import java.util.*
  * @property isCased        whether lemma contains uppercase
  * @property partOfSpeech   synset part-of-speech {'n', 'v', 'a', 'r'} with ss_type 's' (satellite adj) mapped to 'a'
  * @property discriminant   discriminates same type entries
-
  */
 class Lex(
 

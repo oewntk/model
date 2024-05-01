@@ -12,50 +12,31 @@ import java.util.*
 /**
  * Base language model
  *
- * @param lexes   lexical items
- * @param senses  senses
- * @param synsets synsets
- * @property lexes   lexical items
- * @property senses  senses
- * @property synsets synsets
- * @property source  source
+ * @param lexes             lexical items
+ * @param senses            senses
+ * @param synsets           synsets
+ *
+ * @property lexes          lexical items (unmodifiable)
+ * @property senses         senses (unmodifiable)
+ * @property synsets        synsets (unmodifiable)
+ * @property source         source, typically input directory
+ * @property lexesByLemma   transient lexical items mapped by lemma written form
+ * @property lexesByLCLemma transient lexical items mapped by lower-cased lemma written form
+ * @property sensesById     transient senses mapped by sense id (sensekey)
+ * @property synsetsById    transient synsets mapped by synset id
+ *
  */
 open class CoreModel(
     lexes: Collection<Lex>,
     senses: Collection<Sense>,
     synsets: Collection<Synset>,
-) : Serializable {
 
-    /**
-     * Lexical items
-     */
+    ) : Serializable {
+
     val lexes: Collection<Lex> = Collections.unmodifiableCollection(lexes)
-
-    /**
-     * Senses
-     */
     val senses: Collection<Sense> = Collections.unmodifiableCollection(senses)
-
-    /**
-     * Synsets
-     */
     val synsets: Collection<Synset> = Collections.unmodifiableCollection(synsets)
-
-    /**
-     * Source, typically input directory
-     */
     var source: File? = null
-
-    /**
-     * Generate inverse relations
-     *
-     * @return this model
-     */
-    fun generateInverseRelations(): CoreModel {
-        InverseRelationFactory.makeSynsetRelations(synsetsById!!)
-        InverseRelationFactory.makeSenseRelations(sensesById!!)
-        return this
-    }
 
     /**
      * Cached
@@ -131,6 +112,17 @@ open class CoreModel(
     // val lexesByLemma: Map<String, Collection<Lex>> by lazy { LexGroupings.lexesByLemma(lexes) }
     // val sensesById: Map<String, Sense> by lazy { sensesById(senses) }
     // val synsetsById: Map<String, Synset> by lazy { synsetsById(synsets) }
+
+    /**
+     * Generate inverse relations
+     *
+     * @return this model
+     */
+    fun generateInverseRelations(): CoreModel {
+        InverseRelationFactory.makeSynsetRelations(synsetsById!!)
+        InverseRelationFactory.makeSenseRelations(sensesById!!)
+        return this
+    }
 
     /**
      * Info about this model

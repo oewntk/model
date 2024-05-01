@@ -51,7 +51,7 @@ object InverseRelationFactory {
                                 count++
                             } catch (e: IllegalArgumentException) {
                                 if (LOG_ALREADY_PRESENT) {
-                                    Tracing.psErr.printf("[W] %s%n", e.message)
+                                    Tracing.psErr.println("[W] ${e.message}\n")
                                 }
                             }
                         }
@@ -84,7 +84,7 @@ object InverseRelationFactory {
                                 count++
                             } catch (e: IllegalArgumentException) {
                                 if (LOG_ALREADY_PRESENT) {
-                                    Tracing.psErr.printf("[W] %s%n", e.message)
+                                    Tracing.psErr.println("[W] ${e.message}\n")
                                 }
                             }
                         }

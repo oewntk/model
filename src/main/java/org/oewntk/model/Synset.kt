@@ -9,93 +9,52 @@ import java.util.*
 /**
  * Synset
  *
- * @property synsetId    synset id
- * @property type        type: {n,v,a,r,s}
- * @property domain      source file
- * @property members     synset members
- * @property definitions definitions
- * @property examples    examples
- * @property wikidata    wiki data
- * @property relations   synset relations
+ * @param synsetId        synset id
+ * @param type            synset ss_type {'n', 'v', 'a', 'r', 's'}
+ * @param domain          source file
+ * @param members         synset lemma members
+ * @param definitions     definitions
+ * @param examples        examples
+ * @param wikidata        wiki data
+ * @param relations       synset relations mapped by type
+ *
+ * @property synsetId     synset id
+ * @property type         synset ss_type {'n', 'v', 'a', 'r', 's'}
+ * @property domain       source file
+ * @property members      synset lemma members
+ * @property definitions  definitions
+ * @property examples     examples
+ * @property wikidata     wiki data
+ * @property relations    synset relations mapped by type
+ *
+ * @property partOfSpeech synset part-of-speech {'n', 'v', 'a', 'r'} with ss_type 's' (satellite adj) mapped to 'a'
+ * @property definition   first definition
+ * @property lexfile      partOfSpeech.domain
  */
 class Synset(
 
-    /**
-     * Synset id
-     */
     val synsetId: SynsetId,
-
-    /**
-     * Synset type ss_type {'n', 'v', 'a', 'r', 's'}
-     */
     val type: PosType,
-
-    /**
-     * Source file
-     */
     val domain: String,
-
-    /**
-     * Lemma members
-     */
     val members: Array<String>,
-
-    /**
-     * Definitions
-     */
     val definitions: Array<String>,
-
-    /**
-     * Examples
-     */
     val examples: Array<String>?,
-
-    /**
-     * Wiki data
-     */
     private val wikidata: String?,
-
-    /**
-     * Synset relations, mapped by type
-     */
     var relations: MutableMap<RelationType, MutableSet<SynsetId>>?,
 
     ) : Comparable<Synset>, Serializable {
 
-    /**
-     * Part-of-speech
-     */
     val partOfSpeech: Char
-        get() {
-            if (type == 's') {
-                return 'a'
-            }
-            return type
-        }
-
-    /**
-     * First definition
-     */
+        get() = if (type == 's') 'a' else type
     val definition: String?
-        get() {
-            if (definitions.isNotEmpty()) {
-                return definitions[0]
-            }
-            return null
-        }
-
-    /**
-     * Lex file
-     */
+        get() = if (definitions.isNotEmpty()) definitions[0] else null
     val lexfile: String?
-        get() {
-            return when (partOfSpeech) {
-                'n'  -> "noun.$domain"
-                'v'  -> "verb.$domain"
-                'a'  -> "adj.$domain"
-                'r'  -> "adv.$domain"
-                else -> null
-            }
+        get() = when (partOfSpeech) {
+            'n'  -> "noun.$domain"
+            'v'  -> "verb.$domain"
+            'a'  -> "adj.$domain"
+            'r'  -> "adv.$domain"
+            else -> null
         }
 
     // mutation

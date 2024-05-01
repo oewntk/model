@@ -35,7 +35,7 @@ import java.util.*
  * @property senseKey         alias for sense id
  * @property lemma            lemma
  * @property lCLemma          lower-cased lemma
- * @property partOfSpeech     sense part-of-speech ss_type {'n', 'v', 'a', 'r'}
+ * @property partOfSpeech     sense part-of-speech {'n', 'v', 'a', 'r'} with ss_type 's' (satellite adj) mapped to 'a'
  * @property intTagCount      integer tag count
  * @property source           sense source
  */
@@ -49,7 +49,8 @@ class Sense(
     val verbFrames: Array<VerbFrameType>?,
     val adjPosition: AdjPositionType?,
     var relations: MutableMap<RelationType, MutableSet<SenseKey>>?,
-) : Comparable<Sense>, Serializable {
+
+    ) : Comparable<Sense>, Serializable {
 
     var verbTemplates: Array<Int>? = null
     var tagCount: TagCount? = null

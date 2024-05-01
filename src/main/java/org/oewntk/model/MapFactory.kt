@@ -61,7 +61,7 @@ object MapFactory {
     /**
      * Supply 'keep' merging function
      *
-     * @param <V> type of element
+     * @param V type of element
      */
     private fun <V> keepMerging() = { existing: V, replacement: V ->
         if (existing == replacement) {
@@ -76,8 +76,8 @@ object MapFactory {
     /**
      * Supply 'replace' merging function
      *
-     * @param <V> type of element
-    </V> */
+     * @param V type of element
+     */
     private fun <V> replaceMerging() = { existing: V, replacement: V ->
         if (existing == replacement) {
             if (LOG_DUPLICATE_VALUES) {

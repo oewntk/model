@@ -11,7 +11,19 @@ import java.util.*
 object SenseGroupings {
 
     // S E N S E   M A P S
-
+    
+    /**
+     * Senses grouped and mapped by lower-cased lemma
+     *
+     * @param senses senses
+     * @return collections of senses grouped by and mapped by lower-cased lemma
+     */
+    fun sensesByLCLemma(senses: Collection<Sense>): Map<String, Collection<Sense>> {
+        return senses
+            .groupBy(Sense::lCLemma)
+            .mapValues { it.value.toSet() }
+    }
+    
     /**
      * Senses grouped and mapped by lower-cased lemma and part-of-speech
      *
@@ -24,18 +36,6 @@ object SenseGroupings {
             .mapValues { it.value.toSet() }
     }
 
-    /**
-     * Senses grouped and mapped by lower-cased lemma
-     *
-     * @param senses senses
-     * @return collections of senses grouped by and mapped by lower-cased lemma
-     */
-    fun sensesByLCLemma(senses: Collection<Sense>): Map<String, Collection<Sense>> {
-        return senses
-            .groupBy(Sense::lCLemma)
-            .mapValues { it.value.toSet() }
-    }
-
     // S E N S E S  F O R
 
     // for debug as it makes a fresh map every time
@@ -45,9 +45,9 @@ object SenseGroupings {
      * @param senses           senses
      * @param groupingFunction map sense to key
      * @param k                key
-     * @param <K>              type of key
+     * @param K                type of key
      * @return senses matching this key
-    </K> */
+     */
     private fun <K> sensesFor(
         senses: Collection<Sense>,
         groupingFunction: (Sense) -> K,

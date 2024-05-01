@@ -13,7 +13,7 @@ import java.io.Serializable
  * @property senseNum sense num
  * @property count    tag count
  */
-class TagCount(
+data class TagCount(
     private val senseNum: Int,
     val count: Int,
 

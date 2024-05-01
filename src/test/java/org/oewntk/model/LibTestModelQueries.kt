@@ -5,7 +5,6 @@ package org.oewntk.model
 
 import java.io.PrintStream
 import java.util.*
-import java.util.function.Consumer
 
 object LibTestModelQueries {
 
@@ -97,14 +96,14 @@ object LibTestModelQueries {
 
         // relations
         val relations: Map<String, Set<String>>? = sense.relations
-        relations?.keys?.forEach(Consumer { type: String ->
+        relations?.keys?.forEach { type: String ->
             ps.printf(
                 "%s%-28s: [%s]%n",
                 indent,
                 type,
                 relations[type]!!.joinToString(",")
             )
-        })
+        }
 
         // verbframes
         val verbFrames = sense.verbFrames
@@ -129,17 +128,10 @@ object LibTestModelQueries {
         return toShort(synset)
     }
 
-    private fun toShort(synset: Synset?): String {
-        return String.format(
-            "%s %s '%s'",
-            synset!!.synsetId,
-            synset.members.contentToString(),
-            toShortDefinition(synset)
-        )
-    }
+    private fun toShort(synset: Synset?) = "${synset!!.synsetId} ${synset.members.contentToString()} '${synset.toShortDefinition()}'"
 
-    private fun toShortDefinition(synset: Synset?): String {
-        val definition = synset!!.definition
+    private fun Synset?.toShortDefinition(): String {
+        val definition = this!!.definition
         if (definition!!.length > 32) {
             return definition.substring(0, 32) + "..."
         }
@@ -151,13 +143,13 @@ object LibTestModelQueries {
         ps.printf("%s{%s}%n", indent + "\t", synset.members.joinToString(","))
         ps.printf("%s%s%n", indent + "\t", synset.definitions.joinToString(","))
         val relations = synset.relations
-        relations?.keys?.forEach(Consumer { type: String ->
+        relations?.keys?.forEach { type: String ->
             ps.printf(
                 "%s%-20s: %s%n",
                 indent + "\t",
                 type,
                 relations[type]
             )
-        })
+        }
     }
 }

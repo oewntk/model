@@ -47,7 +47,7 @@ interface Key {
         }
 
         override fun toString(): String {
-            return String.format("(%s,%s)", word, posType)
+            return "($word,$posType)"
         }
 
         override fun toLongString(): String {
@@ -134,11 +134,11 @@ interface Key {
         }
 
         override fun toString(): String {
-            return String.format("(%s,%s,%s)", word, posType, pronunciations.contentToString())
+            return "($word,$posType,${pronunciations.contentToString()})"
         }
 
         override fun toLongString(): String {
-            return String.format("KEY WPA %s %s", this.javaClass.simpleName, this)
+            return "KEY WPA ${javaClass.simpleName} $this"
         }
 
         companion object {
@@ -226,11 +226,11 @@ interface Key {
         }
 
         override fun toString(): String {
-            return String.format("(%s,%s,%s)", word, posType, discriminant)
+            return "($word,$posType,$discriminant)"
         }
 
         override fun toLongString(): String {
-            return String.format("KEY WPD %s %s", this.javaClass.simpleName, this)
+            return "KEY WPD ${javaClass.simpleName} $this"
         }
 
         companion object {

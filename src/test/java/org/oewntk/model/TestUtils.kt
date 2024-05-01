@@ -4,7 +4,6 @@
 package org.oewntk.model
 
 import java.io.StringWriter
-import java.util.function.Consumer
 
 object TestUtils {
 
@@ -13,7 +12,7 @@ object TestUtils {
             return "\t<none>"
         }
         val sw = StringWriter()
-        senses.forEach(Consumer { sense: Sense? -> sw.write(String.format("\t%s%n", sense)) })
+        senses.forEach { sw.write("\t$it\n") }
         return sw.toString()
     }
 
@@ -25,7 +24,7 @@ object TestUtils {
         senses
             .sortedWith(SenseGroupings.BY_DECREASING_TAGCOUNT.thenComparing(Sense::senseKey))
             .forEach {
-                sw.write(String.format("\t%d %s%n", it.intTagCount, it))
+                sw.write("\t${it.intTagCount} $it\n")
             }
         return sw.toString()
     }
@@ -35,17 +34,17 @@ object TestUtils {
             return "\t<none>"
         }
         val sw = StringWriter()
-        lexes.forEach(Consumer { lex: Lex? -> sw.write(String.format("\t%s%n", lex)) })
+        lexes.forEach { sw.write("\t$it\n") }
         return sw.toString()
     }
 
     fun lexHypermapForLemmaToString(lexHypermap: Map<String, Map<String, Collection<Lex>>>, lemma: String): String {
         val map = lexHypermap[lemma.lowercase()]!!
         val sw = StringWriter()
-        map.keys.forEach(Consumer { cs: String? ->
-            sw.write(String.format("\tcs '%s'%n", cs))
-            map[cs]?.forEach(Consumer { s: Lex? -> sw.write(String.format("\t\t%s%n", s)) })
-        })
+        map.keys.forEach { cs ->
+            sw.write("\tcs '$cs'\n")
+            map[cs]?.forEach { sw.write("\t\t$it\n") }
+        }
         return sw.toString()
     }
 }

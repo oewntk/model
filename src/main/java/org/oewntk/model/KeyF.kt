@@ -37,15 +37,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
         val posTypeExtractor: (Lex) -> Char,
     ) : W_P(word, posType) {
 
-        override fun toLongString(): String {
-            return String.format(
-                "KEYF %s WPD_%s_%s %s",
-                javaClass.simpleName,
-                toWordExtractorString(wordExtractor),
-                toPosTypeExtractorString(posTypeExtractor),
-                this
-            )
-        }
+        override fun toLongString(): String = "KEYF ${javaClass.simpleName} WP_${toWordExtractorString(wordExtractor)}_${toPosTypeExtractorString(posTypeExtractor)} $this"
 
         /**
          * Functional part that yields single value
@@ -164,13 +156,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
         val posTypeExtractor: (Lex) -> Char,
     ) : W_P_A(word, posType, pronunciations) {
 
-        override fun toLongString(): String {
-            return String.format(
-                "KEYF %s WPA_%s_%s %s", this.javaClass.simpleName, toWordExtractorString(
-                    this.wordExtractor
-                ), toPosTypeExtractorString(this.posTypeExtractor), this
-            )
-        }
+        override fun toLongString(): String = "KEYF ${javaClass.simpleName} WPA_${toWordExtractorString(wordExtractor)}_${toPosTypeExtractorString(posTypeExtractor)} $this"
 
         /**
          * Functional part that yields single value
@@ -299,7 +285,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
      *
      * @param word    word: lemma or LC lemma
      * @param posType pos type: part-of-speech or type
-     * @param discriminant discriminat
+     * @param discriminant discriminant
      * @property wordExtractor word extractor function from lex
      * @property posTypeExtractor part-of-speech or type extractor function from lex
      */
@@ -311,13 +297,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
         val posTypeExtractor: (Lex) -> Char,
     ) : W_P_D(word, posType, discriminant) {
 
-        override fun toLongString(): String {
-            return String.format(
-                "KEYF %s WPD_%s_%s %s", this.javaClass.simpleName, toWordExtractorString(
-                    this.wordExtractor
-                ), toPosTypeExtractorString(this.posTypeExtractor), this
-            )
-        }
+        override fun toLongString(): String = "KEYF ${javaClass.simpleName} WPD_${toWordExtractorString(wordExtractor)}_${toPosTypeExtractorString(posTypeExtractor)} $this"
 
         /**
          * Functional part that yields single value

@@ -84,27 +84,27 @@ object ModelInfo {
             .flatMap { it.values }
             .sumOf { it.size.toLong() }
 
-        return String.format(COUNT_TEMPLATE, "lexes", model.lexes.size) +
-                String.format(COUNT_TEMPLATE, "lemmas (distinct CS)", csWordCount) +
-                String.format(COUNT_TEMPLATE, "lemmas (distinct LC)", lcWordCount) +
-                String.format(COUNT_TEMPLATE, "lemmas (cased)", casedCount) +
-                String.format(COUNT_TEMPLATE, "discriminant types", discriminantCount) +
-                String.format(COUNT_TEMPLATE, "lexes with discriminant", withDiscriminantLexCount) +
-                String.format(COUNT_TEMPLATE, "lexes with pronunciation", withPronunciationLexCount) +
-                String.format(COUNT_TEMPLATE, "lexes with multi senses", withMultiSenseLexCount) +
-                String.format(COUNT_TEMPLATE, "distinct lexes by key W_P_A_type (deep)", distinctByKeyOEWNLexCount) +
-                String.format(COUNT_TEMPLATE, "distinct lexes by key W_P_D_type (shallow)", distinctByKeyShallowLexCount) +
-                String.format(COUNT_TEMPLATE, "distinct lexes by key W_P_A_pos (pos)", distinctByKeyPOSLexCount) +
-                String.format(COUNT_TEMPLATE, "distinct lexes by key W_P_A_lc_type (ic)", distinctByKeyICLexCount) +
-                String.format(COUNT_TEMPLATE, "distinct lexes by key W_P_lc_pos (pwn)", distinctByKeyPWNLexCount) +
-                String.format(COUNT_TEMPLATE, "senses", model.senses.size) +
-                String.format(COUNT_TEMPLATE, "distinct sense sets in lexes", distinctSenseGroupsCount) +
-                String.format(COUNT_TEMPLATE, "senses in sense sets", sensesInSenseGroupsSum) +
-                String.format(COUNT_TEMPLATE, "senses with relations", withRelationSenseCount) +
-                String.format(COUNT_TEMPLATE, "sense relations", senseRelationSum) +
-                String.format(COUNT_TEMPLATE, "synsets", model.synsets.size) +
-                String.format(COUNT_TEMPLATE, "synsets with relations", withRelationSynsetCount) +
-                String.format(COUNT_TEMPLATE, "synset relations", synsetRelationSum)
+        return format("lexes", model.lexes.size) +
+                format("lemmas (distinct CS)", csWordCount) +
+                format("lemmas (distinct LC)", lcWordCount) +
+                format("lemmas (cased)", casedCount) +
+                format("discriminant types", discriminantCount) +
+                format("lexes with discriminant", withDiscriminantLexCount) +
+                format("lexes with pronunciation", withPronunciationLexCount) +
+                format("lexes with multi senses", withMultiSenseLexCount) +
+                format("distinct lexes by key W_P_A_type (deep)", distinctByKeyOEWNLexCount) +
+                format("distinct lexes by key W_P_D_type (shallow)", distinctByKeyShallowLexCount) +
+                format("distinct lexes by key W_P_A_pos (pos)", distinctByKeyPOSLexCount) +
+                format("distinct lexes by key W_P_A_lc_type (ic)", distinctByKeyICLexCount) +
+                format("distinct lexes by key W_P_lc_pos (pwn)", distinctByKeyPWNLexCount) +
+                format("senses", model.senses.size) +
+                format("distinct sense sets in lexes", distinctSenseGroupsCount) +
+                format("senses in sense sets", sensesInSenseGroupsSum) +
+                format("senses with relations", withRelationSenseCount) +
+                format("sense relations", senseRelationSum) +
+                format("synsets", model.synsets.size) +
+                format("synsets with relations", withRelationSynsetCount) +
+                format("synset relations", synsetRelationSum)
     }
 
     /**
@@ -149,17 +149,17 @@ object ModelInfo {
             .filter { !it.examples.isNullOrEmpty() }
             .sumOf { it.examples!!.size.toLong() }
 
-        return String.format(COUNT_TEMPLATE, "lexes with morphs", withMorphLexCount) +
-                String.format(COUNT_TEMPLATE, "senses with verb frames", withVerbFramesSenseCount) +
-                String.format(COUNT_TEMPLATE, "senses with verb templates", withVerbTemplatesSenseCount) +
-                String.format(COUNT_TEMPLATE, "senses with tag count", withTagCountSenseCount) +
-                String.format(COUNT_TEMPLATE, "senses with examples", withExamplesSenseCount) +
-                String.format(COUNT_TEMPLATE, "synsets with examples", withSamplesSynsetCount) +
-                String.format(COUNT_TEMPLATE, "synset examples", sampleSum) +
-                String.format(COUNT_TEMPLATE, "pronunciations", pronunciationCount) +
-                String.format(COUNT_TEMPLATE, "pronunciation references", pronunciationRefSum) +
-                String.format(COUNT_TEMPLATE, "morphs", morphCount) +
-                String.format(COUNT_TEMPLATE, "morph references", morphRefSum)
+        return format("lexes with morphs", withMorphLexCount) +
+                format("senses with verb frames", withVerbFramesSenseCount) +
+                format("senses with verb templates", withVerbTemplatesSenseCount) +
+                format("senses with tag count", withTagCountSenseCount) +
+                format("senses with examples", withExamplesSenseCount) +
+                format("synsets with examples", withSamplesSynsetCount) +
+                format("synset examples", sampleSum) +
+                format("pronunciations", pronunciationCount) +
+                format("pronunciation references", pronunciationRefSum) +
+                format("morphs", morphCount) +
+                format("morph references", morphRefSum)
     }
 
     private fun reportRelations(model: CoreModel): String {
@@ -171,12 +171,16 @@ object ModelInfo {
             .mapNotNull { it.relations }
             .flatMap { it.values }
             .sumOf { it.size.toLong() }
-        return String.format(COUNT_TEMPLATE, "synset relations", synsetRelationSum) +
-                String.format(COUNT_TEMPLATE, "sense relations", senseRelationSum)
+        return format("synset relations", synsetRelationSum) +
+                format("sense relations", senseRelationSum)
     }
 
     /**
      * Format for count output
      */
     private const val COUNT_TEMPLATE = "%-50s: %6d%n"
+
+    private fun format(label: String, value: Any): String {
+        return String.format(COUNT_TEMPLATE, label, value)
+    }
 }

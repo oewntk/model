@@ -102,8 +102,8 @@ interface Key {
         val pronunciations: Array<Pronunciation>?,
     ) : W_P(word, posType) {
 
-        val pronunciationSet: Set<Pronunciation>
-            get() = Utils.toSet(pronunciations)
+        private val pronunciationSet: Set<Pronunciation>
+            get() = pronunciations?.toSet() ?: emptySet()
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -119,7 +119,7 @@ interface Key {
             if (this.posType != that.posType) {
                 return false
             }
-            return Utils.toSet(this.pronunciations) == Utils.toSet(that.pronunciations)
+            return pronunciationSet == pronunciationSet
         }
 
         override fun hashCode(): Int {
@@ -173,8 +173,8 @@ interface Key {
 
             private val pronunciationsComparator: Comparator<Array<Pronunciation>?> =
                 Comparator { pa1: Array<Pronunciation>?, pa2: Array<Pronunciation>? ->
-                    val ps1 = Utils.toSet(pa1)
-                    val ps2 = Utils.toSet(pa2)
+                    val ps1 = pa1?.toSet() ?: emptySet()
+                    val ps2 = pa2?.toSet() ?: emptySet()
                     if (ps1 == ps2) 0 else ps1.toString().compareTo(ps2.toString())
                 }
 

@@ -8,19 +8,14 @@ import java.io.Serializable
 /**
  * Verb template
  *
+ * @param id          verb template id
+ * @param template    verb template
  * @property id       verb template id
  * @property template verb template
  */
-class VerbTemplate(
+data class VerbTemplate(
 
-    /**
-     * Verb template id
-     */
     val id: VerbTemplateType,
-
-    /**
-     * Verb template
-     */
     val template: String,
 
     ) : Serializable {

@@ -8,19 +8,14 @@ import java.io.Serializable
 /**
  * Verb frame
  *
+ * @param id       verb frame id
+ * @param frame    verb frame
  * @property id    verb frame id
  * @property frame verb frame
  */
-class VerbFrame(
+data class VerbFrame(
 
-    /**
-     * Verb frame id
-     */
     val id: VerbFrameType,
-
-    /**
-     * Verb frame
-     */
     val frame: String,
 
     ) : Serializable {

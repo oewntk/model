@@ -41,8 +41,8 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             return String.format(
                 "KEYF %s WPD_%s_%s %s",
                 javaClass.simpleName,
-                Utils.toWordExtractorString(wordExtractor),
-                Utils.toPosTypeExtractorString(posTypeExtractor),
+                toWordExtractorString(wordExtractor),
+                toPosTypeExtractorString(posTypeExtractor),
                 this
             )
         }
@@ -166,9 +166,9 @@ interface KeyF<R> : Key, (CoreModel) -> R {
 
         override fun toLongString(): String {
             return String.format(
-                "KEYF %s WPA_%s_%s %s", this.javaClass.simpleName, Utils.toWordExtractorString(
+                "KEYF %s WPA_%s_%s %s", this.javaClass.simpleName, toWordExtractorString(
                     this.wordExtractor
-                ), Utils.toPosTypeExtractorString(this.posTypeExtractor), this
+                ), toPosTypeExtractorString(this.posTypeExtractor), this
             )
         }
 
@@ -313,9 +313,9 @@ interface KeyF<R> : Key, (CoreModel) -> R {
 
         override fun toLongString(): String {
             return String.format(
-                "KEYF %s WPD_%s_%s %s", this.javaClass.simpleName, Utils.toWordExtractorString(
+                "KEYF %s WPD_%s_%s %s", this.javaClass.simpleName, toWordExtractorString(
                     this.wordExtractor
-                ), Utils.toPosTypeExtractorString(this.posTypeExtractor), this
+                ), toPosTypeExtractorString(this.posTypeExtractor), this
             )
         }
 
@@ -411,6 +411,36 @@ interface KeyF<R> : Key, (CoreModel) -> R {
                     posTypeExtractor
                 )
             }
+        }
+    }
+
+    companion object {
+        // Name for extractor
+
+        private const val DUMMY_UPPER = "CASE"
+
+        private const val DUMMY_SATELLITE = 's'
+
+        private val dummyLex = Lex(DUMMY_UPPER, DUMMY_SATELLITE.toString(), null)
+
+        /**
+         * Name a word extractor (by applying dummy data)
+         *
+         * @param wordExtractor word extractor
+         * @return name
+         */
+        fun toWordExtractorString(wordExtractor: (Lex) -> String): String {
+            return if (wordExtractor.invoke(dummyLex) == DUMMY_UPPER) "cs" else "lc"
+        }
+
+        /**
+         * Name a pos/type extractor (by applying dummy data)
+         *
+         * @param posTypeExtractor word extractor
+         * @return name
+         */
+        fun toPosTypeExtractorString(posTypeExtractor: (Lex) -> Char): String {
+            return if (posTypeExtractor.invoke(dummyLex) == DUMMY_SATELLITE) "t" else "p"
         }
     }
 }

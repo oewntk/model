@@ -8,20 +8,13 @@ import java.io.Serializable
 /**
  * Tag count
  *
+ * @param senseNum    sense num
+ * @param count       tag count
  * @property senseNum sense num
  * @property count    tag count
  */
 class TagCount(
-    /**
-     * Get sense number
-     */
     private val senseNum: Int,
-
-    /**
-     * Get tag count
-     *
-     * @return tag count
-     */
     val count: Int,
 
     ) : Serializable {

@@ -3,8 +3,6 @@
  */
 package org.oewntk.model
 
-import org.oewntk.model.Utils.toSet
-
 /**
  * Lex finder
  */
@@ -121,7 +119,7 @@ object Finder {
      * @throws IllegalArgumentException if not found
      */
     fun getLexesHavingPronunciations(lexes: Sequence<Lex>, pronunciations: Array<Pronunciation>?): Sequence<Lex> {
-        val set = toSet(pronunciations)
+        val set = pronunciations?.toSet() ?: emptySet()
         return lexes
             .filter { compareAsSets(set, it.pronunciations) }
     }
@@ -150,7 +148,7 @@ object Finder {
      * @return true if equals
      */
     fun <T> compareAsSets(array1: Array<T>?, array2: Array<T>?): Boolean {
-        val set1 = toSet(array1)
+        val set1 = array1?.toSet() ?: emptySet()
         return compareAsSets(set1, array2)
     }
 
@@ -163,7 +161,7 @@ object Finder {
      * @return true if equals
      */
     private fun <T> compareAsSets(set1: Set<T>, array2: Array<T>?): Boolean {
-        val set2 = toSet(array2)
+        val set2 = array2?.toSet() ?: emptySet()
         return set1 == set2
     }
 }

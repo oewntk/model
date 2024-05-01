@@ -56,39 +56,7 @@ object MapFactory {
             .toSortedMap(naturalOrder())
     }
 
-    // G E N E R I C   M A P   F A C T O R Y
-
-    /**
-     * Senses by id
-     *
-     * @param senses senses
-     * @return senses mapped by id
-     */
-    fun sensesById(senses: Collection<Sense>): Map<String, Sense> {
-        val mergingFunction = { existing: Sense, replacement: Sense ->
-            val merged = if (replacement.lex.isCased) (if (existing.lex.isCased) existing else replacement) else existing
-            if (existing == replacement) {
-                if (LOG_DUPLICATE_VALUES) {
-                    Tracing.psInfo.printf("[W] Duplicate values %s and %s, merging to %s%n", existing, replacement, merged)
-                }
-            }
-            merged
-        }
-        return map(senses, { it.senseKey }, mergingFunction)
-    }
-
-    /**
-     * Synsets by id
-     *
-     * @param synsets synsets
-     * @return synsets mapped by id
-     */
-    fun synsetsById(synsets: Collection<Synset>): Map<String, Synset> {
-        val f = { s: Synset -> s.synsetId }
-        return map(synsets, f)
-    }
-
-    // G E N E R I C   M A P   F A C T O R Y
+    // G E N E R I C   M E R G I N G   F U N C T I O N S
 
     /**
      * Supply 'keep' merging function
@@ -98,7 +66,7 @@ object MapFactory {
     private fun <V> keepMerging() = { existing: V, replacement: V ->
         if (existing == replacement) {
             if (LOG_DUPLICATE_VALUES) {
-                Tracing.psInfo.printf("[W] Duplicate values %s and %s, keeping first%n", existing, replacement)
+                Tracing.psInfo.println("[W] Duplicate values $existing and $replacement, keeping first")
             }
             //throw new IllegalArgumentException(existing + "," + replacement);
         }
@@ -113,10 +81,42 @@ object MapFactory {
     private fun <V> replaceMerging() = { existing: V, replacement: V ->
         if (existing == replacement) {
             if (LOG_DUPLICATE_VALUES) {
-                Tracing.psInfo.printf("[W] Duplicate values %s and %s, replacing first%n", existing, replacement)
+                Tracing.psInfo.println("[W] Duplicate values $existing and $replacement, replacing first")
             }
             //throw new IllegalArgumentException(existing + "," + replacement);
         }
         replacement
+    }
+
+    // S E N S E   A N D   S Y N S E T  M A P   F A C T O R I E S
+
+    /**
+     * Senses by id
+     *
+     * @param senses senses
+     * @return senses mapped by id
+     */
+    fun sensesById(senses: Collection<Sense>): Map<String, Sense> {
+        // prioritize cased
+        val mergingFunction = { existing: Sense, replacement: Sense ->
+            val merged = if (replacement.lex.isCased) (if (existing.lex.isCased) existing else replacement) else existing
+            if (existing == replacement) {
+                if (LOG_DUPLICATE_VALUES) {
+                    Tracing.psInfo.println("[W] Duplicate values $existing and $replacement, merging to $merged")
+                }
+            }
+            merged
+        }
+        return map(senses, { it.senseKey }, mergingFunction)
+    }
+
+    /**
+     * Synsets by id
+     *
+     * @param synsets synsets
+     * @return synsets mapped by id
+     */
+    fun synsetsById(synsets: Collection<Synset>): Map<String, Synset> {
+        return map(synsets) { it.synsetId }
     }
 }

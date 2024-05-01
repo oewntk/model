@@ -52,8 +52,8 @@ class Lex(
     // stringify
 
     override fun toString(): String {
-        val pronunciationsStr = Formatter.join(pronunciations, ",")
-        val sensesStr = Formatter.join(senses, ",")
+        val pronunciationsStr = pronunciations?.joinToString(",") ?: ""
+        val sensesStr = senses.joinToString(",")
         return "$lemma $type${discriminant ?: ""} $pronunciationsStr {$sensesStr}"
     }
 

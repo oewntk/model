@@ -5,6 +5,7 @@ package org.oewntk.model
 
 import java.io.Serializable
 import java.util.*
+import org.oewntk.model.Formatter.joinToString
 
 /**
  * Sense
@@ -137,7 +138,7 @@ data class Sense(
     }
 
     fun toLongString(): String {
-        val relationsStr = Formatter.join(relations, ",")
+        val relationsStr = relations.joinToString(",")
         return "[${lexIndex + 1}] of '${lex.lemma}' $senseId $type $synsetId {$relationsStr}"
     }
 

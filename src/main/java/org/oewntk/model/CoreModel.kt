@@ -130,6 +130,6 @@ open class CoreModel(
      * @return info
      */
     open fun info(): String? {
-        return String.format("lexes: %d, senses: %d, synsets: %s", lexes.size, senses.size, synsets.size)
+        return "lexes: ${lexes.size}, senses: ${senses.size}, synsets: ${synsets.size}"
     }
 }

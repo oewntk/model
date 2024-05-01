@@ -9,131 +9,61 @@ import java.util.*
 /**
  * Sense
  *
- * @property senseId     sense id / sensekey
- * @property lex         lexical item
- * @property type        {n,v,a,r,s}
- * @property synsetId    synset id
- * @property examples    examples
- * @property verbFrames  verb frames
- * @property adjPosition adjective position
- * @property relations   sense relations
+ * @param senseId             sense id / sensekey
+ * @param lex                 lexical item (lex) this sense is contained in
+ * @param type                synset type ss_type {'n', 'v', 'a', 'r', 's'}
+ * @param synsetId            synset id
+ * @param lexIndex            zero-based index of this sense in lex list/array of senses
+ * @param examples            examples
+ * @param verbFrames          verb frames
+ * @param adjPosition         adjective position {'a', 'ip', 'p'} meaning {attribute,immediate postnominal,predicate}
+ * @param relations           sense relations mapped by type
  *
- * @property senseKey    sense id / sensekey
- * @property lemma       lemma
- * @property lCLemma     lower-cased lemma
- * @property tagCount    tag count
- * @property intTagCount integer tag count
- * @param    indexInLex  index of this sense in lex
+ * @property senseId          sense id / sensekey
+ * @property lex              lexical item (lex) this sense is contained in
+ * @property type             synset type ss_type {'n', 'v', 'a', 'r', 's'}
+ * @property synsetId         synset id
+ * @property lexIndex         zero-based index of this sense in lex list/array of senses
+ * @property examples         examples
+ * @property verbFrames       verb frames
+ * @property adjPosition      adjective position {'a', 'ip', 'p'} meaning {attribute,immediate postnominal,predicate}
+ * @property relations        sense relations mapped by type
+ *
+ * @property tagCount         tag count
+ * @property verbTemplates    verb sentence templates
+ *
+ * @property senseKey         alias for sense id
+ * @property lemma            lemma
+ * @property lCLemma          lower-cased lemma
+ * @property partOfSpeech     sense part-of-speech ss_type {'n', 'v', 'a', 'r'}
+ * @property intTagCount      integer tag count
+ * @property source           sense source
  */
 class Sense(
-
-    /**
-     * Sense id or sensekey
-     */
     private val senseId: SenseKey,
-
-    /**
-     * Lexical item, lex this sense is contained in
-     */
     val lex: Lex,
-
-    /**
-     * Synset type ss_type {'n', 'v', 'a', 'r', 's'}
-     */
     val type: PosType,
-
-    /**
-     * Index in lex entry
-     */
-    private val indexInLex: Int,
-
-    /**
-     * Synset id
-     */
+    val lexIndex: Int,
     val synsetId: SynsetId,
-
-    /**
-     * Examples
-     */
     val examples: Array<String>?,
-
-    /**
-     * Verb frames
-     */
     val verbFrames: Array<VerbFrameType>?,
-
-    /**
-     * Adjective position in {'a', 'ip', 'p'} meaning {attribute,immediate postnominal,predicate}
-     */
     val adjPosition: AdjPositionType?,
+    var relations: MutableMap<RelationType, MutableSet<SenseKey>>?,
+) : Comparable<Sense>, Serializable {
 
-    /**
-     * Sense relations mapped by type
-     */
-    relations: MutableMap<RelationType, MutableSet<SenseKey>>?,
-
-    ) : Comparable<Sense>, Serializable {
-
-    /**
-     * Sense id, sensekey
-     */
+    var verbTemplates: Array<Int>? = null
+    var tagCount: TagCount? = null
     val senseKey: SenseKey
         get() = senseId
-
-    /**
-     * Synset part-of-speech ss_type {'n', 'v', 'a', 'r'}
-     */
-    val partOfSpeech: Char = if (this.type == 's') 'a' else this.type
-
-    /**
-     * Zero-based index of this sense in lex list/array of senses
-     */
-    val lexIndex: Int = indexInLex
-
-    /**
-     * Verb sentence templates
-     */
-    var verbTemplates: Array<Int>? = null
-
-    /**
-     * Tag count
-     */
-    var tagCount: TagCount? = null
-
-    /**
-     * Sense relations
-     */
-    var relations: MutableMap<RelationType, MutableSet<SenseKey>>?
-
-    /**
-     * Lemma
-     */
     val lemma: String
         get() = lex.lemma
-
-    /**
-     * Lower-case lemma
-     */
     val lCLemma: String
         get() = lex.lCLemma
-
-    /**
-     * Int tag count
-     */
+    val partOfSpeech: Char = if (this.type == 's') 'a' else this.type
     val intTagCount: Int
         get() = if (tagCount == null) 0 else tagCount!!.count
-
-    /**
-     * Source file
-     */
     val source: String?
         get() = lex.source
-
-    // init
-
-    init {
-        this.relations = relations
-    }
 
     // mutation
 

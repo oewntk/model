@@ -13,17 +13,9 @@ import java.util.*
  * @property variety variety
  */
 class Pronunciation(
-    /**
-     * Value in IPA
-     */
     val value: String,
-
-    /**
-     * Variety
-     */
     val variety: String?,
-
-    ) : Serializable {
+) : Serializable {
 
     // identify
 

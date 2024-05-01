@@ -14,15 +14,18 @@ object Formatter {
      * @param K  type of key
      * @param V  type of value
      * @param T  type of item
-     * @param separator separator
+     * @param entrySeparator entry separator
+     * @param valueSeparator value separator
+     * @param valuePrefix value prefix
+     * @param valuePostfix value postfix
      * @return joined string representation of items:
      * ```
-     * [key1]={value11,value12,...}separator
-     * [key2]={value21,value22,...}separator
+     * [key1]={value11,value12,...}
+     * [key2]={value21,value22,...}
      *
      * ```
      */
-    fun <K, V : Iterable<T>?, T> Map<K, V>?.joinToString(separator: String): String {
-        return this?.entries!!.joinToString(separator) { "[${it.key}]=${it.value?.joinToString(separator = ",", prefix = "{", postfix = "}") ?: ""}" }
+    fun <K, V : Iterable<T>?, T> Map<K, V>?.joinToString(entrySeparator: CharSequence = " ", valueSeparator: CharSequence = ",", valuePrefix: CharSequence = "", valuePostfix: CharSequence = ""): String {
+        return this?.entries!!.joinToString(separator = entrySeparator) { "[${it.key}]=${it.value?.joinToString(separator = valueSeparator, prefix = valuePrefix, postfix = valuePostfix) ?: ""}" }
     }
 }

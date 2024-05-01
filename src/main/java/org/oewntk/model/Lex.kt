@@ -52,9 +52,9 @@ class Lex(
     // stringify
 
     override fun toString(): String {
-        val pronunciationsStr = pronunciations?.joinToString(",") ?: ""
-        val sensesStr = senses.joinToString(",")
-        return "$lemma $type${discriminant ?: ""} $pronunciationsStr {$sensesStr}"
+        val pronunciations = pronunciations?.joinToString(",") ?: ""
+        val senses = senses.joinToString(",")
+        return "$lemma $type${discriminant ?: ""} $pronunciations {$senses}"
     }
 
     // identify

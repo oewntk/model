@@ -3,7 +3,6 @@
  */
 package org.oewntk.model
 
-import org.oewntk.model.Key.W_P_A
 import java.io.Serializable
 import java.util.*
 
@@ -12,76 +11,44 @@ import java.util.*
  * The basic container of senses.
  * Can be thought of as the pair of a key and value (k, senses).
  * The value is the set of senses while the key is made up of member elements, depending on the key.
- * @property lemma         lemma
- * @property source        source
- * @property type          type ss_type {n, v, a, r, s}
- * @property partOfSpeech  type ss_type {n, v, a, r}
- * @property lCLemma       lower-cased lemma
- * @param    code          code
  *
+ * @param lemma             lemma written form
+ * @param code              ss_type with a possible discriminant appended in the form '-number'
+ * @param source            source
+ *
+ * @property lemma          lemma written form
+ * @property type           type ss_type {'n', 'v', 'a', 'r', 's'}
+ * @property source         source
+ * @property senses         senses
+ * @property forms          morphological forms
+ * @property pronunciations pronunciations
+ *
+ * @property lCLemma        lower-cased lemma
+ * @property isCased        whether lemma contains uppercase
+ * @property partOfSpeech   synset part-of-speech {'n', 'v', 'a', 'r'} with ss_type 's' (satellite adj) mapped to 'a'
+ * @property discriminant   discriminates same type entries
+
  */
 class Lex(
-    /**
-     * Lemma written form
-     */
+
     val lemma: String,
-
-    /**
-     * Code
-     */
     code: String,
-
-    /**
-     * Source file
-     */
     val source: String?,
 
-    ) : Serializable //, Comparable<Lex>
-{
+    ) : Serializable /*, Comparable<Lex> */ {
 
-    /**
-     * Lemma lower-cased written form
-     */
+    val type: Char = code[0]
+    lateinit var senses: MutableList<Sense>
+    var forms: Array<out String>? = null
+    var pronunciations: Array<Pronunciation>? = null
+
     val lCLemma: String
         get() = lemma.lowercase()
-
-    /**
-     * Whether lemma has uppercase
-     */
     val isCased: Boolean
         get() = lemma != lCLemma
-
-    /**
-     * Synset type ss_type {n, v, a, r, s}
-     */
-    val type: Char = code[0]
-
-    /**
-     * Part-of-speech (sme as part-of-speech except for satellite adjective)
-     */
     val partOfSpeech: Char
         get() = if (this.type == 's') 'a' else this.type
-
-    /**
-     * Discriminant amongst same-type lexes appended to type that distinguishes same-type lexes (because of pronunciation or morphological forms )
-     * Current values are '-1','-2'
-     */
     val discriminant: String? = if (code.length > 1) code.substring(1) else null
-
-    /**
-     * Senses
-     */
-    lateinit var senses: MutableList<Sense>
-
-    /**
-     * Morphological forms
-     */
-    var forms: Array<out String>? = null
-
-    /**
-     * Pronunciations
-     */
-    var pronunciations: Array<Pronunciation>? = null
 
     // stringify
 
@@ -101,16 +68,5 @@ class Lex(
         var result = Objects.hash(lemma, type, discriminant)
         result = 31 * result + pronunciations.contentHashCode()
         return result
-    }
-
-    companion object {
-
-        // ordering, this is used when sorted maps are made
-
-        val comparatorByKeyOEWN: Comparator<Lex> = Comparator { thisLex: Lex, thatLex: Lex ->
-            val thisKey = W_P_A.of_t(thisLex)
-            val thatKey = W_P_A.of_t(thatLex)
-            thisKey.compareTo(thatKey)
-        }
     }
 }

@@ -32,25 +32,6 @@ object LexGroupings {
     }
 
     /**
-     * Hypermap (LCLemma to CSLemma to lexes)
-     *
-     * @param model model
-     * @return 2-tier hypermap
-     * ```
-     * (LCLemma -> CSLemma -> lexes)
-     * ```
-     */
-    fun hyperMapByLCLemmaByLemma(model: CoreModel): Map<String, Map<String, Collection<Lex>>> {
-        return model.lexesByLemma!!.entries // entries: setOf(lemma to lexes)
-            .groupBy { entry -> entry.key.lowercase() } // groupBy: mapOf(lclemma to listOf(lemma to lexes)), entry: lemma to lexes
-            .mapValues { values -> // values: lcLemma to listOf(lemma to lexes))
-                values.value // value: listOf(lemma to lexes)
-                    .associateBy { it.key } // mapOf(lemma to lexes)
-                    .mapValues { it.value.value } // it: lemma to (lemma to lexes), it.value: lemma to lexes, it.value.value: lexes
-            }
-    }
-
-    /**
      * CSLemmas grouped by LCLemma
      * ```
      * baroque -&gt; (Baroque, baroque)
@@ -74,6 +55,27 @@ object LexGroupings {
      */
     fun cSLemmasForLCLemma(model: CoreModel, lcLemma: String): Set<String> {
         return cSLemmasByLCLemma(model)[lcLemma]!!
+    }
+
+    // hyper maps
+
+    /**
+     * Hypermap (LCLemma to CSLemma to lexes)
+     *
+     * @param model model
+     * @return 2-tier hypermap
+     * ```
+     * (LCLemma -> CSLemma -> lexes)
+     * ```
+     */
+    fun hyperMapByLCLemmaByLemma(model: CoreModel): Map<String, Map<String, Collection<Lex>>> {
+        return model.lexesByLemma!!.entries // entries: setOf(lemma to lexes)
+            .groupBy { entry -> entry.key.lowercase() } // groupBy: mapOf(lclemma to listOf(lemma to lexes)), entry: lemma to lexes
+            .mapValues { values -> // values: lcLemma to listOf(lemma to lexes))
+                values.value // value: listOf(lemma to lexes)
+                    .associateBy { it.key } // mapOf(lemma to lexes)
+                    .mapValues { it.value.value } // it: lemma to (lemma to lexes), it.value: lemma to lexes, it.value.value: lexes
+            }
     }
 
     // counts

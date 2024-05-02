@@ -37,7 +37,7 @@ class Pronunciation(
     // stringify
 
     override fun toString(): String {
-        return if (variety != null) "[$variety] $value" else "/$value/"
+        return if (variety != null) "[$variety] /$value/" else "/$value/"
     }
 
     companion object {

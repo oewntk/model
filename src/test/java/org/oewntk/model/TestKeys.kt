@@ -3,8 +3,7 @@
  */
 package org.oewntk.model
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
+import org.junit.Assert.*
 import org.junit.Test
 import kotlin.test.assertContentEquals
 
@@ -31,6 +30,41 @@ class TestKeys {
     }
 
     @Test
+    fun testEquals() {
+        val wordMobile = "mobile"
+        val pMobile = Pronunciation("ˈməʊbaɪl", null)
+        val pMobileGB = Pronunciation("ˈməʊbaɪl", "GB")
+        val pMobileUS = Pronunciation("ˈmoʊbil", "US")
+        val paMobile1 = arrayOf(pMobile, pMobileGB, pMobileUS)
+        val paMobile2 = arrayOf(pMobile, pMobileUS, pMobileGB)
+        ps.println("pronunciations1 = ${paMobile1.withIndex().joinToString(separator=" "){ "#${it.index} ${it.value}" }}")
+        ps.println("pronunciations2 = ${paMobile2.withIndex().joinToString(separator=" "){ "#${it.index} ${it.value}" }}")
+        assertFalse(paMobile1 == paMobile2)
+        assertFalse(paMobile1.contentEquals(paMobile2))
+        assertEquals(paMobile1.toSet(), paMobile2.toSet())
+
+        val lexMobile0 = Lex(wordMobile, "n", "source1").apply { senses = ArrayList() }
+        val lexMobile1 = Lex(wordMobile, "n", "source1").apply { senses = ArrayList(); pronunciations = paMobile1 }
+        val lexMobile2 = Lex(wordMobile, "n", "source2").apply { senses = ArrayList(); pronunciations = paMobile2 }
+        ps.println("lex0 = $lexMobile0")
+        ps.println("lex1 = $lexMobile1")
+        ps.println("lex2 = $lexMobile2")
+
+        val k0 = Key.W_P_A.of_t(lexMobile0)
+        val k1 = Key.W_P_A.of_t(lexMobile1)
+        val k2 = Key.W_P_A.of_t(lexMobile2)
+        ps.println("key0 = $k0")
+        ps.println("key1 = $k1")
+        ps.println("key2 = $k2")
+
+        assertEquals(k1.pronunciationSet, k2.pronunciationSet)
+        assertNotEquals(k1.pronunciationSet, k0.pronunciationSet)
+
+        assertEquals(k1, k2)
+        assertNotEquals(k1, k0)
+    }
+
+    @Test
     fun testMobile() {
         val wordMobile = "mobile"
         val pMobile = Pronunciation("ˈməʊbaɪl", null)
@@ -39,7 +73,7 @@ class TestKeys {
         val paMobile1 = arrayOf(pMobile, pMobileGB, pMobileUS)
         val paMobile2 = arrayOf(pMobile, pMobileGB, pMobileUS)
 
-        val lexMobile0 = Lex(wordMobile, "n", "source1")
+        val lexMobile0 = Lex(wordMobile, "n", "source1").apply { pronunciations = null }
         val lexMobile1 = Lex(wordMobile, "n", "source1").apply { pronunciations = paMobile1 }
         val lexMobile2 = Lex(wordMobile, "n", "source2").apply { pronunciations = paMobile2 }
 
@@ -127,5 +161,10 @@ class TestKeys {
         assertNotEquals(pRowOu, pRowAu)
         assertNotEquals(paRow1, paRow2)
         assertEquals(psRow1, psRow2)
+    }
+
+    companion object {
+
+        private val ps = if (!System.getProperties().containsKey("SILENT")) Tracing.psInfo else Tracing.psNull
     }
 }

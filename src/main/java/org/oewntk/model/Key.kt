@@ -14,7 +14,7 @@ interface Key {
      * (Word, PosOrType)
      *
      * @property word    word: lemma or LC lemma
-     * @property posType pos type: part-of-speech or type
+     * @property posType pos type: part-of-speech or type (P for pos)
      */
     open class W_P(
         val word: String,
@@ -93,8 +93,8 @@ interface Key {
      * (Word, PosOrType, Pronunciations)
      *
      * @param word    word: lemma or LC lemma
-     * @param posType pos type: part-of-speech or type
-     * @property pronunciations pronunciations
+     * @param posType pos type: part-of-speech or type (P)
+     * @property pronunciations pronunciations (A for audio)
      */
     open class W_P_A(
         word: String,
@@ -102,7 +102,7 @@ interface Key {
         val pronunciations: Array<Pronunciation>?,
     ) : W_P(word, posType) {
 
-        private val pronunciationSet: Set<Pronunciation>
+        val pronunciationSet: Set<Pronunciation>
             get() = pronunciations?.toSet() ?: emptySet()
 
         override fun equals(other: Any?): Boolean {
@@ -119,7 +119,7 @@ interface Key {
             if (this.posType != that.posType) {
                 return false
             }
-            return pronunciationSet == pronunciationSet
+            return pronunciationSet == that.pronunciationSet
         }
 
         override fun hashCode(): Int {
@@ -188,8 +188,8 @@ interface Key {
      * (Word, PosOrType, Discriminant) - Shallow key
      *
      * @param word    word: lemma or LC lemma
-     * @param posType pos type: part-of-speech or type
-     * @property discriminant discriminant
+     * @param posType pos type: part-of-speech or type (P for pos)
+     * @property discriminant discriminant (D for discriminant)
      */
     open class W_P_D(
         word: String,

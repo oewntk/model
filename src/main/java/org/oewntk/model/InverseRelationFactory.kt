@@ -38,10 +38,9 @@ object InverseRelationFactory {
     fun makeSynsetRelations(synsetsById: Map<String, Synset>): Int {
         var count = 0
         for ((sourceSynsetId, sourceSynset) in synsetsById) {
-            val relations: Map<String, Set<String>>? = sourceSynset.relations
-            if (!relations.isNullOrEmpty()) {
+            if (!sourceSynset.relations.isNullOrEmpty()) {
                 INVERSE_SYNSET_RELATIONS.keys.forEach {
-                    val targetSynsetIds: Collection<String>? = relations[it]
+                    val targetSynsetIds = sourceSynset.relations!![it]
                     if (!targetSynsetIds.isNullOrEmpty()) {
                         val inverseType = INVERSE_SYNSET_RELATIONS[it]
                         for (targetSynsetId in targetSynsetIds) {
@@ -71,16 +70,15 @@ object InverseRelationFactory {
     fun makeSenseRelations(sensesById: Map<String, Sense>): Int {
         var count = 0
         for ((sourceSenseId, sourceSense) in sensesById) {
-            val relations: Map<String, Set<String>>? = sourceSense.relations
-            if (!relations.isNullOrEmpty()) {
+            if (!sourceSense.relations.isNullOrEmpty()) {
                 INVERSE_SENSE_RELATIONS.keys.forEach {
-                    val targetSenseIds: Collection<String>? = relations[it]
+                    val targetSenseIds = sourceSense.relations!![it]
                     if (!targetSenseIds.isNullOrEmpty()) {
-                        val inverseType = INVERSE_SENSE_RELATIONS[it]
+                        val inverseType = INVERSE_SENSE_RELATIONS[it]!!
                         for (targetSenseId in targetSenseIds) {
                             val targetSense = checkNotNull(sensesById[targetSenseId])
                             try {
-                                targetSense.addInverseRelation(inverseType!!, sourceSenseId)
+                                targetSense.addInverseRelation(inverseType, sourceSenseId)
                                 count++
                             } catch (e: IllegalArgumentException) {
                                 if (LOG_ALREADY_PRESENT) {

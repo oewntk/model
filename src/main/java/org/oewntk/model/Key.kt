@@ -99,11 +99,8 @@ interface Key {
     open class W_P_A(
         word: String,
         posType: Char,
-        val pronunciations: Array<Pronunciation>?,
+        val pronunciations: Set<Pronunciation>?,
     ) : W_P(word, posType) {
-
-        val pronunciationSet: Set<Pronunciation>
-            get() = pronunciations?.toSet() ?: emptySet()
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -119,11 +116,13 @@ interface Key {
             if (this.posType != that.posType) {
                 return false
             }
-            return pronunciationSet == that.pronunciationSet
+            val p1 = pronunciations ?: emptySet()
+            val p2 = that.pronunciations ?: emptySet()
+            return p1 == p2
         }
 
         override fun hashCode(): Int {
-            return Objects.hash(word, posType, pronunciations.contentHashCode())
+            return Objects.hash(word, posType, pronunciations)
         }
 
         override fun compareTo(other: W_P): Int {
@@ -134,7 +133,7 @@ interface Key {
         }
 
         override fun toString(): String {
-            return "($word,$posType,${pronunciations.contentToString()})"
+            return "($word,$posType,$pronunciations)"
         }
 
         override fun toLongString(): String {
@@ -167,15 +166,21 @@ interface Key {
                 return of(lex, Lex::lCLemma, Lex::partOfSpeech)
             }
 
-            fun from(lemma: String, type: Char, pronunciations: Array<Pronunciation>): W_P_A {
+            fun from(lemma: LemmaType, type: PosType, pronunciations: Set<Pronunciation>): W_P_A {
                 return W_P_A(lemma, type, pronunciations)
             }
 
-            private val pronunciationsComparator: Comparator<Array<Pronunciation>?> =
-                Comparator { pa1: Array<Pronunciation>?, pa2: Array<Pronunciation>? ->
-                    val ps1 = pa1?.toSet() ?: emptySet()
-                    val ps2 = pa2?.toSet() ?: emptySet()
-                    if (ps1 == ps2) 0 else ps1.toString().compareTo(ps2.toString())
+            private val pronunciationsComparator: Comparator<Set<Pronunciation>?> =
+                Comparator { ps1: Set<Pronunciation>?, ps2: Set<Pronunciation>? ->
+                    val pse1 = ps1 ?: emptySet()
+                    val pse2 = ps2 ?: emptySet()
+                    val c = pse1.size.compareTo(pse2.size)
+                    if (c != 0)
+                        c
+                    else if (pse1 == pse2)
+                        0
+                    else
+                        ps1.toString().compareTo(ps2.toString())
                 }
 
             val wpaComparator = compareBy<W_P_A> { it.word }

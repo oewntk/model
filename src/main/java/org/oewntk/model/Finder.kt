@@ -118,10 +118,10 @@ object Finder {
      * @return sequence of lexes
      * @throws IllegalArgumentException if not found
      */
-    fun getLexesHavingPronunciations(lexes: Sequence<Lex>, pronunciations: Array<Pronunciation>?): Sequence<Lex> {
-        val set = pronunciations?.toSet() ?: emptySet()
+    fun getLexesHavingPronunciations(lexes: Sequence<Lex>, pronunciations: Set<Pronunciation>?): Sequence<Lex> {
+        val p = pronunciations ?: emptySet()
         return lexes
-            .filter { compareAsSets(set, it.pronunciations) }
+            .filter { p == it.pronunciations }
     }
 
     /**

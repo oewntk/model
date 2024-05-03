@@ -30,22 +30,22 @@ import java.util.*
  */
 class Lex(
 
-    val lemma: String,
+    val lemma: LemmaType,
     code: String,
     val source: String?,
 
     ) : Serializable /*, Comparable<Lex> */ {
 
-    val type: Char = code[0]
+    val type: PosType = code[0]
     lateinit var senses: MutableList<Sense>
-    var forms: Array<out String>? = null
-    var pronunciations: Array<Pronunciation>? = null
+    var forms: Array<MorphType>? = null
+    var pronunciations: Set<Pronunciation>? = null
 
     val lCLemma: String
         get() = lemma.lowercase()
     val isCased: Boolean
         get() = lemma != lCLemma
-    val partOfSpeech: Char
+    val partOfSpeech: PosType
         get() = if (this.type == 's') 'a' else this.type
     val discriminant: String? = if (code.length > 1) code.substring(1) else null
 
@@ -64,8 +64,6 @@ class Lex(
     }
 
     override fun hashCode(): Int {
-        var result = Objects.hash(lemma, type, discriminant)
-        result = 31 * result + pronunciations.contentHashCode()
-        return result
+        return Objects.hash(lemma, type, discriminant, pronunciations)
     }
 }

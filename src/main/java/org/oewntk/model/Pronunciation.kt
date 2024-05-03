@@ -15,7 +15,7 @@ import java.util.*
 class Pronunciation(
     val value: PronunciationValueType,
     val variety: PronunciationVarietyType?,
-) : Serializable {
+) : Comparable<Pronunciation>, Serializable {
 
     // identify
 
@@ -38,6 +38,16 @@ class Pronunciation(
 
     override fun toString(): String {
         return if (variety != null) "[$variety] /$value/" else "/$value/"
+    }
+
+    // order
+
+    val comparator: Comparator<Pronunciation> = compareBy(Pronunciation::variety).thenBy(Pronunciation::value)
+
+    val comparatorNull: Comparator<Pronunciation?> = nullsFirst(comparator)
+
+    override fun compareTo(other: Pronunciation): Int {
+        return comparator.compare(this, other)
     }
 
     companion object {

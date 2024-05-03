@@ -151,7 +151,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
     open class F_W_P_A private constructor(
         word: String,
         posType: Char,
-        pronunciations: Array<Pronunciation>?,
+        pronunciations: Set<Pronunciation>?,
         val wordExtractor: (Lex) -> String,
         val posTypeExtractor: (Lex) -> Char,
     ) : W_P_A(word, posType, pronunciations) {
@@ -164,7 +164,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
         class Mono private constructor(
             word: String,
             posType: Char,
-            pronunciations: Array<Pronunciation>?,
+            pronunciations: Set<Pronunciation>?,
             wordExtractor: (Lex) -> String,
             posTypeExtractor: (Lex) -> Char,
         ) : F_W_P_A(word, posType, pronunciations, wordExtractor, posTypeExtractor), MonoValued {
@@ -202,7 +202,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
                     posTypeExtractor: (Lex) -> Char,
                     word: String,
                     posType: Char,
-                    pronunciations: Array<Pronunciation>,
+                    pronunciations: Set<Pronunciation>,
                 ): Mono {
                     return Mono(word, posType, pronunciations, wordExtractor, posTypeExtractor)
                 }
@@ -215,7 +215,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
         class Multi private constructor(
             word: String,
             posType: Char,
-            pronunciations: Array<Pronunciation>?,
+            pronunciations: Set<Pronunciation>?,
             wordExtractor: (Lex) -> String,
             posTypeExtractor: (Lex) -> Char,
         ) : F_W_P_A(word, posType, pronunciations, wordExtractor, posTypeExtractor), MultiValued {
@@ -255,7 +255,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
                     posTypeExtractor: (Lex) -> Char,
                     word: String,
                     posType: Char,
-                    pronunciations: Array<Pronunciation>,
+                    pronunciations: Set<Pronunciation>,
                 ): Multi {
                     return Multi(word, posType, pronunciations, wordExtractor, posTypeExtractor)
                 }

@@ -101,24 +101,24 @@ object LibTestModelKeys {
     ): IntArray {
         val lc = cased.lowercase()
         val isCased = lc != cased
-
+        val pset = p.toSet()
         val keys: MutableList<MultiValued> = ArrayList()
         for (posType in posTypes) {
-            keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, cased, posType, p))
+            keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, cased, posType, pset))
             if (p.size > 1) {
-                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, cased, posType, arrayOf(p[1], p[0])))
+                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, cased, posType, pset))
             }
             if (isCased) {
-                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, lc, posType, p))
-                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::type, lc, posType, p))
-                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::type, lc, posType, p))
+                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, lc, posType, pset))
+                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::type, lc, posType, pset))
+                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::type, lc, posType, pset))
             }
             if (posType == 's' || posType == 'a') {
-                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::partOfSpeech, cased, posType, p))
+                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::partOfSpeech, cased, posType, pset))
                 if (isCased) {
-                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::partOfSpeech, lc, posType, p))
-                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::partOfSpeech, lc, posType, p))
-                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::partOfSpeech, lc, posType, p))
+                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::partOfSpeech, lc, posType, pset))
+                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::partOfSpeech, lc, posType, pset))
+                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::partOfSpeech, lc, posType, pset))
                 }
             }
         }
@@ -173,25 +173,26 @@ object LibTestModelKeys {
     ): IntArray {
         val lc = cased.lowercase()
         val isCased = lc != cased
+        val pset = p.toSet()
 
         val keys: MutableList<MonoValued> = ArrayList()
         for (posType in posTypes) {
-            keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::type, cased, posType, p))
+            keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::type, cased, posType, pset))
             if (p.size > 1) {
-                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::type, cased, posType, arrayOf(p[1], p[0])))
+                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::type, cased, posType, pset))
             }
             if (isCased) {
-                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::type, cased.lowercase(), posType, p))
-                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), posType, p))
-                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), posType, p))
+                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::type, cased.lowercase(), posType, pset))
+                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), posType, pset))
+                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), posType, pset))
             }
 
             if (posType == 's' || posType == 'a') {
-                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::partOfSpeech, cased, posType, p))
+                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::partOfSpeech, cased, posType, pset))
                 if (isCased) {
-                    keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::partOfSpeech, cased.lowercase(), posType, p))
-                    keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), posType, p))
-                    keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), posType, p))
+                    keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::partOfSpeech, cased.lowercase(), posType, pset))
+                    keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), posType, pset))
+                    keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), posType, pset))
                 }
             }
         }
@@ -264,7 +265,7 @@ object LibTestModelKeys {
     ): IntArray {
         val keys: MutableList<MultiValued> = ArrayList()
         for (p in pronunciations) {
-            keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::partOfSpeech, lemma, type, arrayOf(p!!)))
+            keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::partOfSpeech, lemma, type, setOf(p!!)))
         }
         keys.add(KeyF.F_W_P.Multi.from(Lex::lemma, Lex::type, lemma, type))
         return testKeysMulti(model, ps, lemma, *keys.toTypedArray<MultiValued>())

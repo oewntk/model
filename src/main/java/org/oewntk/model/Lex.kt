@@ -38,7 +38,7 @@ class Lex(
 
     val type: PosType = code[0]
     lateinit var senses: MutableList<Sense>
-    var forms: Array<MorphType>? = null
+    var forms: Set<MorphType>? = null
     var pronunciations: Set<Pronunciation>? = null
 
     val lCLemma: String

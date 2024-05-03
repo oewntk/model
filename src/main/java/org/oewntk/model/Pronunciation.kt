@@ -13,8 +13,8 @@ import java.util.*
  * @property variety variety
  */
 class Pronunciation(
-    val value: String,
-    val variety: String?,
+    val value: PronunciationValueType,
+    val variety: PronunciationVarietyType?,
 ) : Serializable {
 
     // identify

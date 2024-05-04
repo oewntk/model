@@ -11,7 +11,7 @@ import java.util.*
 object SenseGroupings {
 
     // S E N S E   M A P S
-    
+
     /**
      * Senses grouped and mapped by lower-cased lemma
      *
@@ -23,7 +23,7 @@ object SenseGroupings {
             .groupBy(Sense::lCLemma)
             .mapValues { it.value.toSet() }
     }
-    
+
     /**
      * Senses grouped and mapped by lower-cased lemma and part-of-speech
      *

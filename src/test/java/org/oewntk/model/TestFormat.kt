@@ -29,21 +29,21 @@ class TestFormat {
 
     @Test
     fun testMapWithNewLine() {
-        val r = map.joinToString(entrySeparator="\n")
+        val r = map.joinToString(entrySeparator = "\n")
         ps.println(r)
         assertEquals("[1]=a,b,c,d\n[2]=e,f,g,h\n[3]=i,j,k,l\n[4]=m,n,o,p\n[5]=q,r,s,t\n[6]=u,v,w,x\n[7]=y,z", r)
     }
 
     @Test
     fun testMapWithValueSeparator() {
-        val r = map.joinToString(entrySeparator="\n", valueSeparator="#")
+        val r = map.joinToString(entrySeparator = "\n", valueSeparator = "#")
         ps.println(r)
         assertEquals("[1]=a#b#c#d\n[2]=e#f#g#h\n[3]=i#j#k#l\n[4]=m#n#o#p\n[5]=q#r#s#t\n[6]=u#v#w#x\n[7]=y#z", r)
     }
 
     @Test
     fun testMapWithValueSeparatorAndPrefixAndPostFix() {
-        val r = map.joinToString(entrySeparator="\n", valueSeparator=" ", valuePrefix = "{", valuePostfix ="}")
+        val r = map.joinToString(entrySeparator = "\n", valueSeparator = " ", valuePrefix = "{", valuePostfix = "}")
         ps.println(r)
         assertEquals("[1]={a b c d}\n[2]={e f g h}\n[3]={i j k l}\n[4]={m n o p}\n[5]={q r s t}\n[6]={u v w x}\n[7]={y z}", r)
     }

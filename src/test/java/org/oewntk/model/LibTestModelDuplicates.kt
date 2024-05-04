@@ -25,13 +25,13 @@ object LibTestModelDuplicates {
     }
 
     private fun testDuplicatesForKeyMulti(model: CoreModel, keyGetter: (Lex) -> MultiValued, ps: PrintStream) {
-        val dups = model.lexes 
+        val dups = model.lexes
             .map(keyGetter) // sequence of keys
             .groupBy { it }
             .mapValues { it.value.size } // map(key, count))
             .entries // sequence  of (key,count) entries
             .filter { it.value > 1 } // if map value > 1, duplicate element
-            .sortedBy { it.key.toString() } 
+            .sortedBy { it.key.toString() }
             .toSet()
         ps.println(dups.size)
         dups.forEach { ps.println(it) }

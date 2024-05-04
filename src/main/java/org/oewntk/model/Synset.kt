@@ -3,9 +3,9 @@
  */
 package org.oewntk.model
 
+import org.oewntk.model.Formatter.joinToString
 import java.io.Serializable
 import java.util.*
-import org.oewntk.model.Formatter.joinToString
 
 /**
  * Synset
@@ -138,8 +138,8 @@ data class Synset(
     // stringify
 
     override fun toString(): String {
-        val membersStr = members.joinToString( ",")
-        val relationsStr = relations.joinToString( ",")
+        val membersStr = members.joinToString(",")
+        val relationsStr = relations.joinToString(",")
         return "$synsetId $type {$membersStr} '$definition' {$relationsStr}"
     }
 

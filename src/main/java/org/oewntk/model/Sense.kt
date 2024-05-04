@@ -3,9 +3,9 @@
  */
 package org.oewntk.model
 
+import org.oewntk.model.Formatter.joinToString
 import java.io.Serializable
 import java.util.*
-import org.oewntk.model.Formatter.joinToString
 
 /**
  * Sense

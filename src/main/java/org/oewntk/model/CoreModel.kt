@@ -5,16 +5,27 @@ package org.oewntk.model
 
 import org.oewntk.model.MapFactory.sensesById
 import org.oewntk.model.MapFactory.synsetsById
-import java.io.File
 import java.io.Serializable
-import java.util.*
+
+/**
+ * Sealed Base language model
+ *
+ * @property lexes          lexical items (unmodifiable)
+ * @property senses         senses (unmodifiable)
+ * @property synsets        synsets (unmodifiable)
+ * @property source         source, typically input directory
+ */
+@kotlinx.serialization.Serializable
+sealed class BaseModel : Serializable {
+
+    abstract val lexes: Collection<Lex>
+    abstract val senses: Collection<Sense>
+    abstract val synsets: Collection<Synset>
+    abstract var source: String?
+}
 
 /**
  * Base language model
- *
- * @param lexes             lexical items
- * @param senses            senses
- * @param synsets           synsets
  *
  * @property lexes          lexical items (unmodifiable)
  * @property senses         senses (unmodifiable)
@@ -24,20 +35,21 @@ import java.util.*
  * @property lexesByLCLemma transient lexical items mapped by lower-cased lemma written form
  * @property sensesById     transient senses mapped by sense id (sensekey)
  * @property synsetsById    transient synsets mapped by synset id
- *
  */
-//@kotlinx.serialization.Serializable
-open class CoreModel(
-    lexes: Collection<Lex>,
-    senses: Collection<Sense>,
-    synsets: Collection<Synset>,
+@kotlinx.serialization.Serializable
+open class CoreModel private constructor(
+    override val lexes: Collection<Lex>,
+    override val senses: Collection<Sense>,
+    override val synsets: Collection<Synset>,
+    override var source: String?,
 
-    ) : Serializable {
+    ) : BaseModel(), Serializable {
 
-    val lexes: Collection<Lex> = Collections.unmodifiableCollection(lexes)
-    val senses: Collection<Sense> = Collections.unmodifiableCollection(senses)
-    val synsets: Collection<Synset> = Collections.unmodifiableCollection(synsets)
-    var source: String? = null
+    constructor (
+        lexes: Collection<Lex>,
+        senses: Collection<Sense>,
+        synsets: Collection<Synset>,
+    ) : this(lexes, senses, synsets, null)
 
     /**
      * Cached

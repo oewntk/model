@@ -40,6 +40,7 @@ import java.util.*
  * @property intTagCount      integer tag count
  * @property source           sense source
  */
+@kotlinx.serialization.Serializable
 data class Sense(
     private val senseId: SenseKey,
     val lex: Lex,

@@ -13,6 +13,7 @@ import java.io.Serializable
  * @property senseNum sense num
  * @property count    tag count
  */
+@kotlinx.serialization.Serializable
 data class TagCount(
     private val senseNum: Int,
     val count: Int,

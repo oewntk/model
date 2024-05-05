@@ -31,11 +31,12 @@ interface KeyF<R> : Key, (CoreModel) -> R {
      * @property posTypeExtractor part-of-speech or type extractor function from lex
      */
     open class F_W_P private constructor(
-        word: String,
-        posType: Char,
+        override var word: String,
+        override var posType: Char,
         val wordExtractor: (Lex) -> String,
         val posTypeExtractor: (Lex) -> Char,
-    ) : W_P(word, posType) {
+
+        ) : W_P(word, posType) {
 
         override fun toLongString(): String = "KEYF ${javaClass.simpleName} WP_${toWordExtractorString(wordExtractor)}_${toPosTypeExtractorString(posTypeExtractor)} $this"
 

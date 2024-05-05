@@ -31,6 +31,7 @@ import java.util.*
  * @property verbTemplates        verb templates (unmodifiable)
  * @property source2              source2
  */
+//@kotlinx.serialization.Serializable
 class Model(
     lexes: Collection<Lex>,
     senses: Collection<Sense>,
@@ -43,7 +44,7 @@ class Model(
 
     val verbFrames: Collection<VerbFrame> = Collections.unmodifiableCollection(verbFrames)
     private val verbTemplates: Collection<VerbTemplate> = Collections.unmodifiableCollection(verbTemplates)
-    var source2: File? = null
+    var source2: String? = null
 
     /**
      * Init
@@ -116,7 +117,7 @@ class Model(
     /**
      * Input sources
      */
-    val sources: Array<File?>
+    val sources: Array<String?>
         get() = arrayOf(source, source2)
 
     /**

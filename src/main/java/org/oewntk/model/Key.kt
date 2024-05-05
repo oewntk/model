@@ -10,16 +10,25 @@ interface Key {
 
     fun toLongString(): String
 
+    @kotlinx.serialization.Serializable
+    sealed class BaseKey : Key /*, Comparable<W_P> */, Serializable {
+
+        abstract val word: String
+
+        abstract val posType: Char
+    }
+
     /**
      * (Word, PosOrType)
      *
      * @property word    word: lemma or LC lemma
      * @property posType pos type: part-of-speech or type (P for pos)
      */
+    @kotlinx.serialization.Serializable
     open class W_P(
-        val word: String,
-        val posType: Char,
-    ) : Key, Comparable<W_P>, Serializable {
+        override val word: String,
+        override val posType: Char,
+    ) : BaseKey(), Comparable<W_P>, Serializable {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -86,6 +95,7 @@ interface Key {
 
             val wpComparator: Comparator<W_P> = Comparator.comparing { obj: W_P -> obj.word }
                 .thenComparing { obj: W_P -> obj.posType }
+
         }
     }
 
@@ -96,11 +106,12 @@ interface Key {
      * @param posType pos type: part-of-speech or type (P)
      * @property pronunciations pronunciations (A for audio)
      */
+    @kotlinx.serialization.Serializable
     open class W_P_A(
-        word: String,
-        posType: Char,
+        override var word: String,
+        override var posType: Char,
         val pronunciations: Set<Pronunciation>?,
-    ) : W_P(word, posType) {
+    ) : BaseKey(), Comparable<W_P_A> {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -125,11 +136,11 @@ interface Key {
             return Objects.hash(word, posType, pronunciations)
         }
 
-        override fun compareTo(other: W_P): Int {
+        override fun compareTo(other: W_P_A): Int {
             if (this == other) {
                 return 0
             }
-            return wpaComparator.compare(this, other as W_P_A)
+            return wpaComparator.compare(this, other)
         }
 
         override fun toString(): String {
@@ -196,11 +207,12 @@ interface Key {
      * @param posType pos type: part-of-speech or type (P for pos)
      * @property discriminant discriminant (D for discriminant)
      */
+    @kotlinx.serialization.Serializable
     open class W_P_D(
-        word: String,
-        posType: Char,
+        override val word: String,
+        override val posType: Char,
         val discriminant: String?,
-    ) : W_P(word, posType) {
+    ) : BaseKey(), Comparable<W_P_D> {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -223,11 +235,11 @@ interface Key {
             return Objects.hash(word, posType, discriminant)
         }
 
-        override fun compareTo(other: W_P): Int {
+        override fun compareTo(other: W_P_D): Int {
             if (this == other) {
                 return 0
             }
-            return wpdComparator.compare(this, other as W_P_D)
+            return wpdComparator.compare(this, other)
         }
 
         override fun toString(): String {

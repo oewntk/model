@@ -12,6 +12,7 @@ import java.util.*
  * @property value   value in IPA
  * @property variety variety
  */
+@kotlinx.serialization.Serializable
 class Pronunciation(
     val value: PronunciationValueType,
     val variety: PronunciationVarietyType?,

@@ -32,6 +32,7 @@ import java.util.*
  * @property definition   first definition
  * @property lexfile      partOfSpeech.domain
  */
+@kotlinx.serialization.Serializable
 data class Synset(
 
     val synsetId: SynsetId,

@@ -26,6 +26,7 @@ import java.util.*
  * @property synsetsById    transient synsets mapped by synset id
  *
  */
+//@kotlinx.serialization.Serializable
 open class CoreModel(
     lexes: Collection<Lex>,
     senses: Collection<Sense>,
@@ -36,7 +37,7 @@ open class CoreModel(
     val lexes: Collection<Lex> = Collections.unmodifiableCollection(lexes)
     val senses: Collection<Sense> = Collections.unmodifiableCollection(senses)
     val synsets: Collection<Synset> = Collections.unmodifiableCollection(synsets)
-    var source: File? = null
+    var source: String? = null
 
     /**
      * Cached

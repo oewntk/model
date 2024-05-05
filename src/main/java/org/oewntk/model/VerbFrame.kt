@@ -13,6 +13,7 @@ import java.io.Serializable
  * @property id    verb frame id
  * @property frame verb frame
  */
+@kotlinx.serialization.Serializable
 data class VerbFrame(
 
     val id: VerbFrameType,

@@ -13,6 +13,7 @@ import java.io.Serializable
  * @property id       verb template id
  * @property template verb template
  */
+@kotlinx.serialization.Serializable
 data class VerbTemplate(
 
     val id: VerbTemplateType,

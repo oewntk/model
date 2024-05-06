@@ -43,8 +43,10 @@ class Pronunciation(
 
     // order
 
+    @Transient
     val comparator: Comparator<Pronunciation> = compareBy(Pronunciation::variety).thenBy(Pronunciation::value)
 
+    @Transient
     val comparatorNull: Comparator<Pronunciation?> = nullsFirst(comparator)
 
     override fun compareTo(other: Pronunciation): Int {

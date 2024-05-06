@@ -24,6 +24,20 @@ sealed class BaseModel : Serializable {
     abstract var source: String?
 }
 
+@kotlinx.serialization.Serializable
+data class DataCoreModel(
+    override val lexes: Collection<Lex>,
+    override val senses: Collection<Sense>,
+    override val synsets: Collection<Synset>,
+    override var source: String? = null,
+
+    ) : BaseModel(), Serializable {
+
+    constructor (
+        model: CoreModel,
+    ) : this(model.lexes, model.senses, model.synsets, model.source)
+}
+
 /**
  * Base language model
  *
@@ -37,19 +51,22 @@ sealed class BaseModel : Serializable {
  * @property synsetsById    transient synsets mapped by synset id
  */
 @kotlinx.serialization.Serializable
-open class CoreModel private constructor(
+open class CoreModel(
     override val lexes: Collection<Lex>,
     override val senses: Collection<Sense>,
     override val synsets: Collection<Synset>,
-    override var source: String?,
+    override var source: String? = null,
 
     ) : BaseModel(), Serializable {
 
+    /**
+     * Constructor from data
+     *
+     * @param data data core model
+     */
     constructor (
-        lexes: Collection<Lex>,
-        senses: Collection<Sense>,
-        synsets: Collection<Synset>,
-    ) : this(lexes, senses, synsets, null)
+        data: DataCoreModel,
+    ) : this(data.lexes, data.senses, data.synsets, data.source)
 
     /**
      * Cached

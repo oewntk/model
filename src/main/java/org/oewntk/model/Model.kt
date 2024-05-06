@@ -4,8 +4,24 @@
 package org.oewntk.model
 
 import org.oewntk.model.MapFactory.map
-import java.io.File
-import java.util.*
+import java.io.Serializable
+
+@kotlinx.serialization.Serializable
+data class DataModel(
+    override val lexes: Collection<Lex>,
+    override val senses: Collection<Sense>,
+    override val synsets: Collection<Synset>,
+    override var source: String?,
+    val verbFrames: Collection<VerbFrame>,
+    val verbTemplates: Collection<VerbTemplate>,
+    var source2: String? = null,
+
+    ) : BaseModel(), Serializable {
+
+    constructor (
+        model: Model,
+    ) : this(model.lexes, model.senses, model.synsets, model.source, model.verbFrames, model.verbTemplates, model.source2)
+}
 
 /**
  * Language model
@@ -15,8 +31,6 @@ import java.util.*
  * @param  synsets                synsets
  * @param  verbFrames             verb frames
  * @param  verbTemplates          verb templates
- * @param  senseToVerbTemplates   sensekey-to-verb template
- * @param  senseToTagCounts       sensekey-to-tagcount
  *
  * @property lexes                lexes (inherited, unmodifiable)
  * @property senses               senses (inherited, unmodifiable)
@@ -31,25 +45,37 @@ import java.util.*
  * @property verbTemplates        verb templates (unmodifiable)
  * @property source2              source2
  */
-//@kotlinx.serialization.Serializable
-class Model(
-    lexes: Collection<Lex>,
-    senses: Collection<Sense>,
-    synsets: Collection<Synset>,
-    verbFrames: Collection<VerbFrame>,
-    verbTemplates: Collection<VerbTemplate>,
-    senseToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateType>>>,
-    senseToTagCounts: Collection<Pair<SenseKey, TagCount>>,
+class Model private constructor(
+    override val lexes: Collection<Lex>,
+    override val senses: Collection<Sense>,
+    override val synsets: Collection<Synset>,
+    val verbFrames: Collection<VerbFrame>,
+    val verbTemplates: Collection<VerbTemplate>,
 ) : CoreModel(lexes, senses, synsets) {
 
-    val verbFrames: Collection<VerbFrame> = Collections.unmodifiableCollection(verbFrames)
-    private val verbTemplates: Collection<VerbTemplate> = Collections.unmodifiableCollection(verbTemplates)
     var source2: String? = null
 
     /**
-     * Init
+     * Language model
+     *
+     * @param  lexes                  lexes
+     * @param  senses                 senses
+     * @param  synsets                synsets
+     * @param  verbFrames             verb frames
+     * @param  verbTemplates          verb templates
+     * @param  senseToVerbTemplates   sensekey-to-verb template
+     * @param  senseToTagCounts       sensekey-to-tagcount
      */
-    init {
+    constructor(
+        lexes: Collection<Lex>,
+        senses: Collection<Sense>,
+        synsets: Collection<Synset>,
+        verbFrames: Collection<VerbFrame>,
+        verbTemplates: Collection<VerbTemplate>,
+        senseToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateType>>>,
+        senseToTagCounts: Collection<Pair<SenseKey, TagCount>>,
+    ) : this(lexes, senses, synsets, verbFrames, verbTemplates) {
+
         // set sense's verb templates
         for ((sensekey, templatesIds) in senseToVerbTemplates) {
             val sense = sensesById?.get(sensekey)
@@ -61,6 +87,18 @@ class Model(
             val sense = sensesById?.get(sensekey)
             sense?.tagCount = tagCount
         }
+    }
+
+    /**
+     * Constructor from data
+     *
+     * @param data data core model
+     */
+    constructor (
+        data: DataModel,
+    ) : this(data.lexes, data.senses, data.synsets, data.verbFrames, data.verbTemplates) {
+        source = data.source
+        source2 = data.source2
     }
 
     /**

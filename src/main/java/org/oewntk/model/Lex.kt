@@ -25,7 +25,7 @@ import java.util.*
  * @property discriminant   discriminates same type entries
  */
 @kotlinx.serialization.Serializable
-class Lex private constructor(
+data class Lex(
 
     val lemma: LemmaType,
     val type: PosType,

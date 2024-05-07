@@ -101,24 +101,24 @@ object LibTestModelKeys {
     ): IntArray {
         val lc = cased.lowercase()
         val isCased = lc != cased
-        val pset = p.toSet()
+        val pSet = p.toSet()
         val keys: MutableList<MultiValued> = ArrayList()
         for (posType in posTypes) {
-            keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, cased, posType, pset))
+            keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, cased, posType, pSet))
             if (p.size > 1) {
-                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, cased, posType, pset))
+                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, cased, posType, pSet))
             }
             if (isCased) {
-                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, lc, posType, pset))
-                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::type, lc, posType, pset))
-                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::type, lc, posType, pset))
+                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, lc, posType, pSet))
+                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::type, lc, posType, pSet))
+                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::type, lc, posType, pSet))
             }
             if (posType == 's' || posType == 'a') {
-                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::partOfSpeech, cased, posType, pset))
+                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::partOfSpeech, cased, posType, pSet))
                 if (isCased) {
-                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::partOfSpeech, lc, posType, pset))
-                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::partOfSpeech, lc, posType, pset))
-                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::partOfSpeech, lc, posType, pset))
+                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::partOfSpeech, lc, posType, pSet))
+                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::partOfSpeech, lc, posType, pSet))
+                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::partOfSpeech, lc, posType, pSet))
                 }
             }
         }

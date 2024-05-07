@@ -89,23 +89,16 @@ data class Synset(
         lemma2Lexes: (lemma: LemmaType) -> Collection<Lex>,
         senseKey2Sense: (senseKey: SenseKey) -> Sense,
     ): List<Sense> {
-        val senses = ArrayList<Sense>()
-        for (member in members) {
-            val lexes = lemma2Lexes(member)
-            for (lex in lexes) {
-                if (lex.partOfSpeech != partOfSpeech) {
-                    continue
-                }
-                lex.senseKeys
-                    .asSequence()
-                    .map { sk -> senseKey2Sense(sk) }
-                    .filter { s -> s.synsetId == synsetId }
-                    .forEach {
-                        senses.add(it)
-                    }
-            }
-        }
-        return senses
+
+        return members
+            .asSequence()
+            .map { lemma2Lexes(it) }
+            .flatMap { it.asSequence() }
+            .filter { it.partOfSpeech == this.partOfSpeech }
+            .flatMap { it.senseKeys }
+            .map { sk -> senseKey2Sense(sk) }
+            .filter { s -> s.synsetId == this.synsetId }
+            .toList()
     }
 
     /**

@@ -16,7 +16,7 @@ import java.io.Serializable
 @kotlinx.serialization.Serializable
 data class VerbFrame(
 
-    val id: VerbFrameType,
+    val id: VerbFrameId,
     val frame: String,
 
     ) : Serializable {

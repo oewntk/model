@@ -28,7 +28,7 @@ import java.util.*
 data class Lex(
 
     val lemma: LemmaType,
-    val type: PosType,
+    val type: PosId,
     val discriminant: String?,
     var senseKeys: MutableList<SenseKey>,
     val source: String?,
@@ -38,11 +38,11 @@ data class Lex(
     var forms: Set<MorphType>? = null
     var pronunciations: Set<Pronunciation>? = null
 
-    val lCLemma: String
+    val lCLemma: LemmaType
         get() = lemma.lowercase()
     val isCased: Boolean
         get() = lemma != lCLemma
-    val partOfSpeech: PosType
+    val partOfSpeech: PosId
         get() = if (this.type == 's') 'a' else this.type
 
     /**

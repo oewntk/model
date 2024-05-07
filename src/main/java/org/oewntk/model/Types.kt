@@ -5,13 +5,15 @@
 package org.oewntk.model
 
 typealias LemmaType = String
-typealias SenseKey = String
-typealias SynsetId = String
-typealias RelationType = String
-typealias PosType = Char
-typealias VerbFrameType = String
-typealias VerbTemplateType = Int
-typealias AdjPositionType = String
 typealias MorphType = String
 typealias PronunciationValueType = String
 typealias PronunciationVarietyType = String
+
+typealias SenseKey = String
+typealias SynsetId = String
+typealias RelationId = String
+typealias PosId = Char
+typealias VerbFrameId = String
+typealias VerbTemplateId = Int
+
+typealias AdjPositionType = String

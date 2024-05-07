@@ -15,7 +15,7 @@ interface Key {
 
         abstract val word: LemmaType
 
-        abstract val pos: PosType
+        abstract val pos: PosId
     }
 
     /**
@@ -27,7 +27,7 @@ interface Key {
     @kotlinx.serialization.Serializable
     open class W_P(
         override val word: LemmaType,
-        override val pos: PosType,
+        override val pos: PosId,
     ) : BaseKey(), Comparable<W_P>, Serializable {
 
         override fun equals(other: Any?): Boolean {
@@ -68,7 +68,7 @@ interface Key {
             fun of(
                 lex: Lex,
                 wordExtractor: (Lex) -> LemmaType,
-                posExtractor: (Lex) -> PosType,
+                posExtractor: (Lex) -> PosId,
             ): W_P {
                 return W_P(wordExtractor(lex), posExtractor(lex))
             }
@@ -89,7 +89,7 @@ interface Key {
                 return of(lex, Lex::lCLemma, Lex::partOfSpeech)
             }
 
-            fun from(word: LemmaType, pos: PosType): W_P {
+            fun from(word: LemmaType, pos: PosId): W_P {
                 return W_P(word, pos)
             }
 
@@ -109,7 +109,7 @@ interface Key {
     @kotlinx.serialization.Serializable
     open class W_P_A(
         override var word: LemmaType,
-        override var pos: PosType,
+        override var pos: PosId,
         val pronunciations: Set<Pronunciation>?,
     ) : BaseKey(), Comparable<W_P_A> {
 
@@ -156,7 +156,7 @@ interface Key {
             fun of(
                 lex: Lex,
                 wordExtractor: (Lex) -> LemmaType,
-                posExtractor: (Lex) -> PosType,
+                posExtractor: (Lex) -> PosId,
             ): W_P_A {
                 return W_P_A(wordExtractor(lex), posExtractor(lex), lex.pronunciations)
             }
@@ -177,7 +177,7 @@ interface Key {
                 return of(lex, Lex::lCLemma, Lex::partOfSpeech)
             }
 
-            fun from(lemma: LemmaType, type: PosType, pronunciations: Set<Pronunciation>): W_P_A {
+            fun from(lemma: LemmaType, type: PosId, pronunciations: Set<Pronunciation>): W_P_A {
                 return W_P_A(lemma, type, pronunciations)
             }
 
@@ -210,7 +210,7 @@ interface Key {
     @kotlinx.serialization.Serializable
     open class W_P_D(
         override val word: LemmaType,
-        override val pos: PosType,
+        override val pos: PosId,
         val discriminant: String?,
     ) : BaseKey(), Comparable<W_P_D> {
 
@@ -255,7 +255,7 @@ interface Key {
             fun of(
                 lex: Lex,
                 wordExtractor: (Lex) -> LemmaType,
-                posExtractor: (Lex) -> PosType,
+                posExtractor: (Lex) -> PosId,
             ): W_P_D {
                 return W_P_D(wordExtractor(lex), posExtractor(lex), lex.discriminant)
             }

@@ -36,12 +36,12 @@ import java.util.*
 data class Synset(
 
     val synsetId: SynsetId,
-    val type: PosType,
+    val type: PosId,
     val domain: String,
-    val members: Array<String>,
+    val members: Array<LemmaType>,
     val definitions: Array<String>,
     val examples: Array<String>? = null,
-    var relations: MutableMap<RelationType, MutableSet<SynsetId>>? = null,
+    var relations: MutableMap<RelationId, MutableSet<SynsetId>>? = null,
     val wikidata: String? = null,
 
     ) : Comparable<Synset>, Serializable {
@@ -67,7 +67,7 @@ data class Synset(
      * @param inverseType    inverse type
      * @param targetSynsetId target synset id
      */
-    fun addInverseRelation(inverseType: String, targetSynsetId: SynsetId) {
+    fun addInverseRelation(inverseType: RelationId, targetSynsetId: SynsetId) {
         if (relations == null) {
             relations = HashMap()
         }
@@ -111,7 +111,7 @@ data class Synset(
      */
     @Throws(IllegalStateException::class)
     fun findSenseOf(
-        lemma: String,
+        lemma: LemmaType,
         lemma2Lexes: (lemma: LemmaType) -> Collection<Lex>?,
         senseKey2Sense: (senseKey: SenseKey) -> Sense,
     ): Sense {
@@ -130,7 +130,7 @@ data class Synset(
      * @param lemma member lemma
      * @return index of member is members, -1 if not found
      */
-    fun findIndexOfMember(lemma: String): Int {
+    fun findIndexOfMember(lemma: LemmaType): Int {
         val members = members
         val memberList = listOf(*members)
         return memberList.indexOf(lemma)

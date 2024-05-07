@@ -80,7 +80,7 @@ object LibTestModelLexGroups {
         return lexesToString(lexes)
     }
 
-    fun testCISensesGroupingByLCLemmaAndPos(model: CoreModel, word: LemmaType, pos: PosType, ps: PrintStream) {
+    fun testCISensesGroupingByLCLemmaAndPos(model: CoreModel, word: LemmaType, pos: PosId, ps: PrintStream) {
         ps.printf("ci '%s' %s%n", word, pos)
         ps.println(testCISensesGroupingByLCLemmaAndPosString(model, word, pos))
     }
@@ -95,7 +95,7 @@ object LibTestModelLexGroups {
         return sensesToString(senses)
     }
 
-    private fun testCISensesGroupingByLCLemmaAndPosString(model: CoreModel, word: LemmaType, pos: PosType): String {
+    private fun testCISensesGroupingByLCLemmaAndPosString(model: CoreModel, word: LemmaType, pos: PosId): String {
         val senses = sensesForLCLemmaAndPos(model.senses, word, pos)
         return sensesToString(senses)
     }
@@ -125,7 +125,7 @@ object LibTestModelLexGroups {
         Assert.assertEquals(s2, s3)
     }
 
-    private fun testCIHypermapString(lexHyperMap: Map<String, Map<String, Collection<Lex>>>, lemma: LemmaType): String {
+    private fun testCIHypermapString(lexHyperMap: Map<LemmaType, Map<LemmaType, Collection<Lex>>>, lemma: LemmaType): String {
         return lexHypermapForLemmaToString(lexHyperMap, lemma)
     }
 }

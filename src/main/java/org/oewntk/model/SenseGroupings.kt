@@ -18,7 +18,7 @@ object SenseGroupings {
      * @param senses senses
      * @return collections of senses grouped by and mapped by lower-cased lemma
      */
-    fun sensesByLCLemma(senses: Collection<Sense>): Map<String, Collection<Sense>> {
+    fun sensesByLCLemma(senses: Collection<Sense>): Map<LemmaType, Collection<Sense>> {
         return senses
             .groupBy(Sense::lCLemma)
             .mapValues { it.value.toSet() }
@@ -64,7 +64,7 @@ object SenseGroupings {
      * @param pos     target part-of-speech
      * @return collection of senses for this target lower-cased lemma and part-of-speech
      */
-    fun sensesForLCLemmaAndPos(senses: Collection<Sense>, lcLemma: String, pos: PosType): Collection<Sense> {
+    fun sensesForLCLemmaAndPos(senses: Collection<Sense>, lcLemma: LemmaType, pos: PosId): Collection<Sense> {
         return sensesFor(senses, { sense: Sense -> KeyLCLemmaAndPos(sense) }, KeyLCLemmaAndPos.of(lcLemma, pos))
     }
 
@@ -75,7 +75,7 @@ object SenseGroupings {
      * @param lcLemma target lower-cased lemma
      * @return collection of senses for this target lower-cased lemma
      */
-    fun sensesForLCLemma(senses: Collection<Sense>, lcLemma: String): Collection<Sense> {
+    fun sensesForLCLemma(senses: Collection<Sense>, lcLemma: LemmaType): Collection<Sense> {
         return sensesFor(senses, Sense::lCLemma, lcLemma)
     }
 
@@ -102,7 +102,7 @@ object SenseGroupings {
     /**
      * Key that matches how indexes are built in PWN (index.sense and index.(noun|verb|adj|adv)
      */
-    class KeyLCLemmaAndPos(lemma: LemmaType, val pos: PosType) : Comparable<KeyLCLemmaAndPos> {
+    class KeyLCLemmaAndPos(lemma: LemmaType, val pos: PosId) : Comparable<KeyLCLemmaAndPos> {
 
         val lcLemma: LemmaType = lemma.lowercase()
 
@@ -137,7 +137,7 @@ object SenseGroupings {
 
         companion object {
 
-            fun of(lcLemma: String, pos: PosType): KeyLCLemmaAndPos {
+            fun of(lcLemma: LemmaType, pos: PosId): KeyLCLemmaAndPos {
                 return KeyLCLemmaAndPos(lcLemma, pos)
             }
 

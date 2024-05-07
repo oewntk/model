@@ -96,7 +96,7 @@ object MapFactory {
      * @param senses senses
      * @return senses mapped by id
      */
-    fun sensesById(senses: Collection<Sense>): Map<String, Sense> {
+    fun sensesById(senses: Collection<Sense>): Map<SenseKey, Sense> {
         // prioritize cased
         val mergingFunction = { existing: Sense, replacement: Sense ->
             val merged = if (replacement.lex.isCased) (if (existing.lex.isCased) existing else replacement) else existing
@@ -116,7 +116,7 @@ object MapFactory {
      * @param synsets synsets
      * @return synsets mapped by id
      */
-    fun synsetsById(synsets: Collection<Synset>): Map<String, Synset> {
+    fun synsetsById(synsets: Collection<Synset>): Map<SynsetId, Synset> {
         return map(synsets) { it.synsetId }
     }
 }

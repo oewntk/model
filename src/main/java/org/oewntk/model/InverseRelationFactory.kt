@@ -35,7 +35,7 @@ object InverseRelationFactory {
      * @param synsetsById synsets mapped by id
      * @return count
      */
-    fun makeSynsetRelations(synsetsById: Map<String, Synset>): Int {
+    fun makeSynsetRelations(synsetsById: Map<SynsetId, Synset>): Int {
         var count = 0
         for ((sourceSynsetId, sourceSynset) in synsetsById) {
             if (!sourceSynset.relations.isNullOrEmpty()) {
@@ -67,7 +67,7 @@ object InverseRelationFactory {
      * @param sensesById senses mapped by id
      * @return count
      */
-    fun makeSenseRelations(sensesById: Map<String, Sense>): Int {
+    fun makeSenseRelations(sensesById: Map<SenseKey, Sense>): Int {
         var count = 0
         for ((sourceSenseId, sourceSense) in sensesById) {
             if (!sourceSense.relations.isNullOrEmpty()) {

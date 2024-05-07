@@ -16,7 +16,7 @@ import java.io.Serializable
 @kotlinx.serialization.Serializable
 data class VerbTemplate(
 
-    val id: VerbTemplateType,
+    val id: VerbTemplateId,
     val template: String,
 
     ) : Serializable {

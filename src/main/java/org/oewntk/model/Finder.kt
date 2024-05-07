@@ -15,7 +15,7 @@ object Finder {
      * @param lemma lemma (CS)
      * @return collection of lexes
      */
-    fun getLexes(model: CoreModel, lemma: String): Collection<Lex> {
+    fun getLexes(model: CoreModel, lemma: LemmaType): Collection<Lex> {
         return model.lexesByLemma!![lemma]!!
     }
 
@@ -32,9 +32,9 @@ object Finder {
     fun getLexesHaving(
         model: CoreModel,
         word: LemmaType,
-        posTarget: PosType,
+        posTarget: PosId,
         wordExtractor: (Lex) -> LemmaType,
-        posExtractor: (Lex) -> PosType,
+        posExtractor: (Lex) -> PosId,
     ): Sequence<Lex> {
         return model.lexes
             .asSequence()
@@ -50,7 +50,7 @@ object Finder {
      * @param typeFilter type filter
      * @return sequence of lexes
      */
-    fun getLexesHavingType(model: CoreModel, lemma: String, typeFilter: Char): Sequence<Lex>? {
+    fun getLexesHavingType(model: CoreModel, lemma: LemmaType, typeFilter: Char): Sequence<Lex>? {
         return model.lexesByLemma!![lemma]
             ?.asSequence()
             ?.filter { it.type == typeFilter }
@@ -64,7 +64,7 @@ object Finder {
      * @param posFilter part-of-speech filter
      * @return sequence of lexes
      */
-    fun getLexesHavingPos(model: CoreModel, lemma: String, posFilter: Char): Sequence<Lex>? {
+    fun getLexesHavingPos(model: CoreModel, lemma: LemmaType, posFilter: Char): Sequence<Lex>? {
         return model.lexesByLemma!![lemma]
             ?.asSequence()
             ?.filter { it.partOfSpeech == posFilter }
@@ -78,7 +78,7 @@ object Finder {
      * @param typeFilter type filter
      * @return sequence of lexes
      */
-    fun getLcLexesHavingType(model: CoreModel, lcLemma: String, typeFilter: Char): Sequence<Lex>? {
+    fun getLcLexesHavingType(model: CoreModel, lcLemma: LemmaType, typeFilter: Char): Sequence<Lex>? {
         return model.lexesByLCLemma!![lcLemma.lowercase()]
             ?.asSequence()
             ?.filter { it.type == typeFilter }
@@ -92,7 +92,7 @@ object Finder {
      * @param posFilter pos filter
      * @return sequence of lexes
      */
-    fun getLcLexesHavingPos(model: CoreModel, lcLemma: String, posFilter: Char): Sequence<Lex>? {
+    fun getLcLexesHavingPos(model: CoreModel, lcLemma: LemmaType, posFilter: Char): Sequence<Lex>? {
         return model.lexesByLCLemma!![lcLemma.lowercase()]
             ?.asSequence()
             ?.filter { it.partOfSpeech == posFilter }
@@ -105,7 +105,7 @@ object Finder {
      * @param lcLemma lower-cased lemma
      * @return sequence of lexes
      */
-    fun getLcLexes(model: CoreModel, lcLemma: String): Sequence<Lex>? {
+    fun getLcLexes(model: CoreModel, lcLemma: LemmaType): Sequence<Lex>? {
         return model.lexesByLCLemma!![lcLemma.lowercase()]
             ?.asSequence()
     }

@@ -74,10 +74,10 @@ open class CoreModel(
      * A multimap: each value is an array of lexes for the lemma.
      * Emulates (@Transient not allowed for properties with delegates) :
      * @Transient
-     * val lexesByLemma: Map<String, Collection<Lex>> by lazy { LexGroupings.lexesByLemma(lexes) }
+     * val lexesByLemma: Map<LemmaType, Collection<Lex>> by lazy { LexGroupings.lexesByLemma(lexes) }
      */
     @Transient
-    var lexesByLemma: Map<String, Collection<Lex>>? = null
+    var lexesByLemma: Map<VerbFrameId, Collection<Lex>>? = null
         get() {
             if (field == null) {
                 field = LexGroupings.lexesByLemma(lexes)
@@ -92,10 +92,10 @@ open class CoreModel(
      * A multimap: each value is an array of lexes for the lemma.
      * Emulates (@Transient not allowed for properties with delegates) :
      * @Transient
-     * val lexesByLCLemma: Map<String, Collection<Lex>> by lazy { LexGroupings.lexesByLCLemma(lexes) }
+     * val lexesByLCLemma: Map<LemmaType, Collection<Lex>> by lazy { LexGroupings.lexesByLCLemma(lexes) }
      */
     @Transient
-    var lexesByLCLemma: Map<String, Collection<Lex>>? = null
+    var lexesByLCLemma: Map<LemmaType, Collection<Lex>>? = null
         get() {
             if (field == null) {
                 field = LexGroupings.lexesByLCLemma(lexes)
@@ -109,7 +109,7 @@ open class CoreModel(
      * Senses mapped by id (sensekey)
      * Emulates (@Transient not allowed for properties with delegates) :
      * @Transient
-     * val sensesById2: Map<String, Sense> by lazy { sensesById(senses) }
+     * val sensesById2: Map<SenseKey, Sense> by lazy { sensesById(senses) }
      */
     @Transient
     var sensesById: Map<SenseKey, Sense>? = null
@@ -126,7 +126,7 @@ open class CoreModel(
      * Synsets mapped by id (synset id)
      * Emulates (@Transient not allowed for properties with delegates) :
      * @Transient
-     * val synsetsById: Map<String, Synset> by lazy { synsetsById(synsets) }
+     * val synsetsById: Map<SynsetId, Synset> by lazy { synsetsById(synsets) }
      */
     @Transient
     var synsetsById: Map<SynsetId, Synset>? = null
@@ -138,10 +138,10 @@ open class CoreModel(
         }
         private set
 
-    // val lexesByLCLemma: Map<String, Collection<Lex>> by lazy { LexGroupings.lexesByLCLemma(lexes) }
-    // val lexesByLemma: Map<String, Collection<Lex>> by lazy { LexGroupings.lexesByLemma(lexes) }
-    // val sensesById: Map<String, Sense> by lazy { sensesById(senses) }
-    // val synsetsById: Map<String, Synset> by lazy { synsetsById(synsets) }
+    // val lexesByLCLemma: Map<LemmaType, Collection<Lex>> by lazy { LexGroupings.lexesByLCLemma(lexes) }
+    // val lexesByLemma: Map<LemmaType, Collection<Lex>> by lazy { LexGroupings.lexesByLemma(lexes) }
+    // val sensesById: Map<SenseKey, Sense> by lazy { sensesById(senses) }
+    // val synsetsById: Map<SynsetId, Synset> by lazy { synsetsById(synsets) }
 
     /**
      * Generate inverse relations

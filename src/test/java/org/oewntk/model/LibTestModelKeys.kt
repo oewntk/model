@@ -97,7 +97,7 @@ object LibTestModelKeys {
         ps: PrintStream,
         cased: String,
         p: Array<Pronunciation>,
-        vararg poses: PosType,
+        vararg poses: PosId,
     ): IntArray {
         val lc = cased.lowercase()
         val isCased = lc != cased
@@ -134,7 +134,7 @@ object LibTestModelKeys {
         model: CoreModel,
         ps: PrintStream,
         cased: String,
-        vararg poses: PosType,
+        vararg poses: PosId,
     ): IntArray {
         val lc = cased.lowercase()
         val isCased = lc != cased
@@ -169,7 +169,7 @@ object LibTestModelKeys {
         ps: PrintStream,
         cased: String,
         p: Array<Pronunciation>,
-        vararg poses: PosType,
+        vararg poses: PosId,
     ): IntArray {
         val lc = cased.lowercase()
         val isCased = lc != cased
@@ -208,7 +208,7 @@ object LibTestModelKeys {
         model: CoreModel,
         ps: PrintStream,
         cased: String,
-        vararg poses: PosType,
+        vararg poses: PosId,
     ): IntArray {
         val lc = cased.lowercase()
         val isCased = lc != cased

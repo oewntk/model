@@ -72,7 +72,7 @@ class Model private constructor(
         synsets: Collection<Synset>,
         verbFrames: Collection<VerbFrame>,
         verbTemplates: Collection<VerbTemplate>,
-        senseToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateType>>>,
+        senseToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateId>>>,
         senseToTagCounts: Collection<Pair<SenseKey, TagCount>>,
     ) : this(lexes, senses, synsets, verbFrames, verbTemplates) {
 
@@ -114,7 +114,7 @@ class Model private constructor(
         coreModel: CoreModel,
         verbFrames: Collection<VerbFrame>,
         verbTemplates: Collection<VerbTemplate>,
-        sensesToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateType>>>,
+        sensesToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateId>>>,
         sensesToTagCounts: Collection<Pair<SenseKey, TagCount>>,
     ) : this(
         coreModel.lexes,
@@ -130,7 +130,7 @@ class Model private constructor(
      * Verb frames mapped by id
      */
     @Transient
-    var verbFramesById: Map<String, VerbFrame>? = null
+    var verbFramesById: Map<VerbFrameId, VerbFrame>? = null
         get() {
             if (field == null) {
                 field = map(verbFrames) { it.id }
@@ -143,7 +143,7 @@ class Model private constructor(
      * Verb templates mapped by id
      */
     @Transient
-    var verbTemplatesById: Map<Int, VerbTemplate>? = null
+    var verbTemplatesById: Map<VerbTemplateId, VerbTemplate>? = null
         get() {
             if (field == null) {
                 field = map(verbTemplates) { it.id }

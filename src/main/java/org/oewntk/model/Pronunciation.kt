@@ -55,11 +55,11 @@ class Pronunciation(
 
     companion object {
 
-        fun ipa(value: String): Pronunciation {
+        fun ipa(value: PronunciationValueType): Pronunciation {
             return Pronunciation(value, null)
         }
 
-        fun ipa(value: String, variety: String?): Pronunciation {
+        fun ipa(value: PronunciationValueType, variety: PronunciationVarietyType?): Pronunciation {
             return Pronunciation(value, variety)
         }
     }

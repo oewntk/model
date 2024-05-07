@@ -44,12 +44,12 @@ import java.util.*
 data class Sense(
     private val senseId: SenseKey,
     val lex: Lex,
-    val type: PosType,
+    val type: PosId,
     val lexIndex: Int,
     val synsetId: SynsetId,
-    val verbFrames: Array<VerbFrameType>? = null,
+    val verbFrames: Array<VerbFrameId>? = null,
     val adjPosition: AdjPositionType? = null,
-    var relations: MutableMap<RelationType, MutableSet<SenseKey>>? = null,
+    var relations: MutableMap<RelationId, MutableSet<SenseKey>>? = null,
     val examples: Array<String>? = null,
 
     ) : Comparable<Sense>, Serializable {
@@ -58,11 +58,11 @@ data class Sense(
     var tagCount: TagCount? = null
     val senseKey: SenseKey
         get() = senseId
-    val lemma: String
+    val lemma: LemmaType
         get() = lex.lemma
-    val lCLemma: String
+    val lCLemma: LemmaType
         get() = lex.lCLemma
-    val partOfSpeech: Char = if (this.type == 's') 'a' else this.type
+    val partOfSpeech: PosId = if (this.type == 's') 'a' else this.type
     val intTagCount: Int
         get() = if (tagCount == null) 0 else tagCount!!.count
     val source: String?
@@ -76,11 +76,11 @@ data class Sense(
      * @param inverseType    inverse type
      * @param targetSensekey target sense id (sensekey)
      */
-    fun addInverseRelation(inverseType: String, targetSensekey: String) {
+    fun addInverseRelation(inverseType: RelationId, targetSensekey: SenseKey) {
         if (relations == null) {
             relations = HashMap()
         }
-        val inverseRelations = relations!!.computeIfAbsent(inverseType) { _: String? -> LinkedHashSet() }
+        val inverseRelations = relations!!.computeIfAbsent(inverseType) { LinkedHashSet() }
         require(!inverseRelations.contains(targetSensekey)) { "Inverse relation $inverseType from $synsetId to $targetSensekey was already there." }
         inverseRelations.add(targetSensekey)
     }
@@ -93,7 +93,7 @@ data class Sense(
      * @param synsetsById synsets mapped by id
      * @return index of this sense in synset members
      */
-    fun findSynsetIndex(synsetsById: Map<String, Synset>): Int {
+    fun findSynsetIndex(synsetsById: Map<SynsetId, Synset>): Int {
         val synset = synsetsById[synsetId]
         return synset!!.findIndexOfMember(lex.lemma)
     }

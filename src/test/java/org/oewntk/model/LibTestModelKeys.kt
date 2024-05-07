@@ -97,28 +97,28 @@ object LibTestModelKeys {
         ps: PrintStream,
         cased: String,
         p: Array<Pronunciation>,
-        vararg posTypes: Char,
+        vararg poses: PosType,
     ): IntArray {
         val lc = cased.lowercase()
         val isCased = lc != cased
         val pSet = p.toSet()
         val keys: MutableList<MultiValued> = ArrayList()
-        for (posType in posTypes) {
-            keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, cased, posType, pSet))
+        for (pos in poses) {
+            keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, cased, pos, pSet))
             if (p.size > 1) {
-                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, cased, posType, pSet))
+                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, cased, pos, pSet))
             }
             if (isCased) {
-                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, lc, posType, pSet))
-                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::type, lc, posType, pSet))
-                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::type, lc, posType, pSet))
+                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::type, lc, pos, pSet))
+                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::type, lc, pos, pSet))
+                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::type, lc, pos, pSet))
             }
-            if (posType == 's' || posType == 'a') {
-                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::partOfSpeech, cased, posType, pSet))
+            if (pos == 's' || pos == 'a') {
+                keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::partOfSpeech, cased, pos, pSet))
                 if (isCased) {
-                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::partOfSpeech, lc, posType, pSet))
-                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::partOfSpeech, lc, posType, pSet))
-                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::partOfSpeech, lc, posType, pSet))
+                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lemma, Lex::partOfSpeech, lc, pos, pSet))
+                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::partOfSpeech, lc, pos, pSet))
+                    keys.add(KeyF.F_W_P_A.Multi.from(Lex::lCLemma, Lex::partOfSpeech, lc, pos, pSet))
                 }
             }
         }
@@ -134,25 +134,25 @@ object LibTestModelKeys {
         model: CoreModel,
         ps: PrintStream,
         cased: String,
-        vararg posTypes: Char,
+        vararg poses: PosType,
     ): IntArray {
         val lc = cased.lowercase()
         val isCased = lc != cased
 
         val keys: MutableList<MultiValued> = ArrayList()
-        for (posType in posTypes) {
-            keys.add(KeyF.F_W_P.Multi.from(Lex::lemma, Lex::type, cased, posType))
+        for (pos in poses) {
+            keys.add(KeyF.F_W_P.Multi.from(Lex::lemma, Lex::type, cased, pos))
             if (isCased) {
-                keys.add(KeyF.F_W_P.Multi.from(Lex::lemma, Lex::type, lc, posType))
-                keys.add(KeyF.F_W_P.Multi.from(Lex::lCLemma, Lex::type, lc, posType))
-                keys.add(KeyF.F_W_P.Multi.from(Lex::lCLemma, Lex::type, lc, posType))
+                keys.add(KeyF.F_W_P.Multi.from(Lex::lemma, Lex::type, lc, pos))
+                keys.add(KeyF.F_W_P.Multi.from(Lex::lCLemma, Lex::type, lc, pos))
+                keys.add(KeyF.F_W_P.Multi.from(Lex::lCLemma, Lex::type, lc, pos))
             }
-            if (posType == 's' || posType == 'a') {
-                keys.add(KeyF.F_W_P.Multi.from(Lex::lemma, Lex::partOfSpeech, cased, posType))
+            if (pos == 's' || pos == 'a') {
+                keys.add(KeyF.F_W_P.Multi.from(Lex::lemma, Lex::partOfSpeech, cased, pos))
                 if (isCased) {
-                    keys.add(KeyF.F_W_P.Multi.from(Lex::lemma, Lex::partOfSpeech, cased.lowercase(), posType))
-                    keys.add(KeyF.F_W_P.Multi.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), posType))
-                    keys.add(KeyF.F_W_P.Multi.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), posType))
+                    keys.add(KeyF.F_W_P.Multi.from(Lex::lemma, Lex::partOfSpeech, cased.lowercase(), pos))
+                    keys.add(KeyF.F_W_P.Multi.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), pos))
+                    keys.add(KeyF.F_W_P.Multi.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), pos))
                 }
             }
         }
@@ -169,30 +169,30 @@ object LibTestModelKeys {
         ps: PrintStream,
         cased: String,
         p: Array<Pronunciation>,
-        vararg posTypes: Char,
+        vararg poses: PosType,
     ): IntArray {
         val lc = cased.lowercase()
         val isCased = lc != cased
         val pset = p.toSet()
 
         val keys: MutableList<MonoValued> = ArrayList()
-        for (posType in posTypes) {
-            keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::type, cased, posType, pset))
+        for (pos in poses) {
+            keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::type, cased, pos, pset))
             if (p.size > 1) {
-                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::type, cased, posType, pset))
+                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::type, cased, pos, pset))
             }
             if (isCased) {
-                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::type, cased.lowercase(), posType, pset))
-                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), posType, pset))
-                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), posType, pset))
+                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::type, cased.lowercase(), pos, pset))
+                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), pos, pset))
+                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), pos, pset))
             }
 
-            if (posType == 's' || posType == 'a') {
-                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::partOfSpeech, cased, posType, pset))
+            if (pos == 's' || pos == 'a') {
+                keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::partOfSpeech, cased, pos, pset))
                 if (isCased) {
-                    keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::partOfSpeech, cased.lowercase(), posType, pset))
-                    keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), posType, pset))
-                    keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), posType, pset))
+                    keys.add(KeyF.F_W_P_A.Mono.from(Lex::lemma, Lex::partOfSpeech, cased.lowercase(), pos, pset))
+                    keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), pos, pset))
+                    keys.add(KeyF.F_W_P_A.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), pos, pset))
                 }
             }
         }
@@ -208,26 +208,26 @@ object LibTestModelKeys {
         model: CoreModel,
         ps: PrintStream,
         cased: String,
-        vararg posTypes: Char,
+        vararg poses: PosType,
     ): IntArray {
         val lc = cased.lowercase()
         val isCased = lc != cased
 
         val keys: MutableList<MonoValued> = ArrayList()
-        for (posType in posTypes) {
-            keys.add(KeyF.F_W_P.Mono.from(Lex::lemma, Lex::type, cased, posType))
+        for (pos in poses) {
+            keys.add(KeyF.F_W_P.Mono.from(Lex::lemma, Lex::type, cased, pos))
             if (isCased) {
-                keys.add(KeyF.F_W_P.Mono.from(Lex::lemma, Lex::type, cased.lowercase(), posType))
-                keys.add(KeyF.F_W_P.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), posType))
-                keys.add(KeyF.F_W_P.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), posType))
+                keys.add(KeyF.F_W_P.Mono.from(Lex::lemma, Lex::type, cased.lowercase(), pos))
+                keys.add(KeyF.F_W_P.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), pos))
+                keys.add(KeyF.F_W_P.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), pos))
             }
 
-            if (posType == 's' || posType == 'a') {
-                keys.add(KeyF.F_W_P.Mono.from(Lex::lemma, Lex::partOfSpeech, cased, posType))
+            if (pos == 's' || pos == 'a') {
+                keys.add(KeyF.F_W_P.Mono.from(Lex::lemma, Lex::partOfSpeech, cased, pos))
                 if (isCased) {
-                    keys.add(KeyF.F_W_P.Mono.from(Lex::lemma, Lex::partOfSpeech, cased.lowercase(), posType))
-                    keys.add(KeyF.F_W_P.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), posType))
-                    keys.add(KeyF.F_W_P.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), posType))
+                    keys.add(KeyF.F_W_P.Mono.from(Lex::lemma, Lex::partOfSpeech, cased.lowercase(), pos))
+                    keys.add(KeyF.F_W_P.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), pos))
+                    keys.add(KeyF.F_W_P.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), pos))
                 }
             }
         }

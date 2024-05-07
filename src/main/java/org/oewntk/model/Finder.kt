@@ -24,22 +24,22 @@ object Finder {
      *
      * @param model            model
      * @param word             word
-     * @param posTypeFilter    posType filter
+     * @param posTarget        pos target
      * @param wordExtractor    word extractor
-     * @param posTypeExtractor posType extractor
+     * @param posExtractor     pos extractor
      * @return sequence of lexes
      */
     fun getLexesHaving(
         model: CoreModel,
         word: LemmaType,
-        posTypeFilter: PosType,
+        posTarget: PosType,
         wordExtractor: (Lex) -> LemmaType,
-        posTypeExtractor: (Lex) -> PosType,
+        posExtractor: (Lex) -> PosType,
     ): Sequence<Lex> {
         return model.lexes
             .asSequence()
             .filter { word == wordExtractor.invoke(it) }
-            .filter { posTypeFilter == posTypeExtractor.invoke(it) }
+            .filter { posTarget == posExtractor.invoke(it) }
     }
 
     /**

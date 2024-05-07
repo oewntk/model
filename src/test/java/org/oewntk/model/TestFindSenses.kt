@@ -6,58 +6,17 @@ package org.oewntk.model
 import junit.framework.TestCase.assertEquals
 import org.junit.BeforeClass
 import org.junit.Test
+import org.oewntk.model.LibNanoModel.lemma1
+import org.oewntk.model.LibNanoModel.lemma2
+import org.oewntk.model.LibNanoModel.model
+import org.oewntk.model.LibNanoModel.sense11
+import org.oewntk.model.LibNanoModel.sense12
+import org.oewntk.model.LibNanoModel.sense21
+import org.oewntk.model.LibNanoModel.sense22
+import org.oewntk.model.LibNanoModel.synset1
+import org.oewntk.model.LibNanoModel.synset2
 
 class TestFindSenses {
-
-    private val domain1 = "communication"
-    private val domain2 = "body"
-    private val lexid1 = 0
-    private val lexid2 = 0
-    private val lemma1 = "jest"
-    private val lemma2 = "joke"
-    private val pos = 'v'
-    private val ipa1 = "dʒɛst"
-    private val pronunciation1 = Pronunciation(ipa1, null)
-    private val ipa21 = "dʒəʊk"
-    private val ipa22 = "dʒoʊk"
-    private val pronunciation21 = Pronunciation(ipa21, "GB")
-    private val pronunciation22 = Pronunciation(ipa22, "US")
-
-    private val senseKey11 = "jest%2:32:00::"
-    private val senseKey12 = "jest%2:29:00::"
-    private val senseKey21 = "joke%2:32:00::"
-    private val senseKey22 = "joke%2:29:00::"
-
-    private val lex1 = Lex(lemma1, pos.toString(), null, mutableListOf(senseKey11, senseKey12)).apply { pronunciations = setOf(pronunciation1) }
-    private val lex2 = Lex(lemma2, pos.toString(), null, mutableListOf(senseKey21, senseKey22)).apply { pronunciations = setOf(pronunciation21, pronunciation22) }
-
-    private val synsetId1 = "00855315-v"
-    private val synsetId2 = "00105308-v"
-
-    private val synset1 = Synset(
-        synsetId1,
-        pos,
-        domain2,
-        arrayOf(lemma1, lemma2),
-        arrayOf("tell a joke", "speak humorously")
-    )
-    private val synset2 = Synset(
-        synsetId2,
-        pos,
-        domain2,
-        arrayOf(lemma1, lemma2),
-        arrayOf("act in a funny teasing way")
-    )
-    private val sense11 = Sense(senseKey11, lex1, pos, lexid1, synsetId1)
-    private val sense12 = Sense(senseKey12, lex1, pos, lexid2, synsetId2)
-    private val sense21 = Sense(senseKey21, lex2, pos, lexid1, synsetId1)
-    private val sense22 = Sense(senseKey22, lex2, pos, lexid2, synsetId2)
-
-    private val lexes = listOf(lex1, lex2)
-    private val senses = listOf(sense11, sense12, sense21, sense22)
-    private val synsets = listOf(synset1, synset2)
-
-    val model = CoreModel(lexes, senses, synsets)
 
     @Test
     fun testInfo() {

@@ -13,21 +13,21 @@ interface Key {
     @kotlinx.serialization.Serializable
     sealed class BaseKey : Key /*, Comparable<W_P> */, Serializable {
 
-        abstract val word: String
+        abstract val word: LemmaType
 
-        abstract val posType: Char
+        abstract val pos: PosType
     }
 
     /**
      * (Word, PosOrType)
      *
      * @property word    word: lemma or LC lemma
-     * @property posType pos type: part-of-speech or type (P for pos)
+     * @property pos pos type: part-of-speech or type (P for pos)
      */
     @kotlinx.serialization.Serializable
     open class W_P(
-        override val word: String,
-        override val posType: Char,
+        override val word: LemmaType,
+        override val pos: PosType,
     ) : BaseKey(), Comparable<W_P>, Serializable {
 
         override fun equals(other: Any?): Boolean {
@@ -41,11 +41,11 @@ interface Key {
             if (word != that.word) {
                 return false
             }
-            return this.posType == that.posType
+            return this.pos == that.pos
         }
 
         override fun hashCode(): Int {
-            return Objects.hash(word, posType)
+            return Objects.hash(word, pos)
         }
 
         override fun compareTo(other: W_P): Int {
@@ -56,7 +56,7 @@ interface Key {
         }
 
         override fun toString(): String {
-            return "($word,$posType)"
+            return "($word,$pos)"
         }
 
         override fun toLongString(): String {
@@ -67,10 +67,10 @@ interface Key {
 
             fun of(
                 lex: Lex,
-                wordExtractor: (Lex) -> String,
-                posTypeExtractor: (Lex) -> Char,
+                wordExtractor: (Lex) -> LemmaType,
+                posExtractor: (Lex) -> PosType,
             ): W_P {
-                return W_P(wordExtractor(lex), posTypeExtractor(lex))
+                return W_P(wordExtractor(lex), posExtractor(lex))
             }
 
             fun of_t(lex: Lex): W_P {
@@ -89,12 +89,12 @@ interface Key {
                 return of(lex, Lex::lCLemma, Lex::partOfSpeech)
             }
 
-            fun from(word: String, posType: Char): W_P {
-                return W_P(word, posType)
+            fun from(word: LemmaType, pos: PosType): W_P {
+                return W_P(word, pos)
             }
 
             val wpComparator: Comparator<W_P> = Comparator.comparing { obj: W_P -> obj.word }
-                .thenComparing { obj: W_P -> obj.posType }
+                .thenComparing { obj: W_P -> obj.pos }
 
         }
     }
@@ -103,13 +103,13 @@ interface Key {
      * (Word, PosOrType, Pronunciations)
      *
      * @param word    word: lemma or LC lemma
-     * @param posType pos type: part-of-speech or type (P)
+     * @param pos pos type: part-of-speech or type (P)
      * @property pronunciations pronunciations (A for audio)
      */
     @kotlinx.serialization.Serializable
     open class W_P_A(
-        override var word: String,
-        override var posType: Char,
+        override var word: LemmaType,
+        override var pos: PosType,
         val pronunciations: Set<Pronunciation>?,
     ) : BaseKey(), Comparable<W_P_A> {
 
@@ -124,7 +124,7 @@ interface Key {
             if (word != that.word) {
                 return false
             }
-            if (this.posType != that.posType) {
+            if (this.pos != that.pos) {
                 return false
             }
             val p1 = pronunciations ?: emptySet()
@@ -133,7 +133,7 @@ interface Key {
         }
 
         override fun hashCode(): Int {
-            return Objects.hash(word, posType, pronunciations)
+            return Objects.hash(word, pos, pronunciations)
         }
 
         override fun compareTo(other: W_P_A): Int {
@@ -144,7 +144,7 @@ interface Key {
         }
 
         override fun toString(): String {
-            return "($word,$posType,$pronunciations)"
+            return "($word,$pos,$pronunciations)"
         }
 
         override fun toLongString(): String {
@@ -155,10 +155,10 @@ interface Key {
 
             fun of(
                 lex: Lex,
-                wordExtractor: (Lex) -> String,
-                posTypeExtractor: (Lex) -> Char,
+                wordExtractor: (Lex) -> LemmaType,
+                posExtractor: (Lex) -> PosType,
             ): W_P_A {
-                return W_P_A(wordExtractor(lex), posTypeExtractor(lex), lex.pronunciations)
+                return W_P_A(wordExtractor(lex), posExtractor(lex), lex.pronunciations)
             }
 
             fun of_t(lex: Lex): W_P_A {
@@ -195,7 +195,7 @@ interface Key {
                 }
 
             val wpaComparator = compareBy<W_P_A> { it.word }
-                .thenBy { it.posType }
+                .thenBy { it.pos }
                 .thenBy(nullsFirst(pronunciationsComparator)) { it.pronunciations }
         }
     }
@@ -204,13 +204,13 @@ interface Key {
      * (Word, PosOrType, Discriminant) - Shallow key
      *
      * @param word    word: lemma or LC lemma
-     * @param posType pos type: part-of-speech or type (P for pos)
+     * @param pos pos type: part-of-speech or type (P for pos)
      * @property discriminant discriminant (D for discriminant)
      */
     @kotlinx.serialization.Serializable
     open class W_P_D(
-        override val word: String,
-        override val posType: Char,
+        override val word: LemmaType,
+        override val pos: PosType,
         val discriminant: String?,
     ) : BaseKey(), Comparable<W_P_D> {
 
@@ -225,14 +225,14 @@ interface Key {
             if (word != that.word) {
                 return false
             }
-            if (this.posType != that.posType) {
+            if (this.pos != that.pos) {
                 return false
             }
             return this.discriminant == that.discriminant
         }
 
         override fun hashCode(): Int {
-            return Objects.hash(word, posType, discriminant)
+            return Objects.hash(word, pos, discriminant)
         }
 
         override fun compareTo(other: W_P_D): Int {
@@ -243,7 +243,7 @@ interface Key {
         }
 
         override fun toString(): String {
-            return "($word,$posType,$discriminant)"
+            return "($word,$pos,$discriminant)"
         }
 
         override fun toLongString(): String {
@@ -254,10 +254,10 @@ interface Key {
 
             fun of(
                 lex: Lex,
-                wordExtractor: (Lex) -> String,
-                posTypeExtractor: (Lex) -> Char,
+                wordExtractor: (Lex) -> LemmaType,
+                posExtractor: (Lex) -> PosType,
             ): W_P_D {
-                return W_P_D(wordExtractor(lex), posTypeExtractor(lex), lex.discriminant)
+                return W_P_D(wordExtractor(lex), posExtractor(lex), lex.discriminant)
             }
 
             fun of_t(lex: Lex): W_P_D {
@@ -281,7 +281,7 @@ interface Key {
             }
 
             val wpdComparator: Comparator<W_P_D> = compareBy<W_P_D> { it.word }
-                .thenBy { it.posType }
+                .thenBy { it.pos }
                 .thenBy(nullsFirst(Comparator.naturalOrder())) { it.discriminant }
         }
     }

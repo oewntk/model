@@ -11,22 +11,22 @@ import java.io.PrintStream
 
 object LibTestModelSenseGroups {
 
-    fun testCISensesGroupingByLCLemmaAndPos(model: CoreModel, word: String, pos: Char, ps: PrintStream) {
+    fun testCISensesGroupingByLCLemmaAndPos(model: CoreModel, word: LemmaType, pos: PosType, ps: PrintStream) {
         ps.printf("ci '%s' %s%n", word, pos)
         ps.println(testCISensesGroupingByLCLemmaAndPosString(model, word, pos))
     }
 
-    fun testCISensesGroupingByLCLemma(model: CoreModel, word: String, ps: PrintStream) {
+    fun testCISensesGroupingByLCLemma(model: CoreModel, word: LemmaType, ps: PrintStream) {
         ps.printf("ci '%s'%n", word)
         ps.println(testCISensesGroupingByLCLemmaString(model, word))
     }
 
-    private fun testCISensesGroupingByLCLemmaString(model: CoreModel, word: String): String {
+    private fun testCISensesGroupingByLCLemmaString(model: CoreModel, word: LemmaType): String {
         val senses = sensesForLCLemma(model.senses, word)
         return sensesToStringByDecreasingTagCount(senses)
     }
 
-    private fun testCISensesGroupingByLCLemmaAndPosString(model: CoreModel, word: String, pos: Char): String {
+    private fun testCISensesGroupingByLCLemmaAndPosString(model: CoreModel, word: LemmaType, pos: PosType): String {
         val senses = sensesForLCLemmaAndPos(model.senses, word, pos)
         return sensesToStringByDecreasingTagCount(senses)
     }

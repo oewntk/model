@@ -64,7 +64,7 @@ object SenseGroupings {
      * @param pos     target part-of-speech
      * @return collection of senses for this target lower-cased lemma and part-of-speech
      */
-    fun sensesForLCLemmaAndPos(senses: Collection<Sense>, lcLemma: String, pos: Char): Collection<Sense> {
+    fun sensesForLCLemmaAndPos(senses: Collection<Sense>, lcLemma: String, pos: PosType): Collection<Sense> {
         return sensesFor(senses, { sense: Sense -> KeyLCLemmaAndPos(sense) }, KeyLCLemmaAndPos.of(lcLemma, pos))
     }
 
@@ -102,9 +102,9 @@ object SenseGroupings {
     /**
      * Key that matches how indexes are built in PWN (index.sense and index.(noun|verb|adj|adv)
      */
-    class KeyLCLemmaAndPos(lemma: String, val pos: Char) : Comparable<KeyLCLemmaAndPos> {
+    class KeyLCLemmaAndPos(lemma: LemmaType, val pos: PosType) : Comparable<KeyLCLemmaAndPos> {
 
-        val lcLemma: String = lemma.lowercase()
+        val lcLemma: LemmaType = lemma.lowercase()
 
         constructor(sense: Sense) : this(sense.lemma, sense.partOfSpeech)
 
@@ -137,7 +137,7 @@ object SenseGroupings {
 
         companion object {
 
-            fun of(lcLemma: String, pos: Char): KeyLCLemmaAndPos {
+            fun of(lcLemma: String, pos: PosType): KeyLCLemmaAndPos {
                 return KeyLCLemmaAndPos(lcLemma, pos)
             }
 

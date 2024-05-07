@@ -26,57 +26,57 @@ interface KeyF<R> : Key, (CoreModel) -> R {
      * (Word, PosOrType)
      *
      * @param word    word: lemma or LC lemma
-     * @param posType pos type: part-of-speech or type
+     * @param pos pos type: part-of-speech or type
      * @property wordExtractor word extractor function from lex
-     * @property posTypeExtractor part-of-speech or type extractor function from lex
+     * @property posExtractor part-of-speech or type extractor function from lex
      */
     open class F_W_P private constructor(
-        override var word: String,
-        override var posType: Char,
-        val wordExtractor: (Lex) -> String,
-        val posTypeExtractor: (Lex) -> Char,
+        override var word: LemmaType,
+        override var pos: PosType,
+        val wordExtractor: (Lex) -> LemmaType,
+        val posExtractor: (Lex) -> PosType,
 
-        ) : W_P(word, posType) {
+        ) : W_P(word, pos) {
 
-        override fun toLongString(): String = "KEYF ${javaClass.simpleName} WP_${toWordExtractorString(wordExtractor)}_${toPosTypeExtractorString(posTypeExtractor)} $this"
+        override fun toLongString(): String = "KEYF ${javaClass.simpleName} WP_${toWordExtractorString(wordExtractor)}_${toPosTypeExtractorString(posExtractor)} $this"
 
         /**
          * Functional part that yields single value
          */
         class Mono private constructor(
-            word: String,
-            posType: Char,
-            wordExtractor: (Lex) -> String,
-            posTypeExtractor: (Lex) -> Char,
-        ) : F_W_P(word, posType, wordExtractor, posTypeExtractor), MonoValued {
+            word: LemmaType,
+            pos: PosType,
+            wordExtractor: (Lex) -> LemmaType,
+            posExtractor: (Lex) -> PosType,
+        ) : F_W_P(word, pos, wordExtractor, posExtractor), MonoValued {
 
             override fun invoke(model: CoreModel): Lex {
-                return Finder.getLexesHaving(model, word, posType, wordExtractor, posTypeExtractor)
+                return Finder.getLexesHaving(model, word, pos, wordExtractor, posExtractor)
                     .firstOrNull() ?: throw IllegalArgumentException()
             }
 
             companion object {
 
                 fun of(
-                    wordExtractor: (Lex) -> String,
-                    posTypeExtractor: (Lex) -> Char,
+                    wordExtractor: (Lex) -> LemmaType,
+                    posExtractor: (Lex) -> PosType,
                     lex: Lex,
                 ): Mono {
                     return Mono(
                         wordExtractor.invoke(lex),
-                        posTypeExtractor.invoke(lex),
+                        posExtractor.invoke(lex),
                         wordExtractor,
-                        posTypeExtractor
+                        posExtractor
                     )
                 }
 
                 fun from(
-                    wordExtractor: (Lex) -> String,
-                    posTypeExtractor: (Lex) -> Char,
-                    word: String,
-                    posType: Char,
+                    wordExtractor: (Lex) -> LemmaType,
+                    posExtractor: (Lex) -> PosType,
+                    word: LemmaType,
+                    pos: PosType,
                 ): Mono {
-                    return Mono(word, posType, wordExtractor, posTypeExtractor)
+                    return Mono(word, pos, wordExtractor, posExtractor)
                 }
             }
         }
@@ -85,14 +85,14 @@ interface KeyF<R> : Key, (CoreModel) -> R {
          * Functional part that yields multiple values (array)
          */
         class Multi private constructor(
-            word: String,
-            posType: Char,
-            wordExtractor: (Lex) -> String,
-            posTypeExtractor: (Lex) -> Char,
-        ) : F_W_P(word, posType, wordExtractor, posTypeExtractor), MultiValued {
+            word: LemmaType,
+            pos: PosType,
+            wordExtractor: (Lex) -> LemmaType,
+            posExtractor: (Lex) -> PosType,
+        ) : F_W_P(word, pos, wordExtractor, posExtractor), MultiValued {
 
             override fun invoke(model: CoreModel): Array<Lex> {
-                return Finder.getLexesHaving(model, word, posType, wordExtractor, posTypeExtractor)
+                return Finder.getLexesHaving(model, word, pos, wordExtractor, posExtractor)
                     .toList()
                     .toTypedArray()
             }
@@ -100,25 +100,25 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             companion object {
 
                 fun of(
-                    wordExtractor: (Lex) -> String,
-                    posTypeExtractor: (Lex) -> Char,
+                    wordExtractor: (Lex) -> LemmaType,
+                    posExtractor: (Lex) -> PosType,
                     lex: Lex,
                 ): Multi {
                     return Multi(
                         wordExtractor.invoke(lex),
-                        posTypeExtractor.invoke(lex),
+                        posExtractor.invoke(lex),
                         wordExtractor,
-                        posTypeExtractor
+                        posExtractor
                     )
                 }
 
                 fun from(
-                    wordExtractor: (Lex) -> String,
-                    posTypeExtractor: (Lex) -> Char,
-                    word: String,
-                    posType: Char,
+                    wordExtractor: (Lex) -> LemmaType,
+                    posExtractor: (Lex) -> PosType,
+                    word: LemmaType,
+                    pos: PosType,
                 ): Multi {
-                    return Multi(word, posType, wordExtractor, posTypeExtractor)
+                    return Multi(word, pos, wordExtractor, posExtractor)
                 }
             }
         }
@@ -127,14 +127,14 @@ interface KeyF<R> : Key, (CoreModel) -> R {
 
             fun of(
                 lex: Lex,
-                wordExtractor: (Lex) -> String,
-                posTypeExtractor: (Lex) -> Char,
+                wordExtractor: (Lex) -> LemmaType,
+                posExtractor: (Lex) -> PosType,
             ): F_W_P {
                 return F_W_P(
                     wordExtractor.invoke(lex),
-                    posTypeExtractor.invoke(lex),
+                    posExtractor.invoke(lex),
                     wordExtractor,
-                    posTypeExtractor
+                    posExtractor
                 )
             }
         }
@@ -144,40 +144,40 @@ interface KeyF<R> : Key, (CoreModel) -> R {
      * (Word, PosOrType, Pronunciations)
      *
      * @param word    word: lemma or LC lemma
-     * @param posType pos type: part-of-speech or type
+     * @param pos pos type: part-of-speech or type
      * @param pronunciations pronunciations
      * @property wordExtractor word extractor function from lex
-     * @property posTypeExtractor part-of-speech or type extractor function from lex
+     * @property posExtractor part-of-speech or type extractor function from lex
      */
     open class F_W_P_A private constructor(
-        word: String,
-        posType: Char,
+        word: LemmaType,
+        pos: PosType,
         pronunciations: Set<Pronunciation>?,
-        val wordExtractor: (Lex) -> String,
-        val posTypeExtractor: (Lex) -> Char,
-    ) : W_P_A(word, posType, pronunciations) {
+        val wordExtractor: (Lex) -> LemmaType,
+        val posExtractor: (Lex) -> PosType,
+    ) : W_P_A(word, pos, pronunciations) {
 
-        override fun toLongString(): String = "KEYF ${javaClass.simpleName} WPA_${toWordExtractorString(wordExtractor)}_${toPosTypeExtractorString(posTypeExtractor)} $this"
+        override fun toLongString(): String = "KEYF ${javaClass.simpleName} WPA_${toWordExtractorString(wordExtractor)}_${toPosTypeExtractorString(posExtractor)} $this"
 
         /**
          * Functional part that yields single value
          */
         class Mono private constructor(
-            word: String,
-            posType: Char,
+            word: LemmaType,
+            pos: PosType,
             pronunciations: Set<Pronunciation>?,
-            wordExtractor: (Lex) -> String,
-            posTypeExtractor: (Lex) -> Char,
-        ) : F_W_P_A(word, posType, pronunciations, wordExtractor, posTypeExtractor), MonoValued {
+            wordExtractor: (Lex) -> LemmaType,
+            posExtractor: (Lex) -> PosType,
+        ) : F_W_P_A(word, pos, pronunciations, wordExtractor, posExtractor), MonoValued {
 
             override fun invoke(model: CoreModel): Lex {
                 return Finder.getLexesHavingPronunciations(
                     Finder.getLexesHaving(
                         model,
                         word,
-                        posType,
+                        pos,
                         wordExtractor,
-                        posTypeExtractor
+                        posExtractor
                     ), pronunciations
                 ).firstOrNull() ?: throw IllegalArgumentException()
             }
@@ -185,27 +185,27 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             companion object {
 
                 fun of(
-                    wordExtractor: (Lex) -> String,
-                    posTypeExtractor: (Lex) -> Char,
+                    wordExtractor: (Lex) -> LemmaType,
+                    posExtractor: (Lex) ->  PosType,
                     lex: Lex,
                 ): Mono {
                     return Mono(
                         wordExtractor.invoke(lex),
-                        posTypeExtractor.invoke(lex),
+                        posExtractor.invoke(lex),
                         lex.pronunciations,
                         wordExtractor,
-                        posTypeExtractor
+                        posExtractor
                     )
                 }
 
                 fun from(
-                    wordExtractor: (Lex) -> String,
-                    posTypeExtractor: (Lex) -> Char,
-                    word: String,
-                    posType: Char,
+                    wordExtractor: (Lex) -> LemmaType,
+                    posExtractor: (Lex) -> PosType,
+                    word: LemmaType,
+                    pos: PosType,
                     pronunciations: Set<Pronunciation>,
                 ): Mono {
-                    return Mono(word, posType, pronunciations, wordExtractor, posTypeExtractor)
+                    return Mono(word, pos, pronunciations, wordExtractor, posExtractor)
                 }
             }
         }
@@ -214,21 +214,21 @@ interface KeyF<R> : Key, (CoreModel) -> R {
          * Functional part that yields multiple values (array)
          */
         class Multi private constructor(
-            word: String,
-            posType: Char,
+            word: LemmaType,
+            pos: PosType,
             pronunciations: Set<Pronunciation>?,
-            wordExtractor: (Lex) -> String,
-            posTypeExtractor: (Lex) -> Char,
-        ) : F_W_P_A(word, posType, pronunciations, wordExtractor, posTypeExtractor), MultiValued {
+            wordExtractor: (Lex) -> LemmaType,
+            posExtractor: (Lex) -> PosType,
+        ) : F_W_P_A(word, pos, pronunciations, wordExtractor, posExtractor), MultiValued {
 
             override fun invoke(model: CoreModel): Array<Lex> {
                 return Finder.getLexesHavingPronunciations(
                     Finder.getLexesHaving(
                         model,
                         word,
-                        posType,
+                        pos,
                         wordExtractor,
-                        posTypeExtractor
+                        posExtractor
                     ), pronunciations
                 )
                     .toList()
@@ -238,27 +238,27 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             companion object {
 
                 fun of(
-                    wordExtractor: (Lex) -> String,
-                    posTypeExtractor: (Lex) -> Char,
+                    wordExtractor: (Lex) -> LemmaType,
+                    posExtractor: (Lex) -> PosType,
                     lex: Lex,
                 ): Multi {
                     return Multi(
                         wordExtractor.invoke(lex),
-                        posTypeExtractor.invoke(lex),
+                        posExtractor.invoke(lex),
                         lex.pronunciations,
                         wordExtractor,
-                        posTypeExtractor
+                        posExtractor
                     )
                 }
 
                 fun from(
-                    wordExtractor: (Lex) -> String,
-                    posTypeExtractor: (Lex) -> Char,
-                    word: String,
-                    posType: Char,
+                    wordExtractor: (Lex) -> LemmaType,
+                    posExtractor: (Lex) -> PosType,
+                    word: LemmaType,
+                    pos: PosType,
                     pronunciations: Set<Pronunciation>,
                 ): Multi {
-                    return Multi(word, posType, pronunciations, wordExtractor, posTypeExtractor)
+                    return Multi(word, pos, pronunciations, wordExtractor, posExtractor)
                 }
             }
         }
@@ -267,15 +267,15 @@ interface KeyF<R> : Key, (CoreModel) -> R {
 
             fun of(
                 lex: Lex,
-                wordExtractor: (Lex) -> String,
-                posTypeExtractor: (Lex) -> Char,
+                wordExtractor: (Lex) -> LemmaType,
+                posExtractor: (Lex) -> PosType,
             ): F_W_P_A {
                 return F_W_P_A(
                     wordExtractor.invoke(lex),
-                    posTypeExtractor.invoke(lex),
+                    posExtractor.invoke(lex),
                     lex.pronunciations,
                     wordExtractor,
-                    posTypeExtractor
+                    posExtractor
                 )
             }
         }
@@ -284,41 +284,41 @@ interface KeyF<R> : Key, (CoreModel) -> R {
     /**
      * (Word, PosOrType, Discriminant) - Shallow key
      *
-     * @param word    word: lemma or LC lemma
-     * @param posType pos type: part-of-speech or type
+     * @param word word lemma or LC lemma
+     * @param pos pos part-of-speech or type
      * @param discriminant discriminant
      * @property wordExtractor word extractor function from lex
-     * @property posTypeExtractor part-of-speech or type extractor function from lex
+     * @property posExtractor part-of-speech or type extractor function from lex
      */
     open class F_W_P_D private constructor(
-        word: String,
-        posType: Char,
+        word: LemmaType,
+        pos: PosType,
         discriminant: String?,
-        val wordExtractor: (Lex) -> String,
-        val posTypeExtractor: (Lex) -> Char,
-    ) : W_P_D(word, posType, discriminant) {
+        val wordExtractor: (Lex) -> LemmaType,
+        val posExtractor: (Lex) -> PosType,
+    ) : W_P_D(word, pos, discriminant) {
 
-        override fun toLongString(): String = "KEYF ${javaClass.simpleName} WPD_${toWordExtractorString(wordExtractor)}_${toPosTypeExtractorString(posTypeExtractor)} $this"
+        override fun toLongString(): String = "KEYF ${javaClass.simpleName} WPD_${toWordExtractorString(wordExtractor)}_${toPosTypeExtractorString(posExtractor)} $this"
 
         /**
          * Functional part that yields single value
          */
         class Mono private constructor(
-            word: String,
-            posType: Char,
+            word: LemmaType,
+            pos: PosType,
             discriminant: String,
-            wordExtractor: (Lex) -> String,
-            posTypeExtractor: (Lex) -> Char,
-        ) : F_W_P_D(word, posType, discriminant, wordExtractor, posTypeExtractor), MonoValued {
+            wordExtractor: (Lex) -> LemmaType,
+            posExtractor: (Lex) -> PosType,
+        ) : F_W_P_D(word, pos, discriminant, wordExtractor, posExtractor), MonoValued {
 
             override fun invoke(model: CoreModel): Lex {
                 return Finder.getLexesHavingDiscriminant(
                     Finder.getLexesHaving(
                         model,
                         word,
-                        posType,
+                        pos,
                         wordExtractor,
-                        posTypeExtractor
+                        posExtractor
                     ), discriminant
                 )
                     .firstOrNull() ?: throw IllegalArgumentException()
@@ -327,13 +327,13 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             companion object {
 
                 fun from(
-                    wordExtractor: (Lex) -> String,
-                    posTypeExtractor: (Lex) -> Char,
-                    word: String,
-                    posType: Char,
+                    wordExtractor: (Lex) -> LemmaType,
+                    posExtractor: (Lex) -> PosType,
+                    word: LemmaType,
+                    pos: PosType,
                     discriminant: String,
                 ): Mono {
-                    return Mono(word, posType, discriminant, wordExtractor, posTypeExtractor)
+                    return Mono(word, pos, discriminant, wordExtractor, posExtractor)
                 }
             }
         }
@@ -342,21 +342,21 @@ interface KeyF<R> : Key, (CoreModel) -> R {
          * Functional part that yields multiple values (array)
          */
         class Multi private constructor(
-            word: String,
-            posType: Char,
+            word: LemmaType,
+            pos: PosType,
             discriminant: String,
-            wordExtractor: (Lex) -> String,
-            posTypeExtractor: (Lex) -> Char,
-        ) : F_W_P_D(word, posType, discriminant, wordExtractor, posTypeExtractor), MultiValued {
+            wordExtractor: (Lex) -> LemmaType,
+            posExtractor: (Lex) -> PosType,
+        ) : F_W_P_D(word, pos, discriminant, wordExtractor, posExtractor), MultiValued {
 
             override fun invoke(model: CoreModel): Array<Lex> {
                 return Finder.getLexesHavingDiscriminant(
                     Finder.getLexesHaving(
                         model,
                         word,
-                        posType,
+                        pos,
                         wordExtractor,
-                        posTypeExtractor
+                        posExtractor
                     ), discriminant
                 )
                     .toList()
@@ -366,13 +366,13 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             companion object {
 
                 fun from(
-                    wordExtractor: (Lex) -> String,
-                    posTypeExtractor: (Lex) -> Char,
-                    word: String,
-                    posType: Char,
+                    wordExtractor: (Lex) -> LemmaType,
+                    posExtractor: (Lex) -> PosType,
+                    word: LemmaType,
+                    pos: PosType,
                     discriminant: String,
                 ): Multi {
-                    return Multi(word, posType, discriminant, wordExtractor, posTypeExtractor)
+                    return Multi(word, pos, discriminant, wordExtractor, posExtractor)
                 }
             }
         }
@@ -381,15 +381,15 @@ interface KeyF<R> : Key, (CoreModel) -> R {
 
             fun of(
                 lex: Lex,
-                wordExtractor: (Lex) -> String,
-                posTypeExtractor: (Lex) -> Char,
+                wordExtractor: (Lex) -> LemmaType,
+                posExtractor: (Lex) -> PosType,
             ): F_W_P_D {
                 return F_W_P_D(
                     wordExtractor.invoke(lex),
-                    posTypeExtractor.invoke(lex),
+                    posExtractor.invoke(lex),
                     lex.discriminant,
                     wordExtractor,
-                    posTypeExtractor
+                    posExtractor
                 )
             }
         }
@@ -410,18 +410,18 @@ interface KeyF<R> : Key, (CoreModel) -> R {
          * @param wordExtractor word extractor
          * @return name
          */
-        fun toWordExtractorString(wordExtractor: (Lex) -> String): String {
+        fun toWordExtractorString(wordExtractor: (Lex) -> LemmaType): LemmaType {
             return if (wordExtractor.invoke(dummyLex) == DUMMY_UPPER) "cs" else "lc"
         }
 
         /**
          * Name a pos/type extractor (by applying dummy data)
          *
-         * @param posTypeExtractor word extractor
+         * @param posExtractor word extractor
          * @return name
          */
-        fun toPosTypeExtractorString(posTypeExtractor: (Lex) -> Char): String {
-            return if (posTypeExtractor.invoke(dummyLex) == DUMMY_SATELLITE) "t" else "p"
+        fun toPosTypeExtractorString(posExtractor: (Lex) -> PosType): String {
+            return if (posExtractor.invoke(dummyLex) == DUMMY_SATELLITE) "t" else "p"
         }
     }
 }

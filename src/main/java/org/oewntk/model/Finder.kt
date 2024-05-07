@@ -31,10 +31,10 @@ object Finder {
      */
     fun getLexesHaving(
         model: CoreModel,
-        word: String,
-        posTypeFilter: Char,
-        wordExtractor: (Lex) -> String,
-        posTypeExtractor: (Lex) -> Char,
+        word: LemmaType,
+        posTypeFilter: PosType,
+        wordExtractor: (Lex) -> LemmaType,
+        posTypeExtractor: (Lex) -> PosType,
     ): Sequence<Lex> {
         return model.lexes
             .asSequence()

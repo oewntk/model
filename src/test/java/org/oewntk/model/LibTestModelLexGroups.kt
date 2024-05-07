@@ -24,22 +24,22 @@ object LibTestModelLexGroups {
             }
     }
 
-    fun testCILemmas(model: CoreModel, word: String, ps: PrintStream) {
+    fun testCILemmas(model: CoreModel, word: LemmaType, ps: PrintStream) {
         val lemmas = cSLemmasByLCLemma(model)[word]
         ps.println("$word ${lemmas?.joinToString(separator = ",", prefix = "{", postfix = "}")}")
     }
 
-    fun testCICounts(model: CoreModel, word: String, ps: PrintStream) {
+    fun testCICounts(model: CoreModel, word: LemmaType, ps: PrintStream) {
         val count = countsByLCLemma(model)[word]
         ps.printf("%s %d%n", word, count)
     }
 
-    fun testCICountsFromMap(model: CoreModel, word: String, ps: PrintStream) {
+    fun testCICountsFromMap(model: CoreModel, word: LemmaType, ps: PrintStream) {
         val count = multipleCountsByICLemma(model)[word]
         ps.printf("%s %d%n", word, count)
     }
 
-    fun testCILexesFor3(model: CoreModel, word: String, ps: PrintStream) {
+    fun testCILexesFor3(model: CoreModel, word: LemmaType, ps: PrintStream) {
         var word2 = word
         val s1 = testCILexesString(model, word2)
         ps.printf("ci '%s'%n", word2)
@@ -59,53 +59,53 @@ object LibTestModelLexGroups {
         Assert.assertEquals(s2, s3)
     }
 
-    fun testCILexes(model: CoreModel, word: String, ps: PrintStream) {
+    fun testCILexes(model: CoreModel, word: LemmaType, ps: PrintStream) {
         ps.printf("ci '%s'%n", word)
         ps.println(testCILexesString(model, word))
     }
 
-    fun testCILexesFor(model: CoreModel, word: String, ps: PrintStream) {
+    fun testCILexesFor(model: CoreModel, word: LemmaType, ps: PrintStream) {
         ps.printf("ci '%s'%n", word)
         ps.println(testCILexesForWordString(model, word))
     }
 
-    private fun testCILexesString(model: CoreModel, word: String): String {
+    private fun testCILexesString(model: CoreModel, word: LemmaType): String {
         val map = checkNotNull(model.lexesByLCLemma)
         val lexes = checkNotNull(map[word.lowercase()])
         return lexesToString(lexes)
     }
 
-    private fun testCILexesForWordString(model: CoreModel, word: String): String {
+    private fun testCILexesForWordString(model: CoreModel, word: LemmaType): String {
         val lexes = checkNotNull(model.lexesByLCLemma!![word])
         return lexesToString(lexes)
     }
 
-    fun testCISensesGroupingByLCLemmaAndPos(model: CoreModel, word: String, pos: Char, ps: PrintStream) {
+    fun testCISensesGroupingByLCLemmaAndPos(model: CoreModel, word: LemmaType, pos: PosType, ps: PrintStream) {
         ps.printf("ci '%s' %s%n", word, pos)
         ps.println(testCISensesGroupingByLCLemmaAndPosString(model, word, pos))
     }
 
-    fun testCISensesGroupingByLCLemma(model: CoreModel, word: String, ps: PrintStream) {
+    fun testCISensesGroupingByLCLemma(model: CoreModel, word: LemmaType, ps: PrintStream) {
         ps.printf("ci '%s'%n", word)
         ps.println(testCISensesGroupingByLCLemmaString(model, word))
     }
 
-    private fun testCISensesGroupingByLCLemmaString(model: CoreModel, word: String): String {
+    private fun testCISensesGroupingByLCLemmaString(model: CoreModel, word: LemmaType): String {
         val senses = sensesForLCLemma(model.senses, word)
         return sensesToString(senses)
     }
 
-    private fun testCISensesGroupingByLCLemmaAndPosString(model: CoreModel, word: String, pos: Char): String {
+    private fun testCISensesGroupingByLCLemmaAndPosString(model: CoreModel, word: LemmaType, pos: PosType): String {
         val senses = sensesForLCLemmaAndPos(model.senses, word, pos)
         return sensesToString(senses)
     }
 
-    fun testCIHypermap(lexHyperMap: Map<String, Map<String, Collection<Lex>>>, word: String, ps: PrintStream) {
+    fun testCIHypermap(lexHyperMap: Map<String, Map<String, Collection<Lex>>>, word: LemmaType, ps: PrintStream) {
         ps.printf("ci '%s'%n", word)
         ps.println(testCIHypermapString(lexHyperMap, word))
     }
 
-    fun testCIHypermap3(lexHyperMap: Map<String, Map<String, Collection<Lex>>>, word: String, ps: PrintStream) {
+    fun testCIHypermap3(lexHyperMap: Map<String, Map<String, Collection<Lex>>>, word: LemmaType, ps: PrintStream) {
         var word2 = word
         val s1 = testCIHypermapString(lexHyperMap, word2)
         ps.printf("ci '%s'%n", word2)
@@ -125,7 +125,7 @@ object LibTestModelLexGroups {
         Assert.assertEquals(s2, s3)
     }
 
-    private fun testCIHypermapString(lexHyperMap: Map<String, Map<String, Collection<Lex>>>, lemma: String): String {
+    private fun testCIHypermapString(lexHyperMap: Map<String, Map<String, Collection<Lex>>>, lemma: LemmaType): String {
         return lexHypermapForLemmaToString(lexHyperMap, lemma)
     }
 }

@@ -402,7 +402,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
 
         private const val DUMMY_SATELLITE = 's'
 
-        private val dummyLex = Lex(DUMMY_UPPER, DUMMY_SATELLITE.toString(), null)
+        private val dummyLex = Lex(DUMMY_UPPER, DUMMY_SATELLITE.toString())
 
         /**
          * Name a word extractor (by applying dummy data)

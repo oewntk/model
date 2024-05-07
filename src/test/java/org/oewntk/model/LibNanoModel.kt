@@ -24,8 +24,8 @@ object LibNanoModel {
     val senseKey21 = "joke%2:32:00::"
     val senseKey22 = "joke%2:29:00::"
 
-    val lex1 = Lex(lemma1, pos.toString(), null, mutableListOf(senseKey11, senseKey12)).apply { pronunciations = setOf(pronunciation1) }
-    val lex2 = Lex(lemma2, pos.toString(), null, mutableListOf(senseKey21, senseKey22)).apply { pronunciations = setOf(pronunciation21, pronunciation22) }
+    val lex1 = Lex(lemma1, pos.toString(), mutableListOf(senseKey11, senseKey12)).apply { pronunciations = setOf(pronunciation1) }
+    val lex2 = Lex(lemma2, pos.toString(), mutableListOf(senseKey21, senseKey22)).apply { pronunciations = setOf(pronunciation21, pronunciation22) }
 
     val synsetId1 = "00855315-v"
     val synsetId2 = "00105308-v"

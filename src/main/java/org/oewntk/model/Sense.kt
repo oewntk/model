@@ -47,10 +47,10 @@ data class Sense(
     val type: PosType,
     val lexIndex: Int,
     val synsetId: SynsetId,
-    val examples: Array<String>? = null,
     val verbFrames: Array<VerbFrameType>? = null,
     val adjPosition: AdjPositionType? = null,
     var relations: MutableMap<RelationType, MutableSet<SenseKey>>? = null,
+    val examples: Array<String>? = null,
 
     ) : Comparable<Sense>, Serializable {
 

@@ -41,8 +41,8 @@ data class Synset(
     val members: Array<String>,
     val definitions: Array<String>,
     val examples: Array<String>? = null,
-    val wikidata: String? = null,
     var relations: MutableMap<RelationType, MutableSet<SynsetId>>? = null,
+    val wikidata: String? = null,
 
     ) : Comparable<Synset>, Serializable {
 

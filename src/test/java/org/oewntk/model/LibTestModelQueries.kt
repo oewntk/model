@@ -67,15 +67,16 @@ object LibTestModelQueries {
             for (k3 in map3.keys) {
                 ps.printf("\t\t%s:%n", keyToString(k3))
                 map3[k3]!!.forEach {
-                    dump(it.senses, model, "\t\t\t", ps)
+                    dump(it.senseKeys, model, "\t\t\t", ps)
                 }
             }
         }
     }
 
-    private fun dump(senses: Collection<Sense>, model: CoreModel, indent: String, ps: PrintStream) {
-        senses.forEach { sense: Sense ->
-            ps.printf("%s%s%n", indent, sense)
+    private fun dump(senses: Collection<SenseKey>, model: CoreModel, indent: String, ps: PrintStream) {
+        senses.forEach { sk: SenseKey ->
+            ps.printf("%s%s%n", indent, sk)
+            val sense: Sense = model.sensesById?.get(sk)!!
             dump(sense, model, indent + "\t", ps)
         }
     }

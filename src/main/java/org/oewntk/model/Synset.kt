@@ -84,21 +84,30 @@ data class Synset(
      * @param lexesByLemma lexes
      * @return senses of this synset
      */
-    fun findSenses(lexesByLemma: Map<String, Collection<Lex>>): Array<Sense> {
-        val senses = ArrayList<Sense>()
+    fun findSenses(lexesByLemma: Map<String, Collection<Lex>>): Array<SenseKey> {
+        val senses = ArrayList<SenseKey>()
         for (member in members) {
             for (lex in lexesByLemma[member]!!) {
                 if (lex.partOfSpeech != partOfSpeech) {
                     continue
                 }
-                for (sense in lex.senses) {
-                    if (sense.synsetId == synsetId) {
-                        senses.add(sense)
+                lex.senseKeys
+                    .asSequence()
+                    .map { sk -> sensekeyToSense(sk) }
+                    .filter { s -> s?.synsetId == synsetId }
+                    .map { s -> s?.senseKey }
+                    .forEach { sk ->
+                        if (sk != null) {
+                            senses.add(sk)
+                        }
                     }
-                }
             }
         }
         return senses.toTypedArray()
+    }
+
+    private fun sensekeyToSense(sk: SenseKey): Sense? {
+        return null
     }
 
     /**
@@ -109,17 +118,14 @@ data class Synset(
      * @return sense of lemma in this synset, null if not found
      */
     @Throws(IllegalStateException::class)
-    fun findSenseOf(lemma: String, lexesByLemma: Map<String, Collection<Lex>>): Sense {
+    fun findSenseOf(lemma: String, lexesByLemma: Map<String, Collection<Lex>>): SenseKey {
         val lexes: Collection<Lex> = checkNotNull(lexesByLemma[lemma]) { "$lemma has no sense" }
         for (lex in lexes) {
             if (lex.partOfSpeech != partOfSpeech) {
                 continue
             }
-            for (sense in lex.senses) {
-                if (sense.synsetId == synsetId) {
-                    return sense
-                }
-            }
+            lex.senseKeys
+                .first { sk -> sensekeyToSense(sk)?.synsetId == synsetId }
         }
         throw IllegalStateException("Lemma $lemma not found in synset $this")
     }

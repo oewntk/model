@@ -51,16 +51,16 @@ object ModelInfo {
             .distinct()
             .count()
         val distinctSenseGroupsCount = model.lexes
-            .map { it.senses.toSet() }
+            .map { it.senseKeys.toSet() }
             .distinct()
             .count()
         val sensesInSenseGroupsSum = model.lexes
-            .map { it.senses.toSet() }
+            .map { it.senseKeys.toSet() }
             .distinct()
             .sumOf { it.size.toLong() }
 
         val withMultiSenseLexCount = model.lexes
-            .count { it.senses.size > 1 }
+            .count { it.senseKeys.size > 1 }
         val discriminantCount = model.lexes
             .mapNotNull { it.discriminant }
             .distinct()

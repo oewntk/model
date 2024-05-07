@@ -5,6 +5,7 @@ package org.oewntk.model
 
 import java.io.Serializable
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Lexical item/unit/entry
@@ -15,7 +16,7 @@ import java.util.*
  * @property lemma          lemma written form
  * @property type           type ss_type {'n', 'v', 'a', 'r', 's'}
  * @property source         source
- * @property senses         senses
+ * @property senseKeys         senses
  * @property forms          morphological forms
  * @property pronunciations pronunciations
  *
@@ -31,10 +32,10 @@ data class Lex(
     val type: PosType,
     val discriminant: String?,
     val source: String?,
+    var senseKeys: MutableList<SenseKey>,
 
     ) : Serializable /*, Comparable<Lex> */ {
 
-    lateinit var senses: MutableList<Sense>
     var forms: Set<MorphType>? = null
     var pronunciations: Set<Pronunciation>? = null
 
@@ -57,14 +58,15 @@ data class Lex(
         lemma: LemmaType,
         code: String,
         source: String?,
+        senseKeys: MutableList<SenseKey> = ArrayList(),
 
-        ) : this(lemma, code[0], if (code.length > 1) code.substring(1) else null, source)
+        ) : this(lemma, code[0], if (code.length > 1) code.substring(1) else null, source, senseKeys)
 
     // stringify
 
     override fun toString(): String {
         val pronunciations = pronunciations?.joinToString(",") ?: ""
-        val senses = senses.joinToString(",")
+        val senses = senseKeys.joinToString(",")
         return "$lemma $type${discriminant ?: ""} $pronunciations {$senses}"
     }
 

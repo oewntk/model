@@ -112,7 +112,7 @@ open class CoreModel(
      * val sensesById2: Map<String, Sense> by lazy { sensesById(senses) }
      */
     @Transient
-    var sensesById: Map<String, Sense>? = null
+    var sensesById: Map<SenseKey, Sense>? = null
         get() {
             if (field == null) {
                 field = sensesById(senses)
@@ -129,7 +129,7 @@ open class CoreModel(
      * val synsetsById: Map<String, Synset> by lazy { synsetsById(synsets) }
      */
     @Transient
-    var synsetsById: Map<String, Synset>? = null
+    var synsetsById: Map<SynsetId, Synset>? = null
         get() {
             if (field == null) {
                 field = synsetsById(synsets)

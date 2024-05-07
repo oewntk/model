@@ -43,9 +43,9 @@ class TestKeys {
         assertFalse(paMobile1.contentEquals(paMobile2))
         assertEquals(paMobile1.toSet(), paMobile2.toSet())
 
-        val lexMobile0 = Lex(wordMobile, "n", "source1").apply { senses = ArrayList() }
-        val lexMobile1 = Lex(wordMobile, "n", "source1").apply { senses = ArrayList(); pronunciations = paMobile1.toSet() }
-        val lexMobile2 = Lex(wordMobile, "n", "source2").apply { senses = ArrayList(); pronunciations = paMobile2.toSet() }
+        val lexMobile0 = Lex(wordMobile, "n", "source1")
+        val lexMobile1 = Lex(wordMobile, "n", "source1").apply { pronunciations = paMobile1.toSet() }
+        val lexMobile2 = Lex(wordMobile, "n", "source2").apply { pronunciations = paMobile2.toSet() }
         ps.println("lex0 = $lexMobile0")
         ps.println("lex1 = $lexMobile1")
         ps.println("lex2 = $lexMobile2")

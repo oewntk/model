@@ -47,10 +47,10 @@ data class Sense(
     val type: PosType,
     val lexIndex: Int,
     val synsetId: SynsetId,
-    val examples: Array<String>?,
-    val verbFrames: Array<VerbFrameType>?,
-    val adjPosition: AdjPositionType?,
-    var relations: MutableMap<RelationType, MutableSet<SenseKey>>?,
+    val examples: Array<String>? = null,
+    val verbFrames: Array<VerbFrameType>? = null,
+    val adjPosition: AdjPositionType? = null,
+    var relations: MutableMap<RelationType, MutableSet<SenseKey>>? = null,
 
     ) : Comparable<Sense>, Serializable {
 
@@ -135,7 +135,7 @@ data class Sense(
     // stringify
 
     override fun toString(): String {
-        return " $senseId (${lexIndex + 1}th of '${lex.lemma}', $synsetId $type)"
+        return "$senseId (${lexIndex + 1}th of '${lex.lemma}', $synsetId $type)"
     }
 
     fun toLongString(): String {

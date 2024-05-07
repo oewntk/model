@@ -40,9 +40,9 @@ data class Synset(
     val domain: String,
     val members: Array<String>,
     val definitions: Array<String>,
-    val examples: Array<String>?,
-    private val wikidata: String?,
-    var relations: MutableMap<RelationType, MutableSet<SynsetId>>?,
+    val examples: Array<String>? = null,
+    val wikidata: String? = null,
+    var relations: MutableMap<RelationType, MutableSet<SynsetId>>? = null,
 
     ) : Comparable<Synset>, Serializable {
 
@@ -88,8 +88,8 @@ data class Synset(
     fun findSenses(
         lemma2Lexes: (lemma: LemmaType) -> Collection<Lex>,
         senseKey2Sense: (senseKey: SenseKey) -> Sense,
-    ): List<SenseKey> {
-        val senses = ArrayList<SenseKey>()
+    ): List<Sense> {
+        val senses = ArrayList<Sense>()
         for (member in members) {
             val lexes = lemma2Lexes(member)
             for (lex in lexes) {
@@ -100,9 +100,8 @@ data class Synset(
                     .asSequence()
                     .map { sk -> senseKey2Sense(sk) }
                     .filter { s -> s.synsetId == synsetId }
-                    .map { s -> s.senseKey }
-                    .forEach { sk ->
-                        senses.add(sk)
+                    .forEach {
+                        senses.add(it)
                     }
             }
         }
@@ -124,15 +123,12 @@ data class Synset(
         senseKey2Sense: (senseKey: SenseKey) -> Sense,
     ): Sense {
         val lexes: Collection<Lex> = checkNotNull(lemma2Lexes(lemma)) { "$lemma has no sense" }
-        lexes
+        return lexes
             .asSequence()
             .filter { it.partOfSpeech == partOfSpeech }
-            .forEach {
-                it.senseKeys
-                    .map { sk -> senseKey2Sense(sk) }
-                    .first { s -> s.synsetId == this.synsetId }
-            }
-        throw IllegalStateException("Lemma $lemma not found in synset $this")
+            .flatMap { it.senseKeys }
+            .map { sk -> senseKey2Sense(sk) }
+            .firstOrNull { s -> s.synsetId == this.synsetId } ?: throw IllegalStateException("Lemma $lemma not found in synset $this")
     }
 
     /**
@@ -151,7 +147,7 @@ data class Synset(
 
     override fun toString(): String {
         val membersStr = members.joinToString(",")
-        val relationsStr = relations.joinToString(",")
+        val relationsStr = relations?.joinToString(",") ?: ""
         return "$synsetId $type {$membersStr} '$definition' {$relationsStr}"
     }
 

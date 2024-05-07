@@ -81,52 +81,57 @@ data class Synset(
     /**
      * Find senses of this synset
      *
-     * @param lexesByLemma lexes
+     * @param lemma2Lexes lemma to lexes mapper
+     * @param senseKey2Sense senseKey to sense mapper
      * @return senses of this synset
      */
-    fun findSenses(lexesByLemma: Map<String, Collection<Lex>>): Array<SenseKey> {
+    fun findSenses(
+        lemma2Lexes: (lemma: LemmaType) -> Collection<Lex>,
+        senseKey2Sense: (senseKey: SenseKey) -> Sense,
+    ): List<SenseKey> {
         val senses = ArrayList<SenseKey>()
         for (member in members) {
-            for (lex in lexesByLemma[member]!!) {
+            val lexes = lemma2Lexes(member)
+            for (lex in lexes) {
                 if (lex.partOfSpeech != partOfSpeech) {
                     continue
                 }
                 lex.senseKeys
                     .asSequence()
-                    .map { sk -> sensekeyToSense(sk) }
-                    .filter { s -> s?.synsetId == synsetId }
-                    .map { s -> s?.senseKey }
+                    .map { sk -> senseKey2Sense(sk) }
+                    .filter { s -> s.synsetId == synsetId }
+                    .map { s -> s.senseKey }
                     .forEach { sk ->
-                        if (sk != null) {
-                            senses.add(sk)
-                        }
+                        senses.add(sk)
                     }
             }
         }
-        return senses.toTypedArray()
-    }
-
-    private fun sensekeyToSense(sk: SenseKey): Sense? {
-        return null
+        return senses
     }
 
     /**
      * Find sense of lemma in this synset
      *
      * @param lemma        lemma
-     * @param lexesByLemma lexes
+     * @param lemma2Lexes lemma to lexes mapper
+     * @param senseKey2Sense senseKey to sense mapper
      * @return sense of lemma in this synset, null if not found
      */
     @Throws(IllegalStateException::class)
-    fun findSenseOf(lemma: String, lexesByLemma: Map<String, Collection<Lex>>): SenseKey {
-        val lexes: Collection<Lex> = checkNotNull(lexesByLemma[lemma]) { "$lemma has no sense" }
-        for (lex in lexes) {
-            if (lex.partOfSpeech != partOfSpeech) {
-                continue
+    fun findSenseOf(
+        lemma: String,
+        lemma2Lexes: (lemma: LemmaType) -> Collection<Lex>?,
+        senseKey2Sense: (senseKey: SenseKey) -> Sense,
+    ): Sense {
+        val lexes: Collection<Lex> = checkNotNull(lemma2Lexes(lemma)) { "$lemma has no sense" }
+        lexes
+            .asSequence()
+            .filter { it.partOfSpeech == partOfSpeech }
+            .forEach {
+                it.senseKeys
+                    .map { sk -> senseKey2Sense(sk) }
+                    .first { s -> s.synsetId == this.synsetId }
             }
-            lex.senseKeys
-                .first { sk -> sensekeyToSense(sk)?.synsetId == synsetId }
-        }
         throw IllegalStateException("Lemma $lemma not found in synset $this")
     }
 

@@ -27,22 +27,22 @@ import java.util.*
 @kotlinx.serialization.Serializable
 data class Lex(
 
-    val lemma: LemmaType,
-    val type: PosId,
-    val discriminant: String?,
+    val lemma: Lemma,
+    val type: Category,
+    val discriminant: Discriminant?,
     var senseKeys: MutableList<SenseKey>,
     val source: String?,
 
     ) : Serializable /*, Comparable<Lex> */ {
 
-    var forms: Set<MorphType>? = null
+    var forms: Set<Morph>? = null
     var pronunciations: Set<Pronunciation>? = null
 
-    val lCLemma: LemmaType
+    val lCLemma: Lemma
         get() = lemma.lowercase()
     val isCased: Boolean
         get() = lemma != lCLemma
-    val partOfSpeech: PosId
+    val partOfSpeech: Category
         get() = if (this.type == 's') 'a' else this.type
 
     /**
@@ -54,7 +54,7 @@ data class Lex(
      */
     constructor (
 
-        lemma: LemmaType,
+        lemma: Lemma,
         code: String,
         senseKeys: MutableList<SenseKey> = ArrayList(),
         source: String? = null,

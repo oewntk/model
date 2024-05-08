@@ -15,31 +15,31 @@ object Finder {
      * @param lemma lemma (CS)
      * @return collection of lexes
      */
-    fun getLexes(model: CoreModel, lemma: LemmaType): Collection<Lex> {
+    fun getLexes(model: CoreModel, lemma: Lemma): Collection<Lex> {
         return model.lexesByLemma!![lemma]!!
     }
 
     /**
      * Find lex matching word and type filter
      *
-     * @param model            model
-     * @param word             word
-     * @param posTarget        pos target
-     * @param wordExtractor    word extractor
-     * @param posExtractor     pos extractor
+     * @param model             model
+     * @param word              word
+     * @param targetCategory    target category
+     * @param wordExtractor     word extractor
+     * @param categoryExtractor category extractor
      * @return sequence of lexes
      */
     fun getLexesHaving(
         model: CoreModel,
-        word: LemmaType,
-        posTarget: PosId,
-        wordExtractor: (Lex) -> LemmaType,
-        posExtractor: (Lex) -> PosId,
+        word: Lemma,
+        targetCategory: Category,
+        wordExtractor: (Lex) -> Lemma,
+        categoryExtractor: (Lex) -> Category,
     ): Sequence<Lex> {
         return model.lexes
             .asSequence()
             .filter { word == wordExtractor.invoke(it) }
-            .filter { posTarget == posExtractor.invoke(it) }
+            .filter { targetCategory == categoryExtractor.invoke(it) }
     }
 
     /**
@@ -50,7 +50,7 @@ object Finder {
      * @param typeFilter type filter
      * @return sequence of lexes
      */
-    fun getLexesHavingType(model: CoreModel, lemma: LemmaType, typeFilter: Char): Sequence<Lex>? {
+    fun getLexesHavingType(model: CoreModel, lemma: Lemma, typeFilter: Char): Sequence<Lex>? {
         return model.lexesByLemma!![lemma]
             ?.asSequence()
             ?.filter { it.type == typeFilter }
@@ -64,7 +64,7 @@ object Finder {
      * @param posFilter part-of-speech filter
      * @return sequence of lexes
      */
-    fun getLexesHavingPos(model: CoreModel, lemma: LemmaType, posFilter: Char): Sequence<Lex>? {
+    fun getLexesHavingPos(model: CoreModel, lemma: Lemma, posFilter: Char): Sequence<Lex>? {
         return model.lexesByLemma!![lemma]
             ?.asSequence()
             ?.filter { it.partOfSpeech == posFilter }
@@ -78,24 +78,24 @@ object Finder {
      * @param typeFilter type filter
      * @return sequence of lexes
      */
-    fun getLcLexesHavingType(model: CoreModel, lcLemma: LemmaType, typeFilter: Char): Sequence<Lex>? {
+    fun getLcLexesHavingType(model: CoreModel, lcLemma: Lemma, typeFilter: Char): Sequence<Lex>? {
         return model.lexesByLCLemma!![lcLemma.lowercase()]
             ?.asSequence()
             ?.filter { it.type == typeFilter }
     }
 
     /**
-     * Find lexes matching lemma ignoring case and having the desired pos
+     * Find lexes matching lemma ignoring case and having the desired category
      *
-     * @param model     model
-     * @param lcLemma   lower-cased lemma
-     * @param posFilter pos filter
+     * @param model          model
+     * @param lcLemma        lower-cased lemma
+     * @param targetCategory target category
      * @return sequence of lexes
      */
-    fun getLcLexesHavingPos(model: CoreModel, lcLemma: LemmaType, posFilter: Char): Sequence<Lex>? {
+    fun getLcLexesHavingPos(model: CoreModel, lcLemma: Lemma, targetCategory: Category): Sequence<Lex>? {
         return model.lexesByLCLemma!![lcLemma.lowercase()]
             ?.asSequence()
-            ?.filter { it.partOfSpeech == posFilter }
+            ?.filter { it.partOfSpeech == targetCategory }
     }
 
     /**
@@ -105,7 +105,7 @@ object Finder {
      * @param lcLemma lower-cased lemma
      * @return sequence of lexes
      */
-    fun getLcLexes(model: CoreModel, lcLemma: LemmaType): Sequence<Lex>? {
+    fun getLcLexes(model: CoreModel, lcLemma: Lemma): Sequence<Lex>? {
         return model.lexesByLCLemma!![lcLemma.lowercase()]
             ?.asSequence()
     }
@@ -132,7 +132,7 @@ object Finder {
      * @return sequence of lexes
      * @throws IllegalArgumentException if not found
      */
-    fun getLexesHavingDiscriminant(lexes: Sequence<Lex>, discriminant: String?): Sequence<Lex> {
+    fun getLexesHavingDiscriminant(lexes: Sequence<Lex>, discriminant: Discriminant?): Sequence<Lex> {
         return lexes
             .filter { it.discriminant == discriminant }
     }

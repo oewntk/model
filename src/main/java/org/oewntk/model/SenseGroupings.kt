@@ -18,7 +18,7 @@ object SenseGroupings {
      * @param senses senses
      * @return collections of senses grouped by and mapped by lower-cased lemma
      */
-    fun sensesByLCLemma(senses: Collection<Sense>): Map<LemmaType, Collection<Sense>> {
+    fun sensesByLCLemma(senses: Collection<Sense>): Map<Lemma, Collection<Sense>> {
         return senses
             .groupBy(Sense::lCLemma)
             .mapValues { it.value.toSet() }
@@ -61,11 +61,11 @@ object SenseGroupings {
      *
      * @param senses  senses
      * @param lcLemma target lower-cased lemma
-     * @param pos     target part-of-speech
+     * @param category     target part-of-speech
      * @return collection of senses for this target lower-cased lemma and part-of-speech
      */
-    fun sensesForLCLemmaAndPos(senses: Collection<Sense>, lcLemma: LemmaType, pos: PosId): Collection<Sense> {
-        return sensesFor(senses, { sense: Sense -> KeyLCLemmaAndPos(sense) }, KeyLCLemmaAndPos.of(lcLemma, pos))
+    fun sensesForLCLemmaAndPos(senses: Collection<Sense>, lcLemma: Lemma, category: Category): Collection<Sense> {
+        return sensesFor(senses, { sense: Sense -> KeyLCLemmaAndPos(sense) }, KeyLCLemmaAndPos.of(lcLemma, category))
     }
 
     /**
@@ -75,7 +75,7 @@ object SenseGroupings {
      * @param lcLemma target lower-cased lemma
      * @return collection of senses for this target lower-cased lemma
      */
-    fun sensesForLCLemma(senses: Collection<Sense>, lcLemma: LemmaType): Collection<Sense> {
+    fun sensesForLCLemma(senses: Collection<Sense>, lcLemma: Lemma): Collection<Sense> {
         return sensesFor(senses, Sense::lCLemma, lcLemma)
     }
 
@@ -102,9 +102,9 @@ object SenseGroupings {
     /**
      * Key that matches how indexes are built in PWN (index.sense and index.(noun|verb|adj|adv)
      */
-    class KeyLCLemmaAndPos(lemma: LemmaType, val pos: PosId) : Comparable<KeyLCLemmaAndPos> {
+    class KeyLCLemmaAndPos(lemma: Lemma, val category: Category) : Comparable<KeyLCLemmaAndPos> {
 
-        val lcLemma: LemmaType = lemma.lowercase()
+        val lcLemma: Lemma = lemma.lowercase()
 
         constructor(sense: Sense) : this(sense.lemma, sense.partOfSpeech)
 
@@ -116,11 +116,11 @@ object SenseGroupings {
                 return false
             }
             val that = other as KeyLCLemmaAndPos
-            return pos == that.pos && lcLemma == that.lcLemma
+            return category == that.category && lcLemma == that.lcLemma
         }
 
         override fun hashCode(): Int {
-            return Objects.hash(lcLemma, pos)
+            return Objects.hash(lcLemma, category)
         }
 
         override fun compareTo(other: KeyLCLemmaAndPos): Int {
@@ -128,17 +128,17 @@ object SenseGroupings {
             if (cmp != 0) {
                 return cmp
             }
-            return pos.compareTo(other.pos)
+            return category.compareTo(other.category)
         }
 
         override fun toString(): String {
-            return "'$lcLemma'-$pos"
+            return "'$lcLemma'-$category"
         }
 
         companion object {
 
-            fun of(lcLemma: LemmaType, pos: PosId): KeyLCLemmaAndPos {
-                return KeyLCLemmaAndPos(lcLemma, pos)
+            fun of(lcLemma: Lemma, category: Category): KeyLCLemmaAndPos {
+                return KeyLCLemmaAndPos(lcLemma, category)
             }
 
             fun of(sense: Sense): KeyLCLemmaAndPos {

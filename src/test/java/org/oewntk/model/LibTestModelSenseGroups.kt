@@ -11,23 +11,23 @@ import java.io.PrintStream
 
 object LibTestModelSenseGroups {
 
-    fun testCISensesGroupingByLCLemmaAndPos(model: CoreModel, word: LemmaType, pos: PosId, ps: PrintStream) {
-        ps.printf("ci '%s' %s%n", word, pos)
-        ps.println(testCISensesGroupingByLCLemmaAndPosString(model, word, pos))
+    fun testCISensesGroupingByLCLemmaAndPos(model: CoreModel, word: Lemma, category: Category, ps: PrintStream) {
+        ps.printf("ci '%s' %s%n", word, category)
+        ps.println(testCISensesGroupingByLCLemmaAndPosString(model, word, category))
     }
 
-    fun testCISensesGroupingByLCLemma(model: CoreModel, word: LemmaType, ps: PrintStream) {
+    fun testCISensesGroupingByLCLemma(model: CoreModel, word: Lemma, ps: PrintStream) {
         ps.printf("ci '%s'%n", word)
         ps.println(testCISensesGroupingByLCLemmaString(model, word))
     }
 
-    private fun testCISensesGroupingByLCLemmaString(model: CoreModel, word: LemmaType): String {
-        val senses = sensesForLCLemma(model.senses, word)
+    private fun testCISensesGroupingByLCLemmaString(model: CoreModel, lemma: Lemma): String {
+        val senses = sensesForLCLemma(model.senses, lemma)
         return sensesToStringByDecreasingTagCount(senses)
     }
 
-    private fun testCISensesGroupingByLCLemmaAndPosString(model: CoreModel, word: LemmaType, pos: PosId): String {
-        val senses = sensesForLCLemmaAndPos(model.senses, word, pos)
+    private fun testCISensesGroupingByLCLemmaAndPosString(model: CoreModel, lemma: Lemma, category: Category): String {
+        val senses = sensesForLCLemmaAndPos(model.senses, lemma, category)
         return sensesToStringByDecreasingTagCount(senses)
     }
 }

@@ -38,13 +38,13 @@ object LibTestModelDuplicates {
     }
 
     fun testDuplicatesForKeyOEWN(model: CoreModel, ps: PrintStream) {
-        testDuplicatesForKeyMono(model, { KeyF.F_W_P_A.Mono.of(Lex::lemma, Lex::type, it) }, ps)
+        testDuplicatesForKeyMono(model, { KeyF.FuncKeyLCP.Mono.of(Lex::lemma, Lex::type, it) }, ps)
     }
 
     fun testDuplicatesForKeyPos(model: CoreModel, ps: PrintStream) {
         testDuplicatesForKeyMulti(
             model,
-            { KeyF.F_W_P_A.Multi.of(Lex::lemma, Lex::partOfSpeech, it) },
+            { KeyF.FuncKeyLCP.Multi.of(Lex::lemma, Lex::partOfSpeech, it) },
             ps
         )
     }
@@ -52,7 +52,7 @@ object LibTestModelDuplicates {
     fun testDuplicatesForKeyIC(model: CoreModel, ps: PrintStream) {
         testDuplicatesForKeyMulti(
             model,
-            { KeyF.F_W_P_A.Multi.of(Lex::lCLemma, Lex::type, it) },
+            { KeyF.FuncKeyLCP.Multi.of(Lex::lCLemma, Lex::type, it) },
             ps
         )
     }
@@ -60,7 +60,7 @@ object LibTestModelDuplicates {
     fun testDuplicatesForKeyPWN(model: CoreModel, ps: PrintStream) {
         testDuplicatesForKeyMulti(
             model,
-            { KeyF.F_W_P.Multi.of(Lex::lCLemma, Lex::type, it) },
+            { KeyF.FuncKeyLC.Multi.of(Lex::lCLemma, Lex::type, it) },
             ps
         )
     }

@@ -95,7 +95,7 @@ open class CoreModel(
      * val lexesByLCLemma: Map<LemmaType, Collection<Lex>> by lazy { LexGroupings.lexesByLCLemma(lexes) }
      */
     @Transient
-    var lexesByLCLemma: Map<LemmaType, Collection<Lex>>? = null
+    var lexesByLCLemma: Map<Lemma, Collection<Lex>>? = null
         get() {
             if (field == null) {
                 field = LexGroupings.lexesByLCLemma(lexes)

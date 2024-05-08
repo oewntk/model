@@ -14,8 +14,8 @@ import java.util.*
  */
 @kotlinx.serialization.Serializable
 class Pronunciation(
-    val value: PronunciationValueType,
-    val variety: PronunciationVarietyType?,
+    val value: PronunciationValue,
+    val variety: PronunciationVariety?,
 ) : Comparable<Pronunciation>, Serializable {
 
     // identify
@@ -55,11 +55,11 @@ class Pronunciation(
 
     companion object {
 
-        fun ipa(value: PronunciationValueType): Pronunciation {
+        fun ipa(value: PronunciationValue): Pronunciation {
             return Pronunciation(value, null)
         }
 
-        fun ipa(value: PronunciationValueType, variety: PronunciationVarietyType?): Pronunciation {
+        fun ipa(value: PronunciationValue, variety: PronunciationVariety?): Pronunciation {
             return Pronunciation(value, variety)
         }
     }

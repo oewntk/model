@@ -25,7 +25,12 @@ object Formatter {
      *
      * ```
      */
-    fun <K, V : Iterable<T>?, T> Map<K, V>?.joinToString(entrySeparator: CharSequence = " ", valueSeparator: CharSequence = ",", valuePrefix: CharSequence = "", valuePostfix: CharSequence = ""): String {
+    fun <K, V : Iterable<T>?, T> Map<K, V>?.joinToString(
+        entrySeparator: CharSequence = " ",
+        valueSeparator: CharSequence = ",",
+        valuePrefix: CharSequence = "",
+        valuePostfix: CharSequence = "",
+    ): String {
         return this?.entries!!.joinToString(separator = entrySeparator) { "[${it.key}]=${it.value?.joinToString(separator = valueSeparator, prefix = valuePrefix, postfix = valuePostfix) ?: ""}" }
     }
 }

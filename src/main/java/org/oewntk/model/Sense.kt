@@ -44,12 +44,12 @@ import java.util.*
 data class Sense(
     private val senseId: SenseKey,
     val lex: Lex,
-    val type: PosId,
+    val type: Category,
     val lexIndex: Int,
     val synsetId: SynsetId,
     val verbFrames: Array<VerbFrameId>? = null,
-    val adjPosition: AdjPositionType? = null,
-    var relations: MutableMap<RelationId, MutableSet<SenseKey>>? = null,
+    val adjPosition: AdjPosition? = null,
+    var relations: MutableMap<Relation, MutableSet<SenseKey>>? = null,
     val examples: Array<String>? = null,
 
     ) : Comparable<Sense>, Serializable {
@@ -58,11 +58,11 @@ data class Sense(
     var tagCount: TagCount? = null
     val senseKey: SenseKey
         get() = senseId
-    val lemma: LemmaType
+    val lemma: Lemma
         get() = lex.lemma
-    val lCLemma: LemmaType
+    val lCLemma: Lemma
         get() = lex.lCLemma
-    val partOfSpeech: PosId = if (this.type == 's') 'a' else this.type
+    val partOfSpeech: Category = if (this.type == 's') 'a' else this.type
     val intTagCount: Int
         get() = if (tagCount == null) 0 else tagCount!!.count
     val source: String?
@@ -76,7 +76,7 @@ data class Sense(
      * @param inverseType    inverse type
      * @param targetSensekey target sense id (sensekey)
      */
-    fun addInverseRelation(inverseType: RelationId, targetSensekey: SenseKey) {
+    fun addInverseRelation(inverseType: Relation, targetSensekey: SenseKey) {
         if (relations == null) {
             relations = HashMap()
         }

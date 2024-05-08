@@ -36,12 +36,12 @@ import java.util.*
 data class Synset(
 
     val synsetId: SynsetId,
-    val type: PosId,
-    val domain: String,
-    val members: Array<LemmaType>,
+    val type: Category,
+    val domain: Domain,
+    val members: Array<Lemma>,
     val definitions: Array<String>,
     val examples: Array<String>? = null,
-    var relations: MutableMap<RelationId, MutableSet<SynsetId>>? = null,
+    var relations: MutableMap<Relation, MutableSet<SynsetId>>? = null,
     val wikidata: String? = null,
 
     ) : Comparable<Synset>, Serializable {
@@ -67,7 +67,7 @@ data class Synset(
      * @param inverseType    inverse type
      * @param targetSynsetId target synset id
      */
-    fun addInverseRelation(inverseType: RelationId, targetSynsetId: SynsetId) {
+    fun addInverseRelation(inverseType: Relation, targetSynsetId: SynsetId) {
         if (relations == null) {
             relations = HashMap()
         }
@@ -86,7 +86,7 @@ data class Synset(
      * @return senses of this synset
      */
     fun findSenses(
-        lemma2Lexes: (lemma: LemmaType) -> Collection<Lex>,
+        lemma2Lexes: (lemma: Lemma) -> Collection<Lex>,
         senseKey2Sense: (senseKey: SenseKey) -> Sense,
     ): List<Sense> {
 
@@ -111,8 +111,8 @@ data class Synset(
      */
     @Throws(IllegalStateException::class)
     fun findSenseOf(
-        lemma: LemmaType,
-        lemma2Lexes: (lemma: LemmaType) -> Collection<Lex>?,
+        lemma: Lemma,
+        lemma2Lexes: (lemma: Lemma) -> Collection<Lex>?,
         senseKey2Sense: (senseKey: SenseKey) -> Sense,
     ): Sense {
         val lexes: Collection<Lex> = checkNotNull(lemma2Lexes(lemma)) { "$lemma has no sense" }
@@ -130,7 +130,7 @@ data class Synset(
      * @param lemma member lemma
      * @return index of member is members, -1 if not found
      */
-    fun findIndexOfMember(lemma: LemmaType): Int {
+    fun findIndexOfMember(lemma: Lemma): Int {
         val members = members
         val memberList = listOf(*members)
         return memberList.indexOf(lemma)

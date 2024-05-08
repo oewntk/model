@@ -6,29 +6,34 @@ package org.oewntk.model
 import java.io.Serializable
 import java.util.*
 
+/**
+ * Keys are to be interpreted here in the relation database sense:
+ * A t-uple that uniquely identifies an entry (Mono) or a set of entries (Multi).
+ * The functional extension KeyF just produces these entries.
+ */
 interface Key {
 
-    fun toLongString(): String
-
     @kotlinx.serialization.Serializable
-    sealed class BaseKey : Key /*, Comparable<W_P> */, Serializable {
+    sealed class BaseKey : Key, Serializable {
 
-        abstract val word: LemmaType
+        abstract val lemma: Lemma
 
-        abstract val pos: PosId
+        abstract val category: Category
+
+        abstract fun toLongString(): String
     }
 
     /**
-     * (Word, PosOrType)
+     * (Lemma, Category)
      *
-     * @property word    word: lemma or LC lemma
-     * @property pos pos type: part-of-speech or type (P for pos)
+     * @property lemma    lemma or LC lemma
+     * @property category category: part-of-speech or type (C for category)
      */
     @kotlinx.serialization.Serializable
-    open class W_P(
-        override val word: LemmaType,
-        override val pos: PosId,
-    ) : BaseKey(), Comparable<W_P>, Serializable {
+    open class KeyLC(
+        override val lemma: Lemma,
+        override val category: Category,
+    ) : BaseKey(), Comparable<KeyLC>, Serializable {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -37,18 +42,18 @@ interface Key {
             if (other == null || javaClass != other.javaClass) {
                 return false
             }
-            val that = other as W_P
-            if (word != that.word) {
+            val that = other as KeyLC
+            if (lemma != that.lemma) {
                 return false
             }
-            return this.pos == that.pos
+            return this.category == that.category
         }
 
         override fun hashCode(): Int {
-            return Objects.hash(word, pos)
+            return Objects.hash(lemma, category)
         }
 
-        override fun compareTo(other: W_P): Int {
+        override fun compareTo(other: KeyLC): Int {
             if (this == other) {
                 return 0
             }
@@ -56,62 +61,62 @@ interface Key {
         }
 
         override fun toString(): String {
-            return "($word,$pos)"
+            return "($lemma,$category)"
         }
 
         override fun toLongString(): String {
-            return "KEY WP ${javaClass.simpleName} $this"
+            return "KEY LC ${javaClass.simpleName} $this"
         }
 
         companion object {
 
             fun of(
                 lex: Lex,
-                wordExtractor: (Lex) -> LemmaType,
-                posExtractor: (Lex) -> PosId,
-            ): W_P {
-                return W_P(wordExtractor(lex), posExtractor(lex))
+                lemmaExtractor: (Lex) -> Lemma,
+                categoryExtractor: (Lex) -> Category,
+            ): KeyLC {
+                return KeyLC(lemmaExtractor(lex), categoryExtractor(lex))
             }
 
-            fun of_t(lex: Lex): W_P {
+            fun of_t(lex: Lex): KeyLC {
                 return of(lex, Lex::lemma, Lex::type)
             }
 
-            fun of_p(lex: Lex): W_P {
+            fun of_p(lex: Lex): KeyLC {
                 return of(lex, Lex::lemma, Lex::partOfSpeech)
             }
 
-            fun of_lc_t(lex: Lex): W_P {
+            fun of_lc_t(lex: Lex): KeyLC {
                 return of(lex, Lex::lCLemma, Lex::type)
             }
 
-            fun of_lc_p(lex: Lex): W_P {
+            fun of_lc_p(lex: Lex): KeyLC {
                 return of(lex, Lex::lCLemma, Lex::partOfSpeech)
             }
 
-            fun from(word: LemmaType, pos: PosId): W_P {
-                return W_P(word, pos)
+            fun from(lemma: Lemma, category: Category): KeyLC {
+                return KeyLC(lemma, category)
             }
 
-            val wpComparator: Comparator<W_P> = Comparator.comparing { obj: W_P -> obj.word }
-                .thenComparing { obj: W_P -> obj.pos }
+            val wpComparator: Comparator<KeyLC> = Comparator.comparing { obj: KeyLC -> obj.lemma }
+                .thenComparing { obj: KeyLC -> obj.category }
 
         }
     }
 
     /**
-     * (Word, PosOrType, Pronunciations)
+     * (Lemma, Category, Pronunciations)
      *
-     * @param word    word: lemma or LC lemma
-     * @param pos pos type: part-of-speech or type (P)
-     * @property pronunciations pronunciations (A for audio)
+     * @param lemma             lemma or LC lemma (L)
+     * @param category          category: part-of-speech or type (C)
+     * @property pronunciations pronunciations (P)
      */
     @kotlinx.serialization.Serializable
-    open class W_P_A(
-        override var word: LemmaType,
-        override var pos: PosId,
+    open class KeyLCP(
+        override var lemma: Lemma,
+        override var category: Category,
         val pronunciations: Set<Pronunciation>?,
-    ) : BaseKey(), Comparable<W_P_A> {
+    ) : BaseKey(), Comparable<KeyLCP> {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -120,11 +125,11 @@ interface Key {
             if (other == null || javaClass != other.javaClass) {
                 return false
             }
-            val that = other as W_P_A
-            if (word != that.word) {
+            val that = other as KeyLCP
+            if (lemma != that.lemma) {
                 return false
             }
-            if (this.pos != that.pos) {
+            if (this.category != that.category) {
                 return false
             }
             val p1 = pronunciations ?: emptySet()
@@ -133,10 +138,10 @@ interface Key {
         }
 
         override fun hashCode(): Int {
-            return Objects.hash(word, pos, pronunciations)
+            return Objects.hash(lemma, category, pronunciations)
         }
 
-        override fun compareTo(other: W_P_A): Int {
+        override fun compareTo(other: KeyLCP): Int {
             if (this == other) {
                 return 0
             }
@@ -144,41 +149,41 @@ interface Key {
         }
 
         override fun toString(): String {
-            return "($word,$pos,$pronunciations)"
+            return "($lemma,$category,$pronunciations)"
         }
 
         override fun toLongString(): String {
-            return "KEY WPA ${javaClass.simpleName} $this"
+            return "KEY LCP ${javaClass.simpleName} $this"
         }
 
         companion object {
 
             fun of(
                 lex: Lex,
-                wordExtractor: (Lex) -> LemmaType,
-                posExtractor: (Lex) -> PosId,
-            ): W_P_A {
-                return W_P_A(wordExtractor(lex), posExtractor(lex), lex.pronunciations)
+                lemmaExtractor: (Lex) -> Lemma,
+                categoryExtractor: (Lex) -> Category,
+            ): KeyLCP {
+                return KeyLCP(lemmaExtractor(lex), categoryExtractor(lex), lex.pronunciations)
             }
 
-            fun of_t(lex: Lex): W_P_A {
+            fun of_t(lex: Lex): KeyLCP {
                 return of(lex, Lex::lemma, Lex::type)
             }
 
-            fun of_p(lex: Lex): W_P_A {
+            fun of_p(lex: Lex): KeyLCP {
                 return of(lex, Lex::lemma, Lex::partOfSpeech)
             }
 
-            fun of_lc_t(lex: Lex): W_P_A {
+            fun of_lc_t(lex: Lex): KeyLCP {
                 return of(lex, Lex::lCLemma, Lex::type)
             }
 
-            fun of_lc_p(lex: Lex): W_P_A {
+            fun of_lc_p(lex: Lex): KeyLCP {
                 return of(lex, Lex::lCLemma, Lex::partOfSpeech)
             }
 
-            fun from(lemma: LemmaType, type: PosId, pronunciations: Set<Pronunciation>): W_P_A {
-                return W_P_A(lemma, type, pronunciations)
+            fun from(lemma: Lemma, type: Category, pronunciations: Set<Pronunciation>): KeyLCP {
+                return KeyLCP(lemma, type, pronunciations)
             }
 
             private val pronunciationsComparator: Comparator<Set<Pronunciation>?> =
@@ -194,25 +199,25 @@ interface Key {
                         ps1.toString().compareTo(ps2.toString())
                 }
 
-            val wpaComparator = compareBy<W_P_A> { it.word }
-                .thenBy { it.pos }
+            val wpaComparator = compareBy<KeyLCP> { it.lemma }
+                .thenBy { it.category }
                 .thenBy(nullsFirst(pronunciationsComparator)) { it.pronunciations }
         }
     }
 
     /**
-     * (Word, PosOrType, Discriminant) - Shallow key
+     * (Lemma, Category, Discriminant) - Shallow key
      *
-     * @param word    word: lemma or LC lemma
-     * @param pos pos type: part-of-speech or type (P for pos)
+     * @param lemma           lemma or LC lemma
+     * @param category        category: part-of-speech or type (C for category)
      * @property discriminant discriminant (D for discriminant)
      */
     @kotlinx.serialization.Serializable
-    open class W_P_D(
-        override val word: LemmaType,
-        override val pos: PosId,
-        val discriminant: String?,
-    ) : BaseKey(), Comparable<W_P_D> {
+    open class KeyLCD(
+        override val lemma: Lemma,
+        override val category: Category,
+        val discriminant: Discriminant?,
+    ) : BaseKey(), Comparable<KeyLCD> {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -221,21 +226,21 @@ interface Key {
             if (other == null || javaClass != other.javaClass) {
                 return false
             }
-            val that = other as W_P_D
-            if (word != that.word) {
+            val that = other as KeyLCD
+            if (lemma != that.lemma) {
                 return false
             }
-            if (this.pos != that.pos) {
+            if (this.category != that.category) {
                 return false
             }
             return this.discriminant == that.discriminant
         }
 
         override fun hashCode(): Int {
-            return Objects.hash(word, pos, discriminant)
+            return Objects.hash(lemma, category, discriminant)
         }
 
-        override fun compareTo(other: W_P_D): Int {
+        override fun compareTo(other: KeyLCD): Int {
             if (this == other) {
                 return 0
             }
@@ -243,45 +248,45 @@ interface Key {
         }
 
         override fun toString(): String {
-            return "($word,$pos,$discriminant)"
+            return "($lemma,$category,$discriminant)"
         }
 
         override fun toLongString(): String {
-            return "KEY WPD ${javaClass.simpleName} $this"
+            return "KEY LCD ${javaClass.simpleName} $this"
         }
 
         companion object {
 
             fun of(
                 lex: Lex,
-                wordExtractor: (Lex) -> LemmaType,
-                posExtractor: (Lex) -> PosId,
-            ): W_P_D {
-                return W_P_D(wordExtractor(lex), posExtractor(lex), lex.discriminant)
+                lemmaExtractor: (Lex) -> Lemma,
+                categoryExtractor: (Lex) -> Category,
+            ): KeyLCD {
+                return KeyLCD(lemmaExtractor(lex), categoryExtractor(lex), lex.discriminant)
             }
 
-            fun of_t(lex: Lex): W_P_D {
+            fun of_t(lex: Lex): KeyLCD {
                 return of(lex, Lex::lemma, Lex::type)
             }
 
-            fun of_p(lex: Lex): W_P_D {
+            fun of_p(lex: Lex): KeyLCD {
                 return of(lex, Lex::lemma, Lex::partOfSpeech)
             }
 
-            fun of_lc_t(lex: Lex): W_P_D {
+            fun of_lc_t(lex: Lex): KeyLCD {
                 return of(lex, Lex::lCLemma, Lex::type)
             }
 
-            fun of_lc_p(lex: Lex): W_P_D {
+            fun of_lc_p(lex: Lex): KeyLCD {
                 return of(lex, Lex::lCLemma, Lex::partOfSpeech)
             }
 
-            fun from(lemma: String, type: Char, discriminant: String?): W_P_D {
-                return W_P_D(lemma, type, discriminant)
+            fun from(lemma: Lemma, category: Category, discriminant: Discriminant?): KeyLCD {
+                return KeyLCD(lemma, category, discriminant)
             }
 
-            val wpdComparator: Comparator<W_P_D> = compareBy<W_P_D> { it.word }
-                .thenBy { it.pos }
+            val wpdComparator: Comparator<KeyLCD> = compareBy<KeyLCD> { it.lemma }
+                .thenBy { it.category }
                 .thenBy(nullsFirst(Comparator.naturalOrder())) { it.discriminant }
         }
     }

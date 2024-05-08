@@ -20,12 +20,12 @@ class TestKeys {
         val lexRowOuN = Lex(wordRow, "n", source = "source1").apply { pronunciations = setOf(pRowOu) }
         val lexRowAuN = Lex(wordRow, "n", source = "source2").apply { pronunciations = setOf(pRowAu) }
 
-        assertNotEquals(Key.W_P_A.of_t(lexRowOu), Key.W_P_A.of_t(lexRowAu))
-        assertNotEquals(Key.W_P_D.of_t(lexRowOu), Key.W_P_D.of_t(lexRowAu)) // because discriminant is different
-        assertEquals(Key.W_P_D.of_t(lexRowOuN), Key.W_P_D.of_t(lexRowAuN)) // because discriminant is same
+        assertNotEquals(Key.KeyLCP.of_t(lexRowOu), Key.KeyLCP.of_t(lexRowAu))
+        assertNotEquals(Key.KeyLCD.of_t(lexRowOu), Key.KeyLCD.of_t(lexRowAu)) // because discriminant is different
+        assertEquals(Key.KeyLCD.of_t(lexRowOuN), Key.KeyLCD.of_t(lexRowAuN)) // because discriminant is same
         assertEquals(
-            Key.W_P.of(lexRowOu, Lex::lemma, Lex::type),
-            Key.W_P.of(lexRowAu, Lex::lemma, Lex::type)
+            Key.KeyLC.of(lexRowOu, Lex::lemma, Lex::type),
+            Key.KeyLC.of(lexRowAu, Lex::lemma, Lex::type)
         )
     }
 
@@ -50,9 +50,9 @@ class TestKeys {
         ps.println("lex1 = $lexMobile1")
         ps.println("lex2 = $lexMobile2")
 
-        val k0 = Key.W_P_A.of_t(lexMobile0)
-        val k1 = Key.W_P_A.of_t(lexMobile1)
-        val k2 = Key.W_P_A.of_t(lexMobile2)
+        val k0 = Key.KeyLCP.of_t(lexMobile0)
+        val k1 = Key.KeyLCP.of_t(lexMobile1)
+        val k2 = Key.KeyLCP.of_t(lexMobile2)
         ps.println("key0 = $k0")
         ps.println("key1 = $k1")
         ps.println("key2 = $k2")
@@ -80,13 +80,13 @@ class TestKeys {
         val lexMobile1 = Lex(wordMobile, "n", source = "source1").apply { pronunciations = paMobile1.toSet() }
         val lexMobile2 = Lex(wordMobile, "n", source = "source2").apply { pronunciations = paMobile2.toSet() }
 
-        assertEquals(Key.W_P_A.of_t(lexMobile1), Key.W_P_A.of_t(lexMobile2))
-        assertEquals(Key.W_P_D.of_t(lexMobile1), Key.W_P_D.of_t(lexMobile2))
-        assertEquals(Key.W_P.of_t(lexMobile1), Key.W_P.of_t(lexMobile2))
+        assertEquals(Key.KeyLCP.of_t(lexMobile1), Key.KeyLCP.of_t(lexMobile2))
+        assertEquals(Key.KeyLCD.of_t(lexMobile1), Key.KeyLCD.of_t(lexMobile2))
+        assertEquals(Key.KeyLC.of_t(lexMobile1), Key.KeyLC.of_t(lexMobile2))
 
-        assertNotEquals(Key.W_P_A.of_t(lexMobile1), Key.W_P_A.of_t(lexMobile0))
-        assertEquals(Key.W_P_D.of_t(lexMobile1), Key.W_P_D.of_t(lexMobile0)) // because discriminant is both null
-        assertEquals(Key.W_P.of_t(lexMobile1), Key.W_P.of_t(lexMobile0))
+        assertNotEquals(Key.KeyLCP.of_t(lexMobile1), Key.KeyLCP.of_t(lexMobile0))
+        assertEquals(Key.KeyLCD.of_t(lexMobile1), Key.KeyLCD.of_t(lexMobile0)) // because discriminant is both null
+        assertEquals(Key.KeyLC.of_t(lexMobile1), Key.KeyLC.of_t(lexMobile0))
     }
 
     @Test
@@ -95,10 +95,10 @@ class TestKeys {
         val lexCriticalA = Lex(wordCritical, "a", source = "source1")
         val lexCriticalS = Lex(wordCritical, "s", source = "source2")
 
-        assertNotEquals(Key.W_P_A.of_t(lexCriticalA), Key.W_P_A.of_t(lexCriticalS))
-        assertNotEquals(Key.W_P_D.of_t(lexCriticalA), Key.W_P_D.of_t(lexCriticalS))
-        assertEquals(Key.W_P.of_p(lexCriticalA), Key.W_P.of_p(lexCriticalS))
-        assertEquals(Key.W_P_A.of_p(lexCriticalA), Key.W_P_A.of_p(lexCriticalS)) // A and S are merged
+        assertNotEquals(Key.KeyLCP.of_t(lexCriticalA), Key.KeyLCP.of_t(lexCriticalS))
+        assertNotEquals(Key.KeyLCD.of_t(lexCriticalA), Key.KeyLCD.of_t(lexCriticalS))
+        assertEquals(Key.KeyLC.of_p(lexCriticalA), Key.KeyLC.of_p(lexCriticalS))
+        assertEquals(Key.KeyLCP.of_p(lexCriticalA), Key.KeyLCP.of_p(lexCriticalS)) // A and S are merged
     }
 
     @Test
@@ -108,10 +108,10 @@ class TestKeys {
         val lexEarthL = Lex(wordEarthL, "n", source = "source1")
         val lexEarthU = Lex(wordEarthU, "n", source = "source2")
 
-        assertNotEquals(Key.W_P_A.of_t(lexEarthL), Key.W_P_A.of_t(lexEarthU))
-        assertNotEquals(Key.W_P_D.of_t(lexEarthL), Key.W_P_D.of_t(lexEarthU))
-        assertEquals(Key.W_P.of_lc_t(lexEarthL), Key.W_P.of_lc_t(lexEarthU))
-        assertEquals(Key.W_P_A.of_lc_t(lexEarthL), Key.W_P_A.of_lc_t(lexEarthU))
+        assertNotEquals(Key.KeyLCP.of_t(lexEarthL), Key.KeyLCP.of_t(lexEarthU))
+        assertNotEquals(Key.KeyLCD.of_t(lexEarthL), Key.KeyLCD.of_t(lexEarthU))
+        assertEquals(Key.KeyLC.of_lc_t(lexEarthL), Key.KeyLC.of_lc_t(lexEarthU))
+        assertEquals(Key.KeyLCP.of_lc_t(lexEarthL), Key.KeyLCP.of_lc_t(lexEarthU))
     }
 
     @Test

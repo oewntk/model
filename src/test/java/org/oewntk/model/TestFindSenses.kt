@@ -34,7 +34,7 @@ class TestFindSenses {
         ps.println("sense22=$sense22")
     }
 
-    private val lemma2Lexes = { lemma: LemmaType -> model.lexesByLemma!![lemma]!! }
+    private val lemma2Lexes = { lemma: Lemma -> model.lexesByLemma!![lemma]!! }
 
     private val sensekey2sense = { sk: SenseKey -> model.sensesById!![sk]!! }
 

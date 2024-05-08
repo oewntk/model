@@ -27,27 +27,27 @@ object LibTestModelQueries {
         return k.toString()
     }
 
-    fun testWordByType(model: CoreModel, lemma: String?, ps: PrintStream) {
+    fun testWordByType(model: CoreModel, lemma: Lemma, ps: PrintStream) {
         ps.println(lemma)
-        val lexes = model.lexesByLemma!![lemma!!]!!
+        val lexes = model.lexesByLemma!![lemma]!!
         dump(lexes, Lex::type, nullableDiscriminant, model, ps)
     }
 
-    fun testWordByPos(model: CoreModel, lemma: String?, ps: PrintStream) {
+    fun testWordByPos(model: CoreModel, lemma: Lemma, ps: PrintStream) {
         ps.println(lemma)
-        val lexes = model.lexesByLemma!![lemma!!]!!
+        val lexes = model.lexesByLemma!![lemma]!!
         dump(lexes, Lex::partOfSpeech, nullableDiscriminant, model, ps)
     }
 
-    fun testWordByTypeAndPronunciation(model: CoreModel, lemma: String?, ps: PrintStream) {
+    fun testWordByTypeAndPronunciation(model: CoreModel, lemma: Lemma, ps: PrintStream) {
         ps.println(lemma)
-        val lexes = model.lexesByLemma!![lemma!!]!!
+        val lexes = model.lexesByLemma!![lemma]!!
         dump(lexes, Lex::type, nullablePronunciations, model, ps)
     }
 
-    fun testWordByPosAndPronunciation(model: CoreModel, lemma: String?, ps: PrintStream) {
+    fun testWordByPosAndPronunciation(model: CoreModel, lemma: Lemma, ps: PrintStream) {
         ps.println(lemma)
-        val lexes = model.lexesByLemma!![lemma!!]!!
+        val lexes = model.lexesByLemma!![lemma]!!
         dump(lexes, Lex::partOfSpeech, nullablePronunciations, model, ps)
     }
 
@@ -96,8 +96,8 @@ object LibTestModelQueries {
         dumpSynset(sense.synsetId, model, indent + "\t", ps)
 
         // relations
-        val relations: Map<String, Set<String>>? = sense.relations
-        relations?.keys?.forEach { type: String ->
+        val relations: Map<Relation, Set<SenseKey>>? = sense.relations
+        relations?.keys?.forEach { type: Relation ->
             ps.printf(
                 "%s%-28s: [%s]%n",
                 indent,
@@ -120,16 +120,16 @@ object LibTestModelQueries {
     }
 
     private fun dumpSynset(synsetId: SynsetId, model: CoreModel, indent: String, ps: PrintStream) {
-        val synset = model.synsetsById!![synsetId]
+        val synset = model.synsetsById!![synsetId]!!
         dump(synset, indent, ps)
     }
 
     private fun toShortSynset(synsetId: SynsetId, model: CoreModel): String {
-        val synset = model.synsetsById!![synsetId]
+        val synset = model.synsetsById!![synsetId]!!
         return toShort(synset)
     }
 
-    private fun toShort(synset: Synset?) = "${synset!!.synsetId} ${synset.members.contentToString()} '${synset.toShortDefinition()}'"
+    private fun toShort(synset: Synset) = "${synset.synsetId} ${synset.members.contentToString()} '${synset.toShortDefinition()}'"
 
     private fun Synset?.toShortDefinition(): String {
         val definition = this!!.definition
@@ -139,12 +139,12 @@ object LibTestModelQueries {
         return definition
     }
 
-    private fun dump(synset: Synset?, indent: String, ps: PrintStream) {
-        ps.printf("%s%s%n", indent, synset!!.synsetId)
+    private fun dump(synset: Synset, indent: String, ps: PrintStream) {
+        ps.printf("%s%s%n", indent, synset.synsetId)
         ps.printf("%s{%s}%n", indent + "\t", synset.members.joinToString(","))
         ps.printf("%s%s%n", indent + "\t", synset.definitions.joinToString(","))
         val relations = synset.relations
-        relations?.keys?.forEach { type: String ->
+        relations?.keys?.forEach { type: Relation ->
             ps.printf(
                 "%s%-20s: %s%n",
                 indent + "\t",

@@ -4,16 +4,16 @@
 
 package org.oewntk.model
 
-typealias LemmaType = String
-typealias MorphType = String
-typealias PronunciationValueType = String
-typealias PronunciationVarietyType = String
-
+typealias Lemma = String
 typealias SenseKey = String
 typealias SynsetId = String
-typealias RelationId = String
-typealias PosId = Char
+typealias Relation = String
+typealias Category = Char
+typealias Discriminant = String
+typealias Domain = String
+typealias Morph = String
+typealias PronunciationValue = String
+typealias PronunciationVariety = String
 typealias VerbFrameId = String
 typealias VerbTemplateId = Int
-
-typealias AdjPositionType = String
+typealias AdjPosition = String

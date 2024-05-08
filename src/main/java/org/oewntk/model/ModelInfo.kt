@@ -31,23 +31,23 @@ object ModelInfo {
             .count()
 
         val distinctByKeyOEWNLexCount = model.lexes
-            .map { W_P_A.of_t(it) }
+            .map { KeyLCP.of_t(it) }
             .distinct()
             .count()
         val distinctByKeyShallowLexCount = model.lexes
-            .map { W_P_D.of_t(it) }
+            .map { KeyLCD.of_t(it) }
             .distinct()
             .count()
         val distinctByKeyPOSLexCount = model.lexes
-            .map { W_P_A.of_p(it) }
+            .map { KeyLCP.of_p(it) }
             .distinct()
             .count()
         val distinctByKeyICLexCount = model.lexes
-            .map { W_P_A.of_lc_t(it) }
+            .map { KeyLCP.of_lc_t(it) }
             .distinct()
             .count()
         val distinctByKeyPWNLexCount = model.lexes
-            .map { W_P.of_lc_p(it) }
+            .map { KeyLC.of_lc_p(it) }
             .distinct()
             .count()
         val distinctSenseGroupsCount = model.lexes

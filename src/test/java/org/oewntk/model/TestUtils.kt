@@ -38,7 +38,7 @@ object TestUtils {
         return sw.toString()
     }
 
-    fun lexHypermapForLemmaToString(lexHypermap: Map<LemmaType, Map<LemmaType, Collection<Lex>>>, lemma: LemmaType): String {
+    fun lexHypermapForLemmaToString(lexHypermap: Map<Lemma, Map<Lemma, Collection<Lex>>>, lemma: Lemma): String {
         val map = lexHypermap[lemma.lowercase()]!!
         val sw = StringWriter()
         map.keys.forEach { cs ->

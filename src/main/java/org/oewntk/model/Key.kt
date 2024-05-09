@@ -98,8 +98,9 @@ interface Key {
                 return KeyLC(lemma, category)
             }
 
-            val wpComparator: Comparator<KeyLC> = Comparator.comparing { obj: KeyLC -> obj.lemma }
-                .thenComparing { obj: KeyLC -> obj.category }
+            val wpComparator: Comparator<KeyLC> = Comparator
+                .comparing { k: KeyLC -> k.lemma }
+                .thenComparing { k: KeyLC -> k.category }
 
         }
     }

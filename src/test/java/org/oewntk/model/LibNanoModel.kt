@@ -5,30 +5,29 @@ package org.oewntk.model
 
 object LibNanoModel {
 
-    val domain1 = "communication"
-    val domain2 = "body"
-    val lexid1 = 0
-    val lexid2 = 0
-    val lemma1 = "jest"
-    val lemma2 = "joke"
-    val pos = 'v'
-    val ipa1 = "dʒɛst"
+    const val domain1 = "communication"
+    const val domain2 = "body"
+    const val lexid1 = 0
+    const val lexid2 = 0
+    const val lemma1 = "jest"
+    const val lemma2 = "joke"
+    const val pos = 'v'
+    const val senseKey11 = "jest%2:32:00::"
+    const val senseKey12 = "jest%2:29:00::"
+    const val senseKey21 = "joke%2:32:00::"
+    const val senseKey22 = "joke%2:29:00::"
+    const val synsetId1 = "00855315-v"
+    const val synsetId2 = "00105308-v"
+    const val ipa1 = "dʒɛst"
+    const val ipa21 = "dʒəʊk"
+    const val ipa22 = "dʒoʊk"
+
     val pronunciation1 = Pronunciation(ipa1, null)
-    val ipa21 = "dʒəʊk"
-    val ipa22 = "dʒoʊk"
     val pronunciation21 = Pronunciation(ipa21, "GB")
     val pronunciation22 = Pronunciation(ipa22, "US")
 
-    val senseKey11 = "jest%2:32:00::"
-    val senseKey12 = "jest%2:29:00::"
-    val senseKey21 = "joke%2:32:00::"
-    val senseKey22 = "joke%2:29:00::"
-
     val lex1 = Lex(lemma1, pos.toString(), mutableListOf(senseKey11, senseKey12)).apply { pronunciations = setOf(pronunciation1) }
     val lex2 = Lex(lemma2, pos.toString(), mutableListOf(senseKey21, senseKey22)).apply { pronunciations = setOf(pronunciation21, pronunciation22) }
-
-    val synsetId1 = "00855315-v"
-    val synsetId2 = "00105308-v"
 
     val synset1 = Synset(
         synsetId1,

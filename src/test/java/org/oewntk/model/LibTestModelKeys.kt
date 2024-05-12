@@ -173,26 +173,26 @@ object LibTestModelKeys {
     ): IntArray {
         val lc = cased.lowercase()
         val isCased = lc != cased
-        val pset = p.toSet()
+        val pSet = p.toSet()
 
         val keys: MutableList<MonoValued> = ArrayList()
         for (category in categories) {
-            keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, Lex::type, cased, category, pset))
+            keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, Lex::type, cased, category, pSet))
             if (p.size > 1) {
-                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, Lex::type, cased, category, pset))
+                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, Lex::type, cased, category, pSet))
             }
             if (isCased) {
-                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, Lex::type, cased.lowercase(), category, pset))
-                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), category, pset))
-                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), category, pset))
+                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, Lex::type, cased.lowercase(), category, pSet))
+                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), category, pSet))
+                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, Lex::type, cased.lowercase(), category, pSet))
             }
 
             if (category == 's' || category == 'a') {
-                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, Lex::partOfSpeech, cased, category, pset))
+                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, Lex::partOfSpeech, cased, category, pSet))
                 if (isCased) {
-                    keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, Lex::partOfSpeech, cased.lowercase(), category, pset))
-                    keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), category, pset))
-                    keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), category, pset))
+                    keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, Lex::partOfSpeech, cased.lowercase(), category, pSet))
+                    keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), category, pSet))
+                    keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, Lex::partOfSpeech, cased.lowercase(), category, pSet))
                 }
             }
         }

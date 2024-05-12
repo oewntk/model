@@ -8,7 +8,7 @@ import java.util.*
 
 /**
  * Keys are to be interpreted here in the relation database sense:
- * A t-uple that uniquely identifies an entry (Mono) or a set of entries (Multi).
+ * A tuple that uniquely identifies an entry (Mono) or a set of entries (Multi).
  * The functional extension KeyF just produces these entries.
  */
 interface Key {

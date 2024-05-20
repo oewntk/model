@@ -13,7 +13,7 @@ import java.util.*
  * @property variety variety
  */
 @kotlinx.serialization.Serializable
-class Pronunciation(
+data class Pronunciation(
     val value: PronunciationValue,
     val variety: PronunciationVariety?,
 ) : Comparable<Pronunciation>, Serializable {
@@ -43,17 +43,17 @@ class Pronunciation(
 
     // order
 
-    @Transient
-    val comparator: Comparator<Pronunciation> = compareBy(Pronunciation::variety).thenBy(Pronunciation::value)
-
-    @Transient
-    val comparatorNull: Comparator<Pronunciation?> = nullsFirst(comparator)
-
     override fun compareTo(other: Pronunciation): Int {
         return comparator.compare(this, other)
     }
 
     companion object {
+
+        @Transient
+        val comparator: Comparator<Pronunciation> = compareBy(Pronunciation::variety).thenBy(Pronunciation::value)
+
+        @Transient
+        val comparatorNull: Comparator<Pronunciation?> = nullsFirst(comparator)
 
         fun ipa(value: PronunciationValue): Pronunciation {
             return Pronunciation(value, null)

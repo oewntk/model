@@ -41,7 +41,7 @@ data class Synset(
     val members: Array<Lemma>,
     val definitions: Array<String>,
     val examples: Array<String>? = null,
-    var relations: MutableMap<Relation, MutableSet<SynsetId>>? = null,
+    var relations: Map<Relation, Set<SynsetId>>? = null,
     val wikidata: String? = null,
 
     ) : Comparable<Synset>, Serializable {
@@ -71,9 +71,9 @@ data class Synset(
         if (relations == null) {
             relations = HashMap()
         }
-        val inverseRelations = relations!!.computeIfAbsent(inverseType) { LinkedHashSet() }
+        val inverseRelations = relations!!.toMutableMap().computeIfAbsent(inverseType) { LinkedHashSet() }
         require(!inverseRelations.contains(targetSynsetId)) { "Inverse relation $inverseType from $synsetId to $targetSynsetId was already there." }
-        inverseRelations.add(targetSynsetId)
+        inverseRelations.toMutableSet().add(targetSynsetId)
     }
 
     // computed

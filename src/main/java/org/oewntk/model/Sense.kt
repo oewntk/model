@@ -49,7 +49,7 @@ data class Sense(
     val synsetId: SynsetId,
     val verbFrames: Array<VerbFrameId>? = null,
     val adjPosition: AdjPosition? = null,
-    var relations: MutableMap<Relation, MutableSet<SenseKey>>? = null,
+    var relations: Map<Relation, Set<SenseKey>>? = null,
     val examples: Array<String>? = null,
 
     ) : Comparable<Sense>, Serializable {
@@ -80,9 +80,9 @@ data class Sense(
         if (relations == null) {
             relations = HashMap()
         }
-        val inverseRelations = relations!!.computeIfAbsent(inverseType) { LinkedHashSet() }
+        val inverseRelations = relations!!.toMutableMap().computeIfAbsent(inverseType) { LinkedHashSet() }
         require(!inverseRelations.contains(targetSensekey)) { "Inverse relation $inverseType from $synsetId to $targetSensekey was already there." }
-        inverseRelations.add(targetSensekey)
+        inverseRelations.toMutableSet().add(targetSensekey)
     }
 
     // computed

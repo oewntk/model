@@ -30,7 +30,7 @@ data class Lex(
     val lemma: Lemma,
     val type: Category,
     val discriminant: Discriminant?,
-    var senseKeys: MutableList<SenseKey>,
+    var senseKeys: List<SenseKey>,
     val source: String?,
 
     ) : Serializable /*, Comparable<Lex> */ {
@@ -56,7 +56,7 @@ data class Lex(
 
         lemma: Lemma,
         code: String,
-        senseKeys: MutableList<SenseKey> = ArrayList(),
+        senseKeys: List<SenseKey> = ArrayList(),
         source: String? = null,
 
         ) : this(lemma, code[0], if (code.length > 1) code.substring(1) else null, senseKeys, source)

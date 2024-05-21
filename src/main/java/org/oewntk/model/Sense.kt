@@ -77,12 +77,14 @@ data class Sense(
      * @param targetSensekey target sense id (sensekey)
      */
     fun addInverseRelation(inverseType: Relation, targetSensekey: SenseKey) {
-        if (relations == null) {
-            relations = HashMap()
-        }
-        val inverseRelations = relations!!.toMutableMap().computeIfAbsent(inverseType) { LinkedHashSet() }
+        val mutableRelations = if (relations == null) HashMap() else relations!!.toMutableMap()
+        relations = mutableRelations
+        val inverseRelations =
+            mutableRelations.computeIfPresent(inverseType) { k: Relation, v: Set<SynsetId> -> v.toMutableSet() }
+                ?: mutableRelations.computeIfAbsent(inverseType) { LinkedHashSet() }
+
         require(!inverseRelations.contains(targetSensekey)) { "Inverse relation $inverseType from $synsetId to $targetSensekey was already there." }
-        inverseRelations.toMutableSet().add(targetSensekey)
+        (inverseRelations as MutableSet<SynsetId>).add(targetSensekey)
     }
 
     // computed
@@ -139,7 +141,7 @@ data class Sense(
     }
 
     fun toLongString(): String {
-        val relationsStr = relations.joinToString(",")
+        val relationsStr = relations?.joinToString(",") ?: ""
         return "[${lexIndex + 1}] of '${lex.lemma}' $senseId $type $synsetId {$relationsStr}"
     }
 

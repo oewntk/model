@@ -68,12 +68,14 @@ data class Synset(
      * @param targetSynsetId target synset id
      */
     fun addInverseRelation(inverseType: Relation, targetSynsetId: SynsetId) {
-        if (relations == null) {
-            relations = HashMap()
-        }
-        val inverseRelations = relations!!.toMutableMap().computeIfAbsent(inverseType) { LinkedHashSet() }
+        val mutableRelations = if (relations == null) HashMap() else relations !!.toMutableMap()
+        relations = mutableRelations
+        val inverseRelations =
+            mutableRelations.computeIfPresent(inverseType, ){ k: Relation, v: Set<SynsetId> -> v.toMutableSet() }
+            ?: mutableRelations.computeIfAbsent(inverseType) { LinkedHashSet() }
+
         require(!inverseRelations.contains(targetSynsetId)) { "Inverse relation $inverseType from $synsetId to $targetSynsetId was already there." }
-        inverseRelations.toMutableSet().add(targetSynsetId)
+        (inverseRelations as MutableSet<SynsetId>).add(targetSynsetId)
     }
 
     // computed
@@ -139,6 +141,12 @@ data class Synset(
     // stringify
 
     override fun toString(): String {
+        val membersStr = members.joinToString(",")
+        val relationsStr = relations?.get("hypernym") ?: ""
+        return "$synsetId $type {$membersStr} '$definition' ^$relationsStr"
+    }
+
+    fun toLongString(): String {
         val membersStr = members.joinToString(",")
         val relationsStr = relations?.joinToString(",") ?: ""
         return "$synsetId $type {$membersStr} '$definition' {$relationsStr}"

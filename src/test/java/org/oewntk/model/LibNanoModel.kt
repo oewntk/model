@@ -7,8 +7,6 @@ object LibNanoModel {
 
     const val domain1 = "communication"
     const val domain2 = "body"
-    const val lexid1 = 0
-    const val lexid2 = 0
     const val lemma1 = "jest"
     const val lemma2 = "joke"
     const val pos = 'v'
@@ -26,8 +24,8 @@ object LibNanoModel {
     val pronunciation21 = Pronunciation(ipa21, "GB")
     val pronunciation22 = Pronunciation(ipa22, "US")
 
-    val lex1 = Lex(lemma1, pos.toString(), mutableListOf(senseKey11, senseKey12)).apply { pronunciations = setOf(pronunciation1) }
-    val lex2 = Lex(lemma2, pos.toString(), mutableListOf(senseKey21, senseKey22)).apply { pronunciations = setOf(pronunciation21, pronunciation22) }
+    val lex1 = Lex(lemma1, pos.toString(), listOf(senseKey11, senseKey12)).apply { pronunciations = setOf(pronunciation1) }
+    val lex2 = Lex(lemma2, pos.toString(), listOf(senseKey21, senseKey22)).apply { pronunciations = setOf(pronunciation21, pronunciation22) }
 
     val synset1 = Synset(
         synsetId1,
@@ -43,14 +41,51 @@ object LibNanoModel {
         arrayOf(lemma1, lemma2),
         arrayOf("act in a funny teasing way")
     )
-    val sense11 = Sense(senseKey11, lex1, pos, lexid1, synsetId1)
-    val sense12 = Sense(senseKey12, lex1, pos, lexid2, synsetId2)
-    val sense21 = Sense(senseKey21, lex2, pos, lexid1, synsetId1)
-    val sense22 = Sense(senseKey22, lex2, pos, lexid2, synsetId2)
+    val sense11 = Sense(senseKey11, lex1, pos, 0, synsetId1)
+    val sense12 = Sense(senseKey12, lex1, pos, 1, synsetId2)
+    val sense21 = Sense(senseKey21, lex2, pos, 0, synsetId1)
+    val sense22 = Sense(senseKey22, lex2, pos, 1, synsetId2)
 
-    val lexes = listOf(lex1, lex2)
-    val senses = listOf(sense11, sense12, sense21, sense22)
-    val synsets = listOf(synset1, synset2)
+    // relations
+
+    const val synsetIdH1 = "00742582-v"
+    val synsetH1 = Synset(
+        synsetIdH1,
+        pos,
+        domain1,
+        arrayOf("communicate", "intercommunicate"),
+        arrayOf("transmit thoughts or feelings")
+    )
+
+    const val synsetIdD1 = "10240982-n"
+    val synsetD1 = Synset(
+        synsetIdD1,
+        'n',
+        "person",
+        arrayOf("jester", "fool", "motley fool"),
+        arrayOf("a professional clown employed to entertain a king or nobleman in the Middle Ages")
+    )
+
+    val senseKeyD11 = "jester%1:18:00::"
+    val lexD1 = Lex("jester", "n", listOf(senseKeyD11))
+    val senseD11 = Sense(
+        senseKeyD11, lexD1, 'n', 0, "10240982-n"
+    )
+
+    init {
+        synset1.relations = mapOf(
+            "hypernym" to setOf(synsetH1.synsetId),
+            "also" to setOf(synset2.synsetId, synsetD1.synsetId),
+        )
+        sense11.relations = mapOf(
+            "derivation" to setOf(senseD11.senseKey),
+            "also" to setOf(sense12.senseKey),
+        )
+    }
+
+    val lexes = listOf(lex1, lex2, lexD1)
+    val senses = listOf(sense11, sense12, sense21, sense22, senseD11)
+    val synsets = listOf(synset1, synset2, synsetH1, synsetD1)
 
     val model = CoreModel(lexes, senses, synsets)
 }

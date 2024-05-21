@@ -10,7 +10,7 @@ object InverseRelationFactory {
 
     private const val LOG_ALREADY_PRESENT = false
 
-    private val INVERSE_SYNSET_RELATIONS = mapOf(
+    val INVERSE_SYNSET_RELATIONS = mapOf(
         "hypernym" to "hyponym",
         "instance_hypernym" to "instance_hyponym",
         "mero_part" to "holo_part",
@@ -23,11 +23,11 @@ object InverseRelationFactory {
         "domain_region" to "has_domain_region",
     )
 
-    private val INVERSE_SENSE_RELATIONS = mapOf(
+    val INVERSE_SENSE_RELATIONS = mapOf(
         "exemplifies" to "is_exemplified_by",
         "domain_topic" to "has_domain_topic",
         "domain_region" to "has_domain_region",
-    )
+     )
 
     /**
      * Generate inverse synset relations
@@ -35,14 +35,25 @@ object InverseRelationFactory {
      * @param synsetsById synsets mapped by id
      * @return count
      */
-    fun makeSynsetRelations(synsetsById: Map<SynsetId, Synset>): Int {
+    fun makeInverseSynsetRelations(synsetsById: Map<SynsetId, Synset>): Int {
+        return makeInverseSynsetRelations(INVERSE_SYNSET_RELATIONS, synsetsById)
+    }
+
+    /**
+     * Generate inverse synset relations as per map
+     *
+     * @param toInverse relation mapped to its inverse
+     * @param synsetsById synsets mapped by id
+     * @return count
+     */
+    fun makeInverseSynsetRelations(toInverse: Map<Relation, Relation>, synsetsById: Map<SynsetId, Synset>): Int {
         var count = 0
         for ((sourceSynsetId, sourceSynset) in synsetsById) {
             if (!sourceSynset.relations.isNullOrEmpty()) {
-                INVERSE_SYNSET_RELATIONS.keys.forEach {
+                toInverse.keys.forEach {
                     val targetSynsetIds = sourceSynset.relations!![it]
                     if (!targetSynsetIds.isNullOrEmpty()) {
-                        val inverseType = INVERSE_SYNSET_RELATIONS[it]
+                        val inverseType = toInverse[it]
                         for (targetSynsetId in targetSynsetIds) {
                             val targetSynset = checkNotNull(synsetsById[targetSynsetId])
                             try {
@@ -67,14 +78,25 @@ object InverseRelationFactory {
      * @param sensesById senses mapped by id
      * @return count
      */
-    fun makeSenseRelations(sensesById: Map<SenseKey, Sense>): Int {
+    fun makeInverseSenseRelations(sensesById: Map<SenseKey, Sense>): Int {
+        return makeInverseSenseRelations(INVERSE_SENSE_RELATIONS, sensesById)
+    }
+
+    /**
+     * Generate inverse sense relations
+     *
+     * @param toInverse relation mapped to its inverse
+     * @param sensesById senses mapped by id
+     * @return count
+     */
+    fun makeInverseSenseRelations(toInverse: Map<Relation, Relation>, sensesById: Map<SenseKey, Sense>): Int {
         var count = 0
         for ((sourceSenseId, sourceSense) in sensesById) {
             if (!sourceSense.relations.isNullOrEmpty()) {
-                INVERSE_SENSE_RELATIONS.keys.forEach {
+                toInverse.keys.forEach {
                     val targetSenseIds = sourceSense.relations!![it]
                     if (!targetSenseIds.isNullOrEmpty()) {
-                        val inverseType = INVERSE_SENSE_RELATIONS[it]!!
+                        val inverseType = toInverse[it]!!
                         for (targetSenseId in targetSenseIds) {
                             val targetSense = checkNotNull(sensesById[targetSenseId])
                             try {

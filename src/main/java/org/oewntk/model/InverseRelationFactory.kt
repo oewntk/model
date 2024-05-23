@@ -10,7 +10,7 @@ object InverseRelationFactory {
 
     private const val LOG_ALREADY_PRESENT = false
 
-    val INVERSE_SYNSET_RELATIONS = mapOf(
+    private val INVERSE_SYNSET_RELATIONS = mapOf(
         "hypernym" to "hyponym",
         "instance_hypernym" to "instance_hyponym",
         "mero_part" to "holo_part",

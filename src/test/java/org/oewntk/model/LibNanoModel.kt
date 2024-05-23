@@ -66,7 +66,7 @@ object LibNanoModel {
         arrayOf("a professional clown employed to entertain a king or nobleman in the Middle Ages")
     )
 
-    val senseKeyD11 = "jester%1:18:00::"
+    const val senseKeyD11 = "jester%1:18:00::"
     val lexD1 = Lex("jester", "n", listOf(senseKeyD11))
     val senseD11 = Sense(
         senseKeyD11, lexD1, 'n', 0, "10240982-n"

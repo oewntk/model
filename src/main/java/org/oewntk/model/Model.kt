@@ -11,16 +11,14 @@ data class DataModel(
     override val lexes: Collection<Lex>,
     override val senses: Collection<Sense>,
     override val synsets: Collection<Synset>,
-    override var source: String?,
     val verbFrames: Collection<VerbFrame>,
     val verbTemplates: Collection<VerbTemplate>,
-    var source2: String? = null,
 
     ) : BaseModel(), Serializable {
 
     constructor (
         model: Model,
-    ) : this(model.lexes, model.senses, model.synsets, model.source, model.verbFrames, model.verbTemplates, model.source2)
+    ) : this(model.lexes, model.senses, model.synsets, model.verbFrames, model.verbTemplates)
 }
 
 /**
@@ -96,9 +94,11 @@ class Model private constructor(
      */
     constructor (
         data: DataModel,
+        source0: String,
+        source20: String,
     ) : this(data.lexes, data.senses, data.synsets, data.verbFrames, data.verbTemplates) {
-        source = data.source
-        source2 = data.source2
+        source = source0
+        source2 = source20
     }
 
     /**

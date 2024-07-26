@@ -13,7 +13,6 @@ import java.io.Serializable
  * @property lexes          lexical items (unmodifiable)
  * @property senses         senses (unmodifiable)
  * @property synsets        synsets (unmodifiable)
- * @property source         source, typically input directory
  */
 @kotlinx.serialization.Serializable
 sealed class BaseModel : Serializable {
@@ -21,7 +20,6 @@ sealed class BaseModel : Serializable {
     abstract val lexes: Collection<Lex>
     abstract val senses: Collection<Sense>
     abstract val synsets: Collection<Synset>
-    abstract var source: String?
 }
 
 @kotlinx.serialization.Serializable
@@ -29,13 +27,12 @@ data class DataCoreModel(
     override val lexes: Collection<Lex>,
     override val senses: Collection<Sense>,
     override val synsets: Collection<Synset>,
-    override var source: String? = null,
 
     ) : BaseModel(), Serializable {
 
     constructor (
         model: CoreModel,
-    ) : this(model.lexes, model.senses, model.synsets, model.source)
+    ) : this(model.lexes, model.senses, model.synsets)
 }
 
 /**
@@ -55,7 +52,7 @@ open class CoreModel(
     override val lexes: Collection<Lex>,
     override val senses: Collection<Sense>,
     override val synsets: Collection<Synset>,
-    override var source: String? = null,
+    var source: String? = null,
 
     ) : BaseModel(), Serializable {
 
@@ -66,7 +63,7 @@ open class CoreModel(
      */
     constructor (
         data: DataCoreModel,
-    ) : this(data.lexes, data.senses, data.synsets, data.source)
+    ) : this(data.lexes, data.senses, data.synsets)
 
     /**
      * Cached

@@ -7,7 +7,7 @@
 
   <groupId>io.github.oewntk</groupId>
   <artifactId>model</artifactId>
-  <version>2.1.1</version>
+  <version>2.1.2</version>
   <name>model</name>
   <description>Wordnet model.</description>
   <url>https://github.com/oewntk/model</url>
@@ -255,7 +255,7 @@
         <version>1.6.7</version>
         <extensions>true</extensions>
         <configuration>
-          <serverId>ossrh_oewntk</serverId>
+          <serverId>ossrh</serverId>
           <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>
@@ -266,12 +266,12 @@
 
   <distributionManagement>
     <repository>
-      <id>ossrh_oewntk</id>
+      <id>ossrh</id>
       <name>Maven Central Staging Repository</name>
       <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2</url>
     </repository>
     <snapshotRepository>
-      <id>ossrh_oewntk</id>
+      <id>ossrh</id>
       <name>Maven Central Snapshot Repository</name>
       <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>

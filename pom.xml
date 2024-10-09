@@ -255,7 +255,7 @@
         <version>1.6.14</version>
         <extensions>true</extensions>
         <configuration>
-          <serverId>ossrh</serverId>
+          <serverId>ossrh_oewntk</serverId>
           <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>
@@ -266,12 +266,12 @@
 
   <distributionManagement>
     <repository>
-      <id>ossrh</id>
+      <id>ossrh_oewntk</id>
       <name>Maven Central Staging Repository</name>
       <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2</url>
     </repository>
     <snapshotRepository>
-      <id>ossrh</id>
+      <id>ossrh_oewntk</id>
       <name>Maven Central Snapshot Repository</name>
       <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>

@@ -1,8 +1,8 @@
 <p align="center">
-<img width="256" height="256" src="images/oewntk.png" alt="OEWNTK" alt="XEWN">
+<img width="256" height="256" src="images/oewntk.png" alt="OEWNTK">
 </p>
 <p align="center">
-<img width="150"src="images/mavencentral.png" alt="MavenCentral">
+<img width="150" src="images/mavencentral.png" alt="MavenCentral">
 </p>
 
 # OEWN model

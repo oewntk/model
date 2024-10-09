@@ -19,7 +19,7 @@ object LibTestModelLexGroups {
 
     fun testCIMultipleAll(model: CoreModel, ps: PrintStream) {
         cSLemmasByLCLemmaHavingMultipleCount(model)
-            .forEach { (u: String?, cs: Set<String>?) ->
+            .forEach { (u: String?, cs: Set<String>) ->
                 ps.println("$u ${cs.joinToString(separator = ",", prefix = "{", postfix = "}")}")
             }
     }

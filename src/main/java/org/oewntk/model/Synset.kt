@@ -16,6 +16,7 @@ import java.util.*
  * @param members         synset lemma members
  * @param definitions     definitions
  * @param examples        examples
+ * @param usages          usages
  * @param wikidata        wiki data
  * @param relations       synset relations mapped by type
  *
@@ -25,6 +26,7 @@ import java.util.*
  * @property members      synset lemma members
  * @property definitions  definitions
  * @property examples     examples
+ * @property usages       usages
  * @property wikidata     wiki data
  * @property relations    synset relations mapped by type
  *
@@ -41,6 +43,7 @@ data class Synset(
     val members: Array<Lemma>,
     val definitions: Array<String>,
     val examples: Array<Pair<String, String?>>? = null,
+    val usages: Array<String>? = null,
     var relations: Map<Relation, Set<SynsetId>>? = null,
     val wikidata: String? = null,
 

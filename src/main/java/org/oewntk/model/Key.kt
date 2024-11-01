@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2021-2024. Bernard Bou.
  */
+@file:Suppress("FunctionName")
+
 package org.oewntk.model
 
 import java.io.Serializable

@@ -129,6 +129,7 @@ class Model private constructor(
     /**
      * Verb frames mapped by id
      */
+    @Suppress("unused")
     @Transient
     var verbFramesById: Map<VerbFrameId, VerbFrame>? = null
         get() {

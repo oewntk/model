@@ -52,6 +52,7 @@ data class Pronunciation(
         @Transient
         val comparator: Comparator<Pronunciation> = compareBy(Pronunciation::variety).thenBy(Pronunciation::value)
 
+        @Suppress("unused")
         @Transient
         val comparatorNull: Comparator<Pronunciation?> = nullsFirst(comparator)
 

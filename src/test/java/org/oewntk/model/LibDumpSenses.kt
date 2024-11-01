@@ -5,6 +5,7 @@ package org.oewntk.model
 
 import java.io.PrintStream
 
+@Suppress("unused")
 object LibDumpSenses {
 
     private fun dumpSensesByDecreasingTagCount(senses: List<Sense>, ps: PrintStream) {

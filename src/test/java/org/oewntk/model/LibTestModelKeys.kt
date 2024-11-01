@@ -92,6 +92,7 @@ object LibTestModelKeys {
 
     // W O R D    T E S T S
 
+    @Suppress("SameParameterValue")
     private fun testWordMulti(
         model: CoreModel,
         ps: PrintStream,
@@ -241,6 +242,7 @@ object LibTestModelKeys {
 
     // P R O N U N C I A T I O N   / S H A L L O W    T E S T S
 
+    @Suppress("SameParameterValue")
     private fun testShallow(
         model: CoreModel?,
         ps: PrintStream,
@@ -256,6 +258,7 @@ object LibTestModelKeys {
         return testKeysMulti(model, ps, lemma, *keys.toTypedArray<MultiValued>())
     }
 
+    @Suppress("SameParameterValue")
     private fun testPronunciations(
         model: CoreModel?,
         ps: PrintStream,

@@ -305,6 +305,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
         /**
          * Functional part that yields single value
          */
+        @Suppress("unused")
         class Mono private constructor(
             lemma: Lemma,
             category: Category,

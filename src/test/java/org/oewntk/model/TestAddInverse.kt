@@ -15,6 +15,7 @@ import java.io.PrintStream
 
 class TestAddInverse {
 
+    @Suppress("SameParameterValue")
     private fun dump(model: CoreModel, ps: PrintStream) {
         dumpSynsets(model, ps)
         dumpSenses(model, ps)

@@ -6,8 +6,8 @@ package org.oewntk.model
 import junit.framework.TestCase.assertEquals
 import org.junit.BeforeClass
 import org.junit.Test
-import org.oewntk.model.LibNanoModel.lemma1
-import org.oewntk.model.LibNanoModel.lemma2
+import org.oewntk.model.LibNanoModel.LEMMA1
+import org.oewntk.model.LibNanoModel.LEMMA2
 import org.oewntk.model.LibNanoModel.model
 import org.oewntk.model.LibNanoModel.sense11
 import org.oewntk.model.LibNanoModel.sense12
@@ -51,20 +51,20 @@ class TestFindSenses {
 
     @Test
     fun testFindSensesOfLemmaInSynset() {
-        val result11 = synset1.findSenseOf(lemma1, lemma2Lexes, sensekey2sense)
-        ps.println("senseOf $lemma1 in $synset1 is $result11")
+        val result11 = synset1.findSenseOf(LEMMA1, lemma2Lexes, sensekey2sense)
+        ps.println("senseOf $LEMMA1 in $synset1 is $result11")
         assertEquals(sense11, result11)
 
-        val result21 = synset1.findSenseOf(lemma2, lemma2Lexes, sensekey2sense)
-        ps.println("senseOf $lemma2 in $synset1 is $result21")
+        val result21 = synset1.findSenseOf(LEMMA2, lemma2Lexes, sensekey2sense)
+        ps.println("senseOf $LEMMA2 in $synset1 is $result21")
         assertEquals(sense21, result21)
 
-        val result12 = synset2.findSenseOf(lemma1, lemma2Lexes, sensekey2sense)
-        ps.println("senseOf $lemma1 in $synset2 is $result12")
+        val result12 = synset2.findSenseOf(LEMMA1, lemma2Lexes, sensekey2sense)
+        ps.println("senseOf $LEMMA1 in $synset2 is $result12")
         assertEquals(sense12, result12)
 
-        val result22 = synset2.findSenseOf(lemma2, lemma2Lexes, sensekey2sense)
-        ps.println("senseOf $lemma2 in $synset2 is $result22")
+        val result22 = synset2.findSenseOf(LEMMA2, lemma2Lexes, sensekey2sense)
+        ps.println("senseOf $LEMMA2 in $synset2 is $result22")
         assertEquals(sense22, result22)
     }
 

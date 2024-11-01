@@ -73,6 +73,7 @@ object LibTestModelQueries {
         }
     }
 
+    @Suppress("SameParameterValue")
     private fun dump(senses: Collection<SenseKey>, model: CoreModel, indent: String, ps: PrintStream) {
         senses.forEach { sk: SenseKey ->
             ps.printf("%s%s%n", indent, sk)

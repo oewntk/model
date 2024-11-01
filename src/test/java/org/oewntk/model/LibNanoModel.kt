@@ -32,7 +32,9 @@ object LibNanoModel {
         POS,
         DOMAIN1,
         arrayOf(LEMMA1, LEMMA2),
-        arrayOf("tell a joke", "speak humorously")
+        arrayOf("tell a joke", "speak humorously"),
+        null,
+        null,
     )
     val synset2 = Synset(
         SYNSETID2,

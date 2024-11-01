@@ -40,7 +40,7 @@ data class Synset(
     val domain: Domain,
     val members: Array<Lemma>,
     val definitions: Array<String>,
-    val examples: Array<String>? = null,
+    val examples: Array<Pair<String, String?>>? = null,
     var relations: Map<Relation, Set<SynsetId>>? = null,
     val wikidata: String? = null,
 

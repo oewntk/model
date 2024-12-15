@@ -26,6 +26,15 @@ object MapFactory {
         return map(things, groupingFunction, keepMerging())
     }
 
+    /**
+     * Make map (alt)
+     *
+     * @param things           elements
+     * @param groupingFunction map element to key
+     * @param K                type of key
+     * @param V                type of element
+     * @return elements mapped by key
+     */
     fun <K : Comparable<K>, V> mapAlt(
         things: Collection<V>,
         groupingFunction: (V) -> K,

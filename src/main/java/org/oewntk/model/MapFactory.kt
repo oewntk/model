@@ -87,6 +87,7 @@ object MapFactory {
      *
      * @param V type of element
      */
+    @Suppress("unused")
     private fun <V> replaceMerging() = { existing: V, replacement: V ->
         if (existing == replacement) {
             if (LOG_DUPLICATE_VALUES) {

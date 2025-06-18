@@ -46,7 +46,7 @@ data class Synset(
     val usages: Array<String>? = null,
     var relations: Map<Relation, Set<SynsetId>>? = null,
     val ili: String? = null,
-    val wikidata: String? = null,
+    val wikidata: List<String>? = null,
 
     ) : Comparable<Synset>, Serializable {
 

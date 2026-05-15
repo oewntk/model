@@ -27,7 +27,7 @@ object InverseRelationFactory {
         "exemplifies" to "is_exemplified_by",
         "domain_topic" to "has_domain_topic",
         "domain_region" to "has_domain_region",
-     )
+    )
 
     /**
      * Generate inverse synset relations
@@ -55,7 +55,8 @@ object InverseRelationFactory {
                     if (!targetSynsetIds.isNullOrEmpty()) {
                         val inverseType = toInverse[it]
                         for (targetSynsetId in targetSynsetIds) {
-                            val targetSynset = checkNotNull(synsetsById[targetSynsetId])
+                            val targetSynset =
+                                checkNotNull(synsetsById[targetSynsetId]) { Tracing.psErr.println("[E] non-existing target $targetSynsetId of synset relation $it($sourceSynsetId)") }
                             try {
                                 targetSynset.addInverseRelation(inverseType!!, sourceSynsetId)
                                 count++
@@ -98,7 +99,8 @@ object InverseRelationFactory {
                     if (!targetSenseIds.isNullOrEmpty()) {
                         val inverseType = toInverse[it]!!
                         for (targetSenseId in targetSenseIds) {
-                            val targetSense = checkNotNull(sensesById[targetSenseId])
+                            val targetSense =
+                                checkNotNull(sensesById[targetSenseId]) { Tracing.psErr.println("[E] non-existing target $targetSenseId of synset relation $it($sourceSenseId)") }
                             try {
                                 targetSense.addInverseRelation(inverseType, sourceSenseId)
                                 count++

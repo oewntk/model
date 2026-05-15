@@ -176,10 +176,11 @@ open class CoreModel(
         return "lexes: ${lexes.size}, senses: ${senses.size}, synsets: ${synsets.size}"
     }
 
-     /**
+    /**
      * Check model
      */
-   fun check() : CoreModel {
+    fun check(): CoreModel {
+        checkMembers()
         checkSynsetRelationTargets()
         checkSenseRelationTargets()
         return this
@@ -188,7 +189,7 @@ open class CoreModel(
     /**
      * Check synset relation targets
      */
-    fun checkSynsetRelationTargets() : CoreModel {
+    fun checkSynsetRelationTargets(): CoreModel {
         if (synsetsById != null) {
             for ((sourceSynsetId, sourceSynset) in synsetsById) {
                 if (!sourceSynset.relations.isNullOrEmpty()) {
@@ -197,7 +198,7 @@ open class CoreModel(
                             for (targetSynsetId in targetSynsetIds) {
                                 if (targetSynsetId[0] != 'Q' && synsetsById!![targetSynsetId] == null) Tracing.psErr.println("[E] non-existing target $targetSynsetId of synset relation $rel($sourceSynsetId)")
                             }
-                       } else Tracing.psErr.println("[E] no target of synset relation $rel($sourceSynsetId)")
+                        } else Tracing.psErr.println("[E] no target of synset relation $rel($sourceSynsetId)")
                     }
                 }
             }
@@ -205,10 +206,10 @@ open class CoreModel(
         return this
     }
 
-     /**
+    /**
      * Check sense relation targets
      */
-   fun checkSenseRelationTargets() : CoreModel {
+    fun checkSenseRelationTargets(): CoreModel {
         if (sensesById != null) {
             for ((sourceSenseId, sourceSense) in sensesById) {
                 if (!sourceSense.relations.isNullOrEmpty()) {
@@ -217,12 +218,26 @@ open class CoreModel(
                             for (targetSynsetId in targetSynsetIds) {
                                 if (sensesById!![targetSynsetId] == null) Tracing.psErr.println("[E] non-existing target $targetSynsetId of sense relation $rel($sourceSenseId)")
                             }
-                        }
-                        else Tracing.psErr.println("[E] no target of sense relation $rel($sourceSenseId)\n")
+                        } else Tracing.psErr.println("[E] no target of sense relation $rel($sourceSenseId)")
                     }
                 }
             }
         }
         return this
     }
+
+    /**
+     * Check synset members
+     */
+    fun checkMembers(): CoreModel {
+        for (synset in synsets) {
+            val duplicates = synset.members.groupBy { it }
+                .filter { it.value.size > 1 }
+                .keys
+            if (duplicates.isNotEmpty())
+                Tracing.psErr.println("[E] duplicate synset ${synset.synsetId} members: $duplicates {${synset.members.joinToString()}}")
+        }
+        return this
+    }
+
 }

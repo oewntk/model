@@ -175,4 +175,54 @@ open class CoreModel(
     open fun info(): String? {
         return "lexes: ${lexes.size}, senses: ${senses.size}, synsets: ${synsets.size}"
     }
+
+     /**
+     * Check model
+     */
+   fun check() : CoreModel {
+        checkSynsetRelationTargets()
+        checkSenseRelationTargets()
+        return this
+    }
+
+    /**
+     * Check synset relation targets
+     */
+    fun checkSynsetRelationTargets() : CoreModel {
+        if (synsetsById != null) {
+            for ((sourceSynsetId, sourceSynset) in synsetsById) {
+                if (!sourceSynset.relations.isNullOrEmpty()) {
+                    sourceSynset.relations!!.forEach { (rel, targetSynsetIds) ->
+                        if (targetSynsetIds.isNotEmpty()) {
+                            for (targetSynsetId in targetSynsetIds) {
+                                if (targetSynsetId[0] != 'Q' && synsetsById!![targetSynsetId] == null) Tracing.psErr.println("[E] non-existing target $targetSynsetId of synset relation $rel($sourceSynsetId)")
+                            }
+                       } else Tracing.psErr.println("[E] no target of synset relation $rel($sourceSynsetId)")
+                    }
+                }
+            }
+        }
+        return this
+    }
+
+     /**
+     * Check sense relation targets
+     */
+   fun checkSenseRelationTargets() : CoreModel {
+        if (sensesById != null) {
+            for ((sourceSenseId, sourceSense) in sensesById) {
+                if (!sourceSense.relations.isNullOrEmpty()) {
+                    sourceSense.relations!!.forEach { (rel, targetSynsetIds) ->
+                        if (targetSynsetIds.isNotEmpty()) {
+                            for (targetSynsetId in targetSynsetIds) {
+                                if (sensesById!![targetSynsetId] == null) Tracing.psErr.println("[E] non-existing target $targetSynsetId of sense relation $rel($sourceSenseId)")
+                            }
+                        }
+                        else Tracing.psErr.println("[E] no target of sense relation $rel($sourceSenseId)\n")
+                    }
+                }
+            }
+        }
+        return this
+    }
 }

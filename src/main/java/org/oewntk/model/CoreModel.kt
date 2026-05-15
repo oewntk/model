@@ -158,7 +158,10 @@ open class CoreModel(
      *
      * @return this model
      */
-    fun generateInverseRelations(toSynsetRelationInverse: Map<Relation, Relation>, toSenseRelationInverse: Map<Relation, Relation>): CoreModel {
+    fun generateInverseRelations(
+        toSynsetRelationInverse: Map<Relation, Relation>,
+        toSenseRelationInverse: Map<Relation, Relation>
+    ): CoreModel {
         InverseRelationFactory.makeInverseSynsetRelations(toSynsetRelationInverse, synsetsById!!)
         InverseRelationFactory.makeInverseSenseRelations(toSenseRelationInverse, sensesById!!)
         return this

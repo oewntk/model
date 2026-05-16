@@ -248,8 +248,8 @@ open class CoreModel(
                 count++
                 Tracing.psErr.println("[E] duplicate synset ${synset.synsetId} members: $duplicates {${synset.members.joinToString()}}")
             }
-            Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count synsets have member duplicate(s)")
         }
+        Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count synsets have member duplicate(s)")
         return this
     }
 

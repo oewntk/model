@@ -244,9 +244,9 @@ open class CoreModel(
             val duplicates = synset.members.groupBy { it }
                 .filter { it.value.size > 1 }
                 .keys
-            if (verbose && duplicates.isNotEmpty()) {
+            if (duplicates.isNotEmpty()) {
                 count++
-                Tracing.psErr.println("[E] duplicate synset ${synset.synsetId} members: $duplicates {${synset.members.joinToString()}}")
+                if (verbose) Tracing.psErr.println("[E] duplicate synset ${synset.synsetId} members: $duplicates {${synset.members.joinToString()}}")
             }
         }
         Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count synsets have member duplicate(s)")
@@ -262,7 +262,7 @@ open class CoreModel(
             val orphans = synset.members.filter { lexesByLemma!![it] == null }.toList()
             if (orphans.isNotEmpty()) {
                 count++
-                Tracing.psErr.println("[E] members of synset ${synset.synsetId} with members {${synset.members.joinToString()}} have no entry: $orphans")
+                if (verbose) Tracing.psErr.println("[E] members of synset ${synset.synsetId} with members {${synset.members.joinToString()}} have no entry: $orphans")
             }
         }
         Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count synsets have member(s) without entries")

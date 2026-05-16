@@ -230,14 +230,42 @@ open class CoreModel(
      * Check synset members
      */
     fun checkMembers(): CoreModel {
+        checkMembersDuplicates()
+        checkMembersReference()
+        return this
+    }
+
+    /**
+     * Check synset members
+     */
+    fun checkMembersDuplicates(verbose: Boolean = true): CoreModel {
+        var count = 0
         for (synset in synsets) {
             val duplicates = synset.members.groupBy { it }
                 .filter { it.value.size > 1 }
                 .keys
-            if (duplicates.isNotEmpty())
+            if (verbose && duplicates.isNotEmpty()) {
+                count++
                 Tracing.psErr.println("[E] duplicate synset ${synset.synsetId} members: $duplicates {${synset.members.joinToString()}}")
+            }
+            Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count synsets have member duplicate(s)")
         }
         return this
     }
 
+    /**
+     * Check synset members
+     */
+    fun checkMembersReference(verbose: Boolean = true): CoreModel {
+        var count = 0
+        for (synset in synsets) {
+            val orphans = synset.members.filter { lexesByLemma!![it] == null }.toList()
+            if (orphans.isNotEmpty()) {
+                count++
+                Tracing.psErr.println("[E] members of synset ${synset.synsetId} with members {${synset.members.joinToString()}} have no entry: $orphans")
+            }
+        }
+        Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count synsets have member(s) without entries")
+        return this
+    }
 }

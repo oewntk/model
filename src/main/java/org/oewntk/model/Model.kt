@@ -43,7 +43,7 @@ data class DataModel(
  * @property verbTemplates        verb templates (unmodifiable)
  * @property source2              source2
  */
-class Model private constructor(
+class Model(
     override val lexes: Collection<Lex>,
     override val senses: Collection<Sense>,
     override val synsets: Collection<Synset>,

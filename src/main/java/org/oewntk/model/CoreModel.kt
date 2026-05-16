@@ -74,7 +74,7 @@ open class CoreModel(
      * val lexesByLemma: Map<LemmaType, Collection<Lex>> by lazy { LexGroupings.lexesByLemma(lexes) }
      */
     @Transient
-    var lexesByLemma: Map<VerbFrameId, Collection<Lex>>? = null
+    var lexesByLemma: Map<Lemma, Collection<Lex>>? = null
         get() {
             if (field == null) {
                 field = LexGroupings.lexesByLemma(lexes)

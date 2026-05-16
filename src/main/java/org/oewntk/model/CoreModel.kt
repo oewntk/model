@@ -229,9 +229,9 @@ open class CoreModel(
     /**
      * Check synset members
      */
-    fun checkMembers(): CoreModel {
-        checkMembersDuplicates()
-        checkMembersReference()
+    fun checkMembers(verbose: Boolean = true): CoreModel {
+        checkMembersDuplicates(verbose)
+        checkMembersReference(verbose)
         return this
     }
 

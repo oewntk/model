@@ -56,10 +56,10 @@ data class Synset(
         get() = if (definitions.isNotEmpty()) definitions[0] else null
     val lexfile: String?
         get() = when (partOfSpeech) {
-            'n'  -> "noun.$domain"
-            'v'  -> "verb.$domain"
-            'a'  -> "adj.$domain"
-            'r'  -> "adv.$domain"
+            'n' -> "noun.$domain"
+            'v' -> "verb.$domain"
+            'a' -> "adj.$domain"
+            'r' -> "adv.$domain"
             else -> null
         }
 
@@ -72,11 +72,11 @@ data class Synset(
      * @param targetSynsetId target synset id
      */
     fun addInverseRelation(inverseType: Relation, targetSynsetId: SynsetId) {
-        val mutableRelations = if (relations == null) HashMap() else relations !!.toMutableMap()
+        val mutableRelations = if (relations == null) HashMap() else relations!!.toMutableMap()
         relations = mutableRelations
         val inverseRelations =
-            mutableRelations.computeIfPresent(inverseType){ _: Relation, v: Set<SynsetId> -> v.toMutableSet() }
-            ?: mutableRelations.computeIfAbsent(inverseType) { LinkedHashSet() }
+            mutableRelations.computeIfPresent(inverseType) { _: Relation, v: Set<SynsetId> -> v.toMutableSet() }
+                ?: mutableRelations.computeIfAbsent(inverseType) { LinkedHashSet() }
 
         require(!inverseRelations.contains(targetSynsetId)) { "Inverse relation $inverseType from $synsetId to $targetSynsetId was already there." }
         (inverseRelations as MutableSet<SynsetId>).add(targetSynsetId)
@@ -179,4 +179,3 @@ data class Synset(
         return synsetId.compareTo(other.synsetId)
     }
 }
-

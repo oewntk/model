@@ -43,7 +43,9 @@ data class Lex(
     val isCased: Boolean
         get() = lemma != lCLemma
     val partOfSpeech: Category
-        get() = if (this.type == 's') 'a' else this.type
+        get() = if (type == 's') 'a' else type
+    val key2: String
+        get() = if (discriminant != null) "${type}$discriminant" else type.toString()
 
     /**
      * Constructor

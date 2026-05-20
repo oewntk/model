@@ -62,7 +62,7 @@ fun <M : CoreModel> M.checkSenseRelationTargets(verbose: Boolean = true): M {
             }
         }
     }
-    Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count sense relations have member duplicate(s)")
+    Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count sense relations have no or non-existing target")
     return this
 }
 

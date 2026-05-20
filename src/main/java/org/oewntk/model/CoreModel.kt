@@ -141,6 +141,24 @@ open class CoreModel(
     // val synsetsById: Map<SynsetId, Synset> by lazy { synsetsById(synsets) }
 
     /**
+     * Sense resolver
+     */
+    @Transient
+    val senseResolver: (SenseKey) -> Sense = { sensesById!![it]!! }
+
+    /**
+     * Synset resolver
+     */
+    @Transient
+    val synsetResolver: (SynsetId) -> Synset = { synsetsById!![it]!! }
+
+    /**
+     * Lex resolver
+     */
+    @Transient
+    val lexResolver: (Lemma) -> Collection<Lex> = { lexesByLemma!![it]!! }
+
+    /**
      * Generate inverse relations
      *
      * @return this model

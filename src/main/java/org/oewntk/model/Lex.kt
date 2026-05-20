@@ -14,8 +14,8 @@ import java.util.*
  *
  * @property lemma          lemma written form
  * @property type           type ss_type {'n', 'v', 'a', 'r', 's'}
- * @property source         source
- * @property senseKeys         senses
+ * @property lexfile        source
+ * @property senseKeys      senses
  * @property forms          morphological forms
  * @property pronunciations pronunciations
  *
@@ -31,8 +31,7 @@ data class Lex(
     val type: Category,
     val discriminant: Discriminant?,
     var senseKeys: List<SenseKey>,
-    val source: String?,
-
+    val generated: Boolean = false
     ) : Serializable /*, Comparable<Lex> */ {
 
     var forms: Set<Morph>? = null
@@ -46,22 +45,27 @@ data class Lex(
         get() = if (type == 's') 'a' else type
     val key2: String
         get() = if (discriminant != null) "${type}$discriminant" else type.toString()
+    val lexfile: String
+        get() = "entries-$indexChar.yaml"
+    val indexChar: Char
+        get() {
+            val c = lemma[0].lowercaseChar()
+            return if (c !in 'a' until 'z' + 1) '0' else c
+        }
 
     /**
      * Constructor
      *
      * @param lemma             lemma written form
      * @param code              ss_type with a possible discriminant appended in the form '-number'
-     * @param source            source
+     * @param generated         generated
      */
     constructor (
-
         lemma: Lemma,
         code: String,
         senseKeys: List<SenseKey> = ArrayList(),
-        source: String? = null,
-
-        ) : this(lemma, code[0], if (code.length > 1) code.substring(1) else null, senseKeys, source)
+        generated: Boolean = false
+        ) : this(lemma, code[0], if (code.length > 1) code.substring(1) else null, senseKeys, generated = generated)
 
     // stringify
 

@@ -38,7 +38,7 @@ import java.util.*
  * @property lCLemma          lower-cased lemma
  * @property partOfSpeech     sense part-of-speech {'n', 'v', 'a', 'r'} with ss_type 's' (satellite adj) mapped to 'a'
  * @property intTagCount      integer tag count
- * @property source           sense source
+ * @property lexfile           sense source
  */
 @kotlinx.serialization.Serializable
 data class Sense(
@@ -65,8 +65,8 @@ data class Sense(
     val partOfSpeech: Category = if (this.type == 's') 'a' else this.type
     val intTagCount: Int
         get() = if (tagCount == null) 0 else tagCount!!.count
-    val source: String?
-        get() = lex.source
+    val lexfile: String
+        get() = lex.lexfile
 
     // mutation
 

@@ -62,6 +62,7 @@ data class Synset(
             'r' -> "adv.$domain"
             else -> null
         }
+    var source: String? = null
 
     // mutation
 

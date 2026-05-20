@@ -16,12 +16,16 @@ import java.util.*
  * @property type           type ss_type {'n', 'v', 'a', 'r', 's'}
  * @property lexfile        source
  * @property senseKeys      senses
+ * @property generated      whether the lex entry was generated (as apposed to read from data)
+ *
  * @property forms          morphological forms
  * @property pronunciations pronunciations
  *
  * @property lCLemma        lower-cased lemma
  * @property isCased        whether lemma contains uppercase
  * @property partOfSpeech   synset part-of-speech {'n', 'v', 'a', 'r'} with ss_type 's' (satellite adj) mapped to 'a'
+ * @property key2           unique key (at YAML level 2) made up of part-of-speech and discriminant
+ * @property lexfile        the lexfile it is expected to be output to ("entries-lexfileChar.yaml")
  * @property discriminant   discriminates same type entries
  */
 @kotlinx.serialization.Serializable
@@ -32,7 +36,7 @@ data class Lex(
     val discriminant: Discriminant?,
     var senseKeys: List<SenseKey>,
     val generated: Boolean = false
-    ) : Serializable /*, Comparable<Lex> */ {
+) : Serializable /*, Comparable<Lex> */ {
 
     var forms: Set<Morph>? = null
     var pronunciations: Set<Pronunciation>? = null
@@ -45,13 +49,13 @@ data class Lex(
         get() = if (type == 's') 'a' else type
     val key2: String
         get() = if (discriminant != null) "${type}$discriminant" else type.toString()
-    val lexfile: String
-        get() = "entries-$indexChar.yaml"
-    val indexChar: Char
+    val lexfileChar: Char
         get() {
             val c = lemma[0].lowercaseChar()
             return if (c !in 'a' until 'z' + 1) '0' else c
         }
+    val lexfile: String
+        get() = "entries-$lexfileChar.yaml"
 
     /**
      * Constructor
@@ -65,7 +69,7 @@ data class Lex(
         code: String,
         senseKeys: List<SenseKey> = ArrayList(),
         generated: Boolean = false
-        ) : this(lemma, code[0], if (code.length > 1) code.substring(1) else null, senseKeys, generated = generated)
+    ) : this(lemma, code[0], if (code.length > 1) code.substring(1) else null, senseKeys, generated = generated)
 
     // stringify
 

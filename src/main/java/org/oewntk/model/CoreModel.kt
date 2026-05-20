@@ -143,20 +143,20 @@ open class CoreModel(
     /**
      * Sense resolver
      */
-    @Transient
-    val senseResolver: (SenseKey) -> Sense = { sensesById!![it]!! }
+    val senseResolver: (SenseKey) -> Sense
+        get() = { sensesById!![it]!! }
 
     /**
      * Synset resolver
      */
-    @Transient
-    val synsetResolver: (SynsetId) -> Synset = { synsetsById!![it]!! }
+    val synsetResolver: (SynsetId) -> Synset
+        get() = { synsetsById!![it]!! }
 
     /**
      * Lex resolver
      */
-    @Transient
-    val lexResolver: (Lemma) -> Collection<Lex> = { lexesByLemma!![it]!! }
+    val lexResolver: (Lemma) -> Collection<Lex>
+        get() = { lexesByLemma!![it]!! }
 
     /**
      * Generate inverse relations

@@ -121,7 +121,7 @@ data class Synset(
     @Throws(IllegalStateException::class)
     fun findSenseOf(
         lemma: Lemma,
-        lemma2Lexes: (lemma: Lemma) -> Collection<Lex>?,
+        lemma2Lexes: (lemma: Lemma) -> Collection<Lex>,
         senseKey2Sense: (senseKey: SenseKey) -> Sense,
     ): Sense {
         val lexes: Collection<Lex> = checkNotNull(lemma2Lexes(lemma)) { "$lemma has no sense" }

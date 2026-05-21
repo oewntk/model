@@ -16,7 +16,7 @@ object Finder {
      * @return collection of lexes
      */
     fun getLexes(model: CoreModel, lemma: Lemma): Collection<Lex> {
-        return model.lexesByLemma!![lemma]!!
+        return model.lexResolver(lemma)
     }
 
     /**
@@ -51,7 +51,7 @@ object Finder {
      * @return sequence of lexes
      */
     fun getLexesHavingType(model: CoreModel, lemma: Lemma, typeFilter: Char): Sequence<Lex>? {
-        return model.lexesByLemma!![lemma]
+        return model.lexFinder(lemma)
             ?.asSequence()
             ?.filter { it.type == typeFilter }
     }
@@ -65,7 +65,7 @@ object Finder {
      * @return sequence of lexes
      */
     fun getLexesHavingPos(model: CoreModel, lemma: Lemma, posFilter: Char): Sequence<Lex>? {
-        return model.lexesByLemma!![lemma]
+        return model.lexFinder(lemma)
             ?.asSequence()
             ?.filter { it.partOfSpeech == posFilter }
     }

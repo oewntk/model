@@ -58,7 +58,7 @@ object LibTestModel {
         // test map
         ps.printf("%-12s %s%n", "index", "lex")
         for (word in testWords) {
-            val lexes = model.lexesByLemma!![word]!!
+            val lexes = model.lexResolver(word)
             for (lex in lexes) {
                 ps.printf("%-12d %s%n", lexKeyToIndex[keyGetter.invoke(lex)], lex)
             }
@@ -67,7 +67,7 @@ object LibTestModel {
 
     fun testWords(model: CoreModel, ps: PrintStream, vararg lemmas: Lemma) {
         for (lemma in lemmas) {
-            val lexes = model.lexesByLemma!![lemma]!!
+            val lexes = model.lexResolver(lemma)
             for (lex in lexes) {
                 ps.println(lex)
                 dumpKeys(lex, ps)

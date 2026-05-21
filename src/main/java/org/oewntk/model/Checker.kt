@@ -99,7 +99,7 @@ fun <M : CoreModel> M.checkMembersDuplicates(verbose: Boolean = true): M {
 fun <M : CoreModel> M.checkMembersReference(verbose: Boolean = true): M {
     var count = 0
     for (synset in synsets) {
-        val orphans = synset.members.filter { lexesByLemma!![it] == null }.toList()
+        val orphans = synset.members.filter { lexFinder(it) == null }.toList()
         if (orphans.isNotEmpty()) {
             count++
             if (verbose) Tracing.psErr.println("[E] members of synset ${synset.synsetId} with members {${synset.members.joinToString()}} have no entry: $orphans")

@@ -34,34 +34,32 @@ class TestFindSenses {
         ps.println("sense22=$sense22")
     }
 
-    private val lemma2Lexes = model.lexResolver
-
     @Test
     fun testFindSensesOfSynset() {
-        val senses1 = synset1.findSenses(lemma2Lexes,  model.senseResolver)
+        val senses1 = synset1.findSenses(model.lexResolver,  model.senseResolver)
         ps.println("sensesOf $synset1 $senses1")
         assertEquals(setOf(sense11, sense21), senses1.toSet())
 
-        val senses2 = synset2.findSenses(lemma2Lexes,  model.senseResolver)
+        val senses2 = synset2.findSenses(model.lexResolver,  model.senseResolver)
         assertEquals(setOf(sense12, sense22), senses2.toSet())
         ps.println("sensesOf $synset2 $senses2")
     }
 
     @Test
     fun testFindSensesOfLemmaInSynset() {
-        val result11 = synset1.findSenseOf(LEMMA1, lemma2Lexes,  model.senseResolver)
+        val result11 = synset1.findSenseOf(LEMMA1, model.lexResolver,  model.senseResolver)
         ps.println("senseOf $LEMMA1 in $synset1 is $result11")
         assertEquals(sense11, result11)
 
-        val result21 = synset1.findSenseOf(LEMMA2, lemma2Lexes,  model.senseResolver)
+        val result21 = synset1.findSenseOf(LEMMA2, model.lexResolver,  model.senseResolver)
         ps.println("senseOf $LEMMA2 in $synset1 is $result21")
         assertEquals(sense21, result21)
 
-        val result12 = synset2.findSenseOf(LEMMA1, lemma2Lexes,  model.senseResolver)
+        val result12 = synset2.findSenseOf(LEMMA1, model.lexResolver,  model.senseResolver)
         ps.println("senseOf $LEMMA1 in $synset2 is $result12")
         assertEquals(sense12, result12)
 
-        val result22 = synset2.findSenseOf(LEMMA2, lemma2Lexes,  model.senseResolver)
+        val result22 = synset2.findSenseOf(LEMMA2, model.lexResolver,  model.senseResolver)
         ps.println("senseOf $LEMMA2 in $synset2 is $result22")
         assertEquals(sense22, result22)
     }

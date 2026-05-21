@@ -49,7 +49,7 @@ fun <M : CoreModel> M.checkSenseRelationTargets(verbose: Boolean = true): M {
                 sourceSense.relations!!.forEach { (rel, targetSynsetIds) ->
                     if (targetSynsetIds.isNotEmpty()) {
                         for (targetSynsetId in targetSynsetIds) {
-                            if (sensesById!![targetSynsetId] == null) {
+                            if (senseFinder(targetSynsetId) == null) {
                                 count++
                                 if (verbose) Tracing.psErr.println("[E] non-existing target $targetSynsetId of sense relation $rel($sourceSenseId)")
                             }

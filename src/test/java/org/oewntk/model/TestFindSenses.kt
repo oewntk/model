@@ -36,7 +36,7 @@ class TestFindSenses {
 
     private val lemma2Lexes = { lemma: Lemma -> model.lexesByLemma!![lemma]!! }
 
-    private val sensekey2sense = { sk: SenseKey -> model.sensesById!![sk]!! }
+    private val sensekey2sense = { sk: SenseKey -> model.senseResolver(sk) }
 
     @Test
     fun testFindSensesOfSynset() {

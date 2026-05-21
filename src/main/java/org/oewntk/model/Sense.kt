@@ -92,12 +92,12 @@ data class Sense(
     /**
      * Find synset member index
      *
-     * @param synsetsById synsets mapped by id
+     * @param synsetResolver synset resolver from id
      * @return index of this sense in synset members
      */
-    fun findSynsetIndex(synsetsById: Map<SynsetId, Synset>): Int {
-        val synset = synsetsById[synsetId]
-        return synset!!.findIndexOfMember(lex.lemma)
+    fun findSynsetIndex(synsetResolver: (SynsetId) -> Synset): Int {
+        val synset = synsetResolver(synsetId)
+        return synset.findIndexOfMember(lex.lemma)
     }
 
     /**

@@ -177,6 +177,12 @@ open class CoreModel(
         get() = { lexFinder(it)!! }
 
     /**
+     * Lex entries
+     */
+    val lexEntries: Sequence<LexEntry>
+        get() = lexesByLemma!!.asSequence()
+
+    /**
      * Generate inverse relations
      *
      * @return this model

@@ -69,7 +69,7 @@ object LexGroupings {
      * ```
      */
     fun hyperMapByLCLemmaByLemma(model: CoreModel): Map<Lemma, Map<Lemma, Collection<Lex>>> {
-        return model.lexesByLemma!!.entries // entries: setOf(lemma to lexes)
+        return model.lexEntries // entries: setOf(lemma to lexes)
             .groupBy { entry -> entry.key.lowercase() } // groupBy: mapOf(lclemma to listOf(lemma to lexes)), entry: lemma to lexes
             .mapValues { values -> // values: lcLemma to listOf(lemma to lexes))
                 values.value // value: listOf(lemma to lexes)

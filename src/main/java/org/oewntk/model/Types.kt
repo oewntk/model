@@ -19,3 +19,5 @@ typealias PronunciationVariety = String
 typealias VerbFrameId = String
 typealias VerbTemplateId = Int
 typealias AdjPosition = String
+
+typealias LexEntry = Map.Entry<Lemma, Collection<Lex>>

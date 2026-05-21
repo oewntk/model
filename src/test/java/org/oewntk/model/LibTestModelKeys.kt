@@ -56,37 +56,37 @@ object LibTestModelKeys {
 
     // R O W
 
-    fun testRowDeep(model: CoreModel?, ps: PrintStream): IntArray {
+    fun testRowDeep(model: CoreModel, ps: PrintStream): IntArray {
         return testPronunciations(model, ps, "row", 'n', ipa("ɹəʊ"), ipa("ɹaʊ"))
     }
 
-    fun testRowShallow(model: CoreModel?, ps: PrintStream): IntArray {
+    fun testRowShallow(model: CoreModel, ps: PrintStream): IntArray {
         return testShallow(model, ps, "row", 'n', "-1", "-2")
     }
 
-    fun testRowNoPronunciationDeep(model: CoreModel?, ps: PrintStream): IntArray {
+    fun testRowNoPronunciationDeep(model: CoreModel, ps: PrintStream): IntArray {
         return testPronunciations(model, ps, "row", 'n')
     }
 
-    fun testRowNoPronunciationShallow(model: CoreModel?, ps: PrintStream): IntArray {
+    fun testRowNoPronunciationShallow(model: CoreModel, ps: PrintStream): IntArray {
         return testShallow(model, ps, "row", 'n')
     }
 
     // B A S S
 
-    fun testBassDeep(model: CoreModel?, ps: PrintStream): IntArray {
+    fun testBassDeep(model: CoreModel, ps: PrintStream): IntArray {
         return testPronunciations(model, ps, "bass", 'n', ipa("beɪs"), ipa("bæs"))
     }
 
-    fun testBassShallow(model: CoreModel?, ps: PrintStream): IntArray {
+    fun testBassShallow(model: CoreModel, ps: PrintStream): IntArray {
         return testShallow(model, ps, "bass", 'n', "-1", "-2")
     }
 
-    fun testBassNoPronunciationDeep(model: CoreModel?, ps: PrintStream): IntArray {
+    fun testBassNoPronunciationDeep(model: CoreModel, ps: PrintStream): IntArray {
         return testPronunciations(model, ps, "bass", 'n')
     }
 
-    fun testBassNoPronunciationShallow(model: CoreModel?, ps: PrintStream): IntArray {
+    fun testBassNoPronunciationShallow(model: CoreModel, ps: PrintStream): IntArray {
         return testShallow(model, ps, "bass", 'n')
     }
 
@@ -244,7 +244,7 @@ object LibTestModelKeys {
 
     @Suppress("SameParameterValue")
     private fun testShallow(
-        model: CoreModel?,
+        model: CoreModel,
         ps: PrintStream,
         lemma: Lemma,
         type: Char,
@@ -260,7 +260,7 @@ object LibTestModelKeys {
 
     @Suppress("SameParameterValue")
     private fun testPronunciations(
-        model: CoreModel?,
+        model: CoreModel,
         ps: PrintStream,
         lemma: String,
         type: Char,
@@ -278,7 +278,7 @@ object LibTestModelKeys {
 
     @SafeVarargs
     fun testKeysMono(
-        model: CoreModel?,
+        model: CoreModel,
         ps: PrintStream,
         lemma: Lemma,
         vararg keys: MonoValued,
@@ -287,10 +287,10 @@ object LibTestModelKeys {
         for ((i, k) in keys.withIndex()) {
             ps.printf("%s%n", k.toLongString())
             try {
-                val lex: Lex = k(model!!)
+                val lex: Lex = k(model)
                 ps.println("\t" + lex)
                 r[i] = 1
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 r[i] = 0
             }
         }
@@ -300,7 +300,7 @@ object LibTestModelKeys {
 
     @SafeVarargs
     fun testKeysMulti(
-        model: CoreModel?,
+        model: CoreModel,
         ps: PrintStream,
         lemma: String,
         vararg keys: MultiValued,
@@ -308,7 +308,7 @@ object LibTestModelKeys {
         val r = IntArray(keys.size)
         for ((i, k) in keys.withIndex()) {
             ps.printf("%s%n", k.toLongString())
-            val lexes: Array<Lex> = k(model!!)
+            val lexes: Array<Lex> = k(model)
             r[i] = lexes.size
             for (lex in lexes) {
                 ps.println("\t" + lex)
@@ -322,11 +322,11 @@ object LibTestModelKeys {
 
     private fun dumpContext(
         lemma: String,
-        model: CoreModel?,
+        model: CoreModel,
         ps: PrintStream,
     ) {
         ps.println("----------")
         ps.println("ALL LEMMAS IGNORE CASE $lemma")
-        getLcLexes(model!!, lemma)?.forEach { lex: Lex -> ps.println("\t" + lex) }
+        getLcLexes(model, lemma)?.forEach { lex: Lex -> ps.println("\t" + lex) }
     }
 }

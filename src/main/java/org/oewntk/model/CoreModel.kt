@@ -159,6 +159,24 @@ open class CoreModel(
         get() = { lexesByLemma!![it]!! }
 
     /**
+     * Sense finder (nullable result)
+     */
+    val senseFinder: (SenseKey) -> Sense?
+        get() = { sensesById!![it] }
+
+    /**
+     * Synset finder (nullable result)
+     */
+    val synsetFinder: (SynsetId) -> Synset?
+        get() = { synsetsById!![it] }
+
+    /**
+     * Lex finder (nullable result)
+     */
+    val lexFinder: (Lemma) -> Collection<Lex>?
+        get() = { lexesByLemma!![it] }
+
+    /**
      * Generate inverse relations
      *
      * @return this model

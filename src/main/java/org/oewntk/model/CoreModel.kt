@@ -6,6 +6,7 @@ package org.oewntk.model
 import org.oewntk.model.MapFactory.sensesById
 import org.oewntk.model.MapFactory.synsetsById
 import java.io.Serializable
+import java.util.*
 
 /**
  * Sealed Base language model
@@ -142,38 +143,58 @@ open class CoreModel(
 
     /**
      * Sense finder (nullable result)
+     * Resolution may yield null
      */
     val senseFinder: (SenseKey) -> Sense?
         get() = { sensesById!![it] }
 
     /**
      * Synset finder (nullable result)
+     * Resolution may yield null
      */
     val synsetFinder: (SynsetId) -> Synset?
         get() = { synsetsById!![it] }
 
     /**
      * Lex finder (nullable result)
+     * Resolution may yield null
      */
     val lexFinder: (Lemma) -> Collection<Lex>?
         get() = { lexesByLemma!![it] }
 
     /**
+     * Lex finder ignoring lemma case (nullable result)
+     * Resolution may yield null
+     */
+    val lexIgnoreCaseFinder: (Lemma) -> Collection<Lex>?
+        get() = { lexesByLCLemma!![it.lowercase(Locale.ENGLISH)] }
+
+    /**
      * Sense resolver
+     * Assumes non-null resolution, otherwise an exception is thrown
      */
     val senseResolver: (SenseKey) -> Sense
         get() = { senseFinder(it)!! }
 
     /**
      * Synset resolver
+     * Assumes non-null resolution, otherwise an exception is thrown
      */
     val synsetResolver: (SynsetId) -> Synset
         get() = { synsetFinder(it)!! }
 
     /**
      * Lex resolver
+     * Assumes non-null resolution, otherwise an exception is thrown
      */
     val lexResolver: (Lemma) -> Collection<Lex>
+        get() = { lexFinder(it)!! }
+
+    /**
+     * Lex resolver ignoring lemma case
+     * Assumes non-null resolution, otherwise an exception is thrown
+     */
+    val lexIgnoreCaseResolver: (Lemma) -> Collection<Lex>
         get() = { lexFinder(it)!! }
 
     /**

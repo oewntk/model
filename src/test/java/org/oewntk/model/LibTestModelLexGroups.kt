@@ -41,17 +41,17 @@ object LibTestModelLexGroups {
 
     fun testCILexesFor3(model: CoreModel, lemma: Lemma, ps: PrintStream) {
         var lemma2 = lemma
-        val s1 = testCILexesString(model, lemma2)
+        val s1 = testCILexesFor(model, lemma2)
         ps.printf("ci '%s'%n", lemma2)
         ps.println(s1)
 
         lemma2 = lemma2.lowercase()
-        val s2 = testCILexesString(model, lemma2)
+        val s2 = testCILexesFor(model, lemma2)
         ps.printf("ci '%s'%n", lemma2)
         ps.println(s2)
 
         lemma2 = lemma2.uppercase()
-        val s3 = testCILexesString(model, lemma2)
+        val s3 = testCILexesFor(model, lemma2)
         ps.printf("ci '%s'%n", lemma2)
         ps.println(s3)
 
@@ -59,24 +59,13 @@ object LibTestModelLexGroups {
         Assert.assertEquals(s2, s3)
     }
 
-    fun testCILexes(model: CoreModel, lemma: Lemma, ps: PrintStream) {
-        ps.printf("ci '%s'%n", lemma)
-        ps.println(testCILexesString(model, lemma))
-    }
-
     fun testCILexesFor(model: CoreModel, lemma: Lemma, ps: PrintStream) {
         ps.printf("ci '%s'%n", lemma)
-        ps.println(testCILexesForWordString(model, lemma))
+        ps.println(testCILexesFor(model, lemma))
     }
 
-    private fun testCILexesString(model: CoreModel, lemma: Lemma): String {
-        val map = checkNotNull(model.lexesByLCLemma)
-        val lexes = checkNotNull(map[lemma.lowercase()])
-        return lexesToString(lexes)
-    }
-
-    private fun testCILexesForWordString(model: CoreModel, lemma: Lemma): String {
-        val lexes = checkNotNull(model.lexesByLCLemma!![lemma])
+    private fun testCILexesFor(model: CoreModel, lemma: Lemma): String {
+        val lexes = checkNotNull(model.lexIgnoreCaseFinder(lemma))
         return lexesToString(lexes)
     }
 

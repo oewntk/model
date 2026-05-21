@@ -74,12 +74,12 @@ object Finder {
      * Find lexes matching lemma ignoring case and having the desired type
      *
      * @param model      model
-     * @param lcLemma    lower-cased lemma
+     * @param lemma      target lemma (its case is immaterial)
      * @param typeFilter type filter
      * @return sequence of lexes
      */
-    fun getLcLexesHavingType(model: CoreModel, lcLemma: Lemma, typeFilter: Char): Sequence<Lex>? {
-        return model.lexesByLCLemma!![lcLemma.lowercase()]
+    fun getLcLexesHavingType(model: CoreModel, lemma: Lemma, typeFilter: Char): Sequence<Lex>? {
+        return model.lexIgnoreCaseFinder(lemma)
             ?.asSequence()
             ?.filter { it.type == typeFilter }
     }
@@ -88,12 +88,12 @@ object Finder {
      * Find lexes matching lemma ignoring case and having the desired category
      *
      * @param model          model
-     * @param lcLemma        lower-cased lemma
+     * @param lemma          target lemma (its case is immaterial)
      * @param targetCategory target category
      * @return sequence of lexes
      */
-    fun getLcLexesHavingPos(model: CoreModel, lcLemma: Lemma, targetCategory: Category): Sequence<Lex>? {
-        return model.lexesByLCLemma!![lcLemma.lowercase()]
+    fun getLcLexesHavingPos(model: CoreModel, lemma: Lemma, targetCategory: Category): Sequence<Lex>? {
+        return model.lexIgnoreCaseFinder(lemma)
             ?.asSequence()
             ?.filter { it.partOfSpeech == targetCategory }
     }
@@ -101,12 +101,12 @@ object Finder {
     /**
      * Find lexes matching lemma ignoring case
      *
-     * @param model   model
-     * @param lcLemma lower-cased lemma
+     * @param model         model
+     * @param lemma         target lemma (its case is immaterial)
      * @return sequence of lexes
      */
-    fun getLcLexes(model: CoreModel, lcLemma: Lemma): Sequence<Lex>? {
-        return model.lexesByLCLemma!![lcLemma.lowercase()]
+    fun getLcLexes(model: CoreModel, lemma: Lemma): Sequence<Lex>? {
+        return model.lexIgnoreCaseFinder(lemma)
             ?.asSequence()
     }
 

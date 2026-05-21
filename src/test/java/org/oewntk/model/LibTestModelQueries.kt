@@ -121,12 +121,12 @@ object LibTestModelQueries {
     }
 
     private fun dumpSynset(synsetId: SynsetId, model: CoreModel, indent: String, ps: PrintStream) {
-        val synset = model.synsetsById!![synsetId]!!
+        val synset = model.synsetResolver(synsetId)
         dump(synset, indent, ps)
     }
 
     private fun toShortSynset(synsetId: SynsetId, model: CoreModel): String {
-        val synset = model.synsetsById!![synsetId]!!
+        val synset = model.synsetResolver(synsetId)
         return toShort(synset)
     }
 

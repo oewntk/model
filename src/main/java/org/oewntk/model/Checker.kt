@@ -21,7 +21,7 @@ fun <M : CoreModel> M.checkSynsetRelationTargets(verbose: Boolean = true): M {
                 sourceSynset.relations!!.forEach { (rel, targetSynsetIds) ->
                     if (targetSynsetIds.isNotEmpty()) {
                         for (targetSynsetId in targetSynsetIds) {
-                            if (targetSynsetId[0] != 'Q' && synsetsById!![targetSynsetId] == null) {
+                            if (targetSynsetId[0] != 'Q' && synsetFinder(targetSynsetId) == null) {
                                 count++
                                 if (verbose) Tracing.psErr.println("[E] non-existing target $targetSynsetId of synset relation $rel($sourceSynsetId)")
                             }

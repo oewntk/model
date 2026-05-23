@@ -4,9 +4,12 @@ package org.oewntk.model
  * Check model
  */
 fun <M : CoreModel> M.check(verbose: Boolean = true): M {
-    checkMembers(verbose)
-    checkSynsetRelationTargets(verbose)
-    checkSenseRelationTargets(verbose)
+    if (verbose) Tracing.psInfo.println("Check members")
+    checkMembers(verbose = verbose)
+    if (verbose) Tracing.psInfo.println("Check synset relation targets")
+    checkSynsetRelationTargets(verbose = verbose)
+    if (verbose) Tracing.psInfo.println("Check sense relation targets")
+    checkSenseRelationTargets(verbose = verbose)
     return this
 }
 

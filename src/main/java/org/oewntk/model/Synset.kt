@@ -38,7 +38,7 @@ import java.util.*
 data class Synset(
 
     val synsetId: SynsetId,
-    val type: Category,
+    val type: SynsetType,
     val domain: Domain,
     val members: Array<Lemma>,
     val definitions: Array<String>,

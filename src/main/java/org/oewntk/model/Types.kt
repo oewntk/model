@@ -36,52 +36,31 @@ typealias SynsetType = SynsetTypeImpl
 typealias PartOfSpeech = PartOfSpeechImpl
 
 /**
- * Either SynsetType or Category
+ * Pos key used as a pos key
  */
-enum class CategoryImpl(val value: Char, name:String) {
-    N('n', "noun") {
-        override fun toSynsetType(): SynsetTypeImpl = SynsetTypeImpl.N
+enum class CategoryImpl(val value: Char) {
+    N('n') {
         override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.N
     },
-    V('v',"verb") {
-        override fun toSynsetType(): SynsetTypeImpl = SynsetTypeImpl.V
+    V('v') {
         override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.V
     },
-    A('a',"adj") {
-        override fun toSynsetType(): SynsetTypeImpl = SynsetTypeImpl.A
+    A('a') {
         override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.A
     },
-    R('r',"adv") {
-        override fun toSynsetType(): SynsetTypeImpl = SynsetTypeImpl.R
+    R('r') {
         override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.R
     },
-    S('s',"sat_adj") {
-        override fun toSynsetType(): SynsetTypeImpl = SynsetTypeImpl.A
+    S('s') {
         override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.A
     };
 
-    abstract fun toSynsetType(): SynsetTypeImpl
-
     abstract fun toPartOfSpeech(): PartOfSpeechImpl
-
-    companion object {
-        fun fromCharOrNull(c: Char): CategoryImpl? {
-            return when (c) {
-                'n' -> N
-                'v' -> V
-                'a' -> A
-                'r' -> R
-                's' -> S
-                else -> null
-            }
-        }
-
-        fun fromChar(c: Char): CategoryImpl = fromCharOrNull(c) ?: throw IllegalArgumentException("Illegal PartOfSpeech: $c")
-    }
 }
 
 /**
  * Synset type
+ *
  * [n,v,a,r]
  */
 enum class SynsetTypeImpl(val value: Char) {
@@ -126,22 +105,24 @@ enum class SynsetTypeImpl(val value: Char) {
 }
 
 /**
+ * Part-of-Speech
+ *
  * [n,v,a,r,s]
  */
-enum class PartOfSpeechImpl(val value: Char) {
-    N('n') {
+enum class PartOfSpeechImpl(val value: Char, val fullName: String) {
+    N('n', "noun") {
         override fun toSynsetType(): SynsetType = SynsetType.N
         override fun toCategory(): CategoryImpl = CategoryImpl.N
     },
-    V('v') {
+    V('v', "verb") {
         override fun toSynsetType(): SynsetType = SynsetType.V
         override fun toCategory(): CategoryImpl = CategoryImpl.V
     },
-    A('a') {
+    A('a', "adj") {
         override fun toSynsetType(): SynsetType = SynsetType.A
         override fun toCategory(): CategoryImpl = CategoryImpl.A
     },
-    R('r') {
+    R('r', "adv") {
         override fun toSynsetType(): SynsetType = SynsetType.R
         override fun toCategory(): CategoryImpl = CategoryImpl.R
     };

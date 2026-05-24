@@ -53,7 +53,7 @@ data class Synset(
     val partOfSpeech: PartOfSpeech
         get() = type.toPartOfSpeech()
     val partOfSpeechName: String
-        get() = partOfSpeech.name
+        get() = partOfSpeech.fullName
     val definition: String?
         get() = if (definitions.isNotEmpty()) definitions[0] else null
     val lexfile: String = "$partOfSpeechName.$domain"

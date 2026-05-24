@@ -57,7 +57,7 @@ object SenseKeys {
 
     fun Domain.toLexFileNum(): Int = LEXFILE_TO_NUM[this] ?: throw IllegalArgumentException(this)
 
-    fun Category.toPosNum(): Int = when (this) {
+    fun SynsetType.toPosNum(): Int = when (this) {
         'n' -> 1
         'v' -> 2
         'a' -> 3
@@ -66,7 +66,7 @@ object SenseKeys {
         else -> throw IllegalArgumentException(this.toString())
     }
 
-    fun Category.toPosTag(): String = when (this) {
+    fun SynsetType.toPosTag(): String = when (this) {
         'n' -> "noun"
         'v' -> "verb"
         'a' -> "adj"

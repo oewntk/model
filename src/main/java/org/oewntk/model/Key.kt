@@ -185,8 +185,8 @@ interface Key {
                 return of(lex, Lex::lCLemma) { it.partOfSpeech.toCategory() }
             }
 
-            fun from(lemma: Lemma, type: Category, pronunciations: Set<Pronunciation>): KeyLCP {
-                return KeyLCP(lemma, type, pronunciations)
+            fun from(lemma: Lemma, category: Category, pronunciations: Set<Pronunciation>): KeyLCP {
+                return KeyLCP(lemma, category, pronunciations)
             }
 
             private val pronunciationsComparator: Comparator<Set<Pronunciation>?> =

@@ -9,6 +9,7 @@ typealias SenseKey = String
 typealias SynsetId = String
 typealias Relation = String
 typealias Category = Char
+typealias SynsetType = Char
 typealias PartOfSpeech = Char
 typealias Discriminant = String
 typealias Key2 = String

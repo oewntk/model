@@ -138,12 +138,12 @@ data class Sense(
     // stringify
 
     override fun toString(): String {
-        return "$senseId (${lexIndex + 1}th of '${lex.lemma}', $synsetId $type)"
+        return "$senseId (${lexIndex + 1}th of '${lex.lemma}', $synsetId ${type.value})"
     }
 
     fun toLongString(): String {
         val relationsStr = relations?.joinToString(",") ?: ""
-        return "[${lexIndex + 1}] of '${lex.lemma}' $senseId $type $synsetId {$relationsStr}"
+        return "[${lexIndex + 1}] of '${lex.lemma}' $senseId ${type.value} $synsetId {$relationsStr}"
     }
 
     // identity

@@ -48,7 +48,7 @@ data class Lex(
     val partOfSpeech: PartOfSpeech
         get() = type.toPartOfSpeech()
     val key2: String
-        get() = if (discriminant != null) "${type}$discriminant" else type.toString()
+        get() = if (discriminant != null) "${type.value}$discriminant" else type.value.toString()
     val lexfileChar: Char
         get() {
             val c = lemma[0].lowercaseChar()
@@ -76,7 +76,7 @@ data class Lex(
     override fun toString(): String {
         val pronunciations = pronunciations?.joinToString(",") ?: ""
         val senses = senseKeys.joinToString(",")
-        return "$lemma $type${discriminant ?: ""} $pronunciations {$senses}"
+        return "$lemma $key2 $pronunciations {$senses}"
     }
 
     // identify

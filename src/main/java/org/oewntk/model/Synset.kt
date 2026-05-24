@@ -144,13 +144,13 @@ data class Synset(
     override fun toString(): String {
         val membersStr = members.joinToString(",")
         val relationsStr = relations?.get("hypernym") ?: ""
-        return "$synsetId $type {$membersStr} '$definition' ^$relationsStr"
+        return "$synsetId ${type.value} {$membersStr} '$definition' ^$relationsStr"
     }
 
     fun toLongString(): String {
         val membersStr = members.joinToString(",")
         val relationsStr = relations?.joinToString(",") ?: ""
-        return "$synsetId $type {$membersStr} '$definition' {$relationsStr}"
+        return "$synsetId ${type.value} {$membersStr} '$definition' {$relationsStr}"
     }
 
     // identity

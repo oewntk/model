@@ -100,7 +100,7 @@ enum class SynsetTypeImpl(val value: Char) {
             }
         }
 
-        fun fromChar(c: Char): SynsetTypeImpl = fromCharOrNull(c) ?: throw IllegalArgumentException("Illegal PartOfSpeech: $c")
+        fun fromChar(c: Char): SynsetTypeImpl = fromCharOrNull(c) ?: throw IllegalArgumentException("Illegal SynsetType: $c")
     }
 }
 

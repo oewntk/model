@@ -24,8 +24,8 @@ object LibNanoModel {
     val pronunciation21 = Pronunciation(IPA21, "GB")
     val pronunciation22 = Pronunciation(IPA22, "US")
 
-    val lex1 = Lex(LEMMA1, STYPE.toString(), listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) }
-    val lex2 = Lex(LEMMA2, STYPE.toString(), listOf(SENSEKEY21, SENSEKEY22)).apply { pronunciations = setOf(pronunciation21, pronunciation22) }
+    val lex1 = Lex(LEMMA1, STYPE.value.toString(), listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) }
+    val lex2 = Lex(LEMMA2, STYPE.value.toString(), listOf(SENSEKEY21, SENSEKEY22)).apply { pronunciations = setOf(pronunciation21, pronunciation22) }
 
     val synset1 = Synset(
         SYNSETID1,

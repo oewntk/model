@@ -32,7 +32,7 @@ import java.util.*
 data class Lex(
 
     val lemma: Lemma,
-    val type: Category,
+    val type: SynsetType,
     val discriminant: Discriminant?,
     var senseKeys: List<SenseKey>,
     val generated: Boolean = false
@@ -45,7 +45,7 @@ data class Lex(
         get() = lemma.lowercase()
     val isCased: Boolean
         get() = lemma != lCLemma
-    val partOfSpeech: Category
+    val partOfSpeech: PartOfSpeech
         get() = if (type == 's') 'a' else type
     val key2: String
         get() = if (discriminant != null) "${type}$discriminant" else type.toString()

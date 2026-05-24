@@ -38,24 +38,24 @@ typealias PartOfSpeech = PartOfSpeechImpl
 /**
  * Either SynsetType or Category
  */
-enum class CategoryImpl(val value: Char) {
-    N('n') {
+enum class CategoryImpl(val value: Char, name:String) {
+    N('n', "noun") {
         override fun toSynsetType(): SynsetTypeImpl = SynsetTypeImpl.N
         override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.N
     },
-    V('v') {
+    V('v',"verb") {
         override fun toSynsetType(): SynsetTypeImpl = SynsetTypeImpl.V
         override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.V
     },
-    A('a') {
+    A('a',"adj") {
         override fun toSynsetType(): SynsetTypeImpl = SynsetTypeImpl.A
         override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.A
     },
-    R('r') {
+    R('r',"adv") {
         override fun toSynsetType(): SynsetTypeImpl = SynsetTypeImpl.R
         override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.R
     },
-    S('s') {
+    S('s',"sat_adj") {
         override fun toSynsetType(): SynsetTypeImpl = SynsetTypeImpl.A
         override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.A
     };

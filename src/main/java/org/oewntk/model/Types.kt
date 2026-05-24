@@ -8,8 +8,17 @@ typealias Lemma = String
 typealias SenseKey = String
 typealias SynsetId = String
 typealias Relation = String
+/**
+ * Either SynsetType or Category
+ */
 typealias Category = Char
+/**
+ * [n,v,a,r]
+ */
 typealias SynsetType = Char
+/**
+ * [n,v,a,r,s]
+ */
 typealias PartOfSpeech = Char
 typealias Discriminant = String
 typealias Key2 = String

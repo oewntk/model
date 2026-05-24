@@ -59,9 +59,9 @@ object SenseGroupings {
     /**
      * Find senses for target lower-cased lemma and part-of-speech
      *
-     * @param senses  senses
+     * @param senses senses
      * @param lcLemma target lower-cased lemma
-     * @param category     target part-of-speech
+     * @param category target part-of-speech or synset type
      * @return collection of senses for this target lower-cased lemma and part-of-speech
      */
     fun sensesForLCLemmaAndPos(senses: Collection<Sense>, lcLemma: Lemma, category: Category): Collection<Sense> {

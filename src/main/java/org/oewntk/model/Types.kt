@@ -111,23 +111,18 @@ enum class SynsetTypeImpl(val value: Char) {
  */
 enum class PartOfSpeechImpl(val value: Char, val fullName: String) {
     N('n', "noun") {
-        override fun toSynsetType(): SynsetType = SynsetType.N
         override fun toCategory(): CategoryImpl = CategoryImpl.N
     },
     V('v', "verb") {
-        override fun toSynsetType(): SynsetType = SynsetType.V
         override fun toCategory(): CategoryImpl = CategoryImpl.V
     },
     A('a', "adj") {
-        override fun toSynsetType(): SynsetType = SynsetType.A
         override fun toCategory(): CategoryImpl = CategoryImpl.A
     },
     R('r', "adv") {
-        override fun toSynsetType(): SynsetType = SynsetType.R
         override fun toCategory(): CategoryImpl = CategoryImpl.R
     };
 
-    abstract fun toSynsetType(): SynsetType
     abstract fun toCategory(): CategoryImpl
 
     companion object {

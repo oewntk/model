@@ -44,7 +44,7 @@ import java.util.*
 data class Sense(
     private val senseId: SenseKey,
     val lex: Lex,
-    val type: Category,
+    val type: SynsetType,
     val lexIndex: Int,
     val synsetId: SynsetId,
     val examples: Array<Pair<String, String?>>? = null,
@@ -62,7 +62,7 @@ data class Sense(
         get() = lex.lemma
     val lCLemma: Lemma
         get() = lex.lCLemma
-    val partOfSpeech: Category = if (this.type == 's') 'a' else this.type
+    val partOfSpeech: PartOfSpeech = if (this.type == 's') 'a' else this.type
     val intTagCount: Int
         get() = if (tagCount == null) 0 else tagCount!!.count
     val lexfile: String

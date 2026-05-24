@@ -46,7 +46,7 @@ data class Lex(
     val isCased: Boolean
         get() = lemma != lCLemma
     val partOfSpeech: PartOfSpeech
-        get() = if (type == 's') 'a' else type
+        get() = type.toPartOfSpeech()
     val key2: String
         get() = if (discriminant != null) "${type}$discriminant" else type.toString()
     val lexfileChar: Char
@@ -69,7 +69,7 @@ data class Lex(
         code: String,
         senseKeys: List<SenseKey> = ArrayList(),
         generated: Boolean = false
-    ) : this(lemma, code[0], if (code.length > 1) code.substring(1) else null, senseKeys, generated = generated)
+    ) : this(lemma, SynsetType.fromChar(code[0]), if (code.length > 1) code.substring(1) else null, senseKeys, generated = generated)
 
     // stringify
 

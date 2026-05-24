@@ -9,7 +9,7 @@ object LibNanoModel {
     const val DOMAIN2 = "body"
     const val LEMMA1 = "jest"
     const val LEMMA2 = "joke"
-    const val POS = 'v'
+    val STYPE = SynsetType.V
     const val SENSEKEY11 = "jest%2:32:00::"
     const val SENSEKEY12 = "jest%2:29:00::"
     const val SENSEKEY21 = "joke%2:32:00::"
@@ -24,12 +24,12 @@ object LibNanoModel {
     val pronunciation21 = Pronunciation(IPA21, "GB")
     val pronunciation22 = Pronunciation(IPA22, "US")
 
-    val lex1 = Lex(LEMMA1, POS.toString(), listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) }
-    val lex2 = Lex(LEMMA2, POS.toString(), listOf(SENSEKEY21, SENSEKEY22)).apply { pronunciations = setOf(pronunciation21, pronunciation22) }
+    val lex1 = Lex(LEMMA1, STYPE.toString(), listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) }
+    val lex2 = Lex(LEMMA2, STYPE.toString(), listOf(SENSEKEY21, SENSEKEY22)).apply { pronunciations = setOf(pronunciation21, pronunciation22) }
 
     val synset1 = Synset(
         SYNSETID1,
-        POS,
+        STYPE,
         DOMAIN1,
         arrayOf(LEMMA1, LEMMA2),
         arrayOf("tell a joke", "speak humorously"),
@@ -38,22 +38,22 @@ object LibNanoModel {
     )
     val synset2 = Synset(
         SYNSETID2,
-        POS,
+        STYPE,
         DOMAIN2,
         arrayOf(LEMMA1, LEMMA2),
         arrayOf("act in a funny teasing way")
     )
-    val sense11 = Sense(SENSEKEY11, lex1, POS, 0, SYNSETID1)
-    val sense12 = Sense(SENSEKEY12, lex1, POS, 1, SYNSETID2)
-    val sense21 = Sense(SENSEKEY21, lex2, POS, 0, SYNSETID1)
-    val sense22 = Sense(SENSEKEY22, lex2, POS, 1, SYNSETID2)
+    val sense11 = Sense(SENSEKEY11, lex1, STYPE, 0, SYNSETID1)
+    val sense12 = Sense(SENSEKEY12, lex1, STYPE, 1, SYNSETID2)
+    val sense21 = Sense(SENSEKEY21, lex2, STYPE, 0, SYNSETID1)
+    val sense22 = Sense(SENSEKEY22, lex2, STYPE, 1, SYNSETID2)
 
     // relations
 
     const val SYNSETID_H1 = "00742582-v"
     val synsetH1 = Synset(
         SYNSETID_H1,
-        POS,
+        STYPE,
         DOMAIN1,
         arrayOf("communicate", "intercommunicate"),
         arrayOf("transmit thoughts or feelings")
@@ -62,7 +62,7 @@ object LibNanoModel {
     const val SYNSETID_D1 = "10240982-n"
     val synsetD1 = Synset(
         SYNSETID_D1,
-        'n',
+        SynsetType.N,
         "person",
         arrayOf("jester", "fool", "motley fool"),
         arrayOf("a professional clown employed to entertain a king or nobleman in the Middle Ages")
@@ -71,7 +71,7 @@ object LibNanoModel {
     const val SENSEKEY_D11 = "jester%1:18:00::"
     val lexD1 = Lex("jester", "n", listOf(SENSEKEY_D11))
     val senseD11 = Sense(
-        SENSEKEY_D11, lexD1, 'n', 0, "10240982-n"
+        SENSEKEY_D11, lexD1, SynsetType.N, 0, "10240982-n"
     )
 
     init {

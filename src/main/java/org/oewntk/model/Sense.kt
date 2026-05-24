@@ -62,7 +62,8 @@ data class Sense(
         get() = lex.lemma
     val lCLemma: Lemma
         get() = lex.lCLemma
-    val partOfSpeech: PartOfSpeech = if (this.type == 's') 'a' else this.type
+    val partOfSpeech: PartOfSpeech
+        get() = type.toPartOfSpeech()
     val intTagCount: Int
         get() = if (tagCount == null) 0 else tagCount!!.count
     val lexfile: String

@@ -403,9 +403,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
 
         private const val DUMMY_UPPER = "CASE"
 
-        private const val DUMMY_SATELLITE = 's'
-
-        private val dummyLex = Lex(DUMMY_UPPER, DUMMY_SATELLITE.toString())
+        private val dummyLex = Lex(DUMMY_UPPER, Category.S.toString())
 
         /**
          * Name a lemma extractor (by applying dummy data)
@@ -424,7 +422,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
          * @return name
          */
         fun ((Lex) -> Category).toTypeOrPos(): String {
-            return if (this.invoke(dummyLex) == DUMMY_SATELLITE) "t" else "p"
+            return if (this.invoke(dummyLex) == Category.S) "t" else "p"
         }
     }
 }

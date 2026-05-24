@@ -47,13 +47,13 @@ object Finder {
      *
      * @param model      model
      * @param lemma      lemma (CS)
-     * @param typeFilter type filter
+     * @param targetType target type
      * @return sequence of lexes
      */
-    fun getLexesHavingType(model: CoreModel, lemma: Lemma, typeFilter: Char): Sequence<Lex>? {
+    fun getLexesHavingType(model: CoreModel, lemma: Lemma, targetType: SynsetType): Sequence<Lex>? {
         return model.lexFinder(lemma)
             ?.asSequence()
-            ?.filter { it.type == typeFilter }
+            ?.filter { it.type.value == targetType.value }
     }
 
     /**
@@ -61,13 +61,13 @@ object Finder {
      *
      * @param model     model
      * @param lemma     lemma (cased)
-     * @param posFilter part-of-speech filter
+     * @param targetPos target part-of-speech
      * @return sequence of lexes
      */
-    fun getLexesHavingPos(model: CoreModel, lemma: Lemma, posFilter: Char): Sequence<Lex>? {
+    fun getLexesHavingPos(model: CoreModel, lemma: Lemma, targetPos: PartOfSpeech): Sequence<Lex>? {
         return model.lexFinder(lemma)
             ?.asSequence()
-            ?.filter { it.partOfSpeech == posFilter }
+            ?.filter { it.partOfSpeech.value == targetPos.value }
     }
 
     /**
@@ -75,27 +75,27 @@ object Finder {
      *
      * @param model      model
      * @param lemma      target lemma (its case is immaterial)
-     * @param typeFilter type filter
+     * @param targetType target typer
      * @return sequence of lexes
      */
-    fun getLcLexesHavingType(model: CoreModel, lemma: Lemma, typeFilter: Char): Sequence<Lex>? {
+    fun getLcLexesHavingType(model: CoreModel, lemma: Lemma, targetType: SynsetType): Sequence<Lex>? {
         return model.lexIgnoreCaseFinder(lemma)
             ?.asSequence()
-            ?.filter { it.type == typeFilter }
+            ?.filter { it.type.value == targetType.value }
     }
 
     /**
-     * Find lexes matching lemma ignoring case and having the desired category
+     * Find lexes matching lemma ignoring case and having the desired pos
      *
      * @param model          model
      * @param lemma          target lemma (its case is immaterial)
-     * @param targetCategory target category
+     * @param targetPos      target part-of-speech
      * @return sequence of lexes
      */
-    fun getLcLexesHavingPos(model: CoreModel, lemma: Lemma, targetCategory: Category): Sequence<Lex>? {
+    fun getLcLexesHavingPos(model: CoreModel, lemma: Lemma, targetPos: PartOfSpeech): Sequence<Lex>? {
         return model.lexIgnoreCaseFinder(lemma)
             ?.asSequence()
-            ?.filter { it.partOfSpeech == targetCategory }
+            ?.filter { it.partOfSpeech.value == targetPos.value }
     }
 
     /**

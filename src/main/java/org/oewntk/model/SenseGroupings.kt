@@ -106,7 +106,7 @@ object SenseGroupings {
 
         val lcLemma: Lemma = lemma.lowercase()
 
-        constructor(sense: Sense) : this(sense.lemma, sense.partOfSpeech)
+        constructor(sense: Sense) : this(sense.lemma, sense.partOfSpeech.toCategory())
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

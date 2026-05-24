@@ -24,8 +24,8 @@ class TestKeys {
         assertNotEquals(Key.KeyLCD.of_t(lexRowOu), Key.KeyLCD.of_t(lexRowAu)) // because discriminant is different
         assertEquals(Key.KeyLCD.of_t(lexRowOuN), Key.KeyLCD.of_t(lexRowAuN)) // because discriminant is same
         assertEquals(
-            Key.KeyLC.of(lexRowOu, Lex::lemma, Lex::type),
-            Key.KeyLC.of(lexRowAu, Lex::lemma, Lex::type)
+            Key.KeyLC.of(lexRowOu, Lex::lemma) { it.type.toCategory() },
+            Key.KeyLC.of(lexRowAu, Lex::lemma) { it.type.toCategory() }
         )
     }
 

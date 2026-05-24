@@ -83,7 +83,7 @@ object LibTestModel {
         }
     }
 
-    fun testWord(lemma: Lemma, posFilter: Char, model: CoreModel, ps: PrintStream) {
+    fun testWord(lemma: Lemma, posFilter: PartOfSpeech, model: CoreModel, ps: PrintStream) {
         val lexes = getLexesHavingPos(model, lemma, posFilter)!!
             .toList()
             .toTypedArray()

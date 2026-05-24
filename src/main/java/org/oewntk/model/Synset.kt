@@ -51,18 +51,12 @@ data class Synset(
     ) : Comparable<Synset>, Serializable {
 
     val partOfSpeech: PartOfSpeech
-        get() = if (type == 's') 'a' else type
-    val partOfSpeechName: String?
-        get() = when (partOfSpeech) {
-            'n' -> "noun"
-            'v' -> "verb"
-            'a' -> "adj"
-            'r' -> "adv"
-            else -> null
-        }
+        get() = type.toPartOfSpeech()
+    val partOfSpeechName: String
+        get() = partOfSpeech.name
     val definition: String?
         get() = if (definitions.isNotEmpty()) definitions[0] else null
-    val lexfile: String? = partOfSpeechName?.let { "$partOfSpeechName.$domain" }
+    val lexfile: String = "$partOfSpeechName.$domain"
 
     var source: String? = null
 

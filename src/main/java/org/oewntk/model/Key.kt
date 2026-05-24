@@ -81,19 +81,19 @@ interface Key {
             }
 
             fun of_t(lex: Lex): KeyLC {
-                return of(lex, Lex::lemma, Lex::type)
+                return of(lex, Lex::lemma) { it.type.toCategory() }
             }
 
             fun of_p(lex: Lex): KeyLC {
-                return of(lex, Lex::lemma, Lex::partOfSpeech)
+                return of(lex, Lex::lemma) { it.partOfSpeech.toCategory() }
             }
 
             fun of_lc_t(lex: Lex): KeyLC {
-                return of(lex, Lex::lCLemma, Lex::type)
+                return of(lex, Lex::lCLemma) { it.type.toCategory() }
             }
 
             fun of_lc_p(lex: Lex): KeyLC {
-                return of(lex, Lex::lCLemma, Lex::partOfSpeech)
+                return of(lex, Lex::lCLemma) { it.partOfSpeech.toCategory() }
             }
 
             fun from(lemma: Lemma, category: Category): KeyLC {
@@ -170,19 +170,19 @@ interface Key {
             }
 
             fun of_t(lex: Lex): KeyLCP {
-                return of(lex, Lex::lemma, Lex::type)
+                return of(lex, Lex::lemma) { it.type.toCategory() }
             }
 
             fun of_p(lex: Lex): KeyLCP {
-                return of(lex, Lex::lemma, Lex::partOfSpeech)
+                return of(lex, Lex::lemma) { it.partOfSpeech.toCategory() }
             }
 
             fun of_lc_t(lex: Lex): KeyLCP {
-                return of(lex, Lex::lCLemma, Lex::type)
+                return of(lex, Lex::lCLemma) { it.type.toCategory() }
             }
 
             fun of_lc_p(lex: Lex): KeyLCP {
-                return of(lex, Lex::lCLemma, Lex::partOfSpeech)
+                return of(lex, Lex::lCLemma) { it.partOfSpeech.toCategory() }
             }
 
             fun from(lemma: Lemma, type: Category, pronunciations: Set<Pronunciation>): KeyLCP {
@@ -269,19 +269,19 @@ interface Key {
             }
 
             fun of_t(lex: Lex): KeyLCD {
-                return of(lex, Lex::lemma, Lex::type)
+                return of(lex, Lex::lemma) { it.type.toCategory() }
             }
 
             fun of_p(lex: Lex): KeyLCD {
-                return of(lex, Lex::lemma, Lex::partOfSpeech)
+                return of(lex, Lex::lemma) { it.partOfSpeech.toCategory() }
             }
 
             fun of_lc_t(lex: Lex): KeyLCD {
-                return of(lex, Lex::lCLemma, Lex::type)
+                return of(lex, Lex::lCLemma) { it.type.toCategory() }
             }
 
             fun of_lc_p(lex: Lex): KeyLCD {
-                return of(lex, Lex::lCLemma, Lex::partOfSpeech)
+                return of(lex, Lex::lCLemma) { it.partOfSpeech.toCategory() }
             }
 
             fun from(lemma: Lemma, category: Category, discriminant: Discriminant?): KeyLCD {

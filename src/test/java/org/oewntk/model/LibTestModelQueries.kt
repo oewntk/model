@@ -51,6 +51,14 @@ object LibTestModelQueries {
         dump(lexes, Lex::partOfSpeech, nullablePronunciations, model, ps)
     }
 
+    private val stringifier: (Any) -> String = { it: Any ->
+        when (it) {
+            is SynsetType -> it.value.toString()
+            is PartOfSpeech -> it.value.toString()
+            else -> it.toString()
+        }
+    }
+
     private fun <K> dump(
         lexes: Collection<Lex>,
         classifier2: (Lex) -> K,
@@ -61,7 +69,7 @@ object LibTestModelQueries {
         val map2: Map<out K, List<Lex>> = lexes
             .groupBy(classifier2)
         for (k2 in map2.keys) {
-            ps.printf("\t%s:%n", k2)
+            ps.printf("\t%s:%n", stringifier.invoke(k2 as Any))
             val map3: Map<out K, List<Lex>> = map2[k2]!!
                 .groupBy(classifier3)
             for (k3 in map3.keys) {
@@ -87,8 +95,8 @@ object LibTestModelQueries {
             "%ssk=%s type=%c pos=%c lemma='%s' index=%d adj=%s synset=%s%n",
             indent,
             sense.senseKey,
-            sense.type,
-            sense.partOfSpeech,
+            sense.type.value,
+            sense.partOfSpeech.value,
             sense.lemma,
             sense.lexIndex + 1,
             sense.adjPosition,

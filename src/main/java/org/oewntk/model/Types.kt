@@ -87,7 +87,7 @@ enum class SynsetTypeImpl(val value: Char) {
 
     abstract fun toPartOfSpeech(): PartOfSpeechImpl
     abstract fun toCategory(): CategoryImpl
-    override fun toString(): String { throw IllegalAccessException("Illegal: use ${this.value}") }
+    override fun toString(): String { throw IllegalAccessException("Illegal: use .value ${this.value}") }
 
     companion object {
         fun fromCharOrNull(c: Char): SynsetTypeImpl? {
@@ -125,7 +125,7 @@ enum class PartOfSpeechImpl(val value: Char, val fullName: String) {
     };
 
     abstract fun toCategory(): CategoryImpl
-    override fun toString(): String { throw IllegalAccessException("Illegal: use ${this.value}") }
+    override fun toString(): String { throw IllegalAccessException("Illegal: use .value ${this.value}") }
 
     companion object {
         fun fromCharOrNull(c: Char): PartOfSpeechImpl? {

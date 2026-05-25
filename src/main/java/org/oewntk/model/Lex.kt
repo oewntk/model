@@ -69,7 +69,7 @@ data class Lex(
         code: String,
         senseKeys: List<SenseKey> = ArrayList(),
         generated: Boolean = false
-    ) : this(lemma, SynsetType.fromChar(code[0]), if (code.length > 1) code.substring(1) else null, senseKeys, generated = generated)
+    ) : this(lemma, SynsetType.fromChar(code.lowercase()[0]), if (code.length > 1) code.substring(1) else null, senseKeys, generated = generated)
 
     // stringify
 

@@ -124,7 +124,7 @@ data class Synset(
             .filter { it.partOfSpeech == partOfSpeech }
             .flatMap { it.senseKeys }
             .map { sk -> senseKey2Sense(sk) }
-            .firstOrNull { s -> s.synsetId == this.synsetId } ?: throw IllegalStateException("Lemma $lemma not found in synset $this")
+            .firstOrNull { s -> s.synsetId == this.synsetId } ?: throw IllegalStateException("Lemma '$lemma' not found in synset $this")
     }
 
     /**

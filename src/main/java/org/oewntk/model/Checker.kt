@@ -75,6 +75,7 @@ fun <M : CoreModel> M.checkSenseRelationTargets(verbose: Boolean = true): M {
 fun <M : CoreModel> M.checkMembers(verbose: Boolean = true): M {
     checkMembersDuplicates(verbose)
     checkMembersReference(verbose)
+    checkMembersSenses(verbose)
     return this
 }
 
@@ -109,5 +110,26 @@ fun <M : CoreModel> M.checkMembersReference(verbose: Boolean = true): M {
         }
     }
     Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count synsets have member(s) without entries")
+    return this
+}
+
+/**
+ * Check synset members
+ */
+fun <M : CoreModel> M.checkMembersSenses(verbose: Boolean = true): M {
+    var count = 0
+    for (synset in synsets) {
+        if ("00821893-n" == synset.synsetId)
+            Tracing.psInfo.println()
+        for (member in synset.members) {
+            try {
+                synset.findSenseOf(member, lexResolver, senseResolver)
+            } catch (_: IllegalStateException) {
+                count++
+                if (verbose) Tracing.psErr.println("[E] members of synset ${synset.synsetId} with members {${synset.members.joinToString()}} have no found sense for '$member'")
+            }
+        }
+    }
+    Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count synsets have member(s) with non found sense")
     return this
 }

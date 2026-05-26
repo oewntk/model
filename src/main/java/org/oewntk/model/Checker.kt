@@ -4,12 +4,13 @@ package org.oewntk.model
  * Check model
  */
 fun <M : CoreModel> M.check(verbose: Boolean = true): M {
-    if (verbose) Tracing.psErr.println("[I] Check members")
     checkMembers(verbose = verbose)
     if (verbose) Tracing.psErr.println("[I] Check synset relation targets")
     checkSynsetRelationTargets(verbose = verbose)
     if (verbose) Tracing.psErr.println("[I] Check sense relation targets")
     checkSenseRelationTargets(verbose = verbose)
+    if (verbose) Tracing.psErr.println("[I] Check sense relation targets")
+    checkMembersSenses(verbose = verbose)
     return this
 }
 
@@ -73,9 +74,9 @@ fun <M : CoreModel> M.checkSenseRelationTargets(verbose: Boolean = true): M {
  * Check synset members
  */
 fun <M : CoreModel> M.checkMembers(verbose: Boolean = true): M {
-    checkMembersDuplicates(verbose)
-    checkMembersReference(verbose)
-    checkMembersSenses(verbose)
+    checkMembersDuplicates(verbose = verbose)
+    checkMembersReference(verbose = verbose)
+    checkMembersSenses(verbose = verbose)
     return this
 }
 
@@ -124,9 +125,9 @@ fun <M : CoreModel> M.checkMembersSenses(verbose: Boolean = true): M {
         for (member in synset.members) {
             try {
                 synset.findSenseOf(member, lexResolver, senseResolver)
-            } catch (_: IllegalStateException) {
+            } catch (ise: IllegalStateException) {
                 count++
-                if (verbose) Tracing.psErr.println("[E] members of synset ${synset.synsetId} with members {${synset.members.joinToString()}} have no found sense for '$member'")
+                if (verbose) Tracing.psErr.println("[E] members of synset ${synset.synsetId} with members {${synset.members.joinToString()}} have no found sense for '$member' ${ise.message}")
             }
         }
     }

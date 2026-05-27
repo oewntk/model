@@ -57,5 +57,5 @@ object SenseKeys {
 
     fun Domain.toLexFileNum(): Int = LEXFILE_TO_NUM[this] ?: throw IllegalArgumentException(this)
 
-    fun SynsetType.toPosNum(): Int = ordinal
+    fun SynsetType.toPosNum(): Int = ordinal + 1
 }

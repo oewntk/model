@@ -65,8 +65,8 @@ data class Lex(
     // computed properties
     val value: Set<SenseKey>
         get() = senseKeys.toSet()
-    val key: Triple<Lemma, SynsetType, Discriminant?>
-        get() = Triple(lemma, type, discriminant)
+    val key: Triple<Lemma, Char, Discriminant?>
+        get() = Triple(lemma, type.value, discriminant)
     val key2: String
         get() = if (discriminant != null) "${type.value}$discriminant" else type.value.toString()
 
@@ -95,7 +95,9 @@ data class Lex(
     // identify
 
     override fun equals(other: Any?): Boolean {
-        throw UnsupportedOperationException("$this / $other")
+
+        // throw UnsupportedOperationException("$this / $other")
+        return if (other is Lex) Objects.equals(value, other.value) else false
     }
 
     override fun hashCode(): Int {

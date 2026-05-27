@@ -107,24 +107,41 @@ data class Synset(
     /**
      * Find sense of lemma in this synset
      *
-     * @param lemma        lemma
-     * @param lemma2Lexes lemma to lexes mapper
-     * @param senseKey2Sense senseKey to sense mapper
+     * @param lemma lemma
+     * @param lexResolver lemma to lexes resolver
+     * @param senseKeyResolver senseKey to sense resolver
      * @return sense of lemma in this synset, null if not found
      */
     @Throws(IllegalStateException::class)
     fun findSenseOf(
         lemma: Lemma,
-        lemma2Lexes: (lemma: Lemma) -> Collection<Lex>,
-        senseKey2Sense: (senseKey: SenseKey) -> Sense,
-    ): Sense {
-        val lexes: Collection<Lex> = checkNotNull(lemma2Lexes(lemma)) { "$lemma has no sense" }
+        lexResolver: (Lemma) -> Collection<Lex>,
+        senseKeyResolver: (SenseKey) -> Sense,
+    ): Sense? {
+        val lexes: Collection<Lex> = lexResolver(lemma)
         return lexes
             .asSequence()
             .filter { it.partOfSpeech == partOfSpeech }
             .flatMap { it.senseKeys }
-            .map { sk -> senseKey2Sense(sk) }
-            .firstOrNull { s -> s.synsetId == this.synsetId } ?: throw IllegalStateException("Lemma '$lemma' not found in synset $this")
+            .map { sk -> senseKeyResolver(sk) }
+            .firstOrNull { s -> s.synsetId == this.synsetId }
+    }
+
+    /**
+     * Find sense of lemma in this synset
+     *
+     * @param lemma lemma
+     * @param lexResolver lemma to lexes resolver
+     * @param senseKeyResolver senseKey to sense resolver
+     * @return sense of lemma in this synset, null if not found
+     */
+    @Throws(IllegalStateException::class)
+    fun resolveSenseOf(
+        lemma: Lemma,
+        lexResolver: (lemma: Lemma) -> Collection<Lex>,
+        senseKeyResolver: (senseKey: SenseKey) -> Sense,
+    ): Sense {
+        return findSenseOf(lemma, lexResolver, senseKeyResolver) ?: throw IllegalStateException("Lemma '$lemma' not found in synset $this")
     }
 
     /**

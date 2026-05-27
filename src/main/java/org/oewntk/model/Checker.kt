@@ -19,6 +19,8 @@ fun <M : CoreModel> M.check(throws: Boolean = true, verbose: Boolean = false): M
     checkSynsetRelationTargets(throws = throws, verbose = verbose)
     if (verbose) Tracing.psErr.println("[I] Sense relation targets")
     checkSenseRelationTargets(throws = throws, verbose = verbose)
+
+    Tracing.psErr.println("[I] CoreModel checked")
     return this
 }
 
@@ -37,7 +39,7 @@ fun <M : CoreModel> M.checkLexValueDuplicates(throws: Boolean = false, verbose: 
         if (verbose) Tracing.psErr.println("[E] $state")
     }
     val count = duplicates.size
-    Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count lexes have value duplicate(s)")
+    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count lexes have value duplicate(s)")
     return this
 }
 
@@ -54,7 +56,7 @@ fun <M : CoreModel> M.checkLexKeyDuplicates(throws: Boolean = false, verbose: Bo
         if (verbose) Tracing.psErr.println("[E] $state")
     }
     val count = duplicates.size
-    Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count lexes have key duplicate(s)")
+    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count lexes have key duplicate(s)")
     return this
 }
 
@@ -70,7 +72,7 @@ fun <M : CoreModel> M.checkSenseReference(throws: Boolean = false, verbose: Bool
             if (verbose) Tracing.psErr.println("[E] $state")
         }
     }
-    Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count senses have no or non-existing synset target")
+    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count senses have no or non-existing synset target")
     return this
 }
 
@@ -102,7 +104,7 @@ fun <M : CoreModel> M.checkSynsetRelationTargets(throws: Boolean = false, verbos
                 }
             }
         }
-    Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count synset relations have no or non-existing target")
+    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count synset relations have no or non-existing target")
     return this
 }
 
@@ -132,7 +134,7 @@ fun <M : CoreModel> M.checkSenseRelationTargets(throws: Boolean = false, verbose
                 }
             }
         }
-    Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count sense relations have no or non-existing target")
+    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count sense relations have no or non-existing target")
     return this
 }
 
@@ -164,7 +166,7 @@ fun <M : CoreModel> M.checkMembersDuplicates(throws: Boolean = false, verbose: B
             if (verbose) Tracing.psErr.println("[E] $state")
         }
     }
-    Tracing.psErr.println("[${if (count == 0) "I" else "E"}]\t$count synsets have member duplicate(s)")
+    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}]\t$count synsets have member duplicate(s)")
     return this
 }
 
@@ -182,7 +184,7 @@ fun <M : CoreModel> M.checkMembersReference(throws: Boolean = false, verbose: Bo
             if (verbose) Tracing.psErr.println("[E] $state")
         }
     }
-    Tracing.psErr.println("[${if (count == 0) "I" else "E"}]\t$count synsets have member(s) without entries")
+    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}]\t$count synsets have member(s) without entries")
     return this
 }
 
@@ -203,6 +205,6 @@ fun <M : CoreModel> M.checkMembersSenses(throws: Boolean = false, verbose: Boole
             }
         }
     }
-    Tracing.psErr.println("[${if (count == 0) "I" else "E"}]\t$count synsets have member(s) with non found sense")
+    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}]\t$count synsets have member(s) with non found sense")
     return this
 }

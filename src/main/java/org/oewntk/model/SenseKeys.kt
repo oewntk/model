@@ -1,5 +1,7 @@
 package org.oewntk.model
 
+import java.util.Locale
+
 object SenseKeys {
 
     val LEXFILE_TO_NUM = mapOf(
@@ -58,4 +60,13 @@ object SenseKeys {
     fun Domain.toLexFileNum(): Int = LEXFILE_TO_NUM[this] ?: throw IllegalArgumentException(this)
 
     fun SynsetType.toPosNum(): Int = ordinal + 1
+
+    fun generateSenseKey(lemma: Lemma, synset: Synset, idx: Int): SenseKey {
+        lemma.lowercase(Locale.ENGLISH).escapeForSenseKey()
+        val escapedLemma = lemma.lowercase(Locale.ENGLISH).escapeForSenseKey()
+        val ssType = synset.type.toPosNum()
+        val lexfileNum = "%02d".format(synset.lexfile.toLexFileNum())
+        val lexfileIdx = "%02d".format(idx + 1)
+        return "$escapedLemma%$ssType:$lexfileNum:$lexfileIdx::"
+    }
 }

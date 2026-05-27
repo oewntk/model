@@ -6,23 +6,23 @@ import java.io.File
  * Check model
  */
 fun <M : CoreModel> M.check(throws: Boolean = true, verbose: Boolean = false): M {
-    if (verbose) Tracing.psErr.println("[I] Lex key duplicates")
+    if (verbose) Tracing.psInfo.println("[I] Lex key duplicates")
     checkLexKeyDuplicates(throws = throws, verbose = verbose)
-    if (verbose) Tracing.psErr.println("[I] Lex value duplicates")
+    if (verbose) Tracing.psInfo.println("[I] Lex value duplicates")
     checkLexValueDuplicates(throws = throws, verbose = verbose)
 
-    if (verbose) Tracing.psErr.println("[I] Sense reference")
+    if (verbose) Tracing.psInfo.println("[I] Sense reference")
     checkSenseReference(throws = throws, verbose = verbose)
 
-    if (verbose) Tracing.psErr.println("[I] Synset members")
+    if (verbose) Tracing.psInfo.println("[I] Synset members")
     checkMembers(throws = throws, verbose = verbose)
 
-    if (verbose) Tracing.psErr.println("[I] Synset relation targets")
+    if (verbose) Tracing.psInfo.println("[I] Synset relation targets")
     checkSynsetRelationTargets(throws = throws, verbose = verbose)
-    if (verbose) Tracing.psErr.println("[I] Sense relation targets")
+    if (verbose) Tracing.psInfo.println("[I] Sense relation targets")
     checkSenseRelationTargets(throws = throws, verbose = verbose)
 
-    Tracing.psErr.println("[I] CoreModel checked")
+    Tracing.psInfo.println("[I] CoreModel checked")
     return this
 }
 
@@ -42,11 +42,12 @@ fun <M : CoreModel> M.checkLexValueDuplicates(throws: Boolean = false, verbose: 
         if (verbose) {
             val csvFile = File("lex-value-duplicates.log")
             csvFile.writeText(duplicatesCsv)
-            Tracing.psErr.println("[E] $state")
+            Tracing.psErr.println("[E] ${duplicates.size} lexes have value duplicate(s) logged in $csvFile")
+            //Tracing.psErr.println("[E] ${duplicates.size} lexes have value duplicate(s)\n$state")
         }
+    } else {
+        if (verbose) Tracing.psInfo.println("[I] 0 lexes have value duplicate(s)")
     }
-    val count = duplicates.size
-    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count lexes have value duplicate(s)")
     return this
 }
 
@@ -66,27 +67,37 @@ fun <M : CoreModel> M.checkLexKeyDuplicates(throws: Boolean = false, verbose: Bo
         if (verbose) {
             val csvFile = File("lex-key-duplicates.log")
             csvFile.writeText(duplicatesCsv)
-            Tracing.psErr.println("[E] $state")
+            Tracing.psErr.println("[E] ${duplicates.size} lexes have key duplicate(s) logged in $csvFile")
+            // Tracing.psErr.println("[E] ${duplicates.size} lexes have key duplicate(s)\n$state")
         }
+    } else {
+        if (verbose) Tracing.psInfo.println("[I] 0 lexes have key duplicate(s)")
     }
-    val count = duplicates.size
-    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count lexes have key duplicate(s)")
     return this
 }
 
 // S E N S E
 
 fun <M : CoreModel> M.checkSenseReference(throws: Boolean = false, verbose: Boolean = true): M {
-    var count = 0
-    senses.forEach { sense ->
-        if (synsetFinder(sense.synsetId) == null) {
-            count++
-            val state = "${sense.senseKey} has non-existing target synset ${sense.synsetId}"
-            if (throws) throw IllegalStateException(state)
-            if (verbose) Tracing.psErr.println("[E] $state")
+    val orphans = senses
+        .map { sense -> sense to synsetFinder(sense.synsetId) }
+        .filter { it.second == null }
+        .map { (sense, _) ->
+            "${sense.senseKey};${sense.synsetId}"
         }
+        .toList()
+    if (orphans.isNotEmpty()) {
+        val state = orphans.joinToString(separator = "\n")
+        if (throws) throw IllegalStateException(state)
+        if (verbose) {
+            val csvFile = File("sense-orphan-synset.log")
+            csvFile.writeText(state)
+            Tracing.psErr.println("[E] ${orphans.size} senses have no or non-existing synset target logged in $csvFile")
+            // Tracing.psErr.println("[E] ${orphans.size} senses have no or non-existing synset target\n$state")
+        }
+    } else {
+        if (verbose) Tracing.psInfo.println("[I] 0 senses have no or non-existing synset target")
     }
-    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count senses have no or non-existing synset target")
     return this
 }
 
@@ -118,7 +129,8 @@ fun <M : CoreModel> M.checkSynsetRelationTargets(throws: Boolean = false, verbos
                 }
             }
         }
-    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count synset relations have no or non-existing target")
+    val isError = count != 0
+    if (verbose) Tracing.ps(isError).println("[${if (isError) "E" else "I"}] $count synset relations have no or non-existing target")
     return this
 }
 
@@ -148,7 +160,8 @@ fun <M : CoreModel> M.checkSenseRelationTargets(throws: Boolean = false, verbose
                 }
             }
         }
-    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}] $count sense relations have no or non-existing target")
+    val isError = count != 0
+    if (verbose) Tracing.ps(isError).println("[${if (isError) "E" else "I"}] $count sense relations have no or non-existing target")
     return this
 }
 
@@ -168,19 +181,27 @@ fun <M : CoreModel> M.checkMembers(throws: Boolean = false, verbose: Boolean = t
  * Check synset members
  */
 fun <M : CoreModel> M.checkMembersDuplicates(throws: Boolean = false, verbose: Boolean = true): M {
-    var count = 0
-    synsets.forEach { synset ->
-        val duplicates = synset.members.groupBy { it }
-            .filter { it.value.size > 1 }
-            .keys
-        if (duplicates.isNotEmpty()) {
-            count++
-            val state = "duplicate synset ${synset.synsetId} members: $duplicates {${synset.members.joinToString()}}"
-            if (throws) throw IllegalStateException(state)
-            if (verbose) Tracing.psErr.println("[E] $state")
+    val instances = synsets
+        .map { synset ->
+            synset to synset.members.groupBy { it }
+                .filter { it.value.size > 1 }
+                .keys
         }
+        .filter { it.second.isNotEmpty() }
+        .sortedBy { it.first }
+
+    if (instances.isNotEmpty()) {
+        val state = instances.joinToString(separator = "\n") { (synset, duplicates) -> "${duplicates.joinToString(separator = ",")};${synset.synsetId};${synset.members.joinToString(separator = ",")}}" }
+        if (throws) throw IllegalStateException(state)
+        if (verbose) {
+            val csvFile = File("member-duplicates.log")
+            csvFile.writeText(state)
+            Tracing.psErr.println("[E] ${instances.size} synsets have member duplicate(s) logged in $csvFile")
+            //Tracing.psErr.println("[E] ${instances.size} synsets have member duplicate(s)\n$state")
+        }
+    } else {
+        if (verbose) Tracing.psInfo.println("[I]\t0 synsets have member duplicate(s)")
     }
-    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}]\t$count synsets have member duplicate(s)")
     return this
 }
 
@@ -188,18 +209,23 @@ fun <M : CoreModel> M.checkMembersDuplicates(throws: Boolean = false, verbose: B
  * Check synset members
  */
 fun <M : CoreModel> M.checkMembersReference(throws: Boolean = false, verbose: Boolean = true): M {
-    val membersWithoutLex = synsets
-        .map { synset -> synset.members.filter { member -> lexFinder(member) == null }.toList() to synset }
-        .filter { it.first.isNotEmpty() }
-        .map { (orphans, synset) -> "$orphans;${synset.synsetId};{${synset.members.joinToString()}" }
-    if (membersWithoutLex.isNotEmpty()) {
-        val csv = membersWithoutLex.joinToString(separator = "\n")
-        if (throws) throw IllegalStateException(csv)
-        if (verbose) Tracing.psErr.println("[E] $csv")
-    }
-    val count = membersWithoutLex.size
-    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}]\t$count synsets have member(s) without entries")
+    val instances: List<Pair<Synset, List<Lemma>>> = synsets
+        .map { synset -> synset to synset.members.filter { member -> lexFinder(member) == null }.toList() }
+        .filter { it.second.isNotEmpty() }
+        .sortedBy { it.first }
 
+    if (instances.isNotEmpty()) {
+        val state = instances.joinToString(separator = "\n") { (synset, members) -> "${members.joinToString(separator = ",")};${synset.synsetId};{${synset.members.joinToString(separator = ",")}" }
+        if (throws) throw IllegalStateException(state)
+        if (verbose) {
+            val csvFile = File("member-orphan-entry.log")
+            csvFile.writeText(state)
+            Tracing.psErr.println("[E] ${instances.size} synsets have member(s) without entries in $csvFile")
+            //Tracing.psErr.println("[E] ${instances.size} synsets have member(s) without entries\n$state")
+        }
+    } else {
+        if (verbose) Tracing.psInfo.println("[I]\t0 synsets have member(s) without entries")
+    }
     return this
 }
 
@@ -207,16 +233,22 @@ fun <M : CoreModel> M.checkMembersReference(throws: Boolean = false, verbose: Bo
  * Check synset members
  */
 fun <M : CoreModel> M.checkMembersSenses(throws: Boolean = false, verbose: Boolean = true): M {
-     val membersWithoutSense = synsets
-        .map { synset -> synset.members.filter { member -> synset.findSenseOf(member, lexResolver, senseResolver) == null }.toList() to synset }
-        .filter { it.first.isNotEmpty() }
-        .map { (orphans, synset) -> "$orphans;${synset.synsetId};{${synset.members.joinToString()}" }
-    if (membersWithoutSense.isNotEmpty()) {
-        val csv = membersWithoutSense.joinToString(separator = "\n")
-        if (throws) throw IllegalStateException(csv)
-        if (verbose) Tracing.psErr.println("[E] $csv")
+    val instances = synsets
+        .map { synset -> synset to synset.members.filter { member -> synset.findSenseOf(member, lexResolver, senseResolver) == null }.toList() }
+        .filter { it.second.isNotEmpty() }
+        .sortedBy { it.first }
+
+    if (instances.isNotEmpty()) {
+        val state = instances.joinToString(separator = "\n") { (synset, members) -> "${members.joinToString(separator = ",")};${synset.synsetId};${synset.members.joinToString(separator = ",")}" }
+        if (throws) throw IllegalStateException(state)
+        if (verbose) {
+            val csvFile = File("member-orphan-sense.log")
+            csvFile.writeText(state)
+            Tracing.psErr.println("[E] ${instances.size} synsets have member(s) without resolvable sense logged in $csvFile")
+            // Tracing.psErr.println("[E] ${instances.size} synsets have member(s) without resolvable sense\n$state")
+        }
+    } else {
+        if (verbose) Tracing.psInfo.println("[I]\t0 synsets have member(s) without resolvable sense")
     }
-    val count = membersWithoutSense.size
-    if (verbose) Tracing.psErr.println("[${if (count == 0) "I" else "E"}]\t$count synsets have member(s) without resolvable sense")
     return this
 }

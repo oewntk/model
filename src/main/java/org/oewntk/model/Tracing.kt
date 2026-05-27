@@ -12,10 +12,11 @@ object Tracing {
 
     val psErr: PrintStream = System.err
 
-    val psNull: PrintStream = PrintStream(object : OutputStream(
-    ) {
+    val psNull: PrintStream = PrintStream(object : OutputStream() {
         override fun write(i: Int) {
             // do nothing
         }
     })
+
+    fun ps(isError: Boolean): PrintStream = if (isError) psErr else psInfo
 }

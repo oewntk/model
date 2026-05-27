@@ -69,6 +69,8 @@ data class Sense(
     val lexfile: String
         get() = lex.lexfile
 
+    val flatRelations : List<Pair<Relation, SynsetId>>? = relations?.flatMap {(key, values) -> values.map { key to it }}
+
     // mutation
 
     /**

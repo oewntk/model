@@ -58,6 +58,8 @@ data class Synset(
         get() = if (definitions.isNotEmpty()) definitions[0] else null
     val lexfile: String = "$partOfSpeechName.$domain"
 
+    val flatRelations : List<Pair<Relation, SynsetId>>? = relations?.flatMap {(key, values) -> values.map { key to it }}
+
     var source: String? = null
 
     // mutation

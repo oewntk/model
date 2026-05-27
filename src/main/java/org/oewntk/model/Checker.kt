@@ -107,30 +107,29 @@ fun <M : CoreModel> M.checkSenseReference(throws: Boolean = false, verbose: Bool
  * Check synset relation targets
  */
 fun <M : CoreModel> M.checkSynsetRelationTargets(throws: Boolean = false, verbose: Boolean = true): M {
-    var count = 0
-    synsets
+    val instances = synsets
+        .asSequence()
         .filter { !it.relations.isNullOrEmpty() }
-        .forEach {
-            it.relations?.forEach { (rel, targetSynsetIds) ->
-                if (targetSynsetIds.isNotEmpty()) {
-                    for (targetSynsetId in targetSynsetIds) {
-                        if (targetSynsetId[0] != 'Q' && synsetFinder(targetSynsetId) == null) {
-                            count++
-                            val state = "non-existing target $targetSynsetId of synset relation $rel(${it.synsetId})"
-                            if (throws) throw IllegalStateException(state)
-                            if (verbose) Tracing.psErr.println("[E] $state")
-                        }
-                    }
-                } else {
-                    count++
-                    val state = "no target of synset relation $rel(${it.synsetId})"
-                    if (throws) throw IllegalStateException(state)
-                    if (verbose) Tracing.psErr.println("[E] $state")
-                }
+        .flatMap { synset ->
+            synset.relations!!.flatMap { (rel, targetSynsetIds) ->
+                targetSynsetIds.map { targetSynsetId -> Triple(synset, rel, targetSynsetId) }
             }
         }
-    val isError = count != 0
-    if (verbose) Tracing.ps(isError).println("[${if (isError) "E" else "I"}] $count synset relations have no or non-existing target")
+        .filter { (_, _, targetSynsetId) -> targetSynsetId[0] != 'Q' && synsetFinder(targetSynsetId) == null }
+        .toList()
+
+    if (instances.isNotEmpty()) {
+        val state = instances.joinToString(separator = "\n") { (synset, rel, targetSynsetId) -> "${synset.synsetId};$rel;$targetSynsetId" }
+        if (throws) throw IllegalStateException(state)
+        if (verbose) {
+            val csvFile = File("relations-synset.log")
+            csvFile.writeText(state)
+            Tracing.psErr.println("[E] ${instances.size} synsets have failing sense relations logged in $csvFile")
+            //Tracing.psErr.println("[E] ${instances.size} synsets have failing sense relations\n$state")
+        }
+    } else {
+        if (verbose) Tracing.psInfo.println("[I] No synsets have failing sense relations")
+    }
     return this
 }
 
@@ -138,30 +137,29 @@ fun <M : CoreModel> M.checkSynsetRelationTargets(throws: Boolean = false, verbos
  * Check sense relation targets
  */
 fun <M : CoreModel> M.checkSenseRelationTargets(throws: Boolean = false, verbose: Boolean = true): M {
-    var count = 0
-    senses
+    val instances = senses
+        .asSequence()
         .filter { !it.relations.isNullOrEmpty() }
-        .forEach {
-            it.relations?.forEach { (rel, targetSenseKeys) ->
-                if (targetSenseKeys.isNotEmpty()) {
-                    for (targetSenseKey in targetSenseKeys) {
-                        if (senseFinder(targetSenseKey) == null) {
-                            count++
-                            val state = "non-existing target $targetSenseKey of sense relation $rel(${it.senseKey})"
-                            if (throws) throw IllegalStateException(state)
-                            if (verbose) Tracing.psErr.println("[E] $state")
-                        }
-                    }
-                } else {
-                    count++
-                    val state = "no target of sense relation $rel(${it.senseKey})"
-                    if (throws) throw IllegalStateException(state)
-                    if (verbose) Tracing.psErr.println("[E] $state")
-                }
+        .flatMap { sense ->
+            sense.relations!!.flatMap { (rel, targetSenseKeys) ->
+                targetSenseKeys.map { targetSenseKey -> Triple(sense, rel, targetSenseKey) }
             }
         }
-    val isError = count != 0
-    if (verbose) Tracing.ps(isError).println("[${if (isError) "E" else "I"}] $count sense relations have no or non-existing target")
+        .filter { (_, _, targetSenseKey) -> senseFinder(targetSenseKey) == null }
+        .toList()
+
+    if (instances.isNotEmpty()) {
+        val state = instances.joinToString(separator = "\n") { (sense, rel, targetSenseKey) -> "${sense.senseKey};$rel;$targetSenseKey" }
+        if (throws) throw IllegalStateException(state)
+        if (verbose) {
+            val csvFile = File("relations-sense.log")
+            csvFile.writeText(state)
+            Tracing.psErr.println("[E] ${instances.size} senses have failing sense relations logged in $csvFile")
+            //Tracing.psErr.println("[E] ${instances.size} senses have failing sense relations\n$state")
+        }
+    } else {
+        if (verbose) Tracing.psInfo.println("[I] No senses have failing sense relations")
+    }
     return this
 }
 

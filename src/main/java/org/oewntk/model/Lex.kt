@@ -31,24 +31,29 @@ import java.util.*
 @kotlinx.serialization.Serializable
 data class Lex(
 
+    // key
     val lemma: Lemma,
     val type: SynsetType,
     val discriminant: Discriminant?,
+
+    // value
     var senseKeys: List<SenseKey>,
+
+    // state
     val generated: Boolean = false
 ) : Serializable /*, Comparable<Lex> */ {
 
+    // properties
     var forms: Set<Morph>? = null
     var pronunciations: Set<Pronunciation>? = null
 
+    // computed properties
     val lCLemma: Lemma
-        get() = lemma.lowercase()
-    val isCased: Boolean
-        get() = lemma != lCLemma
+        get() = lemma.lowercase(Locale.ENGLISH)
     val partOfSpeech: PartOfSpeech
         get() = type.toPartOfSpeech()
-    val key2: String
-        get() = if (discriminant != null) "${type.value}$discriminant" else type.value.toString()
+    val isCased: Boolean
+        get() = lemma != lCLemma
     val lexfileChar: Char
         get() {
             val c = lemma[0].lowercaseChar()
@@ -56,6 +61,14 @@ data class Lex(
         }
     val lexfile: String
         get() = "entries-$lexfileChar.yaml"
+
+    // computed properties
+    val value: Set<SenseKey>
+        get() = senseKeys.toSet()
+    val key: Triple<Lemma, SynsetType, Discriminant?>
+        get() = Triple(lemma, type, discriminant)
+    val key2: String
+        get() = if (discriminant != null) "${type.value}$discriminant" else type.value.toString()
 
     /**
      * Constructor
@@ -82,10 +95,11 @@ data class Lex(
     // identify
 
     override fun equals(other: Any?): Boolean {
-        throw UnsupportedOperationException("Either compare values using 'sensesAsSet' or keys using 'Key.OEWN.of', 'Key.PWN.of', etc")
+        throw UnsupportedOperationException("$this / $other")
     }
 
     override fun hashCode(): Int {
-        return Objects.hash(lemma, type, discriminant, pronunciations)
+        // throw UnsupportedOperationException("$this")
+        return Objects.hash(value)
     }
 }

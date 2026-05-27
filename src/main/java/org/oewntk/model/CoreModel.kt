@@ -67,6 +67,14 @@ open class CoreModel(
     ) : this(data.lexes, data.senses, data.synsets)
 
     /**
+     * Lex entries
+     */
+    val lexEntries: Sequence<LexEntry>
+        get() = lexesByLemma!!.asSequence()
+
+    // B Y   C A C H E S
+
+    /**
      * Cached
      * Lexical units mapped by lemma written form.
      * A multimap: each value is an array of lexes for the lemma.
@@ -141,19 +149,7 @@ open class CoreModel(
     // val sensesById: Map<SenseKey, Sense> by lazy { sensesById(senses) }
     // val synsetsById: Map<SynsetId, Synset> by lazy { synsetsById(synsets) }
 
-    /**
-     * Sense finder (nullable result)
-     * Resolution may yield null
-     */
-    val senseFinder: (SenseKey) -> Sense?
-        get() = { sensesById!![it] }
-
-    /**
-     * Synset finder (nullable result)
-     * Resolution may yield null
-     */
-    val synsetFinder: (SynsetId) -> Synset?
-        get() = { synsetsById!![it] }
+    // L E X
 
     /**
      * Lex finder (nullable result)
@@ -170,20 +166,6 @@ open class CoreModel(
         get() = { lexesByLCLemma!![it.lowercase(Locale.ENGLISH)] }
 
     /**
-     * Sense resolver
-     * Assumes non-null resolution, otherwise an exception is thrown
-     */
-    val senseResolver: (SenseKey) -> Sense
-        get() = { senseFinder(it)!! }
-
-    /**
-     * Synset resolver
-     * Assumes non-null resolution, otherwise an exception is thrown
-     */
-    val synsetResolver: (SynsetId) -> Synset
-        get() = { synsetFinder(it)!! }
-
-    /**
      * Lex resolver
      * Assumes non-null resolution, otherwise an exception is thrown
      */
@@ -197,11 +179,37 @@ open class CoreModel(
     val lexIgnoreCaseResolver: (Lemma) -> Collection<Lex>
         get() = { lexFinder(it)!! }
 
+    // S E N S E
+
     /**
-     * Lex entries
+     * Sense finder (nullable result)
+     * Resolution may yield null
      */
-    val lexEntries: Sequence<LexEntry>
-        get() = lexesByLemma!!.asSequence()
+    val senseFinder: (SenseKey) -> Sense?
+        get() = { sensesById!![it] }
+
+    /**
+     * Sense resolver
+     * Assumes non-null resolution, otherwise an exception is thrown
+     */
+    val senseResolver: (SenseKey) -> Sense
+        get() = { senseFinder(it)!! }
+
+    // S E N S E
+
+    /**
+     * Synset finder (nullable result)
+     * Resolution may yield null
+     */
+    val synsetFinder: (SynsetId) -> Synset?
+        get() = { synsetsById!![it] }
+
+    /**
+     * Synset resolver
+     * Assumes non-null resolution, otherwise an exception is thrown
+     */
+    val synsetResolver: (SynsetId) -> Synset
+        get() = { synsetFinder(it)!! }
 
     /**
      * Generate inverse relations

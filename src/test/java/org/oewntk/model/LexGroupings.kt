@@ -43,7 +43,7 @@ object LexGroupings {
      */
     fun hyperMapByLCLemmaByLemma(model: CoreModel): Map<Lemma, Map<Lemma, Collection<Lex>>> {
         return model.lexEntries // entries: setOf(lemma to lexes)
-            .groupBy { entry -> entry.key.lowercase() } // groupBy: mapOf(lclemma to listOf(lemma to lexes)), entry: lemma to lexes
+            .groupBy { entry -> entry.key.lowercase(Locale.ENGLISH) } // groupBy: mapOf(lclemma to listOf(lemma to lexes)), entry: lemma to lexes
             .mapValues { values -> // values: lcLemma to listOf(lemma to lexes))
                 values.value // value: listOf(lemma to lexes)
                     .associateBy { it.key } // mapOf(lemma to lexes)
@@ -91,6 +91,6 @@ object LexGroupings {
      * @return CS lemmas by LC lemmas, with count &gt; 2
      */
     fun cSLemmasByLCLemmaHavingMultipleCount(model: CoreModel): Map<Lemma, Set<Lemma>> {
-        return Groupings.groupByHavingMultipleCount(model.lexes.map(Lex::lemma)) { it.lowercase() }
+        return Groupings.groupByHavingMultipleCount(model.lexes.map(Lex::lemma)) { it.lowercase(Locale.ENGLISH) }
     }
 }

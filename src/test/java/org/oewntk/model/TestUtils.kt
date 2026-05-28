@@ -4,6 +4,7 @@
 package org.oewntk.model
 
 import java.io.StringWriter
+import java.util.Locale
 
 object TestUtils {
 
@@ -39,7 +40,7 @@ object TestUtils {
     }
 
     fun lexHypermapForLemmaToString(lexHypermap: Map<Lemma, Map<Lemma, Collection<Lex>>>, lemma: Lemma): String {
-        val map = lexHypermap[lemma.lowercase()]!!
+        val map = lexHypermap[lemma.lowercase(Locale.ENGLISH)]!!
         val sw = StringWriter()
         map.keys.forEach { cs ->
             sw.write("\tcs '$cs'\n")

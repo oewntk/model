@@ -4,6 +4,7 @@
 package org.oewntk.model
 
 import org.oewntk.model.Key.*
+import java.util.Locale
 
 /**
  * Model info
@@ -26,7 +27,7 @@ object ModelInfo {
             .count()
         val casedCount = model.lexes
             .map { it.lemma }
-            .filter { it != it.lowercase() }
+            .filter { it != it.lowercase(Locale.ENGLISH) }
             .distinct()
             .count()
 

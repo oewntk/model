@@ -9,6 +9,7 @@ import org.oewntk.model.KeyF.MonoValued
 import org.oewntk.model.KeyF.MultiValued
 import org.oewntk.model.Pronunciation.Companion.ipa
 import java.io.PrintStream
+import java.util.Locale
 
 object LibTestModelKeys {
     // M O B I L E
@@ -100,7 +101,7 @@ object LibTestModelKeys {
         p: Array<Pronunciation>,
         vararg categories: Category,
     ): IntArray {
-        val lc = cased.lowercase()
+        val lc = cased.lowercase(Locale.ENGLISH)
         val isCased = lc != cased
         val pSet = p.toSet()
         val keys: MutableList<MultiValued> = ArrayList()
@@ -137,7 +138,7 @@ object LibTestModelKeys {
         cased: Lemma,
         vararg categories: Category,
     ): IntArray {
-        val lc = cased.lowercase()
+        val lc = cased.lowercase(Locale.ENGLISH)
         val isCased = lc != cased
 
         val keys: MutableList<MultiValued> = ArrayList()
@@ -151,9 +152,9 @@ object LibTestModelKeys {
             if (category == Category.S || category == Category.A) {
                 keys.add(KeyF.FuncKeyLC.Multi.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased, category))
                 if (isCased) {
-                    keys.add(KeyF.FuncKeyLC.Multi.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lowercase(), category))
-                    keys.add(KeyF.FuncKeyLC.Multi.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(), category))
-                    keys.add(KeyF.FuncKeyLC.Multi.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(), category))
+                    keys.add(KeyF.FuncKeyLC.Multi.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
+                    keys.add(KeyF.FuncKeyLC.Multi.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
+                    keys.add(KeyF.FuncKeyLC.Multi.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
                 }
             }
         }
@@ -172,7 +173,7 @@ object LibTestModelKeys {
         p: Array<Pronunciation>,
         vararg categories: Category,
     ): IntArray {
-        val lc = cased.lowercase()
+        val lc = cased.lowercase(Locale.ENGLISH)
         val isCased = lc != cased
         val pSet = p.toSet()
 
@@ -183,17 +184,17 @@ object LibTestModelKeys {
                 keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, { it.type.toCategory() }, cased, category, pSet))
             }
             if (isCased) {
-                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, { it.type.toCategory() }, cased.lowercase(), category, pSet))
-                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, { it.type.toCategory() }, cased.lowercase(), category, pSet))
-                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, { it.type.toCategory() }, cased.lowercase(), category, pSet))
+                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, { it.type.toCategory() }, cased.lowercase(Locale.ENGLISH), category, pSet))
+                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, { it.type.toCategory() }, cased.lowercase(Locale.ENGLISH), category, pSet))
+                keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, { it.type.toCategory() }, cased.lowercase(Locale.ENGLISH), category, pSet))
             }
 
             if (category == Category.S || category == Category.A) {
                 keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased, category, pSet))
                 if (isCased) {
-                    keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lowercase(), category, pSet))
-                    keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(), category, pSet))
-                    keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(), category, pSet))
+                    keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category, pSet))
+                    keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category, pSet))
+                    keys.add(KeyF.FuncKeyLCP.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category, pSet))
                 }
             }
         }
@@ -211,24 +212,24 @@ object LibTestModelKeys {
         cased: Lemma,
         vararg categories: Category,
     ): IntArray {
-        val lc = cased.lowercase()
+        val lc = cased.lowercase(Locale.ENGLISH)
         val isCased = lc != cased
 
         val keys: MutableList<MonoValued> = ArrayList()
         for (category in categories) {
             keys.add(KeyF.FuncKeyLC.Mono.from(Lex::lemma, { it.type.toCategory() }, cased, category))
             if (isCased) {
-                keys.add(KeyF.FuncKeyLC.Mono.from(Lex::lemma, { it.type.toCategory() }, cased.lowercase(), category))
-                keys.add(KeyF.FuncKeyLC.Mono.from(Lex::lCLemma, { it.type.toCategory() }, cased.lowercase(), category))
-                keys.add(KeyF.FuncKeyLC.Mono.from(Lex::lCLemma, { it.type.toCategory() }, cased.lowercase(), category))
+                keys.add(KeyF.FuncKeyLC.Mono.from(Lex::lemma, { it.type.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
+                keys.add(KeyF.FuncKeyLC.Mono.from(Lex::lCLemma, { it.type.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
+                keys.add(KeyF.FuncKeyLC.Mono.from(Lex::lCLemma, { it.type.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
             }
 
             if (category == Category.S || category == Category.A) {
                 keys.add(KeyF.FuncKeyLC.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased, category))
                 if (isCased) {
-                    keys.add(KeyF.FuncKeyLC.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lowercase(), category))
-                    keys.add(KeyF.FuncKeyLC.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(), category))
-                    keys.add(KeyF.FuncKeyLC.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(), category))
+                    keys.add(KeyF.FuncKeyLC.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
+                    keys.add(KeyF.FuncKeyLC.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
+                    keys.add(KeyF.FuncKeyLC.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
                 }
             }
         }

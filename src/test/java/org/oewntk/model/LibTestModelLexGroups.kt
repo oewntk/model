@@ -14,6 +14,7 @@ import org.oewntk.model.TestUtils.lexHypermapForLemmaToString
 import org.oewntk.model.TestUtils.lexesToString
 import org.oewntk.model.TestUtils.sensesToString
 import java.io.PrintStream
+import java.util.Locale
 
 object LibTestModelLexGroups {
 
@@ -45,7 +46,7 @@ object LibTestModelLexGroups {
         ps.printf("ci '%s'%n", lemma2)
         ps.println(s1)
 
-        lemma2 = lemma2.lowercase()
+        lemma2 = lemma2.lowercase(Locale.ENGLISH)
         val s2 = testCILexesFor(model, lemma2)
         ps.printf("ci '%s'%n", lemma2)
         ps.println(s2)
@@ -100,7 +101,7 @@ object LibTestModelLexGroups {
         ps.printf("ci '%s'%n", lemma2)
         ps.println(s1)
 
-        lemma2 = lemma2.lowercase()
+        lemma2 = lemma2.lowercase(Locale.ENGLISH)
         val s2 = testCIHypermapString(lexHyperMap, lemma2)
         ps.printf("ci '%s'%n", lemma2)
         ps.println(s2)

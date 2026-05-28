@@ -4,9 +4,9 @@
 package org.oewntk.model
 
 import org.junit.Assert
-import org.oewntk.model.LexGroupings.cSLemmasByLCLemma
-import org.oewntk.model.LexGroupings.cSLemmasByLCLemmaHavingMultipleCount
+import org.oewntk.model.LexGroupings.lemmasByLCLemmaHavingMultipleCount
 import org.oewntk.model.LexGroupings.countsByLCLemma
+import org.oewntk.model.LexGroupings.findLemmasFor
 import org.oewntk.model.LexGroupings.multipleCountsByICLemma
 import org.oewntk.model.SenseGroupings.sensesForLCLemma
 import org.oewntk.model.SenseGroupings.sensesForLCLemmaAndPos
@@ -19,24 +19,24 @@ import java.util.Locale
 object LibTestModelLexGroups {
 
     fun testCIMultipleAll(model: CoreModel, ps: PrintStream) {
-        cSLemmasByLCLemmaHavingMultipleCount(model)
+        model.lexes.lemmasByLCLemmaHavingMultipleCount()
             .forEach { (u: String?, cs: Set<String>) ->
                 ps.println("$u ${cs.joinToString(separator = ",", prefix = "{", postfix = "}")}")
             }
     }
 
     fun testCILemmas(model: CoreModel, lemma: Lemma, ps: PrintStream) {
-        val lemmas = cSLemmasByLCLemma(model)[lemma]
+        val lemmas = model.lexes.findLemmasFor(lemma)
         ps.println("$lemma ${lemmas?.joinToString(separator = ",", prefix = "{", postfix = "}")}")
     }
 
     fun testCICounts(model: CoreModel, lemma: Lemma, ps: PrintStream) {
-        val count = countsByLCLemma(model)[lemma]
+        val count = model.lexes.countsByLCLemma()[lemma]
         ps.printf("%s %d%n", lemma, count)
     }
 
     fun testCICountsFromMap(model: CoreModel, lemma: Lemma, ps: PrintStream) {
-        val count = multipleCountsByICLemma(model)[lemma]
+        val count = model.lexes.multipleCountsByICLemma()[lemma]
         ps.printf("%s %d%n", lemma, count)
     }
 

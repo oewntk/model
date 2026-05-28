@@ -1,48 +1,47 @@
 package org.oewntk.model
 
-import java.util.Locale
+import java.util.*
 
 object LexGroupings {
 
     /**
-     * CSLemmas grouped by LCLemma
+     * Lemmas grouped by LCLemma
      * ```
      * baroque -&gt; (Baroque, baroque)
      *```
-     * @param model model
-     * @return CS lemmas by LC lemmas
+     * @receiver lexes
+     * @return lemmas by LC lemmas
      */
-    fun cSLemmasByLCLemma(model: CoreModel): Map<Lemma, Set<Lemma>> {
-        return model.lexes
+    private val Collection<Lex>.lemmasByLCLemma: Map<LowerCasedLemma, Set<Lemma>>
+        get() = this
             .map(Lex::lemma)
             .groupBy { it.lowercase(Locale.ENGLISH) }
             .mapValues { it.value.toSortedSet() }
-    }
 
     /**
-     * CSLemmas for LCLemma
+     * Lemmas for LCLemma
      *
-     * @param model   model
-     * @param lcLemma lower-cased lemma
-     * @return CS lemmas for given LC lemma
+     * @receiver lexes
+     * @param target string for lemma
+     * @return lemmas for given target
      */
-    fun cSLemmasForLCLemma(model: CoreModel, lcLemma: Lemma): Set<Lemma> {
-        return cSLemmasByLCLemma(model)[lcLemma]!!
+    fun Collection<Lex>.findLemmasFor(target: Lemma): Set<Lemma> {
+        return lemmasByLCLemma[target.lowercase()]!!
     }
 
     // hyper maps
 
     /**
-     * Hypermap (LCLemma to CSLemma to lexes)
+     * Hypermap (LCLemma to Lemma to lexes)
      *
-     * @param model model
+     * @receiver lexes
      * @return 2-tier hypermap
      * ```
-     * (LCLemma -> CSLemma -> lexes)
+     * (LCLemma -> Lemma -> lexes)
      * ```
      */
-    fun hyperMapByLCLemmaByLemma(model: CoreModel): Map<Lemma, Map<Lemma, Collection<Lex>>> {
-        return model.lexEntries // entries: setOf(lemma to lexes)
+    fun Sequence<LexEntry>.hyperMapByLCLemmaByLemma(): Map<LowerCasedLemma, Map<Lemma, Collection<Lex>>> {
+        return this // entries: setOf(lemma to lexes)
             .groupBy { entry -> entry.key.lowercase(Locale.ENGLISH) } // groupBy: mapOf(lclemma to listOf(lemma to lexes)), entry: lemma to lexes
             .mapValues { values -> // values: lcLemma to listOf(lemma to lexes))
                 values.value // value: listOf(lemma to lexes)
@@ -51,16 +50,26 @@ object LexGroupings {
             }
     }
 
+    /**
+     * Lemmas by LC lemmas, retain entries that have count &gt; 2
+     *
+     * @receiver lexes
+     * @return lemmas by LC lemmas, with count &gt; 2
+     */
+    fun Collection<Lex>.lemmasByLCLemmaHavingMultipleCount(): Map<LowerCasedLemma, Set<Lemma>> {
+        return Groupings.groupByHavingMultipleCount(this.map(Lex::lemma)) { it.lowercase(Locale.ENGLISH) }
+    }
+
     // counts
 
     /**
-     * Counts of CS lemmas by LC lemma
+     * Counts of lemmas by LC lemma
      *
-     * @param model model
-     * @return counts of CS lemmas by LC lemmas
+     * @receiver lexes
+     * @return counts of lemmas by LC lemmas
      */
-    fun countsByLCLemma(model: CoreModel): Map<Lemma, Long> {
-        return model.lexes
+    fun Collection<Lex>.countsByLCLemma(): Map<LowerCasedLemma, Long> {
+        return this
             .map(Lex::lemma)
             .groupBy { it.lowercase(Locale.ENGLISH) }
             .toSortedMap(naturalOrder())
@@ -68,13 +77,13 @@ object LexGroupings {
     }
 
     /**
-     * Counts of CS lemmas by LC lemma, same as above but retain entries that have count &gt; 2
+     * Counts of lemmas by LC lemma, same as above but retain entries that have count &gt; 2
      *
-     * @param model model
-     * @return counts of CS lemmas by LC lemmas, with count &gt; 2
+     * @receiver lexes
+     * @return counts of lemmas by LC lemmas, with count &gt; 2
      */
-    fun multipleCountsByICLemma(model: CoreModel): Map<Lemma, Long> {
-        return model.lexes
+    fun Collection<Lex>.multipleCountsByICLemma(): Map<Lemma, Long> {
+        return this
             .map(Lex::lemma)
             .groupBy { it.lowercase(Locale.ENGLISH) }
             .mapValues { it.value.toSet().size.toLong() }
@@ -82,15 +91,5 @@ object LexGroupings {
             .filter { it.second > 1L }
             .toMap()
             .toSortedMap(naturalOrder())
-    }
-
-    /**
-     * CS lemmas by LC lemmas, retain entries that have count &gt; 2
-     *
-     * @param model model
-     * @return CS lemmas by LC lemmas, with count &gt; 2
-     */
-    fun cSLemmasByLCLemmaHavingMultipleCount(model: CoreModel): Map<Lemma, Set<Lemma>> {
-        return Groupings.groupByHavingMultipleCount(model.lexes.map(Lex::lemma)) { it.lowercase(Locale.ENGLISH) }
     }
 }

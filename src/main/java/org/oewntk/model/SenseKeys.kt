@@ -62,11 +62,11 @@ object SenseKeys {
     fun SynsetType.toPosNum(): Int = ordinal + 1
 
     fun generateSenseKey(lemma: Lemma, synset: Synset, idx: Int): SenseKey {
-        lemma.lowercase(Locale.ENGLISH).escapeForSenseKey()
+        val discriminant = if (lemma[0].isUpperCase()) 1 else 0
         val escapedLemma = lemma.lowercase(Locale.ENGLISH).escapeForSenseKey()
         val ssType = synset.type.toPosNum()
         val lexfileNum = "%02d".format(synset.lexfile.toLexFileNum())
-        val lexfileIdx = "%02d".format(idx)
-        return "$escapedLemma%$ssType:$lexfileNum:$lexfileIdx::"
+        val lexfileIdx = "%02d".format(idx+ discriminant)
+        return "$escapedLemma%$ssType:$lexfileNum:$lexfileIdx::99" //TODO
     }
 }

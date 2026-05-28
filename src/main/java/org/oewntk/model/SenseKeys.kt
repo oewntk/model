@@ -66,7 +66,7 @@ object SenseKeys {
         val escapedLemma = lemma.lowercase(Locale.ENGLISH).escapeForSenseKey()
         val ssType = synset.type.toPosNum()
         val lexfileNum = "%02d".format(synset.lexfile.toLexFileNum())
-        val lexfileIdx = "%02d".format(idx + 1)
+        val lexfileIdx = "%02d".format(idx)
         return "$escapedLemma%$ssType:$lexfileNum:$lexfileIdx::"
     }
 }

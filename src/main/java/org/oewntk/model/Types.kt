@@ -5,6 +5,7 @@
 package org.oewntk.model
 
 typealias Lemma = String
+typealias LowerCasedLemma = String
 typealias SenseKey = String
 typealias SynsetId = String
 typealias Relation = String

@@ -48,12 +48,12 @@ data class Lex(
     var pronunciations: Set<Pronunciation>? = null
 
     // computed properties
-    val lCLemma: Lemma
+    val lCLemma: LowerCasedLemma
         get() = lemma.lowercase(Locale.ENGLISH)
-    val partOfSpeech: PartOfSpeech
-        get() = type.toPartOfSpeech()
     val isCased: Boolean
         get() = lemma != lCLemma
+    val partOfSpeech: PartOfSpeech
+        get() = type.toPartOfSpeech()
     val lexfileChar: Char
         get() {
             val c = lemma[0].lowercaseChar()
@@ -82,7 +82,7 @@ data class Lex(
         code: String,
         senseKeys: List<SenseKey> = ArrayList(),
         generated: Boolean = false
-    ) : this(lemma, SynsetType.fromChar(code.lowercase()[0]), if (code.length > 1) code.substring(1) else null, senseKeys, generated = generated)
+    ) : this(lemma, SynsetType.fromChar(code.lowercase(Locale.ENGLISH)[0]), if (code.length > 1) code.substring(1) else null, senseKeys, generated = generated)
 
     // stringify
 
@@ -103,5 +103,32 @@ data class Lex(
     override fun hashCode(): Int {
         // throw UnsupportedOperationException("$this")
         return Objects.hash(value)
+    }
+
+    object Utils {
+
+        /**
+         * Group lexes by case-sensitive lemma
+         *
+         * @receiver lexes
+         * @return lexes grouped by (case-sensitive) lemma
+         */
+        fun Collection<Lex>.groupByLemma(): Map<Lemma, Collection<Lex>> {
+            return this
+                .groupBy(Lex::lemma)
+                .mapValues { it.value.toSet() }
+        }
+
+        /**
+         * Group lexes by lower-cased lemma
+         *
+         * @receiver lexes
+         * @return lexes grouped by lowercased lemma
+         */
+        fun Collection<Lex>.groupByLCLemma(): Map<LowerCasedLemma, Collection<Lex>> {
+            return this
+                .groupBy { it.lCLemma }
+                .mapValues { it.value.toSet() }
+        }
     }
 }

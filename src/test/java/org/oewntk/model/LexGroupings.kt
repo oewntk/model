@@ -1,35 +1,8 @@
-/*
- * Copyright (c) 2021-2024. Bernard Bou.
- */
 package org.oewntk.model
 
-import java.util.*
+import java.util.Locale
 
 object LexGroupings {
-
-    /**
-     * Group lexes by case-sensitive lemma
-     *
-     * @param lexes lexes
-     * @return lexes grouped by CS lemma
-     */
-    fun lexesByLemma(lexes: Collection<Lex>): Map<Lemma, Collection<Lex>> {
-        return lexes
-            .groupBy(Lex::lemma)
-            .mapValues { it.value.toSet() }
-    }
-
-    /**
-     * Group lexes by lower-cased lemma
-     *
-     * @param lexes lexes
-     * @return lexes grouped by LCS lemma
-     */
-    fun lexesByLCLemma(lexes: Collection<Lex>): Map<Lemma, Collection<Lex>> {
-        return lexes
-            .groupBy { it.lCLemma }
-            .mapValues { it.value.toSet() }
-    }
 
     /**
      * CSLemmas grouped by LCLemma

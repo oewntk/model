@@ -3,6 +3,8 @@
  */
 package org.oewntk.model
 
+import org.oewntk.model.Lex.Utils.groupByLemma
+import org.oewntk.model.Lex.Utils.groupByLCLemma
 import org.oewntk.model.MapFactory.sensesById
 import org.oewntk.model.MapFactory.synsetsById
 import java.io.Serializable
@@ -43,7 +45,7 @@ data class DataCoreModel(
  * @property senses         senses (unmodifiable)
  * @property synsets        synsets (unmodifiable)
  * @property source         source, typically input directory
- * @property lexesByLemma   transient lexical items mapped by lemma written form
+ * @property lexesByLemma   transient lexical items mapped by (case-sensitive) lemma written form
  * @property lexesByLCLemma transient lexical items mapped by lower-cased lemma written form
  * @property sensesById     transient senses mapped by sense id (sensekey)
  * @property synsetsById    transient synsets mapped by synset id
@@ -80,13 +82,12 @@ open class CoreModel(
      * A multimap: each value is an array of lexes for the lemma.
      * Emulates (@Transient not allowed for properties with delegates) :
      * @Transient
-     * val lexesByLemma: Map<LemmaType, Collection<Lex>> by lazy { LexGroupings.lexesByLemma(lexes) }
      */
     @Transient
     var lexesByLemma: Map<Lemma, Collection<Lex>>? = null
         get() {
             if (field == null) {
-                field = LexGroupings.lexesByLemma(lexes)
+                field = lexes.groupByLemma()
             }
             return field
         }
@@ -98,13 +99,12 @@ open class CoreModel(
      * A multimap: each value is an array of lexes for the lemma.
      * Emulates (@Transient not allowed for properties with delegates) :
      * @Transient
-     * val lexesByLCLemma: Map<LemmaType, Collection<Lex>> by lazy { LexGroupings.lexesByLCLemma(lexes) }
      */
     @Transient
-    var lexesByLCLemma: Map<Lemma, Collection<Lex>>? = null
+    var lexesByLCLemma: Map<LowerCasedLemma, Collection<Lex>>? = null
         get() {
             if (field == null) {
-                field = LexGroupings.lexesByLCLemma(lexes)
+                field = lexes.groupByLCLemma()
             }
             return field
         }
@@ -115,7 +115,6 @@ open class CoreModel(
      * Senses mapped by id (sensekey)
      * Emulates (@Transient not allowed for properties with delegates) :
      * @Transient
-     * val sensesById2: Map<SenseKey, Sense> by lazy { sensesById(senses) }
      */
     @Transient
     var sensesById: Map<SenseKey, Sense>? = null
@@ -143,11 +142,6 @@ open class CoreModel(
             return field
         }
         private set
-
-    // val lexesByLCLemma: Map<LemmaType, Collection<Lex>> by lazy { LexGroupings.lexesByLCLemma(lexes) }
-    // val lexesByLemma: Map<LemmaType, Collection<Lex>> by lazy { LexGroupings.lexesByLemma(lexes) }
-    // val sensesById: Map<SenseKey, Sense> by lazy { sensesById(senses) }
-    // val synsetsById: Map<SynsetId, Synset> by lazy { synsetsById(synsets) }
 
     // L E X
 

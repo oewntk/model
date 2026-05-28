@@ -6,23 +6,23 @@ import java.io.File
  * Check model
  */
 fun <M : CoreModel> M.check(throws: Boolean = true, verbose: Boolean = false): M {
-    if (verbose) Tracing.psInfo.println("[I] Lex key duplicates")
+    //if (verbose) Tracing.psInfo.println("[I] Lex key duplicates")
     checkLexKeyDuplicates(throws = throws, verbose = verbose)
-    if (verbose) Tracing.psInfo.println("[I] Lex value duplicates")
+    //if (verbose) Tracing.psInfo.println("[I] Lex value duplicates")
     checkLexValueDuplicates(throws = throws, verbose = verbose)
 
-    if (verbose) Tracing.psInfo.println("[I] Sense reference")
+    //if (verbose) Tracing.psInfo.println("[I] Sense reference")
     checkSenseReference(throws = throws, verbose = verbose)
 
-    if (verbose) Tracing.psInfo.println("[I] Synset members")
+    //if (verbose) Tracing.psInfo.println("[I] Synset members")
     checkMembers(throws = throws, verbose = verbose)
 
-    if (verbose) Tracing.psInfo.println("[I] Synset relation targets")
+    //if (verbose) Tracing.psInfo.println("[I] Synset relation targets")
     checkSynsetRelationTargets(throws = throws, verbose = verbose)
-    if (verbose) Tracing.psInfo.println("[I] Sense relation targets")
+    //if (verbose) Tracing.psInfo.println("[I] Sense relation targets")
     checkSenseRelationTargets(throws = throws, verbose = verbose)
 
-    Tracing.psInfo.println("[I] CoreModel checked")
+    Tracing.psInfo.println("[I] CoreModel ${hashCode()} checked")
     return this
 }
 
@@ -128,7 +128,7 @@ fun <M : CoreModel> M.checkSynsetRelationTargets(throws: Boolean = false, verbos
             //Tracing.psErr.println("[E] ${instances.size} synsets have failing sense relations\n$state")
         }
     } else {
-        if (verbose) Tracing.psInfo.println("[I] No synsets have failing sense relations")
+        if (verbose) Tracing.psInfo.println("[I] 0 synsets have failing sense relations")
     }
     return this
 }
@@ -158,7 +158,7 @@ fun <M : CoreModel> M.checkSenseRelationTargets(throws: Boolean = false, verbose
             //Tracing.psErr.println("[E] ${instances.size} senses have failing sense relations\n$state")
         }
     } else {
-        if (verbose) Tracing.psInfo.println("[I] No senses have failing sense relations")
+        if (verbose) Tracing.psInfo.println("[I] 0 senses have failing sense relations")
     }
     return this
 }
@@ -186,7 +186,7 @@ fun <M : CoreModel> M.checkMembersDuplicates(throws: Boolean = false, verbose: B
                 .keys
         }
         .filter { it.second.isNotEmpty() }
-        .sortedBy { it.first }
+        .sortedBy { it.first.synsetId }
 
     if (instances.isNotEmpty()) {
         val state = instances.joinToString(separator = "\n") { (synset, duplicates) -> "${duplicates.joinToString(separator = ",")};${synset.synsetId};${synset.members.joinToString(separator = ",")}}" }
@@ -210,7 +210,7 @@ fun <M : CoreModel> M.checkMembersReference(throws: Boolean = false, verbose: Bo
     val instances: List<Pair<Synset, List<Lemma>>> = synsets
         .map { synset -> synset to synset.members.filter { member -> lexFinder(member) == null }.toList() }
         .filter { it.second.isNotEmpty() }
-        .sortedBy { it.first }
+        .sortedBy { it.first.synsetId }
 
     if (instances.isNotEmpty()) {
         val state = instances.joinToString(separator = "\n") { (synset, members) -> "${members.joinToString(separator = ",")};${synset.synsetId};{${synset.members.joinToString(separator = ",")}" }
@@ -234,7 +234,7 @@ fun <M : CoreModel> M.checkMembersSenses(throws: Boolean = false, verbose: Boole
     val instances = synsets
         .map { synset -> synset to synset.members.filter { member -> synset.findSenseOf(member, lexResolver, senseResolver) == null }.toList() }
         .filter { it.second.isNotEmpty() }
-        .sortedBy { it.first }
+        .sortedBy { it.first.synsetId }
 
     if (instances.isNotEmpty()) {
         val state = instances.joinToString(separator = "\n") { (synset, members) -> "${members.joinToString(separator = ",")};${synset.synsetId};${synset.members.joinToString(separator = ",")}" }

@@ -129,6 +129,15 @@ class TestSerializables {
     }
 
     @Test
+    fun testFlatSerialization() {
+        val y = model.toFlatSerializable(
+            whichLexes = model.lexes.asSequence().drop((1000..100000).random()).take(2),
+            whichSynsets = model.synsets.asSequence().drop((1000..100000).random()).take(2)
+        )
+        println(y)
+    }
+
+    @Test
     fun testOrig() {
         assertEquals(origInfo, modelInfo)
     }
@@ -154,7 +163,6 @@ class TestSerializables {
             modelInfo = "$info\n$counts"
             ps.println(modelInfo)
             ps.println()
-
         }
     }
 }

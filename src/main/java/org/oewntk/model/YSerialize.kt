@@ -72,13 +72,19 @@ fun entriesToSerializable(entries: Sequence<LexEntry>, resolver: (SenseKey) -> S
 
 // L E X
 
+/**
+ * Lexes to serialized hypermap
+ * @param lexes sequence of lexes
+ * @return lex hypermap
+ *
+ */
 fun lexesAsEntriesToSerializable(lexes: Sequence<Lex>): Map<Lemma, Map<Key2, Collection<Lex>>> {
     return lexes.groupByLemmaThenByKey2()
 }
 
 /**
  * Lexes to serializable list of lex values
- * @param lexes lexes sequence of lexes
+ * @param lexes sequence of lexes
  * @param resolver senseKey to sense resolver
  * @return list of lex values
  */
@@ -179,18 +185,18 @@ fun synsetsToSerializable(synsets: Sequence<Synset>): Map<SynsetId, Any> {
 /**
  * Flat data producer
  *
- * @param whichEntries which entries to select, by default all
+ * @param whichLexes which entries to select, by default all
  * @param whichSynsets which synsets, by default all
  * @receiver core model
- * @return lex entries and synsets
+ * @return lexes and synsets
  */
 fun CoreModel.toFlatSerializable(
-    whichEntries: Sequence<LexEntry> = lexEntries.sortedBy { it.key },
+    whichLexes: Sequence<Lex> = lexes.asSequence().sortedWith(compareBy(Lex::lemma).thenBy(Lex::key2)),
     whichSynsets: Sequence<Synset> = synsets.asSequence().sortedBy { it.synsetId },
 ): Pair<SData, SData> {
-    val yEntries: Map<Key2, Any> = entriesToSerializable(whichEntries, senseResolver)
+    val yLexes: Map<Lemma, Any> = lexesAsEntriesToSerializable(whichLexes)
     val ySynsets: Map<SynsetId, Any> = synsetsToSerializable(whichSynsets)
-    return yEntries to ySynsets
+    return yLexes to ySynsets
 }
 
 /**

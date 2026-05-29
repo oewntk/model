@@ -80,7 +80,7 @@ class Model(
                 val sense = senseResolver(sensekey)
                 sense.verbTemplates = templatesIds
             } catch (_: NullPointerException) {
-                Tracing.psErr.println("[W] Unresolvable $sensekey with ${templatesIds.contentToString()}")
+                Tracing.psErr.println("[W] Unresolvable $sensekey with templates ${templatesIds.contentToString()}")
             }
         }
 
@@ -90,7 +90,7 @@ class Model(
                 val sense = senseResolver(sensekey)
                 sense.tagCount = tagCount
             } catch (_: NullPointerException) {
-                Tracing.psErr.println("[W] Unresolvable $sensekey with $tagCount}")
+                Tracing.psErr.println("[W] Unresolvable $sensekey with tagcount $tagCount")
             }
         }
     }

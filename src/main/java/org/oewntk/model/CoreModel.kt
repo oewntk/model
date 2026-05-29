@@ -3,8 +3,8 @@
  */
 package org.oewntk.model
 
-import org.oewntk.model.Lex.Groups.groupByLemma
 import org.oewntk.model.Lex.Groups.groupByLCLemma
+import org.oewntk.model.Lex.Groups.groupByLemma
 import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
 import org.oewntk.model.MapFactory.sensesById
 import org.oewntk.model.MapFactory.synsetsById
@@ -73,95 +73,64 @@ open class CoreModel(
      * Lex entries
      */
     val lexEntries: Sequence<LexEntry>
-        get() = lexesByLemma!!.asSequence()
+        get() = lexesByLemma.asSequence()
 
     // B Y   C A C H E S
 
     /**
-     * Cached
      * Lexical units mapped by lemma written form.
      * A multimap: each value is an array of lexes for the lemma.
-     * Emulates (@Transient not allowed for properties with delegates) :
      * @Transient
      */
     @Transient
-    var lexesByLemma: Map<Lemma, Collection<Lex>>? = null
-        get() {
-            if (field == null) {
-                field = lexes.asSequence().groupByLemma()
-            }
-            return field
-        }
-        private set
+    private val lexesByLemma: Map<Lemma, Collection<Lex>> = lexes.asSequence().groupByLemma()
 
     /**
-     * Cached
      * Lexical units mapped by lemma lower-cased written form.
      * A multimap: each value is an array of lexes for the lemma.
-     * Emulates (@Transient not allowed for properties with delegates) :
      * @Transient
      */
-    @Transient
-    var lexesByLCLemma: Map<LowerCasedLemma, Collection<Lex>>? = null
-        get() {
-            if (field == null) {
-                field = lexes.asSequence().groupByLCLemma()
-            }
-            return field
-        }
-        private set
+    private val lexesByLCLemma: Map<LowerCasedLemma, Collection<Lex>> by lazy { lexes.asSequence().groupByLCLemma() }
 
     /**
-     * Cached
      * Senses mapped by id (sensekey)
-     * Emulates (@Transient not allowed for properties with delegates) :
      * @Transient
      */
-    @Transient
-    var sensesById: Map<SenseKey, Sense>? = null
-        get() {
-            if (field == null) {
-                field = sensesById(senses)
-            }
-            return field
-        }
-        private set
+    private val sensesById: Map<SenseKey, Sense> by lazy { sensesById(senses) }
 
     /**
-     * Cached
      * Synsets mapped by id (synset id)
-     * Emulates (@Transient not allowed for properties with delegates) :
      * @Transient
-     * val synsetsById: Map<SynsetId, Synset> by lazy { synsetsById(synsets) }
      */
-    @Transient
-    var synsetsById: Map<SynsetId, Synset>? = null
-        get() {
-            if (field == null) {
-                field = synsetsById(synsets)
-            }
-            return field
-        }
-        private set
+    private val synsetsById: Map<SynsetId, Synset> by lazy { synsetsById(synsets) }
 
     // L E X
 
-    val hyperMap
-        get() = lexes.asSequence().lexByLemmaThenByKey2()
+    /**
+     * Lexes mapped by lemma then key2
+     * @Transient
+     */
+    private val hyperMap: Map<Lemma, Map<Key2, Lex>> by lazy { lexes.asSequence().lexByLemmaThenByKey2() }
+
+    val lexFinder1: (Lemma, Key2) -> Lex?
+        get() = { lemma: Lemma, key2: Key2 ->
+            hyperMap[lemma]?.get(key2)
+            null
+        }
 
     /**
      * Lex finder (nullable result)
      * Resolution may yield null
      */
     val lexFinder: (Lemma) -> Collection<Lex>?
-        get() = { lexesByLemma!![it] }
+        get() = { lexesByLemma[it] }
 
     /**
      * Lex finder ignoring lemma case (nullable result)
      * Resolution may yield null
      */
     val lexIgnoreCaseFinder: (Lemma) -> Collection<Lex>?
-        get() = { lexesByLCLemma!![it.lowercase(Locale.ENGLISH)] }
+        get() = { lexesByLCLemma[it.lowercase(Locale.ENGLISH)] }
 
     /**
      * Lex resolver
@@ -184,7 +153,7 @@ open class CoreModel(
      * Resolution may yield null
      */
     val senseFinder: (SenseKey) -> Sense?
-        get() = { sensesById!![it] }
+        get() = { sensesById[it] }
 
     /**
      * Sense resolver
@@ -200,7 +169,7 @@ open class CoreModel(
      * Resolution may yield null
      */
     val synsetFinder: (SynsetId) -> Synset?
-        get() = { synsetsById!![it] }
+        get() = { synsetsById[it] }
 
     /**
      * Synset resolver
@@ -215,8 +184,8 @@ open class CoreModel(
      * @return this model
      */
     fun generateInverseRelations(): CoreModel {
-        InverseRelationFactory.makeInverseSynsetRelations(synsetsById!!)
-        InverseRelationFactory.makeInverseSenseRelations(sensesById!!)
+        InverseRelationFactory.makeInverseSynsetRelations(synsetsById)
+        InverseRelationFactory.makeInverseSenseRelations(sensesById)
         return this
     }
 
@@ -231,8 +200,8 @@ open class CoreModel(
         toSynsetRelationInverse: Map<Relation, Relation>,
         toSenseRelationInverse: Map<Relation, Relation>
     ): CoreModel {
-        InverseRelationFactory.makeInverseSynsetRelations(toSynsetRelationInverse, synsetsById!!)
-        InverseRelationFactory.makeInverseSenseRelations(toSenseRelationInverse, sensesById!!)
+        InverseRelationFactory.makeInverseSynsetRelations(toSynsetRelationInverse, synsetsById)
+        InverseRelationFactory.makeInverseSenseRelations(toSenseRelationInverse, sensesById)
         return this
     }
 

@@ -122,9 +122,9 @@ class TestSerializables {
 
     @Test
     fun testModelResolution() {
-        val l1 = model.hyperMap["Californian"]?.get("n")
+        val l1 = model.lexFinder1("Californian", "n")
         println(l1)
-        val l2 = model.hyperMap["Californian"]?.get("a")
+        val l2 = model.lexFinder1("Californian", "a")
         println(l2)
     }
 

@@ -76,14 +76,14 @@ class Model(
 
         // set sense's verb templates
         for ((sensekey, templatesIds) in senseToVerbTemplates) {
-            val sense = sensesById?.get(sensekey)
-            sense?.verbTemplates = templatesIds
+            val sense = senseResolver(sensekey)
+            sense.verbTemplates = templatesIds
         }
 
         // set sense's tag counts
         for ((sensekey, tagCount) in senseToTagCounts) {
-            val sense = sensesById?.get(sensekey)
-            sense?.tagCount = tagCount
+            val sense = senseResolver(sensekey)
+            sense.tagCount = tagCount
         }
     }
 

@@ -85,7 +85,7 @@ object LibTestModelQueries {
     private fun dump(senses: Collection<SenseKey>, model: CoreModel, indent: String, ps: PrintStream) {
         senses.forEach { sk: SenseKey ->
             ps.printf("%s%s%n", indent, sk)
-            val sense: Sense = model.sensesById?.get(sk)!!
+            val sense: Sense = model.senseResolver(sk)
             dump(sense, model, indent + "\t", ps)
         }
     }

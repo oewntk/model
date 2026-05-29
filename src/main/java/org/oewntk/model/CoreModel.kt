@@ -46,6 +46,8 @@ data class DataCoreModel(
  * @property senses         senses (unmodifiable)
  * @property synsets        synsets (unmodifiable)
  * @property source         source, typically input directory
+ *
+ * @property lexHyperMap    transient lexical item mapped by lemma then key2
  * @property lexesByLemma   transient lexical items mapped by (case-sensitive) lemma written form
  * @property lexesByLCLemma transient lexical items mapped by lower-cased lemma written form
  * @property sensesById     transient senses mapped by sense id (sensekey)
@@ -75,7 +77,7 @@ open class CoreModel(
      * Lexes mapped by lemma then key2
      * @Transient
      */
-    private val hyperMap: Map<Lemma, Map<Key2, Lex>> by lazy { lexes.asSequence().lexByLemmaThenByKey2() }
+    private val lexHyperMap: Map<Lemma, Map<Key2, Lex>> by lazy { lexes.asSequence().lexByLemmaThenByKey2() }
 
     /**
      * Lexical units mapped by lemma written form.
@@ -109,7 +111,7 @@ open class CoreModel(
 
     val lexFinder1: (Lemma, Key2) -> Lex?
         get() = { lemma: Lemma, key2: Key2 ->
-            hyperMap[lemma]?.get(key2)
+            lexHyperMap[lemma]?.get(key2)
         }
 
     /**

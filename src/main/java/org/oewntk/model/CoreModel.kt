@@ -3,8 +3,9 @@
  */
 package org.oewntk.model
 
-import org.oewntk.model.Lex.Utils.groupByLemma
-import org.oewntk.model.Lex.Utils.groupByLCLemma
+import org.oewntk.model.Lex.Groups.groupByLemma
+import org.oewntk.model.Lex.Groups.groupByLCLemma
+import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
 import org.oewntk.model.MapFactory.sensesById
 import org.oewntk.model.MapFactory.synsetsById
 import java.io.Serializable
@@ -87,7 +88,7 @@ open class CoreModel(
     var lexesByLemma: Map<Lemma, Collection<Lex>>? = null
         get() {
             if (field == null) {
-                field = lexes.groupByLemma()
+                field = lexes.asSequence().groupByLemma()
             }
             return field
         }
@@ -104,7 +105,7 @@ open class CoreModel(
     var lexesByLCLemma: Map<LowerCasedLemma, Collection<Lex>>? = null
         get() {
             if (field == null) {
-                field = lexes.groupByLCLemma()
+                field = lexes.asSequence().groupByLCLemma()
             }
             return field
         }
@@ -144,6 +145,9 @@ open class CoreModel(
         private set
 
     // L E X
+
+    val hyperMap
+        get() = lexes.asSequence().lexByLemmaThenByKey2()
 
     /**
      * Lex finder (nullable result)

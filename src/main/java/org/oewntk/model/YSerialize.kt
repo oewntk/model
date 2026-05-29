@@ -2,7 +2,7 @@ package org.oewntk.model
 
 import org.oewntk.model.InverseRelationFactory.INVERSE_SENSE_RELATIONS_SET
 import org.oewntk.model.InverseRelationFactory.INVERSE_SYNSET_RELATIONS_SET
-import org.oewntk.model.Lex.Utils.groupByLemmaThenByKey2
+import org.oewntk.model.Lex.Groups.groupByLemmaThenByKey2
 
 const val INCLUDE_LEXFILE = false
 

@@ -95,7 +95,6 @@ data class Lex(
     // identify
 
     override fun equals(other: Any?): Boolean {
-
         // throw UnsupportedOperationException("$this / $other")
         return if (other is Lex) Objects.equals(value, other.value) else false
     }
@@ -105,7 +104,56 @@ data class Lex(
         return Objects.hash(value)
     }
 
-    object Utils {
+    object Groups {
+
+        /**
+         * Hyper map
+         * level 1 key=lemma
+         * level 2 key=type or type-discriminant
+         * lexes = map[lemma][key2]
+         */
+        fun Sequence<Lex>.groupByLemmaThenByKey2(): Map<Lemma, Map<Key2, Collection<Lex>>> {
+            return this
+                .groupBy(Lex::lemma)
+                .mapValues { (_: Lemma, lexes: Collection<Lex>) ->
+                    lexes.groupBy(Lex::key2)
+                }
+        }
+
+        /**
+         * Hyper map
+         * level 1 key=lemma
+         * level 2 key=type or type-discriminant
+         * lexes = map[lemma][key2]
+         */
+        fun Sequence<Lex>.groupByLCLemmaThenByKey2(): Map<LowerCasedLemma, Map<Key2, Collection<Lex>>> {
+            return this
+                .groupBy(Lex::lCLemma)
+                .mapValues { (_: LowerCasedLemma, lexes: Collection<Lex>) ->
+                    lexes.groupBy(Lex::key2)
+                }
+        }
+
+
+        /**
+         * Resolver (hyper map that has one level 3 value)
+         * lexes = map[lemma][key2]
+         * lex = map[lemma][key2]
+         * @param throws throws exception if result is not one lex, otherwise it silently takes the first value
+         */
+        fun Sequence<Lex>.lexByLemmaThenByKey2(throws: Boolean = true): Map<Lemma, Map<Key2, Lex>> {
+            return this
+                .groupBy(Lex::lemma)
+                .mapValues { (_: Lemma, lexes: Collection<Lex>) ->
+                    lexes
+                        .groupBy(Lex::key2)
+                        .mapValues {
+                            if (throws && it.value.size != 1)
+                                throw IllegalStateException(it.value.joinToString())
+                            it.value.first()
+                        }
+                }
+        }
 
         /**
          * Group lexes by case-sensitive lemma
@@ -113,7 +161,7 @@ data class Lex(
          * @receiver lexes
          * @return lexes grouped by (case-sensitive) lemma
          */
-        fun Collection<Lex>.groupByLemma(): Map<Lemma, Collection<Lex>> {
+        fun Sequence<Lex>.groupByLemma(): Map<Lemma, Collection<Lex>> {
             return this
                 .groupBy(Lex::lemma)
                 .mapValues { it.value.toSet() }
@@ -125,9 +173,9 @@ data class Lex(
          * @receiver lexes
          * @return lexes grouped by lowercased lemma
          */
-        fun Collection<Lex>.groupByLCLemma(): Map<LowerCasedLemma, Collection<Lex>> {
+        fun Sequence<Lex>.groupByLCLemma(): Map<LowerCasedLemma, Collection<Lex>> {
             return this
-                .groupBy { it.lCLemma }
+                .groupBy(Lex::lCLemma)
                 .mapValues { it.value.toSet() }
         }
     }

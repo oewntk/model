@@ -110,11 +110,22 @@ class TestSerializables {
 
     @Test
     fun testModel() {
-        val someEntries: Sequence<LexEntry> = model.lexEntries
-            .drop((1000..100000).random())
-            .take(100)
-        val yamlString = yaml.entriesToYaml(someEntries, model.senseResolver)
-        println(yamlString)
+        model.lexes.groupBy(Lex::lemma)
+            .mapValues { (_: Lemma, lexes: Collection<Lex>) ->
+                val group = lexes.groupBy(Lex::key2)
+                group.values.forEach {
+                    assertEquals(1, it.size, it.toString())
+                }
+                group
+            }
+    }
+
+    @Test
+    fun testModelResolution() {
+        val l1 = model.hyperMap["Californian"]?.get("n")
+        println(l1)
+        val l2 = model.hyperMap["Californian"]?.get("a")
+        println(l2)
     }
 
     @Test

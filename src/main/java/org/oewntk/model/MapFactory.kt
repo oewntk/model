@@ -3,12 +3,22 @@
  */
 package org.oewntk.model
 
+import java.io.Serializable
+
 /**
  * Map factory
  */
 object MapFactory {
 
     private const val LOG_DUPLICATE_VALUES = false
+
+    /**
+     * A generic function that returns a Serializable Comparator for any Comparable type T
+     */
+    fun <T : Comparable<T>> serializableNaturalOrder(): Comparator<T> =
+        object : Comparator<T>, Serializable {
+            override fun compare(o1: T, o2: T): Int = o1.compareTo(o2)
+        }
 
     /**
      * Make map
@@ -41,7 +51,7 @@ object MapFactory {
     ): Map<K, V> {
         return things
             .associateBy { groupingFunction(it) }
-            .toSortedMap(naturalOrder())
+            .toSortedMap(serializableNaturalOrder())
     }
 
     /**
@@ -62,7 +72,7 @@ object MapFactory {
         return things
             .groupBy(groupingFunction)
             .mapValues { (_, values) -> values.reduce(mergingFunction) }
-            .toSortedMap(naturalOrder())
+            .toSortedMap(serializableNaturalOrder())
     }
 
     // G E N E R I C   M E R G I N G   F U N C T I O N S

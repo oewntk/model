@@ -69,21 +69,20 @@ open class CoreModel(
         data: DataCoreModel,
     ) : this(data.lexes, data.senses, data.synsets)
 
-    /**
-     * Lex entries
-     */
-    val lexEntries: Sequence<LexEntry>
-        get() = lexesByLemma.asSequence()
+    // B Y - K E Y    C A C H E D    L A Z Y   M A P S
 
-    // B Y   C A C H E S
+    /**
+     * Lexes mapped by lemma then key2
+     * @Transient
+     */
+    private val hyperMap: Map<Lemma, Map<Key2, Lex>> by lazy { lexes.asSequence().lexByLemmaThenByKey2() }
 
     /**
      * Lexical units mapped by lemma written form.
      * A multimap: each value is an array of lexes for the lemma.
      * @Transient
      */
-    @Transient
-    private val lexesByLemma: Map<Lemma, Collection<Lex>> = lexes.asSequence().groupByLemma()
+    private val lexesByLemma: Map<Lemma, Collection<Lex>> by lazy { lexes.asSequence().groupByLemma() }
 
     /**
      * Lexical units mapped by lemma lower-cased written form.
@@ -104,18 +103,13 @@ open class CoreModel(
      */
     private val synsetsById: Map<SynsetId, Synset> by lazy { synsetsById(synsets) }
 
-    // L E X
+    // F I N D E R S   A N D   R E S O L V E R S
 
-    /**
-     * Lexes mapped by lemma then key2
-     * @Transient
-     */
-    private val hyperMap: Map<Lemma, Map<Key2, Lex>> by lazy { lexes.asSequence().lexByLemmaThenByKey2() }
+    // lex
 
     val lexFinder1: (Lemma, Key2) -> Lex?
         get() = { lemma: Lemma, key2: Key2 ->
             hyperMap[lemma]?.get(key2)
-            null
         }
 
     /**
@@ -177,6 +171,14 @@ open class CoreModel(
      */
     val synsetResolver: (SynsetId) -> Synset
         get() = { synsetFinder(it)!! }
+
+    // E N T R I E S
+
+    /**
+     * Lex entries
+     */
+    val lexEntries: Sequence<LexEntry>
+        get() = lexesByLemma.asSequence()
 
     /**
      * Generate inverse relations

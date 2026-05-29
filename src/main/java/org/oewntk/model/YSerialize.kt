@@ -2,6 +2,7 @@ package org.oewntk.model
 
 import org.oewntk.model.InverseRelationFactory.INVERSE_SENSE_RELATIONS_SET
 import org.oewntk.model.InverseRelationFactory.INVERSE_SYNSET_RELATIONS_SET
+import org.oewntk.model.Lex.Utils.groupByLemmaThenByKey2
 
 const val INCLUDE_LEXFILE = false
 
@@ -30,6 +31,8 @@ fun Pronunciation.toSerializable(): Map<String, Any> {
     source
 */
 
+// L E X
+
 /**
  * Lex to serializable map
  * @param resolver senseKey to sense resolver
@@ -50,6 +53,43 @@ fun Lex.toSerializable(resolver: (SenseKey) -> Sense?): Map<Key2, Any> {
         if (INCLUDE_LEXFILE) lexfile.let { this["lexfile"] = it }
     }.toSortedMap()
 }
+
+// L E X  E N T R I E S
+
+/**
+ * Entries to serializable map
+ * @param entries entries sequence of entries
+ * @param resolver senseKey to sense resolver
+ * @return map of entries by lemma
+ */
+fun entriesToSerializable(entries: Sequence<LexEntry>, resolver: (SenseKey) -> Sense?): Map<Key2, Any> {
+    return mutableMapOf<Key2, Any>().apply {
+        entries.forEach { (lemma, lexes) ->
+            this[lemma] = lexes.associate { it.key2 to it.toSerializable(resolver) }
+        }
+    }
+}
+
+// L E X
+
+fun lexesAsEntriesToSerializable(lexes: Sequence<Lex>): Map<Lemma, Map<Key2, Collection<Lex>>> {
+    return lexes.groupByLemmaThenByKey2()
+}
+
+/**
+ * Lexes to serializable list of lex values
+ * @param lexes lexes sequence of lexes
+ * @param resolver senseKey to sense resolver
+ * @return list of lex values
+ */
+fun lexesAsValuesToSerializable(lexes: Sequence<Lex>, resolver: (SenseKey) -> Sense?): List<Any> {
+    fun Lex.toSerializable(): Map<String, Any> = this@toSerializable.toSerializable { resolver.invoke(it)!! }
+    return lexes
+        .map(Lex::toSerializable)
+        .toList()
+}
+
+// S E N S E
 
 /**
  * Sense to serializable map
@@ -77,6 +117,19 @@ fun Sense.toSerializable(): Map<SenseKey, Any> {
             }
     }.toSortedMap()
 }
+
+/**
+ * Senses to serializable map
+ * @param senses senses sequence of senses
+ * @return list of sense
+ */
+fun sensesToSerializableList(senses: Sequence<Sense>): List<Any> {
+    return senses
+        .map(Sense::toSerializable)
+        .toList()
+}
+
+// S Y N S E T
 
 /**
  * Synset to serializable map
@@ -113,44 +166,6 @@ fun Synset.toSerializable(): Map<SynsetId, Any> {
 }
 
 /**
- * Entries to serializable map
- * @param entries entries sequence of entries
- * @param resolver senseKey to sense resolver
- * @return map of entries by lemma
- */
-fun entriesToSerializable(entries: Sequence<LexEntry>, resolver: (SenseKey) -> Sense?): Map<Key2, Any> {
-    return mutableMapOf<Key2, Any>().apply {
-        entries.forEach { (lemma, lexes) ->
-            this[lemma] = lexes.associate { it.key2 to it.toSerializable(resolver) }
-        }
-    }
-}
-
-/**
- * Lexes to serializable map
- * @param lexes lexes sequence of lexes
- * @param resolver senseKey to sense resolver
- * @return list of lexes
- */
-fun lexesToSerializable(lexes: Sequence<Lex>, resolver: (SenseKey) -> Sense?): List<Any> {
-    fun Lex.toSerializable(): Map<String, Any> = this@toSerializable.toSerializable { resolver.invoke(it)!! }
-    return lexes
-        .map(Lex::toSerializable)
-        .toList()
-}
-
-/**
- * Senses to serializable map
- * @param senses senses sequence of senses
- * @return list of sense
- */
-fun sensesToSerializable(senses: Sequence<Sense>): List<Any> {
-    return senses
-        .map(Sense::toSerializable)
-        .toList()
-}
-
-/**
  * Synsets to serializable map
  * @param synsets sequence of synsets
  * @return map of synset by id
@@ -158,6 +173,8 @@ fun sensesToSerializable(senses: Sequence<Sense>): List<Any> {
 fun synsetsToSerializable(synsets: Sequence<Synset>): Map<SynsetId, Any> {
     return synsets.associate { it.synsetId to it.toSerializable() }
 }
+
+// M O D E L
 
 /**
  * Flat data producer
@@ -171,7 +188,7 @@ fun CoreModel.toFlatSerializable(
     whichEntries: Sequence<LexEntry> = lexEntries.sortedBy { it.key },
     whichSynsets: Sequence<Synset> = synsets.asSequence().sortedBy { it.synsetId },
 ): Pair<SData, SData> {
-    val yEntries : Map<Key2, Any> = entriesToSerializable(whichEntries, senseResolver)
+    val yEntries: Map<Key2, Any> = entriesToSerializable(whichEntries, senseResolver)
     val ySynsets: Map<SynsetId, Any> = synsetsToSerializable(whichSynsets)
     return yEntries to ySynsets
 }

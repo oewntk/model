@@ -41,7 +41,7 @@ data class Lex(
 
     // state
     val generated: Boolean = false
-) : Serializable /*, Comparable<Lex> */ {
+) : Serializable {
 
     // properties
     var forms: Set<Morph>? = null
@@ -133,7 +133,6 @@ data class Lex(
                     lexes.groupBy(Lex::key2)
                 }
         }
-
 
         /**
          * Resolver (hyper map that has one level 3 value)

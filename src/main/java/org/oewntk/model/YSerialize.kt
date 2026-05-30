@@ -190,13 +190,31 @@ fun synsetsToSerializable(synsets: Sequence<Synset>): Map<SynsetId, Any> {
  * @receiver core model
  * @return lexes and synsets
  */
-fun CoreModel.toFlatSerializable(
+fun CoreModel.toFlatSerializableOfLexes(
     whichLexes: Sequence<Lex> = lexes.asSequence().sortedWith(compareBy(Lex::lemma).thenBy(Lex::key2)),
     whichSynsets: Sequence<Synset> = synsets.asSequence().sortedBy { it.synsetId },
 ): Pair<SData, SData> {
     val yLexes: Map<Lemma, Any> = lexesAsEntriesToSerializable(whichLexes)
     val ySynsets: Map<SynsetId, Any> = synsetsToSerializable(whichSynsets)
     return yLexes to ySynsets
+}
+
+/**
+ * Flat data producer
+ *
+ * @param whichEntries which entries to select, by default all
+ * @param whichSynsets which synsets, by default all
+ * @receiver core model
+ * @return lex entries and synsets
+ * @return lexes and synsets
+ */
+fun CoreModel.toFlatSerializableOfEntries(
+    whichEntries: Sequence<LexEntry> = lexEntries.sortedBy { it.key },
+    whichSynsets: Sequence<Synset> = synsets.asSequence().sortedBy { it.synsetId },
+): Pair<SData, SData> {
+    val yEntries: Map<Key2, Any> = entriesToSerializable(whichEntries, senseResolver)
+    val ySynsets: Map<SynsetId, Any> = synsetsToSerializable(whichSynsets)
+    return yEntries to ySynsets
 }
 
 /**

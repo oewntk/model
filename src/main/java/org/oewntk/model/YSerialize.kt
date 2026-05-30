@@ -2,7 +2,6 @@ package org.oewntk.model
 
 import org.oewntk.model.InverseRelationFactory.INVERSE_SENSE_RELATIONS_SET
 import org.oewntk.model.InverseRelationFactory.INVERSE_SYNSET_RELATIONS_SET
-import org.oewntk.model.Lex.Groups.groupByLemmaThenByKey2
 
 const val INCLUDE_LEXFILE = false
 
@@ -11,6 +10,8 @@ typealias Filename = String
 
 /**
  * Pronunciation to serializable map
+ *
+ * @receiver pronunciation
  * @return map
  * Keys:
  *  - value
@@ -35,6 +36,8 @@ fun Pronunciation.toSerializable(): Map<String, Any> {
 
 /**
  * Lex to serializable map
+ *
+ * @receiver lex
  * @param resolver senseKey to sense resolver
  * @return map
  * Keys:
@@ -43,9 +46,13 @@ fun Pronunciation.toSerializable(): Map<String, Any> {
  * - sense
  * - source
  */
-fun Lex.toSerializable(resolver: (SenseKey) -> Sense?): Map<Key2, Any> {
+fun Lex.toSerializable(resolver: (SenseKey) -> Sense?): Map<String, Any> {
+    val serializedSenses = senseKeys
+        .map { resolver.invoke(it)!! }
+        .map(Sense::toSerializable)
+        .toList()
     return mutableMapOf<String, Any>(
-        "sense" to senseKeys.map { resolver.invoke(it)!! }.map(Sense::toSerializable).toList(),
+        "sense" to serializedSenses,
         // "key2" to key2,
     ).apply {
         forms?.let { this["form"] = it.map { it2 -> it2 }.toList() }
@@ -54,51 +61,31 @@ fun Lex.toSerializable(resolver: (SenseKey) -> Sense?): Map<Key2, Any> {
     }.toSortedMap()
 }
 
-// L E X  E N T R I E S
-
 /**
- * Entries to serializable map
- * @param entries entries sequence of entries
- * @param resolver senseKey to sense resolver
- * @return map of entries by lemma
- */
-fun entriesToSerializable(entries: Sequence<LexEntry>, resolver: (SenseKey) -> Sense?): Map<Key2, Any> {
-    return mutableMapOf<Key2, Any>().apply {
-        entries.forEach { (lemma, lexes) ->
-            this[lemma] = lexes.associate { it.key2 to it.toSerializable(resolver) }
-        }
-    }
-}
-
-// L E X
-
-/**
- * Lexes to serialized hypermap
- * @param lexes sequence of lexes
- * @return lex hypermap
+ * Lexes to serializable map
  *
- */
-fun lexesAsEntriesToSerializable(lexes: Sequence<Lex>): Map<Lemma, Map<Key2, Collection<Lex>>> {
-    return lexes.groupByLemmaThenByKey2()
-}
-
-/**
- * Lexes to serializable list of lex values
- * @param lexes sequence of lexes
+ * @receiver sequence of lexes
  * @param resolver senseKey to sense resolver
- * @return list of lex values
+ * @return map by lemma
  */
-fun lexesAsValuesToSerializable(lexes: Sequence<Lex>, resolver: (SenseKey) -> Sense?): List<Any> {
-    fun Lex.toSerializable(): Map<String, Any> = this@toSerializable.toSerializable { resolver.invoke(it)!! }
-    return lexes
-        .map(Lex::toSerializable)
-        .toList()
+fun Sequence<Lex>.toSerializable(resolver: (SenseKey) -> Sense): Map<Lemma, Any> {
+    return mutableMapOf<String, Any>()
+        .apply {
+            this@toSerializable
+                .sortedBy { it.lemma }
+                .groupBy { it.lemma }
+                .forEach { (lemma, lexes) ->
+                    this[lemma] = lexes.associate { it.key2 to it.toSerializable(resolver) }
+                }
+        }
 }
 
 // S E N S E
 
 /**
  * Sense to serializable map
+ *
+ * @receiver sense
  * @return map
  * Keys:
  * - id
@@ -108,7 +95,7 @@ fun lexesAsValuesToSerializable(lexes: Sequence<Lex>, resolver: (SenseKey) -> Se
  * - sent
  * - <relations>
  */
-fun Sense.toSerializable(): Map<SenseKey, Any> {
+fun Sense.toSerializable(): Map<String, Any> {
     return mutableMapOf<String, Any>(
         "id" to senseKey,
         "synset" to synsetId,
@@ -125,12 +112,13 @@ fun Sense.toSerializable(): Map<SenseKey, Any> {
 }
 
 /**
- * Senses to serializable map
- * @param senses senses sequence of senses
- * @return list of sense
+ * Senses to serializable list
+ *
+ * @receiver sequence of senses
+ * @return list of serialized senses
  */
-fun sensesToSerializableList(senses: Sequence<Sense>): List<Any> {
-    return senses
+fun Sequence<Sense>.toSerializable(): List<Any> {
+    return this
         .map(Sense::toSerializable)
         .toList()
 }
@@ -139,6 +127,8 @@ fun sensesToSerializableList(senses: Sequence<Sense>): List<Any> {
 
 /**
  * Synset to serializable map
+ *
+ * @receiver synset
  * @return map
  * Keys:
  * - members
@@ -150,7 +140,7 @@ fun sensesToSerializableList(senses: Sequence<Sense>): List<Any> {
  * - ili
  * - <relations>
  */
-fun Synset.toSerializable(): Map<SynsetId, Any> {
+fun Synset.toSerializable(): Map<String, Any> {
     return mutableMapOf(
         // "id" to synsetId,
         "partOfSpeech" to partOfSpeech.value,
@@ -173,48 +163,29 @@ fun Synset.toSerializable(): Map<SynsetId, Any> {
 
 /**
  * Synsets to serializable map
- * @param synsets sequence of synsets
+ *
+ * @receiver sequence of synsets
  * @return map of synset by id
  */
-fun synsetsToSerializable(synsets: Sequence<Synset>): Map<SynsetId, Any> {
-    return synsets.associate { it.synsetId to it.toSerializable() }
-}
+fun Sequence<Synset>.toSerializable(): Map<SynsetId, Any> = this.associate { it.synsetId to it.toSerializable() }
 
 // M O D E L
 
 /**
- * Flat data producer
+ * Merged data generator
  *
- * @param whichLexes which entries to select, by default all
- * @param whichSynsets which synsets, by default all
  * @receiver core model
- * @return lexes and synsets
+ * @yield content (either lex entries or synsets) to file
  */
-fun CoreModel.toFlatSerializableOfLexes(
-    whichLexes: Sequence<Lex> = lexes.asSequence().sortedWith(compareBy(Lex::lemma).thenBy(Lex::key2)),
-    whichSynsets: Sequence<Synset> = synsets.asSequence().sortedBy { it.synsetId },
-): Pair<SData, SData> {
-    val yLexes: Map<Lemma, Any> = lexesAsEntriesToSerializable(whichLexes)
-    val ySynsets: Map<SynsetId, Any> = synsetsToSerializable(whichSynsets)
-    return yLexes to ySynsets
-}
+fun CoreModel.toOneSerializable(): Sequence<Pair<SData, Filename>> {
 
-/**
- * Flat data producer
- *
- * @param whichEntries which entries to select, by default all
- * @param whichSynsets which synsets, by default all
- * @receiver core model
- * @return lex entries and synsets
- * @return lexes and synsets
- */
-fun CoreModel.toFlatSerializableOfEntries(
-    whichEntries: Sequence<LexEntry> = lexEntries.sortedBy { it.key },
-    whichSynsets: Sequence<Synset> = synsets.asSequence().sortedBy { it.synsetId },
-): Pair<SData, SData> {
-    val yEntries: Map<Key2, Any> = entriesToSerializable(whichEntries, senseResolver)
-    val ySynsets: Map<SynsetId, Any> = synsetsToSerializable(whichSynsets)
-    return yEntries to ySynsets
+    return sequence {
+        val yEntries = lexes.asSequence().toSerializable(senseResolver)
+        yield(yEntries to "entries-all") // yield content with source file base
+
+        val ySynsets = synsets.asSequence().toSerializable()
+        yield(ySynsets to "data-all")  // yield content with source file base
+    }
 }
 
 /**
@@ -224,7 +195,6 @@ fun CoreModel.toFlatSerializableOfEntries(
  * @yield content (either lex entries or synsets) to file
  */
 fun CoreModel.toSplitSerializable(generated: Boolean = false): Sequence<Pair<SData, Filename>> {
-    fun Lex.toSerializable(): Map<String, Any> = toSerializable(senseResolver)
 
     return sequence {
         lexes
@@ -234,14 +204,7 @@ fun CoreModel.toSplitSerializable(generated: Boolean = false): Sequence<Pair<SDa
                 } else it.lexfile
             }
             .forEach { (file, lexes) ->
-                val yEntries = mutableMapOf<String, Any>().apply {
-                    lexes
-                        .sortedBy { it.lemma }
-                        .groupBy { it.lemma }
-                        .forEach { (lemma, lexes) ->
-                            this[lemma] = lexes.associate { it.key2 to it.toSerializable() }
-                        }
-                }
+                val yEntries = lexes.asSequence().toSerializable(senseResolver)
                 yield(yEntries to file) // yield content with source file base
             }
 
@@ -249,7 +212,7 @@ fun CoreModel.toSplitSerializable(generated: Boolean = false): Sequence<Pair<SDa
             .sortedBy { it.synsetId }
             .groupBy { it.lexfile }
             .forEach { (lexfile, synsets) ->
-                val ySynsets = synsets.associate { it.synsetId to it.toSerializable() }
+                val ySynsets = synsets.asSequence().toSerializable()
                 yield(ySynsets to lexfile)  // yield content with source file base
             }
     }

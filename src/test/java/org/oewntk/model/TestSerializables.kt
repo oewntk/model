@@ -139,7 +139,7 @@ class TestSerializables {
 
     @Test
     fun testFlatSerializationOfEntries() {
-        val y = model.toFlatSerializableOfEntries(
+        val y = model.toFlatSerializableOfLexEntries(
             whichEntries = model.lexEntries.drop((1000..100000).random()).take(2),
             whichSynsets = model.synsets.asSequence().drop((1000..100000).random()).take(2)
         )

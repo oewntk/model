@@ -129,9 +129,18 @@ class TestSerializables {
     }
 
     @Test
-    fun testFlatSerialization() {
-        val y = model.toFlatSerializable(
+    fun testFlatSerializationOfLexes() {
+        val y = model.toFlatSerializableOfLexes(
             whichLexes = model.lexes.asSequence().drop((1000..100000).random()).take(2),
+            whichSynsets = model.synsets.asSequence().drop((1000..100000).random()).take(2)
+        )
+        println(y)
+    }
+
+    @Test
+    fun testFlatSerializationOfEntries() {
+        val y = model.toFlatSerializableOfEntries(
+            whichEntries = model.lexEntries.drop((1000..100000).random()).take(2),
             whichSynsets = model.synsets.asSequence().drop((1000..100000).random()).take(2)
         )
         println(y)

@@ -7,7 +7,6 @@ import org.junit.BeforeClass
 import org.junit.Test
 import org.oewntk.model.LibModelSubset.lexSubset
 import org.oewntk.model.LibModelSubset.synsetSubset
-import org.oewntk.ser.`in`.LibTestsSerCommon
 import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
 import org.oewntk.yaml.out.ToYaml
@@ -37,13 +36,18 @@ class TestModelSerializables {
         val serialized: Sequence<Pair<SData, Filename>> = genSmallSerializable(model)
         serialized.forEach { (sdata: SData, _: Filename) ->
             val yamlString = yaml.dump(sdata)
-            //ps.println(yamlString)
-            println(yamlString)
+            ps.println(yamlString)
         }
     }
 
     @Test
     fun testOrig() {
+        val orig: String = System.getProperty("INFO")!!
+        val origInfo = File(orig).readText()
+        val info = model.info()
+        val counts = ModelInfo.counts(model)
+        val modelInfo = "$info\n$counts"
+        ps.println(modelInfo)
         assertEquals(origInfo, modelInfo)
     }
 
@@ -58,7 +62,6 @@ class TestModelSerializables {
         fun init() {
             val orig: String = System.getProperty("INFO")!!
             origInfo = File(orig).readText()
-
 
             val info = model.info()
             val counts = ModelInfo.counts(model)

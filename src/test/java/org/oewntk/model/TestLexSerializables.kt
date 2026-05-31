@@ -5,7 +5,8 @@ package org.oewntk.model
 
 import org.junit.BeforeClass
 import org.junit.Test
-import org.oewntk.ser.`in`.LibTestsSerCommon
+import org.oewntk.model.LibModelSubset.lexSubset
+import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
 import org.oewntk.yaml.out.ToYaml
 import org.oewntk.yaml.out.YamlDump.Companion.compatDumperOptions
@@ -18,9 +19,7 @@ class TestLexSerializables {
 
     @Test
     fun testRandomLexes() {
-        val someLexes: Sequence<Lex> = TestSerializables.model.lexes.asSequence()
-            .drop((1000..100000).random())
-            .take(100)
+        val someLexes: Sequence<Lex> = model.lexSubset()
         val yamlString = yaml.lexesToYaml(someLexes)
         println(yamlString)
     }
@@ -40,7 +39,7 @@ class TestLexSerializables {
     @Test
     fun testSomeLexesAsValues() {
         val someLexes: Sequence<Lex> = arrayOf("force", "lead", "row", "bow", "galore")
-            .flatMap(TestSerializables.model.lexResolver)
+            .flatMap(model.lexResolver)
             .asSequence()
         val yamlString = yaml.lexesToYaml(someLexes)
         println(yamlString)
@@ -49,7 +48,7 @@ class TestLexSerializables {
     @Test
     fun testSomeLexesAsEntries() {
         val someLexes: Sequence<Lex> = arrayOf("force", "lead", "row", "bow", "galore")
-            .flatMap(TestSerializables.model.lexResolver)
+            .flatMap(model.lexResolver)
             .asSequence()
         val yamlString = yaml.lexesToYaml(someLexes)
         println(yamlString)
@@ -65,30 +64,21 @@ class TestLexSerializables {
 
     @Test
     fun testOrig() {
+        val orig: String = System.getProperty("INFO")!!
+        val origInfo = File(orig).readText()
+        val info = model.info()
+        val counts = ModelInfo.counts(model)
+        val modelInfo = "$info\n$counts"
+        ps.println(modelInfo)
         assertEquals(origInfo, modelInfo)
     }
 
     companion object {
 
-        lateinit var origInfo: String
-
-        lateinit var modelInfo: String
-
-        lateinit var model: CoreModel
-
         @JvmStatic
         @BeforeClass
         fun init() {
-            val orig: String = System.getProperty("INFO")!!
-            origInfo = File(orig).readText()
-
-            model = checkNotNull(LibTestsSerCommon.model)
-
-            val info = model.info()
-            val counts = ModelInfo.counts(model)
-            modelInfo = "$info\n$counts"
-            ps.println(modelInfo)
-            ps.println()
+            model
         }
     }
 }

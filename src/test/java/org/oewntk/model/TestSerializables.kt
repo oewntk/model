@@ -5,7 +5,7 @@ package org.oewntk.model
 
 import org.junit.BeforeClass
 import org.junit.Test
-import org.oewntk.ser.`in`.LibTestsSerCommon
+import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
 import org.oewntk.yaml.out.ToYaml
 import org.oewntk.yaml.out.YamlDump.Companion.compatDumperOptions
@@ -20,7 +20,7 @@ class TestSerializables {
     fun testDummyLex() {
         val lex = Lex("jest", "n", listOf("jest%1:10:00::", "jest%1:04:00::"))
         val yamlString = yaml.toYaml(lex, model.senseResolver)
-        println(yamlString)
+        ps.println(yamlString)
     }
 
     @Test
@@ -33,21 +33,21 @@ class TestSerializables {
             arrayOf("definition", "definition2"),
         )
         val yamlString = yaml.toYaml(synset)
-        println(yamlString)
+        ps.println(yamlString)
     }
 
     @Test
     fun testLex() {
         val lex: Lex = model.lexResolver1("jest", "n")
         val yamlString = yaml.toYaml(lex, model.senseResolver)
-        println(yamlString)
+        ps.println(yamlString)
     }
 
     @Test
     fun testSense() {
         val sense: Sense = model.senseResolver("jest%1:10:00::")
         val yamlString = yaml.toYaml(sense)
-        println(yamlString)
+        ps.println(yamlString)
     }
 
     @Test
@@ -77,30 +77,21 @@ class TestSerializables {
 
     @Test
     fun testOrig() {
+        val orig: String = System.getProperty("INFO")!!
+        val origInfo = File(orig).readText()
+        val info = model.info()
+        val counts = ModelInfo.counts(model)
+        val modelInfo = "$info\n$counts"
+        ps.println(modelInfo)
         assertEquals(origInfo, modelInfo)
     }
 
     companion object {
 
-        lateinit var origInfo: String
-
-        lateinit var modelInfo: String
-
-        lateinit var model: CoreModel
-
         @JvmStatic
         @BeforeClass
         fun init() {
-            val orig: String = System.getProperty("INFO")!!
-            origInfo = File(orig).readText()
-
-            model = checkNotNull(LibTestsSerCommon.model)
-
-            val info = model.info()
-            val counts = ModelInfo.counts(model)
-            modelInfo = "$info\n$counts"
-            ps.println(modelInfo)
-            ps.println()
+            model
         }
     }
 }

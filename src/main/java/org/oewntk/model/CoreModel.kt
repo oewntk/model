@@ -109,11 +109,6 @@ open class CoreModel(
 
     // lex
 
-    val lexFinder1: (Lemma, Key2) -> Lex?
-        get() = { lemma: Lemma, key2: Key2 ->
-            lexHyperMap[lemma]?.get(key2)
-        }
-
     /**
      * Lex finder (nullable result)
      * Resolution may yield null
@@ -141,6 +136,22 @@ open class CoreModel(
      */
     val lexIgnoreCaseResolver: (Lemma) -> Collection<Lex>
         get() = { lexFinder(it)!! }
+
+    // unique lex
+
+    /**
+     * Resolves (Lemma, Key1) to assumed unique Lex
+     */
+    val lexFinder1: (Lemma, Key2) -> Lex?
+        get() = { lemma: Lemma, key2: Key2 ->
+            lexHyperMap[lemma]?.get(key2)
+        }
+
+    /**
+     * Resolves (Lemma, Key1) to assumed unique existing Lex
+     */
+    val lexResolver1: (lemma: Lemma, key2: Key2) -> Lex
+        get() = { lemma, key2 -> lexFinder1(lemma, key2)!! }
 
     // S E N S E
 

@@ -10,38 +10,56 @@ import org.oewntk.ser.`in`.LibTestsSerCommon.ps
 import org.oewntk.yaml.out.ToYaml
 import org.oewntk.yaml.out.YamlDump.Companion.compatDumperOptions
 import java.io.File
-import java.util.*
 import kotlin.test.assertEquals
 
-class TestModelEntriesSerializables {
+class TestLexSerializables {
 
     val yaml = ToYaml(options = compatDumperOptions)
 
     @Test
     fun test100RandomEntries() {
-        val someEntries: Sequence<LexEntry> = TestSerializables.model.lexEntries
+        val someLexes: Sequence<Lex> = TestSerializables.model.lexes.asSequence()
             .drop((1000..100000).random())
             .take(100)
-        val yamlString = yaml.entriesToYaml(someEntries, TestSerializables.model.senseResolver)
+        val yamlString = yaml.lexesToYaml(someLexes)
         println(yamlString)
     }
 
     @Test
-    fun testSomeEntries() {
-        val someEntries: Sequence<LexEntry> = arrayOf("force", "lead", "row", "bow", "galore")
+    fun testModel() {
+        TestModelSerializables.model.lexes.groupBy(Lex::lemma)
+            .mapValues { (_: Lemma, lexes: Collection<Lex>) ->
+                val group = lexes.groupBy(Lex::key2)
+                group.values.forEach {
+                    assertEquals(1, it.size, it.toString())
+                }
+                group
+            }
+    }
+
+    @Test
+    fun testSomeLexesAsValues() {
+        val someLexes: Sequence<Lex> = arrayOf("force", "lead", "row", "bow", "galore")
+            .flatMap(TestSerializables.model.lexResolver)
             .asSequence()
-            .map { it to TestSerializables.model.lexResolver(it) }
-            .map { AbstractMap.SimpleEntry(it.first, it.second) }
-        val yamlString = yaml.entriesToYaml(someEntries, TestSerializables.model.senseResolver)
+        val yamlString = yaml.lexesToYaml(someLexes)
         println(yamlString)
     }
 
     @Test
-    fun testSomePairEntries() {
-        val someEntries: Sequence<LexEntry> = arrayOf("force", "lead", "row", "bow", "galore")
+    fun testSomeLexesAsEntries() {
+        val someLexes: Sequence<Lex> = arrayOf("force", "lead", "row", "bow", "galore")
+            .flatMap(TestSerializables.model.lexResolver)
             .asSequence()
-            .map { AbstractMap.SimpleEntry(it, TestSerializables.model.lexResolver(it)) }
-        val yamlString = yaml.entriesToYaml(someEntries, TestSerializables.model.senseResolver)
+        val yamlString = yaml.lexesToYaml(someLexes)
+        println(yamlString)
+    }
+
+
+    @Test
+    fun testSerializationOfLexes() {
+        val someLexes: Sequence<Lex> = model.lexes.asSequence().drop((1000..100000).random()).take(20)
+        val yamlString = yaml.lexesToYaml(someLexes)
         println(yamlString)
     }
 

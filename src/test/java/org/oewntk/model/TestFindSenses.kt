@@ -6,15 +6,15 @@ package org.oewntk.model
 import junit.framework.TestCase.assertEquals
 import org.junit.BeforeClass
 import org.junit.Test
-import org.oewntk.model.LibNanoModel.LEMMA1
-import org.oewntk.model.LibNanoModel.LEMMA2
-import org.oewntk.model.LibNanoModel.model
-import org.oewntk.model.LibNanoModel.sense11
-import org.oewntk.model.LibNanoModel.sense12
-import org.oewntk.model.LibNanoModel.sense21
-import org.oewntk.model.LibNanoModel.sense22
-import org.oewntk.model.LibNanoModel.synset1
-import org.oewntk.model.LibNanoModel.synset2
+import org.oewntk.model.LibDummyNanoModel.LEMMA1
+import org.oewntk.model.LibDummyNanoModel.LEMMA2
+import org.oewntk.model.LibDummyNanoModel.model
+import org.oewntk.model.LibDummyNanoModel.sense11
+import org.oewntk.model.LibDummyNanoModel.sense12
+import org.oewntk.model.LibDummyNanoModel.sense21
+import org.oewntk.model.LibDummyNanoModel.sense22
+import org.oewntk.model.LibDummyNanoModel.synset1
+import org.oewntk.model.LibDummyNanoModel.synset2
 
 class TestFindSenses {
 

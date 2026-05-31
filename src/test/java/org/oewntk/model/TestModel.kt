@@ -10,20 +10,10 @@ import org.oewntk.ser.`in`.LibTestsSerCommon.ps
 import org.oewntk.yaml.out.ToYaml
 import org.oewntk.yaml.out.YamlDump.Companion.compatDumperOptions
 import java.io.File
+import java.util.*
 import kotlin.test.assertEquals
 
-class TestLexSerializables {
-
-    val yaml = ToYaml(options = compatDumperOptions)
-
-    @Test
-    fun testRandomLexes() {
-        val someLexes: Sequence<Lex> = TestSerializables.model.lexes.asSequence()
-            .drop((1000..100000).random())
-            .take(100)
-        val yamlString = yaml.lexesToYaml(someLexes)
-        println(yamlString)
-    }
+class TestModel {
 
     @Test
     fun testModel() {
@@ -38,29 +28,11 @@ class TestLexSerializables {
     }
 
     @Test
-    fun testSomeLexesAsValues() {
-        val someLexes: Sequence<Lex> = arrayOf("force", "lead", "row", "bow", "galore")
-            .flatMap(TestSerializables.model.lexResolver)
-            .asSequence()
-        val yamlString = yaml.lexesToYaml(someLexes)
-        println(yamlString)
-    }
-
-    @Test
-    fun testSomeLexesAsEntries() {
-        val someLexes: Sequence<Lex> = arrayOf("force", "lead", "row", "bow", "galore")
-            .flatMap(TestSerializables.model.lexResolver)
-            .asSequence()
-        val yamlString = yaml.lexesToYaml(someLexes)
-        println(yamlString)
-    }
-
-
-    @Test
-    fun testSerializationOfLexes() {
-        val someLexes: Sequence<Lex> = model.lexes.asSequence().drop((1000..100000).random()).take(20)
-        val yamlString = yaml.lexesToYaml(someLexes)
-        println(yamlString)
+    fun testModelResolution() {
+        val l1 = model.lexFinder1("Californian", "n")
+        println(l1)
+        val l2 = model.lexFinder1("Californian", "a")
+        println(l2)
     }
 
     @Test

@@ -3,7 +3,7 @@
  */
 package org.oewntk.model
 
-object LibNanoModel {
+object LibDummyNanoModel {
 
     const val DOMAIN1 = "communication"
     const val DOMAIN2 = "body"

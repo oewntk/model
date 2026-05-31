@@ -5,36 +5,41 @@ package org.oewntk.model
 
 import org.junit.BeforeClass
 import org.junit.Test
+import org.oewntk.model.LibModelSubset.lexSubset
+import org.oewntk.model.LibModelSubset.synsetSubset
 import org.oewntk.ser.`in`.LibTestsSerCommon
+import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
 import org.oewntk.yaml.out.ToYaml
 import org.oewntk.yaml.out.YamlDump.Companion.compatDumperOptions
 import java.io.File
-import java.util.*
 import kotlin.test.assertEquals
 
 class TestModelSerializables {
 
     val yaml = ToYaml(options = compatDumperOptions)
 
-    @Test
-    fun testModel() {
-        model.lexes.groupBy(Lex::lemma)
-            .mapValues { (_: Lemma, lexes: Collection<Lex>) ->
-                val group = lexes.groupBy(Lex::key2)
-                group.values.forEach {
-                    assertEquals(1, it.size, it.toString())
-                }
-                group
-            }
+    private fun genSmallSerializable(model: CoreModel): Sequence<Pair<SData, Filename>> {
+
+        return sequence {
+            val someSerializedLexes = model.lexSubset()
+                .toSerializable(model.senseResolver)
+            yield(someSerializedLexes to "entries-some") // yield content with source file base
+
+            val someSerializedSynsets = model.synsetSubset()
+                .toSerializable()
+            yield(someSerializedSynsets to "data-some")  // yield content with source file base
+        }
     }
 
     @Test
-    fun testModelResolution() {
-        val l1 = model.lexFinder1("Californian", "n")
-        println(l1)
-        val l2 = model.lexFinder1("Californian", "a")
-        println(l2)
+    fun testModelOneSerialization() {
+        val serialized: Sequence<Pair<SData, Filename>> = genSmallSerializable(model)
+        serialized.forEach { (sdata: SData, _: Filename) ->
+            val yamlString = yaml.dump(sdata)
+            //ps.println(yamlString)
+            println(yamlString)
+        }
     }
 
     @Test
@@ -48,15 +53,12 @@ class TestModelSerializables {
 
         lateinit var modelInfo: String
 
-        lateinit var model: CoreModel
-
         @JvmStatic
         @BeforeClass
         fun init() {
             val orig: String = System.getProperty("INFO")!!
             origInfo = File(orig).readText()
 
-            model = checkNotNull(LibTestsSerCommon.model)
 
             val info = model.info()
             val counts = ModelInfo.counts(model)

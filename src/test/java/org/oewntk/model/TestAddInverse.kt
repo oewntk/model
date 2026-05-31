@@ -6,11 +6,11 @@ package org.oewntk.model
 import org.junit.BeforeClass
 import org.junit.Test
 import org.oewntk.model.InverseRelationFactory.INVERSE_SENSE_RELATIONS
-import org.oewntk.model.LibNanoModel.model
-import org.oewntk.model.LibNanoModel.sense11
-import org.oewntk.model.LibNanoModel.senseD11
-import org.oewntk.model.LibNanoModel.synset1
-import org.oewntk.model.LibNanoModel.synsetH1
+import org.oewntk.model.LibDummyNanoModel.model
+import org.oewntk.model.LibDummyNanoModel.sense11
+import org.oewntk.model.LibDummyNanoModel.senseD11
+import org.oewntk.model.LibDummyNanoModel.synset1
+import org.oewntk.model.LibDummyNanoModel.synsetH1
 import java.io.PrintStream
 
 class TestAddInverse {

@@ -91,7 +91,7 @@ open class CoreModel(
      * A multimap: each value is an array of lexes for the lemma.
      * @Transient
      */
-    val lexesByLemma: Map<Lemma, Collection<Lex>> by lazy { lexes.asSequence().groupByLemma() }
+    private val lexesByLemma: Map<Lemma, Collection<Lex>> by lazy { lexes.asSequence().groupByLemma() }
 
     /**
      * Lexical units mapped by lemma lower-cased written form.

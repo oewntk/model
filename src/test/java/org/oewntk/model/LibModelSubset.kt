@@ -5,12 +5,15 @@ package org.oewntk.model
 
 object LibModelSubset {
 
-    fun <T> CoreModel.subset(items: Collection<T>, from: Int = (1000..100000).random(), howMany: Int = 100): Sequence<T> = items
-        .asSequence()
+    fun <T> subsetOf(items: Sequence<T>, from: Int = (1000..100000).random(), howMany: Int = 100): Sequence<T> = items
         .drop(from)
         .take(howMany)
 
-    fun CoreModel.lexSubset(from: Int = (1000..100000).random(), howMany: Int = 100): Sequence<Lex> = subset(lexes)
+    fun <T> subsetOf(items: Collection<T>, from: Int = (1000..100000).random(), howMany: Int = 100): Sequence<T> = subsetOf(items.asSequence(), from = from, howMany = howMany)
 
-    fun CoreModel.synsetSubset(from: Int = (1000..100000).random(), howMany: Int = 100): Sequence<Synset> = subset(synsets)
+    fun CoreModel.lexSubset(from: Int = (1000..100000).random(), howMany: Int = 100): Sequence<Lex> = subsetOf(lexes)
+
+    fun CoreModel.synsetSubset(from: Int = (1000..100000).random(), howMany: Int = 100): Sequence<Synset> = subsetOf(synsets)
+
+    fun CoreModel.lexEntrySubset(from: Int = (1000..100000).random(), howMany: Int = 100): Sequence<LexEntry> = subsetOf(lexEntries)
 }

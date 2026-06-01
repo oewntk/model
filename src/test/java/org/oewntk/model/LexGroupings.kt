@@ -32,25 +32,6 @@ object LexGroupings {
     // hyper maps
 
     /**
-     * Hypermap (LCLemma to Lemma to lexes)
-     *
-     * @receiver lexes
-     * @return 2-tier hypermap
-     * ```
-     * (LCLemma -> Lemma -> lexes)
-     * ```
-     */
-    fun Sequence<LexEntry>.hyperMapByLCLemmaByLemma(): Map<LowerCasedLemma, Map<Lemma, Collection<Lex>>> {
-        return this // entries: setOf(lemma to lexes)
-            .groupBy { entry -> entry.key.lowercase(Locale.ENGLISH) } // groupBy: mapOf(lclemma to listOf(lemma to lexes)), entry: lemma to lexes
-            .mapValues { values -> // values: lcLemma to listOf(lemma to lexes))
-                values.value // value: listOf(lemma to lexes)
-                    .associateBy { it.key } // mapOf(lemma to lexes)
-                    .mapValues { it.value.value } // it: lemma to (lemma to lexes), it.value: lemma to lexes, it.value.value: lexes
-            }
-    }
-
-    /**
      * Lemmas by LC lemmas, retain entries that have count &gt; 2
      *
      * @receiver lexes

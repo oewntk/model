@@ -6,14 +6,12 @@ package org.oewntk.model
 import org.junit.BeforeClass
 import org.junit.Test
 import org.oewntk.model.LibModelSubset.lexSubset
-import org.oewntk.model.LibModelSubset.lexEntrySubset
 import org.oewntk.model.LibModelSubset.synsetSubset
 import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
 import org.oewntk.yaml.out.ToYaml
 import org.oewntk.yaml.out.YamlDump.Companion.compatDumperOptions
 import java.io.File
-import java.util.*
 import kotlin.test.assertEquals
 
 class TestFlatModelSerializables {

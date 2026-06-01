@@ -30,15 +30,6 @@ class TestFlatModelSerializables {
     }
 
     @Test
-    fun testFlatSerializationOfEntries() {
-        val y = model.toFlatSerializableOfLexEntries(
-            whichEntries = model.lexEntrySubset(howMany = 20),
-            whichSynsets = model.synsetSubset(howMany = 2)
-        )
-        ps.println(y)
-    }
-
-    @Test
     fun testOrig() {
         val orig: String = System.getProperty("INFO")!!
         val origInfo = File(orig).readText()

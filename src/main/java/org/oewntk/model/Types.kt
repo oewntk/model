@@ -19,8 +19,6 @@ typealias VerbFrameId = String
 typealias VerbTemplateId = Int
 typealias AdjPosition = String
 
-typealias LexEntry = Map.Entry<Lemma, Collection<Lex>>
-
 typealias HyperMap = Map<Lemma, Map<Key2, Collection<Lex>>>
 typealias HyperMap1 = Map<Lemma, Map<Key2, Lex>>
 

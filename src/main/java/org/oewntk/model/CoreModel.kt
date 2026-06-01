@@ -91,7 +91,7 @@ open class CoreModel(
      * A multimap: each value is an array of lexes for the lemma.
      * @Transient
      */
-    private val lexesByLemma: Map<Lemma, Collection<Lex>> by lazy { lexes.asSequence().groupByLemma() }
+    val lexesByLemma: Map<Lemma, Collection<Lex>> by lazy { lexes.asSequence().groupByLemma() }
 
     /**
      * Lexical units mapped by lemma lower-cased written form.
@@ -191,14 +191,6 @@ open class CoreModel(
      */
     val synsetResolver: (SynsetId) -> Synset
         get() = { synsetFinder(it)!! }
-
-    // E N T R I E S
-
-    /**
-     * Lex entries
-     */
-    val lexEntries: Sequence<LexEntry>
-        get() = lexesByLemma.asSequence()
 
     /**
      * Generate inverse relations

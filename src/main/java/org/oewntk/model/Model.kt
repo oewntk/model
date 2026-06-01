@@ -142,7 +142,7 @@ class Model(
     var verbFramesById: Map<VerbFrameId, VerbFrame>? = null
         get() {
             if (field == null) {
-                field = map(verbFrames) { it.id }
+                field = map(verbFrames.asSequence()) { it.id }
             }
             return field
         }
@@ -155,7 +155,7 @@ class Model(
     var verbTemplatesById: Map<VerbTemplateId, VerbTemplate>? = null
         get() {
             if (field == null) {
-                field = map(verbTemplates) { it.id }
+                field = map(verbTemplates.asSequence()) { it.id }
             }
             return field
         }

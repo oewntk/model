@@ -104,13 +104,13 @@ open class CoreModel(
      * Senses mapped by id (sensekey)
      * @Transient
      */
-    private val sensesById: Map<SenseKey, Sense> by lazy { sensesById(senses) }
+    private val sensesById: Map<SenseKey, Sense> by lazy { senses.asSequence().sensesById() }
 
     /**
      * Synsets mapped by id (synset id)
      * @Transient
      */
-    private val synsetsById: Map<SynsetId, Synset> by lazy { synsetsById(synsets) }
+    private val synsetsById: Map<SynsetId, Synset> by lazy { synsets.asSequence().synsetsById() }
 
     // F I N D E R S   A N D   R E S O L V E R S
 

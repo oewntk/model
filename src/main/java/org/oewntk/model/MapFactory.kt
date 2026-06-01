@@ -30,7 +30,7 @@ object MapFactory {
      * @return elements mapped by key
      */
     fun <K : Comparable<K>, V> map(
-        things: Collection<V>,
+        things: Sequence<V>,
         groupingFunction: (V) -> K,
     ): Map<K, V> {
         return map(things, groupingFunction, keepMerging())
@@ -46,7 +46,7 @@ object MapFactory {
      * @return elements mapped by key
      */
     fun <K : Comparable<K>, V> mapAlt(
-        things: Collection<V>,
+        things: Sequence<V>,
         groupingFunction: (V) -> K,
     ): Map<K, V> {
         return things
@@ -65,7 +65,7 @@ object MapFactory {
      * @return elements mapped by key
      */
     fun <K : Comparable<K>, V> map(
-        things: Collection<V>,
+        things: Sequence<V>,
         groupingFunction: (V) -> K,
         mergingFunction: (V, V) -> V,
     ): Map<K, V> {
@@ -112,10 +112,10 @@ object MapFactory {
     /**
      * Senses by id
      *
-     * @param senses senses
+     * @receiver senses
      * @return senses mapped by id
      */
-    fun sensesById(senses: Collection<Sense>): Map<SenseKey, Sense> {
+    fun Sequence<Sense>.sensesById(): Map<SenseKey, Sense> {
         // prioritize cased
         val mergingFunction = { existing: Sense, replacement: Sense ->
             val merged = if (replacement.lex.isCased) (if (existing.lex.isCased) existing else replacement) else existing
@@ -126,16 +126,16 @@ object MapFactory {
             }
             merged
         }
-        return map(senses, { it.senseKey }, mergingFunction)
+        return map(this, { it.senseKey }, mergingFunction)
     }
 
     /**
      * Synsets by id
      *
-     * @param synsets synsets
+     * @receiver synsets
      * @return synsets mapped by id
      */
-    fun synsetsById(synsets: Collection<Synset>): Map<SynsetId, Synset> {
-        return map(synsets) { it.synsetId }
+    fun Sequence<Synset>.synsetsById(): Map<SynsetId, Synset> {
+        return map(this) { it.synsetId }
     }
 }

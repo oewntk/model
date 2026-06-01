@@ -4,7 +4,21 @@ import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
 import org.oewntk.model.MapFactory.sensesById
 import org.oewntk.model.MapFactory.synsetsById
 
-// L E X
+// O B J E C T
+
+fun Lex.lexAsDataSerialize(): Any {
+    return this
+}
+
+fun Synset.synsetAsDataSerialize(): Any {
+    return this
+}
+
+fun Sense.senseAsDataSerialize(): Any {
+    return this
+}
+
+// S E Q U E N C E S   O F   O B J E C T S
 
 /**
  * Lexes to serializable hypermap
@@ -54,6 +68,6 @@ fun CoreModel.dataSerialize(
 ): Triple<SData, SData, SData> {
     val yLexes: Map<Lemma, Any> = whichLexes.lexesAsDataSerialize()
     val ySynsets: Map<SynsetId, Any> = whichSynsets.synsetsAsDataSerialize()
-    val ySenses: Map<SenseKey, Any> = whichSynsets.synsetsAsDataSerialize()
+    val ySenses: Map<SenseKey, Any> = whichSenses.sensesAsDataSerialize()
     return Triple(yLexes, ySynsets, ySenses)
 }

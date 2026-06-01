@@ -20,6 +20,27 @@ class TestModelRawSerialize {
     val yaml = ToYaml(options = compatDumperOptions)
 
     @Test
+    fun testRawLexForce() {
+        val lex = model.lexResolver1("force", "n")
+        val y = lex.lexAsDataSerialize()
+        ps.println(y)
+    }
+
+    @Test
+    fun testRawSynsetForce() {
+        val synset = model.synsetResolver("05201846-n")
+        val y = synset.synsetAsDataSerialize()
+        ps.println(y)
+    }
+
+    @Test
+    fun testRawSenseForce() {
+        val sense = model.senseResolver("force%1:07:01::")
+        val y = sense.senseAsDataSerialize()
+        ps.println(y)
+    }
+
+    @Test
     fun testRawLexesForce() {
         val y = model.lexResolver("force").asSequence().lexesAsDataSerialize()
         ps.println(y)
@@ -42,6 +63,7 @@ class TestModelRawSerialize {
         val y = model.lexResolver("row").asSequence().lexesAsDataSerialize()
         ps.println(y)
     }
+
 
     @Test
     fun testRawSensesForce() {

@@ -6,22 +6,22 @@ import org.oewntk.model.MapFactory.synsetsById
 // L E X
 
 /**
- * Lexes to hypermap
+ * Lexes to serializable hypermap
  *
  * @preceiver sequence of lexes
  * @return lex hypermap
  */
-fun Sequence<Lex>.asLexData(): SData {
+fun Sequence<Lex>.lexAsDataSerialize(): SData {
     return lexByLemmaThenByKey2()
 }
 
 /**
- * Synsets to serialized hypermap
+ * Synsets to serializable map
  *
- * @preceiver sequence of lexes
- * @return lex hypermap
+ * @preceiver sequence of synsets
+ * @return synset map
  */
-fun Sequence<Synset>.asSynsetData(): SData {
+fun Sequence<Synset>.dataSerialize(): SData {
     return synsetsById()
 }
 
@@ -36,11 +36,11 @@ fun Sequence<Synset>.asSynsetData(): SData {
  * @receiver core model
  * @return lexes and synsets
  */
-fun CoreModel.asData(
+fun CoreModel.dataSerialize(
     whichLexes: Sequence<Lex> = lexes.asSequence().sortedWith(compareBy(Lex::lemma).thenBy(Lex::key2)),
     whichSynsets: Sequence<Synset> = synsets.asSequence().sortedBy { it.synsetId },
 ): Pair<SData, SData> {
-    val yLexes: Map<Lemma, Any> = whichLexes.asLexData()
-    val ySynsets: Map<SynsetId, Any> = whichSynsets.asSynsetData()
+    val yLexes: Map<Lemma, Any> = whichLexes.lexAsDataSerialize()
+    val ySynsets: Map<SynsetId, Any> = whichSynsets.dataSerialize()
     return yLexes to ySynsets
 }

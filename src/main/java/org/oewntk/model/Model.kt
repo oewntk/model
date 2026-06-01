@@ -76,20 +76,20 @@ class Model(
 
         // set sense's verb templates
         for ((sensekey, templatesIds) in senseToVerbTemplates) {
-            try {
-                val sense = senseResolver(sensekey)
+            val sense = senseFinder(sensekey)
+            if (sense != null) {
                 sense.verbTemplates = templatesIds
-            } catch (_: NullPointerException) {
+            } else if (WARN_UNRESOLVABLE_SENSE) {
                 Tracing.psErr.println("[W] Unresolvable $sensekey with templates ${templatesIds.contentToString()}")
             }
         }
 
         // set sense's tag counts
         for ((sensekey, tagCount) in senseToTagCounts) {
-            try {
-                val sense = senseResolver(sensekey)
+            val sense = senseFinder(sensekey)
+            if (sense != null) {
                 sense.tagCount = tagCount
-            } catch (_: NullPointerException) {
+            } else if (WARN_UNRESOLVABLE_SENSE) {
                 Tracing.psErr.println("[W] Unresolvable $sensekey with tagcount $tagCount")
             }
         }
@@ -174,5 +174,9 @@ class Model(
      */
     override fun info(): String {
         return super.info() + ", verb frames: ${verbFrames.size}, verb templates: ${verbTemplates.size}"
+    }
+
+    companion object {
+        const val WARN_UNRESOLVABLE_SENSE = false
     }
 }

@@ -42,7 +42,7 @@ import java.util.*
  */
 @kotlinx.serialization.Serializable
 data class Sense(
-    private val senseId: SenseKey,
+    val senseId: SenseKey,
     val lex: Lex,
     val type: SynsetType,
     val lexIndex: Int,

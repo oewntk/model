@@ -7,15 +7,54 @@ import org.oewntk.model.MapFactory.synsetsById
 // O B J E C T
 
 fun Lex.lexAsDataSerialize(): Any {
-    return this
+    return mutableMapOf(
+        "lemma" to lemma,
+        "type" to type.value,
+        "discriminant" to discriminant,
+        "sense" to senseKeys,
+    ).apply {
+        if (pronunciations != null)
+            this["pronunciation"] = pronunciations
+    }
 }
 
 fun Synset.synsetAsDataSerialize(): Any {
-    return this
+    return mutableMapOf<String, Any>(
+        "id" to synsetId,
+        "type" to type.value,
+        "domain" to domain,
+        "member" to members.toList(),
+        "definition" to (definitions.toList()),
+    ).apply {
+        if (examples != null) this["examples"] = examples.map { if (it.second == null) it.first else mapOf("text" to it.first, "source" to it.second) }.toList()
+        if (usages != null) this["usages"] = usages
+        if (relations != null) {
+            relations!!.forEach { (rel, targets) ->
+                this[rel] = targets.toList()
+            }
+        }
+        if (ili != null) this["ili"] = ili
+        if (wikidata != null) this["wikidata"] = wikidata.joinToString(separator = ";")
+    }
 }
 
+
 fun Sense.senseAsDataSerialize(): Any {
-    return this
+    return mutableMapOf<String, Any>(
+        "id" to senseId,
+        "synset" to synsetId,
+        "type" to type.value,
+        "index" to lexIndex,
+    ).apply {
+        if (examples != null) this["examples"] = examples.map { if (it.second == null) it.first else mapOf("text" to it.first, "source" to it.second) }.toList()
+        if (verbFrames != null) this["verbFrames"] = verbFrames.joinToString(separator = ";")
+        if (adjPosition != null) this["adjPosition"] = adjPosition
+        if (relations != null) {
+            relations!!.forEach { (rel, targets) ->
+                this[rel] = targets.toList()
+            }
+        }
+    }
 }
 
 // S E Q U E N C E S   O F   O B J E C T S

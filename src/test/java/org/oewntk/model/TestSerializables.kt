@@ -5,6 +5,7 @@ package org.oewntk.model
 
 import org.junit.BeforeClass
 import org.junit.Test
+import org.oewntk.ser.`in`.LibTestsSerCommon.checkOrig
 import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
 import org.oewntk.yaml.out.ToYaml
@@ -55,15 +56,15 @@ class TestSerializables {
         val someSenses: Sequence<Sense> = arrayOf("force%1:07:00::", "force%1:07:01::", "force%1:19:00::")
             .map(model.senseResolver)
             .asSequence()
-        val yamlString = yaml.sensesToYaml(someSenses)
-        println(yamlString)
+        val yamlString = yaml.sensesToYaml(someSenses).joinToString(separator="\n\n")
+        ps.println(yamlString)
     }
 
     @Test
     fun testSynset() {
         val synset: Synset = model.synsetResolver("05042508-n")
         val yamlString = yaml.toYaml(synset)
-        println(yamlString)
+        ps.println(yamlString)
     }
 
     @Test
@@ -71,19 +72,13 @@ class TestSerializables {
         val someSynsets: Sequence<Synset> = arrayOf("05042508-n", "05201846-n", "11479041-n")
             .map(model.synsetResolver)
             .asSequence()
-        val yamlString = yaml.synsetsToYaml(someSynsets)
-        println(yamlString)
+        val yamlString = yaml.synsetsToYaml(someSynsets).joinToString(separator="\n\n")
+        ps.println(yamlString)
     }
 
     @Test
     fun testOrig() {
-        val orig: String = System.getProperty("INFO")!!
-        val origInfo = File(orig).readText()
-        val info = model.info()
-        val counts = ModelInfo.counts(model)
-        val modelInfo = "$info\n$counts"
-        ps.println(modelInfo)
-        assertEquals(origInfo, modelInfo)
+        checkOrig()
     }
 
     companion object {
@@ -91,7 +86,7 @@ class TestSerializables {
         @JvmStatic
         @BeforeClass
         fun init() {
-            model
+            model //eager
         }
     }
 }

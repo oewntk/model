@@ -5,6 +5,7 @@ package org.oewntk.model
 
 import org.junit.BeforeClass
 import org.junit.Test
+import org.oewntk.ser.`in`.LibTestsSerCommon.checkOrig
 import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
 import java.io.File
@@ -34,13 +35,7 @@ class TestModel {
 
     @Test
     fun testOrig() {
-        val orig: String = System.getProperty("INFO")!!
-        val origInfo = File(orig).readText()
-        val info = model.info()
-        val counts = ModelInfo.counts(model)
-        val modelInfo = "$info\n$counts"
-        ps.println(modelInfo)
-        assertEquals(origInfo, modelInfo)
+        checkOrig()
     }
 
     companion object {
@@ -48,7 +43,7 @@ class TestModel {
         @JvmStatic
         @BeforeClass
         fun init() {
-            model
+            model // eager
         }
     }
 }

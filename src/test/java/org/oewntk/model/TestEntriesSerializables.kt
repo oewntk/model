@@ -5,6 +5,7 @@ package org.oewntk.model
 
 import org.junit.BeforeClass
 import org.junit.Test
+import org.oewntk.model.LibModelSubset.subsetOf
 import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
 import org.oewntk.yaml.out.ToYaml
@@ -19,11 +20,9 @@ class TestEntriesSerializables {
 
     @Test
     fun test100RandomEntries() {
-        val someEntries: Sequence<LexEntry> = model.lexEntries
-            .drop((1000..100000).random())
-            .take(100)
+        val someEntries: Sequence<LexEntry> = subsetOf(model.lexEntries)
         val yamlString = yaml.entriesToYaml(someEntries, model.senseResolver)
-        println(yamlString)
+        ps.println(yamlString)
     }
 
     @Test
@@ -33,7 +32,7 @@ class TestEntriesSerializables {
             .map { it to model.lexResolver(it) }
             .map { AbstractMap.SimpleEntry(it.first, it.second) }
         val yamlString = yaml.entriesToYaml(someEntries, model.senseResolver)
-        println(yamlString)
+        ps.println(yamlString)
     }
 
     @Test
@@ -42,7 +41,7 @@ class TestEntriesSerializables {
             .asSequence()
             .map { AbstractMap.SimpleEntry(it, model.lexResolver(it)) }
         val yamlString = yaml.entriesToYaml(someEntries, model.senseResolver)
-        println(yamlString)
+        ps.println(yamlString)
     }
 
     @Test

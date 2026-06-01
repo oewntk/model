@@ -7,6 +7,7 @@ import org.junit.BeforeClass
 import org.junit.Test
 import org.oewntk.model.LibModelSubset.lexSubset
 import org.oewntk.model.LibModelSubset.synsetSubset
+import org.oewntk.ser.`in`.LibTestsSerCommon.checkOrig
 import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
 import org.oewntk.yaml.out.ToYaml
@@ -42,32 +43,15 @@ class TestModelSerializables {
 
     @Test
     fun testOrig() {
-        val orig: String = System.getProperty("INFO")!!
-        val origInfo = File(orig).readText()
-        val info = model.info()
-        val counts = ModelInfo.counts(model)
-        val modelInfo = "$info\n$counts"
-        ps.println(modelInfo)
-        assertEquals(origInfo, modelInfo)
+        checkOrig()
     }
 
     companion object {
 
-        lateinit var origInfo: String
-
-        lateinit var modelInfo: String
-
         @JvmStatic
         @BeforeClass
         fun init() {
-            val orig: String = System.getProperty("INFO")!!
-            origInfo = File(orig).readText()
-
-            val info = model.info()
-            val counts = ModelInfo.counts(model)
-            modelInfo = "$info\n$counts"
-            ps.println(modelInfo)
-            ps.println()
+            model //eager
         }
     }
 }

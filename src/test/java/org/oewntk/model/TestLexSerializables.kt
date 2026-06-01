@@ -43,11 +43,11 @@ class TestLexSerializables {
     }
 
     @Test
-    fun testSerializationOfLexes() {
+    fun testSomeLexesByLemmaThenByKey2() {
         val someLexes: Sequence<Lex> = model.lexSubset(howMany = 5)
-        val m: HyperMap1 = someLexes.lexByLemmaThenByKey2()
-        val s: Any = m.toSerializable(model.senseResolver)
-        val yamlString = yaml.dump(s)
+        val map: HyperMap1 = someLexes.lexByLemmaThenByKey2()
+        val serializedMap: Map<Lemma, Any> = map.toSerializable(model.senseResolver)
+        val yamlString = yaml.dumpAsMap(serializedMap)
         ps.println(yamlString)
     }
 

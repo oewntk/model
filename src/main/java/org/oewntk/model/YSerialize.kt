@@ -61,25 +61,6 @@ fun Lex.toSerializable(resolver: (SenseKey) -> Sense?): Map<String, Any> {
     }.toSortedMap()
 }
 
-/**
- * Lexes to serializable map
- *
- * @receiver sequence of lexes
- * @param resolver senseKey to sense resolver
- * @return map by lemma
- */
-fun Sequence<Lex>.toSerializable(resolver: (SenseKey) -> Sense): Map<Lemma, Any> {
-    return mutableMapOf<String, Any>()
-        .apply {
-            this@toSerializable
-                .sortedBy { it.lemma }
-                .groupBy { it.lemma }
-                .forEach { (lemma, lexes) ->
-                    this[lemma] = lexes.associate { it.key2 to it.toSerializable(resolver) }
-                }
-        }
-}
-
 // S E N S E
 
 /**
@@ -169,12 +150,37 @@ fun Synset.toSerializable(): Map<String, Any> {
  */
 fun Sequence<Synset>.toSerializable(): Map<SynsetId, Any> = this.associate { it.synsetId to it.toSerializable() }
 
-// M A P
+// M A P P E D   L E X E S
 
+// TODO REMOVE
+/**
+ * Lexes to serializable map
+ *
+ * @receiver sequence of lexes
+ * @param resolver senseKey to sense resolver
+ * @return map by lemma
+ */
+fun Sequence<Lex>.toSerializable(resolver: (SenseKey) -> Sense): Map<Lemma, Any> {
+    return mutableMapOf<String, Any>()
+        .apply {
+            this@toSerializable
+                .sortedBy { it.lemma }
+                .groupBy { it.lemma }
+                .forEach { (lemma, lexes) ->
+                    this[lemma] = lexes.associate { it.key2 to it.toSerializable(resolver) }
+                }
+        }
+}
+
+/**
+ * Hyper map to serializable vap
+ *
+ * @receiver hypermap1 (lex by lemma then by key2)
+ */
 fun HyperMap1.toSerializable(senseResolver: (SenseKey) -> Sense): Map<Lemma, Map<Key2, Map<String, Any>>> {
     return this
-        .mapValues { (lemma, v) ->
-            v.mapValues { (key2, lex) -> lex.toSerializable { senseResolver(it) } }.toSortedMap()
+        .mapValues { (_: Lemma, v) ->
+            v.mapValues { (_: Key2, lex) -> lex.toSerializable { senseResolver(it) } }.toSortedMap()
         }.toSortedMap()
 }
 

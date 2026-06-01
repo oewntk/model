@@ -14,4 +14,6 @@ object LibModelSubset {
     fun CoreModel.lexSubset(from: Int = (1000..100000).random(), howMany: Int = 100): Sequence<Lex> = subsetOf(lexes, from = from, howMany = howMany)
 
     fun CoreModel.synsetSubset(from: Int = (1000..100000).random(), howMany: Int = 100): Sequence<Synset> = subsetOf(synsets, howMany = howMany)
+
+    fun CoreModel.senseSubset(from: Int = (1000..100000).random(), howMany: Int = 100): Sequence<Sense> = subsetOf(senses, howMany = howMany)
 }

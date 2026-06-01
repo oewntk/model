@@ -2,6 +2,7 @@ package org.oewntk.model
 
 import org.oewntk.model.InverseRelationFactory.INVERSE_SENSE_RELATIONS_SET
 import org.oewntk.model.InverseRelationFactory.INVERSE_SYNSET_RELATIONS_SET
+import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
 
 const val INCLUDE_LEXFILE = false
 
@@ -152,22 +153,27 @@ fun Sequence<Synset>.toSerializable(): Map<SynsetId, Any> = this.associate { it.
 
 // M A P P E D   L E X E S
 
-// TODO REMOVE
 /**
  * Lexes to serializable map
  *
  * @receiver sequence of lexes
- * @param resolver senseKey to sense resolver
+ * @param senseResolver senseKey to sense resolver
  * @return map by lemma
  */
-fun Sequence<Lex>.toSerializable(resolver: (SenseKey) -> Sense): Map<Lemma, Any> {
-    return mutableMapOf<String, Any>()
+fun Sequence<Lex>.toSerializable(senseResolver: (SenseKey) -> Sense): Map<Lemma, Map<Key2, Map<String, Any>>> {
+    val hypermap1: HyperMap1 = this.lexByLemmaThenByKey2()
+    return hypermap1.toSerializable(senseResolver)
+}
+
+// TODO REMOVE
+fun Sequence<Lex>.toSerializable0(senseResolver: (SenseKey) -> Sense): Map<Lemma, Map<Key2, Map<String, Any>>> {
+    return mutableMapOf<String, Map<Key2, Map<String, Any>>>()
         .apply {
-            this@toSerializable
+            this@toSerializable0
                 .sortedBy { it.lemma }
                 .groupBy { it.lemma }
                 .forEach { (lemma, lexes) ->
-                    this[lemma] = lexes.associate { it.key2 to it.toSerializable(resolver) }
+                    this[lemma] = lexes.associate { it.key2 to it.toSerializable(senseResolver) }
                 }
         }
 }

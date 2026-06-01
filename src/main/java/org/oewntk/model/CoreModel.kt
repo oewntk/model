@@ -48,7 +48,7 @@ data class DataCoreModel(
  * @property synsets        synsets (unmodifiable)
  * @property source         source, typically input directory
  *
- * @property lexHyperMap1    transient lexical item mapped by lemma then key2
+ * @property lexHyperMap1   transient lexical item mapped by lemma then key2
  * @property lexesByLemma   transient lexical items mapped by (case-sensitive) lemma written form
  * @property lexesByLCLemma transient lexical items mapped by lower-cased lemma written form
  * @property sensesById     transient senses mapped by sense id (sensekey)

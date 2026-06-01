@@ -84,7 +84,7 @@ open class CoreModel(
      * Lex mapped by lemma then key2
      * @Transient
      */
-    private val lexHyperMap1: HyperMap1 by lazy { lexes.asSequence().lexByLemmaThenByKey2() }
+    val lexHyperMap1: HyperMap1 by lazy { lexes.asSequence().lexByLemmaThenByKey2() }
 
     /**
      * Lexical units mapped by lemma written form.

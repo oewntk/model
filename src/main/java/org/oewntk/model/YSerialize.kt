@@ -169,6 +169,15 @@ fun Synset.toSerializable(): Map<String, Any> {
  */
 fun Sequence<Synset>.toSerializable(): Map<SynsetId, Any> = this.associate { it.synsetId to it.toSerializable() }
 
+// M A P
+
+fun HyperMap1.toSerializable(senseResolver: (SenseKey) -> Sense): Map<Lemma, Map<Key2, Map<String, Any>>> {
+    return this
+        .mapValues { (lemma, v) ->
+            v.mapValues { (key2, lex) -> lex.toSerializable { senseResolver(it) } }.toSortedMap()
+        }.toSortedMap()
+}
+
 // M O D E L
 
 /**

@@ -21,6 +21,9 @@ typealias AdjPosition = String
 
 typealias LexEntry = Map.Entry<Lemma, Collection<Lex>>
 
+typealias HyperMap = Map<Lemma, Map<Key2, Collection<Lex>>>
+typealias HyperMap1 = Map<Lemma, Map<Key2, Lex>>
+
 /**
  * Either SynsetType or Category
  */
@@ -88,7 +91,9 @@ enum class SynsetTypeImpl(val value: Char) {
 
     abstract fun toPartOfSpeech(): PartOfSpeechImpl
     abstract fun toCategory(): CategoryImpl
-    override fun toString(): String { throw IllegalAccessException("Illegal: use .value ${this.value}") }
+    override fun toString(): String {
+        throw IllegalAccessException("Illegal: use .value ${this.value}")
+    }
 
     companion object {
         fun fromCharOrNull(c: Char): SynsetTypeImpl? {
@@ -126,7 +131,9 @@ enum class PartOfSpeechImpl(val value: Char, val fullName: String) {
     };
 
     abstract fun toCategory(): CategoryImpl
-    override fun toString(): String { throw IllegalAccessException("Illegal: use .value ${this.value}") }
+    override fun toString(): String {
+        throw IllegalAccessException("Illegal: use .value ${this.value}")
+    }
 
     companion object {
         fun fromCharOrNull(c: Char): PartOfSpeechImpl? {

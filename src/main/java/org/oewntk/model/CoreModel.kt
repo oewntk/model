@@ -5,6 +5,7 @@ package org.oewntk.model
 
 import org.oewntk.model.Lex.Groups.groupByLCLemma
 import org.oewntk.model.Lex.Groups.groupByLemma
+import org.oewntk.model.Lex.Groups.groupByLemmaThenByKey2
 import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
 import org.oewntk.model.MapFactory.sensesById
 import org.oewntk.model.MapFactory.synsetsById
@@ -47,7 +48,7 @@ data class DataCoreModel(
  * @property synsets        synsets (unmodifiable)
  * @property source         source, typically input directory
  *
- * @property lexHyperMap    transient lexical item mapped by lemma then key2
+ * @property lexHyperMap1    transient lexical item mapped by lemma then key2
  * @property lexesByLemma   transient lexical items mapped by (case-sensitive) lemma written form
  * @property lexesByLCLemma transient lexical items mapped by lower-cased lemma written form
  * @property sensesById     transient senses mapped by sense id (sensekey)
@@ -77,7 +78,13 @@ open class CoreModel(
      * Lexes mapped by lemma then key2
      * @Transient
      */
-    private val lexHyperMap: Map<Lemma, Map<Key2, Lex>> by lazy { lexes.asSequence().lexByLemmaThenByKey2() }
+    private val lexHyperMap: HyperMap by lazy { lexes.asSequence().groupByLemmaThenByKey2() }
+
+    /**
+     * Lex mapped by lemma then key2
+     * @Transient
+     */
+    private val lexHyperMap1: HyperMap1 by lazy { lexes.asSequence().lexByLemmaThenByKey2() }
 
     /**
      * Lexical units mapped by lemma written form.
@@ -144,7 +151,7 @@ open class CoreModel(
      */
     val lexFinder1: (Lemma, Key2) -> Lex?
         get() = { lemma: Lemma, key2: Key2 ->
-            lexHyperMap[lemma]?.get(key2)
+            lexHyperMap1[lemma]?.get(key2)
         }
 
     /**

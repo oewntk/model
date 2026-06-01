@@ -11,6 +11,7 @@ object Validator {
     /**
      * Check model
      */
+    @OptIn(ExperimentalStdlibApi::class)
     fun <M : CoreModel> M.check(throws: Boolean = true, verbose: Boolean = false): M {
         //if (verbose) Tracing.psInfo.println("[I] Lex key duplicates")
         checkLexKeyDuplicates(throws = throws, verbose = verbose)
@@ -28,7 +29,7 @@ object Validator {
         //if (verbose) Tracing.psInfo.println("[I] Sense relation targets")
         checkSenseRelationTargets(throws = throws, verbose = verbose)
 
-        Tracing.psInfo.println("[I] CoreModel ${hashCode()} checked")
+        Tracing.psInfo.println("[I] CoreModel @${hashCode().toHexString()} checked")
         return this
     }
 

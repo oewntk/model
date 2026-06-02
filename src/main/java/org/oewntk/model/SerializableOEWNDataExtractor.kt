@@ -229,16 +229,16 @@ fun CoreModel.toSplitOEWNData(generated: Boolean = false): Sequence<Pair<Map<Str
                 } else it.lexfile
             }
             .forEach { (file, lexes) ->
-                val yEntries = lexes.asSequence().toOEWNData(senseResolver)
-                yield(yEntries to file) // yield content with source file base
+                val lexData = lexes.asSequence().toOEWNData(senseResolver)
+                yield(lexData to file) // yield content with source file base
             }
 
         synsets
             .sortedBy { it.synsetId }
             .groupBy { it.lexfile }
             .forEach { (lexfile, synsets) ->
-                val ySynsets = synsets.asSequence().toOEWNData()
-                yield(ySynsets to lexfile)  // yield content with source file base
+                val synsetData = synsets.asSequence().toOEWNData()
+                yield(synsetData to lexfile)  // yield content with source file base
             }
     }
 }

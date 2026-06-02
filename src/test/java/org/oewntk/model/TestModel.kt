@@ -8,7 +8,6 @@ import org.junit.Test
 import org.oewntk.ser.`in`.LibTestsSerCommon.checkOrig
 import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
-import java.io.File
 import kotlin.test.assertEquals
 
 class TestModel {

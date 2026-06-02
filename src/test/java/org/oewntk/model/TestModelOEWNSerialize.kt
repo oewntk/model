@@ -5,8 +5,6 @@ package org.oewntk.model
 
 import org.junit.BeforeClass
 import org.junit.Test
-import org.oewntk.model.LibModelSubset.lexSubset
-import org.oewntk.model.LibModelSubset.synsetSubset
 import org.oewntk.model.LibTestGen.genModelSerializables
 import org.oewntk.ser.`in`.LibTestsSerCommon.checkOrig
 import org.oewntk.ser.`in`.LibTestsSerCommon.model

@@ -16,9 +16,9 @@ class TestModelOEWNSerialize {
 
     @Test
     fun testModelSerialization() {
-        val serialized: Sequence<Pair<SData, Filename>> = genModelSerializables(model)
-        serialized.forEach { (sdata: SData, _: Filename) ->
-             ps.println(sdata)
+        val serialized: Sequence<Pair<Map<String, Any>, Filename>> = genModelSerializables(model)
+        serialized.forEach { (data: Map<String, Any>, _: Filename) ->
+             ps.println(data)
         }
     }
 

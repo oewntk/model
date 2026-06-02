@@ -6,7 +6,6 @@ import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
 
 const val INCLUDE_LEXFILE = false
 
-typealias SData = Map<String, Any>
 typealias Filename = String
 
 /**
@@ -203,7 +202,7 @@ fun HyperMap1.toSerializable(senseResolver: (SenseKey) -> Sense): Map<Lemma, Map
  * @receiver core model
  * @yield content (either lex entries or synsets) to file
  */
-fun CoreModel.toOneSerializable(): Sequence<Pair<SData, Filename>> {
+fun CoreModel.toOneSerializable(): Sequence<Pair<Map<String, Any>, Filename>> {
 
     return sequence {
         val yEntries = lexes.asSequence().toSerializable(senseResolver)
@@ -220,7 +219,7 @@ fun CoreModel.toOneSerializable(): Sequence<Pair<SData, Filename>> {
  * @receiver core model
  * @yield content (either lex entries or synsets) to file
  */
-fun CoreModel.toSplitSerializable(generated: Boolean = false): Sequence<Pair<SData, Filename>> {
+fun CoreModel.toSplitSerializable(generated: Boolean = false): Sequence<Pair<Map<String, Any>, Filename>> {
 
     return sequence {
         lexes

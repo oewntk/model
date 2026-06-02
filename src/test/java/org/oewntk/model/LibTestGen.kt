@@ -78,7 +78,7 @@ object LibTestGen {
 
     fun genSynsetEntries() = genSynsets(n = 5).associateBy { it["id"] }
 
-    fun genModelSerializables(model: CoreModel): Sequence<Pair<SData, Filename>> {
+    fun genModelSerializables(model: CoreModel): Sequence<Pair<Map<String, Any>, Filename>> {
         return sequence {
             val someSerializedLexes = model.lexSubset()
                 .toSerializable(model.senseResolver)

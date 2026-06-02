@@ -65,7 +65,7 @@ fun Sense.senseAsDataSerialize(): Any {
  * @preceiver sequence of lexes
  * @return lex hypermap
  */
-fun Sequence<Lex>.lexesDataSerialize(): SData {
+fun Sequence<Lex>.lexesDataSerialize(): Map<String, Any> {
     return lexByLemmaThenByKey2()
 }
 
@@ -75,7 +75,7 @@ fun Sequence<Lex>.lexesDataSerialize(): SData {
  * @preceiver sequence of synsets
  * @return synset map
  */
-fun Sequence<Synset>.synsetsDataSerialize(): SData {
+fun Sequence<Synset>.synsetsDataSerialize(): Map<String, Any> {
     return synsetsById()
 }
 
@@ -85,7 +85,7 @@ fun Sequence<Synset>.synsetsDataSerialize(): SData {
  * @preceiver sequence of synsets
  * @return synset map
  */
-fun Sequence<Sense>.sensesDataSerialize(): SData {
+fun Sequence<Sense>.sensesDataSerialize(): Map<String, Any> {
     return sensesById()
 }
 
@@ -104,7 +104,7 @@ fun CoreModel.dataSerialize(
     whichLexes: Sequence<Lex> = lexes.asSequence().sortedWith(compareBy(Lex::lemma).thenBy(Lex::key2)),
     whichSynsets: Sequence<Synset> = synsets.asSequence().sortedBy { it.synsetId },
     whichSenses: Sequence<Sense> = senses.asSequence().sortedBy { it.senseKey },
-): Triple<SData, SData, SData> {
+): Triple<Map<String, Any>, Map<String, Any>, Map<String, Any>> {
     val yLexes: Map<Lemma, Any> = whichLexes.lexesDataSerialize()
     val ySynsets: Map<SynsetId, Any> = whichSynsets.synsetsDataSerialize()
     val ySenses: Map<SenseKey, Any> = whichSenses.sensesDataSerialize()

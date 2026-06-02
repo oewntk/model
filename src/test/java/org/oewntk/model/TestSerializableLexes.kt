@@ -10,18 +10,14 @@ import org.oewntk.model.LibModelSubset.lexSubset
 import org.oewntk.ser.`in`.LibTestsSerCommon.checkOrig
 import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
-import org.oewntk.yaml.out.ToYaml
-import org.oewntk.yaml.out.YamlDump.Companion.compatDumperOptions
 
-class TestLexSerializables {
-
-    val yaml = ToYaml(options = compatDumperOptions)
+class TestSerializableLexes {
 
     @Test
     fun testRandomLexes() {
         val someLexes: Sequence<Lex> = model.lexSubset()
-        val yamlString = yaml.lexesToYaml(someLexes, model.senseResolver).joinToString(separator = "\n\n")
-        ps.println(yamlString)
+        val serializables = someLexes.map { it.toSerializable(model.senseResolver) }
+        ps.println(serializables.joinToString(separator = "\n\n"))
     }
 
     @Test
@@ -29,8 +25,8 @@ class TestLexSerializables {
         val someLexes: Sequence<Lex> = arrayOf("force", "lead", "row", "bow", "galore")
             .flatMap(model.lexResolver)
             .asSequence()
-        val yamlString = yaml.lexesToYaml(someLexes, model.senseResolver).joinToString(separator = "\n\n")
-        ps.println(yamlString)
+        val serializables = someLexes.map { it.toSerializable(model.senseResolver) }
+        ps.println(serializables.joinToString(separator = "\n\n"))
     }
 
     @Test
@@ -38,8 +34,8 @@ class TestLexSerializables {
         val someLexes: Sequence<Lex> = arrayOf("force", "lead", "row", "bow", "galore")
             .flatMap(model.lexResolver)
             .asSequence()
-        val yamlString = yaml.lexesToYaml(someLexes, model.senseResolver).joinToString(separator = "\n\n")
-        ps.println(yamlString)
+        val serializables = someLexes.map { it.toSerializable(model.senseResolver) }
+        ps.println(serializables.joinToString(separator = "\n\n"))
     }
 
     @Test
@@ -47,8 +43,7 @@ class TestLexSerializables {
         val someLexes: Sequence<Lex> = model.lexSubset(howMany = 5)
         val map: HyperMap1 = someLexes.lexByLemmaThenByKey2()
         val serializedMap: Map<Lemma, Any> = map.toSerializable(model.senseResolver)
-        val yamlString = yaml.dumpAsMap(serializedMap)
-        ps.println(yamlString)
+        ps.println(serializedMap)
     }
 
     @Test

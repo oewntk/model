@@ -10,14 +10,10 @@ import org.oewntk.model.LibModelSubset.senseSubset
 import org.oewntk.model.LibModelSubset.synsetSubset
 import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
-import org.oewntk.yaml.out.ToYaml
-import org.oewntk.yaml.out.YamlDump.Companion.compatDumperOptions
 import java.io.File
 import kotlin.test.assertEquals
 
 class TestModelRawSerialize {
-
-    val yaml = ToYaml(options = compatDumperOptions)
 
     @Test
     fun testRawLexForce() {

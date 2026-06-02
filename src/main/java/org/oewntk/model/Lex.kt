@@ -24,8 +24,8 @@ import java.util.*
  * @property lCLemma        lower-cased lemma
  * @property isCased        whether lemma contains uppercase
  * @property partOfSpeech   synset part-of-speech {'n', 'v', 'a', 'r'} with ss_type 's' (satellite adj) mapped to 'a'
- * @property key2           unique key (at YAML level 2) made up of part-of-speech and discriminant
- * @property lexfile        the lexfile it is expected to be output to ("entries-lexfileChar.yaml")
+ * @property key2           unique key (at source level 2) made up of part-of-speech and discriminant
+ * @property lexfile        the lexfile it is expected to be output to ("entries-lexfileChar")
  * @property discriminant   discriminates same type entries
  */
 @kotlinx.serialization.Serializable
@@ -60,7 +60,7 @@ data class Lex(
             return if (c !in 'a' until 'z' + 1) '0' else c
         }
     val lexfile: String
-        get() = "entries-$lexfileChar.yaml"
+        get() = "entries-$lexfileChar"
 
     // computed properties
     val value: Set<SenseKey>

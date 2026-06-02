@@ -10,12 +10,8 @@ import org.oewntk.model.LibModelSubset.synsetSubset
 import org.oewntk.ser.`in`.LibTestsSerCommon.checkOrig
 import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
-import org.oewntk.yaml.out.ToYaml
-import org.oewntk.yaml.out.YamlDump.Companion.compatDumperOptions
 
-class TestModelSerialize {
-
-    val yaml = ToYaml(options = compatDumperOptions)
+class TestSerializeModel {
 
     private fun genSmallSerializable(model: CoreModel): Sequence<Pair<SData, Filename>> {
 
@@ -34,8 +30,7 @@ class TestModelSerialize {
     fun testModelOneSerialization() {
         val serialized: Sequence<Pair<SData, Filename>> = genSmallSerializable(model)
         serialized.forEach { (sdata: SData, _: Filename) ->
-            val yamlString = yaml.dump(sdata)
-            ps.println(yamlString)
+             ps.println(sdata)
         }
     }
 

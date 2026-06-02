@@ -7,28 +7,16 @@ import org.junit.BeforeClass
 import org.junit.Test
 import org.oewntk.model.LibModelSubset.lexSubset
 import org.oewntk.model.LibModelSubset.synsetSubset
+import org.oewntk.model.LibTestGen.genModelSerializables
 import org.oewntk.ser.`in`.LibTestsSerCommon.checkOrig
 import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
 
 class TestModelOEWNSerialize {
 
-    private fun genTestModel(model: CoreModel): Sequence<Pair<SData, Filename>> {
-
-        return sequence {
-            val someSerializedLexes = model.lexSubset()
-                .toSerializable(model.senseResolver)
-            yield(someSerializedLexes to "entries-some") // yield content with source file base
-
-            val someSerializedSynsets = model.synsetSubset()
-                .toSerializable()
-            yield(someSerializedSynsets to "data-some")  // yield content with source file base
-        }
-    }
-
     @Test
     fun testModelSerialization() {
-        val serialized: Sequence<Pair<SData, Filename>> = genTestModel(model)
+        val serialized: Sequence<Pair<SData, Filename>> = genModelSerializables(model)
         serialized.forEach { (sdata: SData, _: Filename) ->
              ps.println(sdata)
         }

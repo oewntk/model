@@ -7,11 +7,12 @@ import org.junit.BeforeClass
 import org.junit.Test
 import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
 import org.oewntk.model.LibModelSubset.lexSubset
+import org.oewntk.model.LibModelSubset.synsetSubset
 import org.oewntk.ser.`in`.LibTestsSerCommon.checkOrig
 import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
 
-class TestSerializables {
+class TestOEWNSerializables {
 
     @Test
     fun testDummyLex() {
@@ -63,6 +64,13 @@ class TestSerializables {
             .asSequence()
         val serializables: Sequence<Map<String, Any>> = someSynsets.map { it.toSerializable() }
         ps.println(serializables.joinToString(separator = "\n\n"))
+    }
+
+    @Test
+    fun testRandomSynsets() {
+        val someSynsets: Sequence<Synset> = model.synsetSubset()
+        val serializables: Sequence<Map<String, Any>> = someSynsets.map { it.toSerializable() }
+        ps.println(serializables.joinToString("\n\n"))
     }
 
     @Test

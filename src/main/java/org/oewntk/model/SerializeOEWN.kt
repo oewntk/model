@@ -151,6 +151,11 @@ fun Synset.toSerializable(): Map<String, Any> {
  */
 fun Sequence<Synset>.toSerializable(): Map<SynsetId, Any> = this.associate { it.synsetId to it.toSerializable() }
 
+/**
+ * Synsets by id to serializable map
+ */
+fun Map<SynsetId, Synset>.toSerializable(): Map<SynsetId, Any> = this.mapValues { it.value.toSerializable() }
+
 // M A P P E D   L E X E S
 
 /**

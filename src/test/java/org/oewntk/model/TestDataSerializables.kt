@@ -11,10 +11,8 @@ import org.oewntk.model.LibModelSubset.synsetSubset
 import org.oewntk.ser.`in`.LibTestsSerCommon.checkOrig
 import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
-import java.io.File
-import kotlin.test.assertEquals
 
-class TestModelRawSerialize {
+class TestDataSerializables {
 
     @Test
     fun testRawLexForce() {
@@ -31,39 +29,38 @@ class TestModelRawSerialize {
     }
 
     @Test
-    fun testRawSenseForce() {
+    fun testSenseForce() {
         val sense = model.senseResolver("force%1:07:01::")
         val y = sense.senseAsDataSerialize()
         ps.println(y)
     }
 
     @Test
-    fun testRawLexesForce() {
+    fun testLexesForce() {
         val y = model.lexResolver("force").asSequence().lexesAsDataSerialize()
         ps.println(y)
     }
 
     @Test
-    fun testRawLexesLead() {
+    fun testLexesLead() {
         val y = model.lexResolver("lead").asSequence().lexesAsDataSerialize()
         ps.println(y)
     }
 
     @Test
-    fun testRawLexesBow() {
+    fun testLexesBow() {
         val y = model.lexResolver("bow").asSequence().lexesAsDataSerialize()
         ps.println(y)
     }
 
     @Test
-    fun testRawLexesRow() {
+    fun testLexesRow() {
         val y = model.lexResolver("row").asSequence().lexesAsDataSerialize()
         ps.println(y)
     }
 
-
     @Test
-    fun testRawSensesForce() {
+    fun testSensesForce() {
         val y = sequenceOf(
             "force%1:07:01::",
             "force%1:19:00::",
@@ -82,30 +79,20 @@ class TestModelRawSerialize {
     }
 
     @Test
-    fun testRawLexes() {
+    fun testLexes() {
         val y = model.lexSubset(howMany = 5).lexesAsDataSerialize()
         ps.println(y)
     }
 
     @Test
-    fun testRawSynsets() {
+    fun testSynsets() {
         val y = model.synsetSubset(howMany = 5).synsetsAsDataSerialize()
         ps.println(y)
     }
 
     @Test
-    fun testRawSenses() {
+    fun testSenses() {
         val y = model.senseSubset(howMany = 5).sensesAsDataSerialize()
-        ps.println(y)
-    }
-
-    @Test
-    fun testRawModel() {
-        val y = model.dataSerialize(
-            whichLexes = model.lexSubset(howMany = 5),
-            whichSynsets = model.synsetSubset(howMany = 5),
-            whichSenses = model.senseSubset(howMany = 5)
-        )
         ps.println(y)
     }
 

@@ -5,6 +5,7 @@ package org.oewntk.model
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.io.PrintStream
 
 class TestLexicographicOrder {
 
@@ -60,6 +61,10 @@ class TestLexicographicOrder {
 
     companion object {
 
-        private val ps = if (!System.getProperties().containsKey("SILENT")) Tracing.psInfo else Tracing.psNull
-    }
+        private val silent = if (System.getProperties().containsKey("VERBOSE")) false
+        else if (System.getProperties().containsKey("SILENT")) true
+        else true
+
+        private val ps: PrintStream = if (!silent) Tracing.psInfo else Tracing.psNull
+  }
 }

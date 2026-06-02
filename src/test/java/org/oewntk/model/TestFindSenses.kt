@@ -15,6 +15,7 @@ import org.oewntk.model.LibDummyNanoModel.sense21
 import org.oewntk.model.LibDummyNanoModel.sense22
 import org.oewntk.model.LibDummyNanoModel.synset1
 import org.oewntk.model.LibDummyNanoModel.synset2
+import java.io.PrintStream
 
 class TestFindSenses {
 
@@ -66,7 +67,11 @@ class TestFindSenses {
 
     companion object {
 
-        private val ps = if (!System.getProperties().containsKey("SILENT")) Tracing.psInfo else Tracing.psNull
+        private val silent = if (System.getProperties().containsKey("VERBOSE")) false
+        else if (System.getProperties().containsKey("SILENT")) true
+        else true
+
+        private val ps: PrintStream = if (!silent) Tracing.psInfo else Tracing.psNull
 
         @Suppress("EmptyMethod")
         @JvmStatic

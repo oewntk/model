@@ -16,7 +16,7 @@ class TestModelDataSerialize {
 
     @Test
     fun testModelSerialization() {
-        val y = model.dataSerialize(
+        val y = model.toData(
             whichLexes = model.lexSubset(howMany = 5),
             whichSynsets = model.synsetSubset(howMany = 5),
             whichSenses = model.senseSubset(howMany = 5)

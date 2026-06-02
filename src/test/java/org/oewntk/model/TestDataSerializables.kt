@@ -17,45 +17,45 @@ class TestDataSerializables {
     @Test
     fun testRawLexForce() {
         val lex = model.lexResolver1("force", "n")
-        val y = lex.lexAsDataSerialize()
+        val y = lex.toData()
         ps.println(y)
     }
 
     @Test
     fun testRawSynsetForce() {
         val synset = model.synsetResolver("05201846-n")
-        val y = synset.synsetAsDataSerialize()
+        val y = synset.toData()
         ps.println(y)
     }
 
     @Test
     fun testSenseForce() {
         val sense = model.senseResolver("force%1:07:01::")
-        val y = sense.senseAsDataSerialize()
+        val y = sense.toData()
         ps.println(y)
     }
 
     @Test
     fun testLexesForce() {
-        val y = model.lexResolver("force").asSequence().lexesDataSerialize()
+        val y = model.lexResolver("force").asSequence().toLexesData()
         ps.println(y)
     }
 
     @Test
     fun testLexesLead() {
-        val y = model.lexResolver("lead").asSequence().lexesDataSerialize()
+        val y = model.lexResolver("lead").asSequence().toLexesData()
         ps.println(y)
     }
 
     @Test
     fun testLexesBow() {
-        val y = model.lexResolver("bow").asSequence().lexesDataSerialize()
+        val y = model.lexResolver("bow").asSequence().toLexesData()
         ps.println(y)
     }
 
     @Test
     fun testLexesRow() {
-        val y = model.lexResolver("row").asSequence().lexesDataSerialize()
+        val y = model.lexResolver("row").asSequence().toLexesData()
         ps.println(y)
     }
 
@@ -74,25 +74,25 @@ class TestDataSerializables {
             "force%1:04:00::"
         )
             .map { model.senseResolver(it) }
-            .sensesDataSerialize()
+            .toSensesData()
         ps.println(y)
     }
 
     @Test
     fun testLexes() {
-        val y = model.lexSubset(howMany = 5).lexesDataSerialize()
+        val y = model.lexSubset(howMany = 5).toLexesData()
         ps.println(y)
     }
 
     @Test
     fun testSynsets() {
-        val y = model.synsetSubset(howMany = 5).synsetsDataSerialize()
+        val y = model.synsetSubset(howMany = 5).toSynsetsData()
         ps.println(y)
     }
 
     @Test
     fun testSenses() {
-        val y = model.senseSubset(howMany = 5).sensesDataSerialize()
+        val y = model.senseSubset(howMany = 5).toSensesData()
         ps.println(y)
     }
 

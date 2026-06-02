@@ -8,6 +8,7 @@ import org.junit.Test
 import org.oewntk.model.LibModelSubset.lexSubset
 import org.oewntk.model.LibModelSubset.senseSubset
 import org.oewntk.model.LibModelSubset.synsetSubset
+import org.oewntk.ser.`in`.LibTestsSerCommon.checkOrig
 import org.oewntk.ser.`in`.LibTestsSerCommon.model
 import org.oewntk.ser.`in`.LibTestsSerCommon.ps
 import java.io.File
@@ -110,13 +111,7 @@ class TestModelRawSerialize {
 
     @Test
     fun testOrig() {
-        val orig: String = System.getProperty("INFO")!!
-        val origInfo = File(orig).readText()
-        val info = model.info()
-        val counts = ModelInfo.counts(model)
-        val modelInfo = "$info\n$counts"
-        ps.println(modelInfo)
-        assertEquals(origInfo, modelInfo)
+        checkOrig()
     }
 
     companion object {

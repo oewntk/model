@@ -7,26 +7,25 @@ object Validator {
 
     private const val VERBOSE_PENDING: Boolean = false
 
-
     /**
      * Check model
      */
     @OptIn(ExperimentalStdlibApi::class)
     fun <M : CoreModel> M.check(throws: Boolean = true, verbose: Boolean = false): M {
-        //if (verbose) Tracing.psInfo.println("[I] Lex key duplicates")
+        if (VERBOSE_PENDING && verbose) Tracing.psInfo.println("[I] Lex key duplicates")
         checkLexKeyDuplicates(throws = throws, verbose = verbose)
-        //if (verbose) Tracing.psInfo.println("[I] Lex value duplicates")
+        if (VERBOSE_PENDING && verbose) Tracing.psInfo.println("[I] Lex value duplicates")
         checkLexValueDuplicates(throws = throws, verbose = verbose)
 
-        //if (verbose) Tracing.psInfo.println("[I] Sense reference")
+        if (VERBOSE_PENDING && verbose) Tracing.psInfo.println("[I] Sense reference")
         checkSenseReference(throws = throws, verbose = verbose)
 
-        //if (verbose) Tracing.psInfo.println("[I] Synset members")
+        if (VERBOSE_PENDING && verbose) Tracing.psInfo.println("[I] Synset members")
         checkMembers(throws = throws, verbose = verbose)
 
-        //if (verbose) Tracing.psInfo.println("[I] Synset relation targets")
+        if (VERBOSE_PENDING && verbose) Tracing.psInfo.println("[I] Synset relation targets")
         checkSynsetRelationTargets(throws = throws, verbose = verbose)
-        //if (verbose) Tracing.psInfo.println("[I] Sense relation targets")
+        if (VERBOSE_PENDING && verbose) Tracing.psInfo.println("[I] Sense relation targets")
         checkSenseRelationTargets(throws = throws, verbose = verbose)
 
         Tracing.psInfo.println("[I] CoreModel @${hashCode().toHexString()} checked")

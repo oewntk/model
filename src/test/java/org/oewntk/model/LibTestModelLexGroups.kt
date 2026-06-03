@@ -4,10 +4,10 @@
 package org.oewntk.model
 
 import org.junit.Assert
-import org.oewntk.model.LexGroupings.lemmasByLCLemmaHavingMultipleCount
-import org.oewntk.model.LexGroupings.countsByLCLemma
-import org.oewntk.model.LexGroupings.findLemmasFor
-import org.oewntk.model.LexGroupings.multipleCountsByICLemma
+import org.oewntk.model.LibLexGroupings.lemmasByLCLemmaHavingMultipleCount
+import org.oewntk.model.LibLexGroupings.countsByLCLemma
+import org.oewntk.model.LibLexGroupings.findLemmasFor
+import org.oewntk.model.LibLexGroupings.multipleCountsByICLemma
 import org.oewntk.model.SenseGroupings.sensesForLCLemma
 import org.oewntk.model.SenseGroupings.sensesForLCLemmaAndPos
 import org.oewntk.model.TestUtils.lexHypermapForLemmaToString

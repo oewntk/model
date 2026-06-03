@@ -7,7 +7,7 @@
 
     <groupId>io.github.oewntk</groupId>
     <artifactId>model</artifactId>
-    <version>2.4.0</version>
+    <version>3.0.1</version>
     <name>model</name>
     <description>Wordnet model.</description>
     <url>https://github.com/oewntk/model</url>
@@ -42,20 +42,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.oewntk</groupId>
-            <artifactId>fromser</artifactId>
-            <version>2.4.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.oewntk</groupId>
-            <artifactId>fromser</artifactId>
-            <version>2.4.0</version>
-            <classifier>tests</classifier>
-            <type>test-jar</type>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -15,7 +15,17 @@ object LibVisitSerializableTypes {
                 "string"
             }
 
+            is Char -> {
+                "char"
+            }
+
             is List<*> -> {
+                item
+                    .map { visitRecurse(it, level + 1) }
+                    .toList()
+            }
+
+            is Array<*> -> {
                 item
                     .map { visitRecurse(it, level + 1) }
                     .toList()

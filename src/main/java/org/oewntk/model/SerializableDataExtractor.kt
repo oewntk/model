@@ -7,6 +7,22 @@ import org.oewntk.model.MapFactory.synsetsById
 // O B J E C T
 
 /**
+ * Pronunciation to OEWN serializable map
+ *
+ * @receiver pronunciation
+ * @return map
+ * Keys:
+ *  - value
+ *  - variety
+ */
+fun Pronunciation.toData(): Map<String, Any> {
+    return mutableMapOf("value" to value)
+        .apply {
+            variety?.let { this["variety"] = it }
+        }
+}
+
+/**
  * Lex to serializable map
  *
  * @preceiver lex
@@ -19,7 +35,7 @@ fun Lex.toData(): Map<String, Any> {
         "sense" to senseKeys,
     ).apply {
         discriminant?.let { this["discriminant"] = it }
-        pronunciations?.let { this["pronunciation"] = it }
+        pronunciations?.let { this["pronunciation"] = it.map { pronunciation -> pronunciation.toData() } }
     }
 }
 

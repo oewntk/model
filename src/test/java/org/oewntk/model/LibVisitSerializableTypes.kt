@@ -19,6 +19,10 @@ object LibVisitSerializableTypes {
                 "char"
             }
 
+            is Int -> {
+                "int"
+            }
+
             is List<*> -> {
                 item
                     .map { visitRecurse(it, level + 1) }

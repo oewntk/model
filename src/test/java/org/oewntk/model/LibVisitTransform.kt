@@ -3,13 +3,13 @@
  */
 package org.oewntk.model
 
-object LibVisit {
+object LibVisitTransform {
 
-    fun visitMap(m: MutableMap<String, Any>): Any {
-        return visitMapRecurse(m, 0)
+    fun visit(m: Any): Any {
+        return visitRecurse(m, 0)
     }
 
-    private fun visitMapRecurse(item: Any?, level: Int): Any {
+    private fun visitRecurse(item: Any?, level: Int): Any {
         return when (item) {
             is String -> {
                 "$item#"
@@ -17,19 +17,17 @@ object LibVisit {
 
             is List<*> -> {
                 item
-                    .map {
-                        visitMapRecurse(it, level + 1)
-                    }
+                    .map { visitRecurse(it, level + 1) }
                     .toList()
             }
 
             is MutableMap<*, *> -> {
                 item
                     .mapKeys {
-                        visitMapRecurse(it.key, level + 1)
+                        visitRecurse(it.key, level + 1)
                     }
                     .mapValues {
-                        visitMapRecurse(it.value, level + 1)
+                        visitRecurse(it.value, level + 1)
                     }
                     .apply {
                         val m: MutableMap<Any, Any> = (this as MutableMap<Any, Any>)
@@ -37,7 +35,7 @@ object LibVisit {
                     }
             }
 
-            else -> throw IllegalArgumentException(item.toString())
+            else -> throw IllegalArgumentException("$item is of type ${item?.let { it::class.java.name }}")
         }
     }
 }

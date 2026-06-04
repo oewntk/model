@@ -99,6 +99,9 @@ fun Sense.toData(): Map<String, Any> {
  */
 fun Sequence<Lex>.toLexesData(): Map<String, Any> {
     return lexByLemmaThenByKey2()
+        .mapValues { (_: Lemma, key2Map: Map<Key2, Lex>) ->
+            key2Map.mapValues { it.value.toData() }
+        }
 }
 
 /**
@@ -108,7 +111,7 @@ fun Sequence<Lex>.toLexesData(): Map<String, Any> {
  * @return synset serializable map
  */
 fun Sequence<Synset>.toSynsetsData(): Map<String, Any> {
-    return synsetsById()
+    return synsetsById().mapValues { it.value.toData() }
 }
 
 /**
@@ -118,7 +121,7 @@ fun Sequence<Synset>.toSynsetsData(): Map<String, Any> {
  * @return sense serializable map
  */
 fun Sequence<Sense>.toSensesData(): Map<String, Any> {
-    return sensesById()
+    return sensesById().mapValues { it.value.toData() }
 }
 
 // M O D E L

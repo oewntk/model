@@ -74,15 +74,15 @@ data class Lex(
      * Constructor
      *
      * @param lemma             lemma written form
-     * @param code              ss_type with a possible discriminant appended in the form '-number'
+     * @param key2              ss_type with a possible discriminant appended in the form '-number'
      * @param generated         generated
      */
     constructor (
         lemma: Lemma,
-        code: String,
+        key2: String,
         senseKeys: List<SenseKey> = ArrayList(),
         generated: Boolean = false
-    ) : this(lemma, SynsetType.fromChar(code.lowercase(Locale.ENGLISH)[0]), if (code.length > 1) code.substring(1) else null, senseKeys, generated = generated)
+    ) : this(lemma, SynsetType.fromChar(key2.lowercase(Locale.ENGLISH)[0]), if (key2.length > 1) key2.substring(1) else null, senseKeys, generated = generated)
 
     // stringify
 

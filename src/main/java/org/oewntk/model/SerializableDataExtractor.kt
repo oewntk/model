@@ -1,9 +1,5 @@
 package org.oewntk.model
 
-import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
-import org.oewntk.model.MapFactory.sensesById
-import org.oewntk.model.MapFactory.synsetsById
-
 // O B J E C T
 
 /**
@@ -97,12 +93,7 @@ fun Sense.toData(): Map<String, Any> {
  * @preceiver sequence of lexes
  * @return lex serializable hypermap
  */
-fun Sequence<Lex>.toLexesData(): Map<String, Any> {
-    return lexByLemmaThenByKey2()
-        .mapValues { (_: Lemma, key2Map: Map<Key2, Lex>) ->
-            key2Map.mapValues { it.value.toData() }
-        }
-}
+fun Sequence<Lex>.toLexesData(): Sequence<Map<String, Any>> = map { it.toData() }
 
 /**
  * Synsets to serializable map
@@ -110,9 +101,7 @@ fun Sequence<Lex>.toLexesData(): Map<String, Any> {
  * @preceiver sequence of synsets
  * @return synset serializable map
  */
-fun Sequence<Synset>.toSynsetsData(): Map<String, Any> {
-    return synsetsById().mapValues { it.value.toData() }
-}
+fun Sequence<Synset>.toSynsetsData(): Sequence<Map<String, Any>> = map { it.toData() }
 
 /**
  * Sense to serializable map
@@ -120,9 +109,7 @@ fun Sequence<Synset>.toSynsetsData(): Map<String, Any> {
  * @preceiver sequence of senses
  * @return sense serializable map
  */
-fun Sequence<Sense>.toSensesData(): Map<String, Any> {
-    return sensesById().mapValues { it.value.toData() }
-}
+fun Sequence<Sense>.toSensesData(): Sequence<Map<String, Any>> = map { it.toData() }
 
 // M O D E L
 
@@ -139,9 +126,9 @@ fun CoreModel.toData(
     whichLexes: Sequence<Lex> = lexes.asSequence().sortedWith(compareBy(Lex::lemma).thenBy(Lex::key2)),
     whichSynsets: Sequence<Synset> = synsets.asSequence().sortedBy { it.synsetId },
     whichSenses: Sequence<Sense> = senses.asSequence().sortedBy { it.senseKey },
-): Triple<Map<String, Any>, Map<String, Any>, Map<String, Any>> {
-    val lexesData: Map<Lemma, Any> = whichLexes.toLexesData()
-    val synsetsData: Map<SynsetId, Any> = whichSynsets.toSynsetsData()
-    val sensesData: Map<SenseKey, Any> = whichSenses.toSensesData()
+): Triple<List<Any>, List<Any>, List<Any>> {
+    val lexesData: List<Map<String, Any>> = whichLexes.toLexesData().toList()
+    val synsetsData: List<Map<String, Any>> = whichSynsets.toSynsetsData().toList()
+    val sensesData: List<Map<String, Any>> = whichSenses.toSensesData().toList()
     return Triple(lexesData, synsetsData, sensesData)
 }

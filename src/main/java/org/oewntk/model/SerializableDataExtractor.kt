@@ -72,7 +72,7 @@ fun Sense.toData(): Map<String, Any> {
         "id" to senseId,
         "synset" to synsetId,
         "type" to type.value,
-        "index" to lexIndex,
+        "index" to indexInLex,
     ).apply {
         examples?.let { this["examples"] = it.map { example -> if (example.second == null) example.first else mapOf("text" to example.first, "source" to example.second) }.toList() }
         verbFrames?.let { this["verbFrames"] = it.joinToString(separator = ";") }

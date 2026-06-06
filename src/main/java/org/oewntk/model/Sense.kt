@@ -14,7 +14,7 @@ import java.util.*
  * @param lexId               lexical item (lex) id this sense refers to
  * @param synsetId            synset id
  * @param type                synset type ss_type {'n', 'v', 'a', 'r', 's'}
- * @param lexIndex            zero-based index of this sense in lex list/array of senses
+ * @param indexInLex            zero-based index of this sense in lex list/array of senses
  * @param examples            examples
  * @param verbFrames          verb frames
  * @param adjPosition         adjective position {'a', 'ip', 'p'} meaning {attribute,immediate postnominal,predicate}
@@ -24,7 +24,7 @@ import java.util.*
  * @property lexId            lexical item (lex) id this sense refers to
  * @property synsetId         synset id
  * @property type             synset type ss_type {'n', 'v', 'a', 'r', 's'}
- * @property lexIndex         zero-based index of this sense in lex list/array of senses
+ * @property indexInLex         zero-based index of this sense in lex list/array of senses
  * @property examples         examples
  * @property verbFrames       verb frames
  * @property adjPosition      adjective position {'a', 'ip', 'p'} meaning {attribute,immediate postnominal,predicate}
@@ -46,7 +46,7 @@ data class Sense(
     val synsetId: SynsetId,
 
     val type: SynsetType,
-    val lexIndex: Int,
+    val indexInLex: Int = 0,
     val examples: Array<Pair<String, String?>>? = null,
     val verbFrames: Array<VerbFrameId>? = null,
     val adjPosition: AdjPosition? = null,
@@ -61,7 +61,7 @@ data class Sense(
     val value: Pair<LexId, SynsetId>
         get() = lexId to synsetId
     val properties: Array<Any?>
-        get() = arrayOf(type, lexIndex, examples, adjPosition, relations, verbFrames, verbTemplates, verbTemplates)
+        get() = arrayOf(type, indexInLex, examples, adjPosition, relations, verbFrames, verbTemplates, verbTemplates)
     val key: SenseKey
         get() = senseId
 
@@ -163,12 +163,12 @@ data class Sense(
     // stringify
 
     override fun toString(): String {
-        return "$senseId (${lexIndex + 1}th of '${lemma}', $synsetId ${type.value})"
+        return "$senseId (${indexInLex + 1}th of '${lemma}', $synsetId ${type.value})"
     }
 
     fun toLongString(): String {
         val relationsStr = relations?.joinToString(",") ?: ""
-        return "[${lexIndex + 1}] of '${lemma}' $senseId ${type.value} $synsetId {$relationsStr}"
+        return "[${indexInLex + 1}] of '${lemma}' $senseId ${type.value} $synsetId {$relationsStr}"
     }
 
     // ordering

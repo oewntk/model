@@ -98,7 +98,7 @@ object LibTestModelQueries {
             sense.type.value,
             sense.partOfSpeech.value,
             sense.lemma,
-            sense.lexIndex + 1,
+            sense.indexInLex + 1,
             sense.adjPosition,
             toShortSynset(sense.synsetId, model)
         )

@@ -8,6 +8,26 @@ package org.oewntk.model
  * @receiver pronunciation
  * @return map
  * Keys:
+ *  - lemma
+ *  - type
+ *  - optional
+ */
+fun LexId.toData(): Map<String, Any> {
+    return mutableMapOf(
+        "lemma" to first,
+        "type" to second,
+    )
+        .apply {
+            third?.let { this["discriminant"] = it }
+        }
+}
+
+/**
+ * Pronunciation to OEWN serializable map
+ *
+ * @receiver pronunciation
+ * @return map
+ * Keys:
  *  - value
  *  - variety
  */
@@ -71,6 +91,7 @@ fun Sense.toData(): Map<String, Any> {
     return mutableMapOf<String, Any>(
         "id" to senseId,
         "synset" to synsetId,
+        "lex" to lexId.toData(),
         "type" to type.value,
         "index" to indexInLex,
     ).apply {

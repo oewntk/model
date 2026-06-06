@@ -11,7 +11,7 @@ import java.util.*
  * Sense
  *
  * @param senseId             sense id / sensekey
- * @param lex                 lexical item (lex) this sense is contained in
+ * @param lexId               lexical item (lex) id this sense refers to
  * @param type                synset type ss_type {'n', 'v', 'a', 'r', 's'}
  * @param synsetId            synset id
  * @param lexIndex            zero-based index of this sense in lex list/array of senses
@@ -21,7 +21,7 @@ import java.util.*
  * @param relations           sense relations mapped by type
  *
  * @property senseId          sense id / sensekey
- * @property lex              lexical item (lex) this sense is contained in
+ * @property lexId            lexical item (lex) id this sense refers to
  * @property type             synset type ss_type {'n', 'v', 'a', 'r', 's'}
  * @property synsetId         synset id
  * @property lexIndex         zero-based index of this sense in lex list/array of senses
@@ -38,12 +38,11 @@ import java.util.*
  * @property lCLemma          lower-cased lemma
  * @property partOfSpeech     sense part-of-speech {'n', 'v', 'a', 'r'} with ss_type 's' (satellite adj) mapped to 'a'
  * @property intTagCount      integer tag count
- * @property lexfile           sense source
  */
 @kotlinx.serialization.Serializable
 data class Sense(
     val senseId: SenseKey,
-    val lex: Lex,
+    val lexId: LexId,
     val type: SynsetType,
     val lexIndex: Int,
     val synsetId: SynsetId,
@@ -59,7 +58,7 @@ data class Sense(
 
     // computed properties (key, value, properties)
     val value: Pair<LexId, SynsetId>
-        get() = lex.key to synsetId
+        get() = lexId to synsetId
     val properties: Array<Any?>
         get() = arrayOf(type, lexIndex, examples, adjPosition, relations, verbFrames, verbTemplates, verbTemplates)
     val key: SenseKey
@@ -69,15 +68,15 @@ data class Sense(
     val senseKey: SenseKey
         get() = senseId
     val lemma: Lemma
-        get() = lex.lemma
+        get() = lexId.first
     val lCLemma: Lemma
-        get() = lex.lCLemma
+        get() = lemma.lowercase(Locale.ENGLISH)
+    val isCased: Boolean
+        get() = lemma != lCLemma
     val partOfSpeech: PartOfSpeech
         get() = type.toPartOfSpeech()
     val intTagCount: Int
         get() = if (tagCount == null) 0 else tagCount!!.count
-    val lexfile: String
-        get() = lex.lexfile
     val flatRelations: List<Pair<Relation, SynsetId>>?
         get() = relations?.flatMap { (key, values) -> values.map { key to it } }
 
@@ -123,7 +122,7 @@ data class Sense(
      */
     fun findSynsetIndex(synsetResolver: (SynsetId) -> Synset): Int {
         val synset = synsetResolver(synsetId)
-        return synset.findIndexOfMember(lex.lemma)
+        return synset.findIndexOfMember(lemma)
     }
 
     /**
@@ -163,12 +162,12 @@ data class Sense(
     // stringify
 
     override fun toString(): String {
-        return "$senseId (${lexIndex + 1}th of '${lex.lemma}', $synsetId ${type.value})"
+        return "$senseId (${lexIndex + 1}th of '${lemma}', $synsetId ${type.value})"
     }
 
     fun toLongString(): String {
         val relationsStr = relations?.joinToString(",") ?: ""
-        return "[${lexIndex + 1}] of '${lex.lemma}' $senseId ${type.value} $synsetId {$relationsStr}"
+        return "[${lexIndex + 1}] of '${lemma}' $senseId ${type.value} $synsetId {$relationsStr}"
     }
 
     // ordering

@@ -118,7 +118,7 @@ object MapFactory {
     fun Sequence<Sense>.sensesById(): Map<SenseKey, Sense> {
         // prioritize cased
         val mergingFunction = { existing: Sense, replacement: Sense ->
-            val merged = if (replacement.lex.isCased) (if (existing.lex.isCased) existing else replacement) else existing
+            val merged = if (replacement.isCased) (if (existing.isCased) existing else replacement) else existing
             if (existing == replacement) {
                 if (LOG_DUPLICATE_VALUES) {
                     Tracing.psInfo.println("[W] Duplicate values $existing and $replacement, merging to $merged")

@@ -15,7 +15,7 @@ package org.oewntk.model
 fun LexId.toData(): Map<String, Any> {
     return mutableMapOf(
         "lemma" to first,
-        "type" to second,
+        "type" to second.value,
     )
         .apply {
             third?.let { this["discriminant"] = it }

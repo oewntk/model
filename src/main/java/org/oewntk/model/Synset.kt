@@ -50,6 +50,15 @@ data class Synset(
 
     ) : Comparable<Synset>, Serializable {
 
+    var source: String? = null
+
+    // computed properties (key, value)
+    val value: Array<Any?>
+        get() = arrayOf(type, domain, members, definitions, examples, usages, relations, ili, wikidata, source)
+    val key: SenseKey
+        get() = synsetId
+
+    // computed properties
     val partOfSpeech: PartOfSpeech
         get() = type.toPartOfSpeech()
     val partOfSpeechName: String
@@ -57,10 +66,8 @@ data class Synset(
     val definition: String?
         get() = if (definitions.isNotEmpty()) definitions[0] else null
     val lexfile: String = "$partOfSpeechName.$domain"
-
-    val flatRelations : List<Pair<Relation, SynsetId>>? = relations?.flatMap {(key, values) -> values.map { key to it }}
-
-    var source: String? = null
+    val flatRelations: List<Pair<Relation, SynsetId>>?
+        get() = relations?.flatMap { (key, values) -> values.map { key to it } }
 
     // mutation
 
@@ -158,6 +165,19 @@ data class Synset(
         return memberList.indexOf(lemma)
     }
 
+    // identity
+
+    override fun equals(other: Any?): Boolean {
+        // throw UnsupportedOperationException("$this / $other")
+        if (this === other) return true
+        return if (other is Synset) Objects.equals(synsetId, other.synsetId) && Objects.equals(value, other.value) else false
+    }
+
+    override fun hashCode(): Int {
+        // throw UnsupportedOperationException("$this")
+        return Objects.hash(synsetId, *value)
+    }
+
     // stringify
 
     override fun toString(): String {
@@ -170,23 +190,6 @@ data class Synset(
         val membersStr = members.joinToString(",")
         val relationsStr = relations?.joinToString(",") ?: ""
         return "$synsetId ${type.value} {$membersStr} '$definition' {$relationsStr}"
-    }
-
-    // identity
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
-        if (other == null || javaClass != other.javaClass) {
-            return false
-        }
-        val synset = other as Synset
-        return synsetId == synset.synsetId
-    }
-
-    override fun hashCode(): Int {
-        return Objects.hash(synsetId)
     }
 
     // ordering

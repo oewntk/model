@@ -5,12 +5,15 @@
 package org.oewntk.model
 
 typealias Lemma = String
-typealias LowerCasedLemma = String
+typealias Key2 = String
+typealias Discriminant = String
+typealias LexId = Triple<Lemma, SynsetType, Discriminant?>
 typealias SenseKey = String
 typealias SynsetId = String
+
+typealias LowerCasedLemma = String
 typealias Relation = String
-typealias Discriminant = String
-typealias Key2 = String
+
 typealias Domain = String
 typealias Morph = String
 typealias PronunciationValue = String
@@ -36,29 +39,6 @@ typealias SynsetType = SynsetTypeImpl
  * [n,v,a,r,s]
  */
 typealias PartOfSpeech = PartOfSpeechImpl
-
-/**
- * Pos key used as a pos key
- */
-enum class CategoryImpl(val value: Char) {
-    N('n') {
-        override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.N
-    },
-    V('v') {
-        override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.V
-    },
-    A('a') {
-        override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.A
-    },
-    R('r') {
-        override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.R
-    },
-    S('s') {
-        override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.A
-    };
-
-    abstract fun toPartOfSpeech(): PartOfSpeechImpl
-}
 
 /**
  * Synset type
@@ -150,4 +130,27 @@ enum class PartOfSpeechImpl(val value: Char, val fullName: String) {
 
         fun fromFullName(fullName: String): PartOfSpeechImpl = fromFullNameOrNull(fullName) ?: throw IllegalArgumentException("Illegal PartOfSpeech: $fullName")
     }
+}
+
+/**
+ * Pos key used as a pos key
+ */
+enum class CategoryImpl(val value: Char) {
+    N('n') {
+        override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.N
+    },
+    V('v') {
+        override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.V
+    },
+    A('a') {
+        override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.A
+    },
+    R('r') {
+        override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.R
+    },
+    S('s') {
+        override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.A
+    };
+
+    abstract fun toPartOfSpeech(): PartOfSpeechImpl
 }

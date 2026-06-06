@@ -47,6 +47,14 @@ data class Lex(
     var forms: Set<Morph>? = null
     var pronunciations: Set<Pronunciation>? = null
 
+    // computed properties (key, value)
+    val value: Set<SenseKey>
+        get() = senseKeys.toSet()
+    val key: LexId
+        get() = Triple(lemma, type, discriminant)
+    val key2: String
+        get() = if (discriminant != null) "${type.value}$discriminant" else type.value.toString()
+
     // computed properties
     val lCLemma: LowerCasedLemma
         get() = lemma.lowercase(Locale.ENGLISH)
@@ -62,14 +70,6 @@ data class Lex(
     val lexfile: String
         get() = "entries-$lexfileChar"
 
-    // computed properties
-    val value: Set<SenseKey>
-        get() = senseKeys.toSet()
-    val key: Triple<Lemma, Char, Discriminant?>
-        get() = Triple(lemma, type.value, discriminant)
-    val key2: String
-        get() = if (discriminant != null) "${type.value}$discriminant" else type.value.toString()
-
     /**
      * Constructor
      *
@@ -84,24 +84,25 @@ data class Lex(
         generated: Boolean = false
     ) : this(lemma, SynsetType.fromChar(key2.lowercase(Locale.ENGLISH)[0]), if (key2.length > 1) key2.substring(1) else null, senseKeys, generated = generated)
 
+    // identify
+
+    override fun equals(other: Any?): Boolean {
+        // throw UnsupportedOperationException("$this / $other")
+        if (this === other) return true
+        return if (other is Lex) Objects.equals(key, other.key) && Objects.equals(value, other.value) else false
+    }
+
+    override fun hashCode(): Int {
+        // throw UnsupportedOperationException("$this")
+        return Objects.hash(key, value)
+    }
+
     // stringify
 
     override fun toString(): String {
         val pronunciations = pronunciations?.joinToString(",") ?: ""
         val senses = senseKeys.joinToString(",")
         return "$lemma $key2 $pronunciations {$senses}"
-    }
-
-    // identify
-
-    override fun equals(other: Any?): Boolean {
-        // throw UnsupportedOperationException("$this / $other")
-        return if (other is Lex) Objects.equals(value, other.value) else false
-    }
-
-    override fun hashCode(): Int {
-        // throw UnsupportedOperationException("$this")
-        return Objects.hash(value)
     }
 
     object Groups {

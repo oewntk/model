@@ -2,7 +2,6 @@ package org.oewntk.model
 
 import java.io.File
 
-
 object Validator {
 
     private const val VERBOSE_PENDING: Boolean = false
@@ -32,7 +31,7 @@ object Validator {
         return this
     }
 
-// L E X
+    // L E X
 
     /**
      * Check lex value duplicates
@@ -60,7 +59,7 @@ object Validator {
     /**
      * Check lex key duplicates
      */
-    private val keySorter = compareBy<Triple<Lemma, Char, Discriminant?>> { it.first }.thenBy { it.second }.thenBy { it.third }
+    private val keySorter = compareBy<LexId> { it.first }.thenBy { it.second.value }.thenBy { it.third }
 
     fun <M : CoreModel> M.checkLexKeyDuplicates(throws: Boolean = false, verbose: Boolean = true): M {
         val duplicates = lexes.groupBy { it.key }
@@ -82,7 +81,7 @@ object Validator {
         return this
     }
 
-// S E N S E
+    // S E N S E
 
     fun <M : CoreModel> M.checkSenseReference(throws: Boolean = false, verbose: Boolean = true): M {
         val orphans = senses
@@ -107,7 +106,7 @@ object Validator {
         return this
     }
 
-// R E L A T I O N S
+    // R E L A T I O N S
 
     /**
      * Check synset relation targets
@@ -169,7 +168,7 @@ object Validator {
         return this
     }
 
-// S Y N S E T  M E M B E R S
+    // S Y N S E T  M E M B E R S
 
     /**
      * Check synset members

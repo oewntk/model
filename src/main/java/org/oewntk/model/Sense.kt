@@ -56,6 +56,16 @@ data class Sense(
 
     var verbTemplates: Array<Int>? = null
     var tagCount: TagCount? = null
+
+    // computed properties (key, value, properties)
+    val value: Pair<LexId, SynsetId>
+        get() = lex.key to synsetId
+    val properties: Array<Any?>
+        get() = arrayOf(type, lexIndex, examples, adjPosition, relations, verbFrames, verbTemplates, verbTemplates)
+    val key: SenseKey
+        get() = senseId
+
+    // computed properties
     val senseKey: SenseKey
         get() = senseId
     val lemma: Lemma
@@ -68,8 +78,21 @@ data class Sense(
         get() = if (tagCount == null) 0 else tagCount!!.count
     val lexfile: String
         get() = lex.lexfile
+    val flatRelations: List<Pair<Relation, SynsetId>>?
+        get() = relations?.flatMap { (key, values) -> values.map { key to it } }
 
-    val flatRelations : List<Pair<Relation, SynsetId>>? = relations?.flatMap {(key, values) -> values.map { key to it }}
+    // identity
+
+    override fun equals(other: Any?): Boolean {
+        // throw UnsupportedOperationException("$this / $other")
+        if (this === other) return true
+        return if (other is Sense) Objects.equals(key, other.key) && Objects.equals(value, other.value) && Objects.equals(properties, other.properties) else false
+    }
+
+    override fun hashCode(): Int {
+        // throw UnsupportedOperationException("$this")
+        return Objects.hash(key, value, *properties)
+    }
 
     // mutation
 
@@ -146,23 +169,6 @@ data class Sense(
     fun toLongString(): String {
         val relationsStr = relations?.joinToString(",") ?: ""
         return "[${lexIndex + 1}] of '${lex.lemma}' $senseId ${type.value} $synsetId {$relationsStr}"
-    }
-
-    // identity
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
-        if (other == null || javaClass != other.javaClass) {
-            return false
-        }
-        val sense = other as Sense
-        return senseId == sense.senseId
-    }
-
-    override fun hashCode(): Int {
-        return Objects.hash(senseId)
     }
 
     // ordering

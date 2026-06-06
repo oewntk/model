@@ -59,7 +59,7 @@ object Validator {
     /**
      * Check lex key duplicates
      */
-    private val keySorter = compareBy<LexId> { it.first }.thenBy { it.second.value }.thenBy { it.third }
+    private val keySorter = compareBy<LexId> { it.lemma }.thenBy { it.type.value }.thenBy { it.discriminant }
 
     fun <M : CoreModel> M.checkLexKeyDuplicates(throws: Boolean = false, verbose: Boolean = true): M {
         val duplicates = lexes.groupBy { it.key }

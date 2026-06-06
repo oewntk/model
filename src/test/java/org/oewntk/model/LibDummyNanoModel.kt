@@ -43,10 +43,10 @@ object LibDummyNanoModel {
         arrayOf(LEMMA1, LEMMA2),
         arrayOf("act in a funny teasing way")
     )
-    val sense11 = Sense(SENSEKEY11, lex1.key, SYNSETID1, STYPE, indexInLex = 0)
-    val sense12 = Sense(SENSEKEY12, lex1.key, SYNSETID2, STYPE, indexInLex = 1)
-    val sense21 = Sense(SENSEKEY21, lex2.key, SYNSETID1, STYPE, indexInLex = 0)
-    val sense22 = Sense(SENSEKEY22, lex2.key, SYNSETID2, STYPE, indexInLex = 1)
+    val sense11 = Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0)
+    val sense12 = Sense(SENSEKEY12, lex1.key, SYNSETID2, indexInLex = 1)
+    val sense21 = Sense(SENSEKEY21, lex2.key, SYNSETID1, indexInLex = 0)
+    val sense22 = Sense(SENSEKEY22, lex2.key, SYNSETID2, indexInLex = 1)
 
     // relations
 
@@ -70,7 +70,7 @@ object LibDummyNanoModel {
 
     const val SENSEKEY_D11 = "jester%1:18:00::"
     val lexD1 = Lex("jester", "n", listOf(SENSEKEY_D11))
-    val senseD11 = Sense(SENSEKEY_D11, lexD1.key, "10240982-n", SynsetType.N, indexInLex = 0)
+    val senseD11 = Sense(SENSEKEY_D11, lexD1.key, "10240982-n", indexInLex = 0)
 
     init {
         synset1.relations = mapOf(

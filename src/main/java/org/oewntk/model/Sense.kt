@@ -47,7 +47,6 @@ data class Sense(
     val lexId: LexId,
     val synsetId: SynsetId,
 
-    val type: SynsetType,
     val indexInLex: Int = 0,
     val examples: Array<Pair<String, String?>>? = null,
     val verbFrames: Array<VerbFrameId>? = null,
@@ -68,16 +67,18 @@ data class Sense(
         get() = arrayOf(type, indexInLex, examples, adjPosition, relations, verbFrames, verbTemplates, verbTemplates)
 
     // computed properties
-    val senseKey: SenseKey
-        get() = senseId
     val lemma: Lemma
-        get() = lexId.first
+        get() = lexId.lemma
     val lCLemma: Lemma
         get() = lemma.lowercase(Locale.ENGLISH)
     val isCased: Boolean
         get() = lemma != lCLemma
+    val type: SynsetType
+        get() = lexId.type
     val partOfSpeech: PartOfSpeech
         get() = type.toPartOfSpeech()
+    val senseKey: SenseKey
+        get() = senseId
     val intTagCount: Int
         get() = if (tagCount == null) 0 else tagCount!!.count
     val flatRelations: List<Pair<Relation, SynsetId>>?

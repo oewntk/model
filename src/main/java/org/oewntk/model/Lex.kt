@@ -49,7 +49,7 @@ data class Lex(
 
     // computed properties (key, value)
     val key: LexId
-        get() = Triple(lemma, type, discriminant)
+        get() = LexId(lemma, type, discriminant)
     val value: Set<SenseKey>
         get() = senseKeys.toSet()
     val key2: String

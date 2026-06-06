@@ -4,10 +4,12 @@
 
 package org.oewntk.model
 
+import java.io.Serializable
+
 typealias Lemma = String
 typealias Key2 = String
 typealias Discriminant = String
-typealias LexId = Triple<Lemma, SynsetType, Discriminant?>
+typealias LexId = LexIdImpl
 typealias SenseKey = String
 typealias SynsetId = String
 
@@ -39,6 +41,16 @@ typealias SynsetType = SynsetTypeImpl
  * [n,v,a,r,s]
  */
 typealias PartOfSpeech = PartOfSpeechImpl
+
+/**
+ * LexId
+ *
+ * @property lemma lemma
+ * @property type type
+ * @property discriminant discriminant (nullable)
+ */
+@kotlinx.serialization.Serializable
+data class LexIdImpl(val lemma: Lemma, val type: SynsetType, val discriminant: Discriminant?): Serializable
 
 /**
  * Synset type

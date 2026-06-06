@@ -12,8 +12,8 @@ import java.util.*
  *
  * @param senseId             sense id / sensekey
  * @param lexId               lexical item (lex) id this sense refers to
- * @param type                synset type ss_type {'n', 'v', 'a', 'r', 's'}
  * @param synsetId            synset id
+ * @param type                synset type ss_type {'n', 'v', 'a', 'r', 's'}
  * @param lexIndex            zero-based index of this sense in lex list/array of senses
  * @param examples            examples
  * @param verbFrames          verb frames
@@ -22,8 +22,8 @@ import java.util.*
  *
  * @property senseId          sense id / sensekey
  * @property lexId            lexical item (lex) id this sense refers to
- * @property type             synset type ss_type {'n', 'v', 'a', 'r', 's'}
  * @property synsetId         synset id
+ * @property type             synset type ss_type {'n', 'v', 'a', 'r', 's'}
  * @property lexIndex         zero-based index of this sense in lex list/array of senses
  * @property examples         examples
  * @property verbFrames       verb frames
@@ -43,9 +43,10 @@ import java.util.*
 data class Sense(
     val senseId: SenseKey,
     val lexId: LexId,
+    val synsetId: SynsetId,
+
     val type: SynsetType,
     val lexIndex: Int,
-    val synsetId: SynsetId,
     val examples: Array<Pair<String, String?>>? = null,
     val verbFrames: Array<VerbFrameId>? = null,
     val adjPosition: AdjPosition? = null,

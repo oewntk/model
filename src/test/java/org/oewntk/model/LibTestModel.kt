@@ -6,8 +6,8 @@ package org.oewntk.model
 
 import org.oewntk.model.Finder.getLexes
 import org.oewntk.model.Finder.getLexesHavingPos
-import org.oewntk.model.Key.KeyLC.Companion.of_lc_p
-import org.oewntk.model.Key.KeyLCP.Companion.of_p
+import org.oewntk.model.Key.FromLemmaCategory.Companion.of_lc_p
+import org.oewntk.model.Key.FromLemmaCategoryPronunciation.Companion.of_p
 import java.io.PrintStream
 
 object LibTestModel {
@@ -101,17 +101,17 @@ object LibTestModel {
     }
 
     private fun dumpKeyEquals(lex1: Lex, lex2: Lex, ps: PrintStream) {
-        ps.printf("\t--- key = %s%n", Key.KeyLCP.of_t(lex1) == Key.KeyLCP.of_t(lex2))
-        ps.printf("\tsha key = %s%n", Key.KeyLCD.of_t(lex1) == Key.KeyLCD.of_t(lex2))
-        ps.printf("\tic  key = %s%n", Key.KeyLCD.of_lc_t(lex1) == Key.KeyLCD.of_lc_t(lex2))
+        ps.printf("\t--- key = %s%n", Key.FromLemmaCategoryPronunciation.of_t(lex1) == Key.FromLemmaCategoryPronunciation.of_t(lex2))
+        ps.printf("\tsha key = %s%n", Key.FromLemmaCategoryDiscriminant.of_t(lex1) == Key.FromLemmaCategoryDiscriminant.of_t(lex2))
+        ps.printf("\tic  key = %s%n", Key.FromLemmaCategoryDiscriminant.of_lc_t(lex1) == Key.FromLemmaCategoryDiscriminant.of_lc_t(lex2))
         ps.printf("\tpos key = %s%n", of_p(lex1) == of_p(lex2))
         ps.printf("\tpwn key = %s%n", of_lc_p(lex1) == of_lc_p(lex2))
     }
 
     private fun dumpKeys(lex: Lex, ps: PrintStream) {
-        ps.printf("\t--- key = %s%n", Key.KeyLCP.of_t(lex))
-        ps.printf("\tsha key = %s%n", Key.KeyLCD.of_t(lex))
-        ps.printf("\tigc key = %s%n", Key.KeyLCP.of_lc_t(lex))
+        ps.printf("\t--- key = %s%n", Key.FromLemmaCategoryPronunciation.of_t(lex))
+        ps.printf("\tsha key = %s%n", Key.FromLemmaCategoryDiscriminant.of_t(lex))
+        ps.printf("\tigc key = %s%n", Key.FromLemmaCategoryPronunciation.of_lc_t(lex))
         ps.printf("\tpos key = %s%n", of_p(lex))
         ps.printf("\tpwn key = %s%n", of_lc_p(lex))
     }

@@ -21,12 +21,12 @@ class TestKeys {
         val lexRowOuN = Lex(wordRow, "n").apply { pronunciations = setOf(pRowOu) }
         val lexRowAuN = Lex(wordRow, "n").apply { pronunciations = setOf(pRowAu) }
 
-        assertNotEquals(Key.KeyLCP.of_t(lexRowOu), Key.KeyLCP.of_t(lexRowAu))
-        assertNotEquals(Key.KeyLCD.of_t(lexRowOu), Key.KeyLCD.of_t(lexRowAu)) // because discriminant is different
-        assertEquals(Key.KeyLCD.of_t(lexRowOuN), Key.KeyLCD.of_t(lexRowAuN)) // because discriminant is same
+        assertNotEquals(Key.FromLemmaCategoryPronunciation.of_t(lexRowOu), Key.FromLemmaCategoryPronunciation.of_t(lexRowAu))
+        assertNotEquals(Key.FromLemmaCategoryDiscriminant.of_t(lexRowOu), Key.FromLemmaCategoryDiscriminant.of_t(lexRowAu)) // because discriminant is different
+        assertEquals(Key.FromLemmaCategoryDiscriminant.of_t(lexRowOuN), Key.FromLemmaCategoryDiscriminant.of_t(lexRowAuN)) // because discriminant is same
         assertEquals(
-            Key.KeyLC.of(lexRowOu, Lex::lemma) { it.type.toCategory() },
-            Key.KeyLC.of(lexRowAu, Lex::lemma) { it.type.toCategory() }
+            Key.FromLemmaCategory.of(lexRowOu, Lex::lemma) { it.type.toCategory() },
+            Key.FromLemmaCategory.of(lexRowAu, Lex::lemma) { it.type.toCategory() }
         )
     }
 
@@ -51,9 +51,9 @@ class TestKeys {
         ps.println("lex1 = $lexMobile1")
         ps.println("lex2 = $lexMobile2")
 
-        val k0 = Key.KeyLCP.of_t(lexMobile0)
-        val k1 = Key.KeyLCP.of_t(lexMobile1)
-        val k2 = Key.KeyLCP.of_t(lexMobile2)
+        val k0 = Key.FromLemmaCategoryPronunciation.of_t(lexMobile0)
+        val k1 = Key.FromLemmaCategoryPronunciation.of_t(lexMobile1)
+        val k2 = Key.FromLemmaCategoryPronunciation.of_t(lexMobile2)
         ps.println("key0 = $k0")
         ps.println("key1 = $k1")
         ps.println("key2 = $k2")
@@ -81,13 +81,13 @@ class TestKeys {
         val lexMobile1 = Lex(wordMobile, "n").apply { pronunciations = paMobile1.toSet() }
         val lexMobile2 = Lex(wordMobile, "n").apply { pronunciations = paMobile2.toSet() }
 
-        assertEquals(Key.KeyLCP.of_t(lexMobile1), Key.KeyLCP.of_t(lexMobile2))
-        assertEquals(Key.KeyLCD.of_t(lexMobile1), Key.KeyLCD.of_t(lexMobile2))
-        assertEquals(Key.KeyLC.of_t(lexMobile1), Key.KeyLC.of_t(lexMobile2))
+        assertEquals(Key.FromLemmaCategoryPronunciation.of_t(lexMobile1), Key.FromLemmaCategoryPronunciation.of_t(lexMobile2))
+        assertEquals(Key.FromLemmaCategoryDiscriminant.of_t(lexMobile1), Key.FromLemmaCategoryDiscriminant.of_t(lexMobile2))
+        assertEquals(Key.FromLemmaCategory.of_t(lexMobile1), Key.FromLemmaCategory.of_t(lexMobile2))
 
-        assertNotEquals(Key.KeyLCP.of_t(lexMobile1), Key.KeyLCP.of_t(lexMobile0))
-        assertEquals(Key.KeyLCD.of_t(lexMobile1), Key.KeyLCD.of_t(lexMobile0)) // because discriminant is both null
-        assertEquals(Key.KeyLC.of_t(lexMobile1), Key.KeyLC.of_t(lexMobile0))
+        assertNotEquals(Key.FromLemmaCategoryPronunciation.of_t(lexMobile1), Key.FromLemmaCategoryPronunciation.of_t(lexMobile0))
+        assertEquals(Key.FromLemmaCategoryDiscriminant.of_t(lexMobile1), Key.FromLemmaCategoryDiscriminant.of_t(lexMobile0)) // because discriminant is both null
+        assertEquals(Key.FromLemmaCategory.of_t(lexMobile1), Key.FromLemmaCategory.of_t(lexMobile0))
     }
 
     @Test
@@ -96,10 +96,10 @@ class TestKeys {
         val lexCriticalA = Lex(wordCritical, "a")
         val lexCriticalS = Lex(wordCritical, "s")
 
-        assertNotEquals(Key.KeyLCP.of_t(lexCriticalA), Key.KeyLCP.of_t(lexCriticalS))
-        assertNotEquals(Key.KeyLCD.of_t(lexCriticalA), Key.KeyLCD.of_t(lexCriticalS))
-        assertEquals(Key.KeyLC.of_p(lexCriticalA), Key.KeyLC.of_p(lexCriticalS))
-        assertEquals(Key.KeyLCP.of_p(lexCriticalA), Key.KeyLCP.of_p(lexCriticalS)) // A and S are merged
+        assertNotEquals(Key.FromLemmaCategoryPronunciation.of_t(lexCriticalA), Key.FromLemmaCategoryPronunciation.of_t(lexCriticalS))
+        assertNotEquals(Key.FromLemmaCategoryDiscriminant.of_t(lexCriticalA), Key.FromLemmaCategoryDiscriminant.of_t(lexCriticalS))
+        assertEquals(Key.FromLemmaCategory.of_p(lexCriticalA), Key.FromLemmaCategory.of_p(lexCriticalS))
+        assertEquals(Key.FromLemmaCategoryPronunciation.of_p(lexCriticalA), Key.FromLemmaCategoryPronunciation.of_p(lexCriticalS)) // A and S are merged
     }
 
     @Test
@@ -109,10 +109,10 @@ class TestKeys {
         val lexEarthL = Lex(wordEarthL, "n")
         val lexEarthU = Lex(wordEarthU, "n")
 
-        assertNotEquals(Key.KeyLCP.of_t(lexEarthL), Key.KeyLCP.of_t(lexEarthU))
-        assertNotEquals(Key.KeyLCD.of_t(lexEarthL), Key.KeyLCD.of_t(lexEarthU))
-        assertEquals(Key.KeyLC.of_lc_t(lexEarthL), Key.KeyLC.of_lc_t(lexEarthU))
-        assertEquals(Key.KeyLCP.of_lc_t(lexEarthL), Key.KeyLCP.of_lc_t(lexEarthU))
+        assertNotEquals(Key.FromLemmaCategoryPronunciation.of_t(lexEarthL), Key.FromLemmaCategoryPronunciation.of_t(lexEarthU))
+        assertNotEquals(Key.FromLemmaCategoryDiscriminant.of_t(lexEarthL), Key.FromLemmaCategoryDiscriminant.of_t(lexEarthU))
+        assertEquals(Key.FromLemmaCategory.of_lc_t(lexEarthL), Key.FromLemmaCategory.of_lc_t(lexEarthU))
+        assertEquals(Key.FromLemmaCategoryPronunciation.of_lc_t(lexEarthL), Key.FromLemmaCategoryPronunciation.of_lc_t(lexEarthU))
     }
 
     @Test

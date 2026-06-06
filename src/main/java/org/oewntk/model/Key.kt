@@ -16,7 +16,7 @@ import java.util.*
 interface Key {
 
     @kotlinx.serialization.Serializable
-    sealed class BaseKey : Key, Serializable {
+    sealed class Base : Key, Serializable {
 
         abstract val lemma: Lemma
 
@@ -32,10 +32,10 @@ interface Key {
      * @property category category: part-of-speech or type (C for category)
      */
     @kotlinx.serialization.Serializable
-    open class KeyLC(
+    open class FromLemmaCategory(
         override val lemma: Lemma,
         override val category: Category,
-    ) : BaseKey(), Comparable<KeyLC>, Serializable {
+    ) : Base(), Comparable<FromLemmaCategory>, Serializable {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -44,7 +44,7 @@ interface Key {
             if (other == null || javaClass != other.javaClass) {
                 return false
             }
-            val that = other as KeyLC
+            val that = other as FromLemmaCategory
             if (lemma != that.lemma) {
                 return false
             }
@@ -55,7 +55,7 @@ interface Key {
             return Objects.hash(lemma, category)
         }
 
-        override fun compareTo(other: KeyLC): Int {
+        override fun compareTo(other: FromLemmaCategory): Int {
             if (this == other) {
                 return 0
             }
@@ -76,33 +76,33 @@ interface Key {
                 lex: Lex,
                 lemmaExtractor: (Lex) -> Lemma,
                 categoryExtractor: (Lex) -> Category,
-            ): KeyLC {
-                return KeyLC(lemmaExtractor(lex), categoryExtractor(lex))
+            ): FromLemmaCategory {
+                return FromLemmaCategory(lemmaExtractor(lex), categoryExtractor(lex))
             }
 
-            fun of_t(lex: Lex): KeyLC {
+            fun of_t(lex: Lex): FromLemmaCategory {
                 return of(lex, Lex::lemma) { it.type.toCategory() }
             }
 
-            fun of_p(lex: Lex): KeyLC {
+            fun of_p(lex: Lex): FromLemmaCategory {
                 return of(lex, Lex::lemma) { it.partOfSpeech.toCategory() }
             }
 
-            fun of_lc_t(lex: Lex): KeyLC {
+            fun of_lc_t(lex: Lex): FromLemmaCategory {
                 return of(lex, Lex::lCLemma) { it.type.toCategory() }
             }
 
-            fun of_lc_p(lex: Lex): KeyLC {
+            fun of_lc_p(lex: Lex): FromLemmaCategory {
                 return of(lex, Lex::lCLemma) { it.partOfSpeech.toCategory() }
             }
 
-            fun from(lemma: Lemma, category: Category): KeyLC {
-                return KeyLC(lemma, category)
+            fun from(lemma: Lemma, category: Category): FromLemmaCategory {
+                return FromLemmaCategory(lemma, category)
             }
 
-            val wpComparator: Comparator<KeyLC> = Comparator
-                .comparing { k: KeyLC -> k.lemma }
-                .thenComparing { k: KeyLC -> k.category }
+            val wpComparator: Comparator<FromLemmaCategory> = Comparator
+                .comparing { k: FromLemmaCategory -> k.lemma }
+                .thenComparing { k: FromLemmaCategory -> k.category }
 
         }
     }
@@ -115,11 +115,11 @@ interface Key {
      * @property pronunciations pronunciations (P)
      */
     @kotlinx.serialization.Serializable
-    open class KeyLCP(
+    open class FromLemmaCategoryPronunciation(
         override var lemma: Lemma,
         override var category: Category,
         val pronunciations: Set<Pronunciation>?,
-    ) : BaseKey(), Comparable<KeyLCP> {
+    ) : Base(), Comparable<FromLemmaCategoryPronunciation> {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -128,7 +128,7 @@ interface Key {
             if (other == null || javaClass != other.javaClass) {
                 return false
             }
-            val that = other as KeyLCP
+            val that = other as FromLemmaCategoryPronunciation
             if (lemma != that.lemma) {
                 return false
             }
@@ -144,7 +144,7 @@ interface Key {
             return Objects.hash(lemma, category, pronunciations)
         }
 
-        override fun compareTo(other: KeyLCP): Int {
+        override fun compareTo(other: FromLemmaCategoryPronunciation): Int {
             if (this == other) {
                 return 0
             }
@@ -165,28 +165,28 @@ interface Key {
                 lex: Lex,
                 lemmaExtractor: (Lex) -> Lemma,
                 categoryExtractor: (Lex) -> Category,
-            ): KeyLCP {
-                return KeyLCP(lemmaExtractor(lex), categoryExtractor(lex), lex.pronunciations)
+            ): FromLemmaCategoryPronunciation {
+                return FromLemmaCategoryPronunciation(lemmaExtractor(lex), categoryExtractor(lex), lex.pronunciations)
             }
 
-            fun of_t(lex: Lex): KeyLCP {
+            fun of_t(lex: Lex): FromLemmaCategoryPronunciation {
                 return of(lex, Lex::lemma) { it.type.toCategory() }
             }
 
-            fun of_p(lex: Lex): KeyLCP {
+            fun of_p(lex: Lex): FromLemmaCategoryPronunciation {
                 return of(lex, Lex::lemma) { it.partOfSpeech.toCategory() }
             }
 
-            fun of_lc_t(lex: Lex): KeyLCP {
+            fun of_lc_t(lex: Lex): FromLemmaCategoryPronunciation {
                 return of(lex, Lex::lCLemma) { it.type.toCategory() }
             }
 
-            fun of_lc_p(lex: Lex): KeyLCP {
+            fun of_lc_p(lex: Lex): FromLemmaCategoryPronunciation {
                 return of(lex, Lex::lCLemma) { it.partOfSpeech.toCategory() }
             }
 
-            fun from(lemma: Lemma, category: Category, pronunciations: Set<Pronunciation>): KeyLCP {
-                return KeyLCP(lemma, category, pronunciations)
+            fun from(lemma: Lemma, category: Category, pronunciations: Set<Pronunciation>): FromLemmaCategoryPronunciation {
+                return FromLemmaCategoryPronunciation(lemma, category, pronunciations)
             }
 
             private val pronunciationsComparator: Comparator<Set<Pronunciation>?> =
@@ -202,7 +202,7 @@ interface Key {
                         ps1.toString().compareTo(ps2.toString())
                 }
 
-            val wpaComparator = compareBy<KeyLCP> { it.lemma }
+            val wpaComparator = compareBy<FromLemmaCategoryPronunciation> { it.lemma }
                 .thenBy { it.category }
                 .thenBy(nullsFirst(pronunciationsComparator)) { it.pronunciations }
         }
@@ -216,11 +216,11 @@ interface Key {
      * @property discriminant discriminant (D for discriminant)
      */
     @kotlinx.serialization.Serializable
-    open class KeyLCD(
+    open class FromLemmaCategoryDiscriminant(
         override val lemma: Lemma,
         override val category: Category,
         val discriminant: Discriminant?,
-    ) : BaseKey(), Comparable<KeyLCD> {
+    ) : Base(), Comparable<FromLemmaCategoryDiscriminant> {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -229,7 +229,7 @@ interface Key {
             if (other == null || javaClass != other.javaClass) {
                 return false
             }
-            val that = other as KeyLCD
+            val that = other as FromLemmaCategoryDiscriminant
             if (lemma != that.lemma) {
                 return false
             }
@@ -243,7 +243,7 @@ interface Key {
             return Objects.hash(lemma, category, discriminant)
         }
 
-        override fun compareTo(other: KeyLCD): Int {
+        override fun compareTo(other: FromLemmaCategoryDiscriminant): Int {
             if (this == other) {
                 return 0
             }
@@ -264,31 +264,31 @@ interface Key {
                 lex: Lex,
                 lemmaExtractor: (Lex) -> Lemma,
                 categoryExtractor: (Lex) -> Category,
-            ): KeyLCD {
-                return KeyLCD(lemmaExtractor(lex), categoryExtractor(lex), lex.discriminant)
+            ): FromLemmaCategoryDiscriminant {
+                return FromLemmaCategoryDiscriminant(lemmaExtractor(lex), categoryExtractor(lex), lex.discriminant)
             }
 
-            fun of_t(lex: Lex): KeyLCD {
+            fun of_t(lex: Lex): FromLemmaCategoryDiscriminant {
                 return of(lex, Lex::lemma) { it.type.toCategory() }
             }
 
-            fun of_p(lex: Lex): KeyLCD {
+            fun of_p(lex: Lex): FromLemmaCategoryDiscriminant {
                 return of(lex, Lex::lemma) { it.partOfSpeech.toCategory() }
             }
 
-            fun of_lc_t(lex: Lex): KeyLCD {
+            fun of_lc_t(lex: Lex): FromLemmaCategoryDiscriminant {
                 return of(lex, Lex::lCLemma) { it.type.toCategory() }
             }
 
-            fun of_lc_p(lex: Lex): KeyLCD {
+            fun of_lc_p(lex: Lex): FromLemmaCategoryDiscriminant {
                 return of(lex, Lex::lCLemma) { it.partOfSpeech.toCategory() }
             }
 
-            fun from(lemma: Lemma, category: Category, discriminant: Discriminant?): KeyLCD {
-                return KeyLCD(lemma, category, discriminant)
+            fun from(lemma: Lemma, category: Category, discriminant: Discriminant?): FromLemmaCategoryDiscriminant {
+                return FromLemmaCategoryDiscriminant(lemma, category, discriminant)
             }
 
-            val wpdComparator: Comparator<KeyLCD> = compareBy<KeyLCD> { it.lemma }
+            val wpdComparator: Comparator<FromLemmaCategoryDiscriminant> = compareBy<FromLemmaCategoryDiscriminant> { it.lemma }
                 .thenBy { it.category }
                 .thenBy(nullsFirst(Comparator.naturalOrder())) { it.discriminant }
         }

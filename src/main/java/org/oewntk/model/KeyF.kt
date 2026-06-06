@@ -32,13 +32,13 @@ interface KeyF<R> : Key, (CoreModel) -> R {
      * @property lemmaExtractor     lemma extractor function from lex
      * @property categoryExtractor  category extractor function from lex
      */
-    open class FuncKeyLC private constructor(
+    open class FuncFromLemmaCategory private constructor(
         override var lemma: Lemma,
         override var category: Category,
         val lemmaExtractor: (Lex) -> Lemma,
         val categoryExtractor: (Lex) -> Category,
 
-        ) : KeyLC(lemma, category) {
+        ) : FromLemmaCategory(lemma, category) {
 
         override fun toLongString(): String = "KEYF ${javaClass.simpleName} LC_${lemmaExtractor.toCaseSensitiveOrLowerCased()}_${categoryExtractor.toTypeOrPos()} $this"
 
@@ -50,7 +50,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             category: Category,
             lemmaExtractor: (Lex) -> Lemma,
             categoryExtractor: (Lex) -> Category,
-        ) : FuncKeyLC(lemma, category, lemmaExtractor, categoryExtractor), MonoValued {
+        ) : FuncFromLemmaCategory(lemma, category, lemmaExtractor, categoryExtractor), MonoValued {
 
             override fun invoke(model: CoreModel): Lex {
                 return Finder.getLexesHaving(model, lemma, category, lemmaExtractor, categoryExtractor)
@@ -91,7 +91,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             category: Category,
             lemmaExtractor: (Lex) -> Lemma,
             categoryExtractor: (Lex) -> Category,
-        ) : FuncKeyLC(lemma, category, lemmaExtractor, categoryExtractor), MultiValued {
+        ) : FuncFromLemmaCategory(lemma, category, lemmaExtractor, categoryExtractor), MultiValued {
 
             override fun invoke(model: CoreModel): Array<Lex> {
                 return Finder.getLexesHaving(model, lemma, category, lemmaExtractor, categoryExtractor)
@@ -131,8 +131,8 @@ interface KeyF<R> : Key, (CoreModel) -> R {
                 lex: Lex,
                 lemmaExtractor: (Lex) -> Lemma,
                 categoryExtractor: (Lex) -> Category,
-            ): FuncKeyLC {
-                return FuncKeyLC(
+            ): FuncFromLemmaCategory {
+                return FuncFromLemmaCategory(
                     lemmaExtractor.invoke(lex),
                     categoryExtractor.invoke(lex),
                     lemmaExtractor,
@@ -151,13 +151,13 @@ interface KeyF<R> : Key, (CoreModel) -> R {
      * @property lemmaExtractor    lemma extractor function from lex
      * @property categoryExtractor category extractor function from lex
      */
-    open class FuncKeyLCP private constructor(
+    open class FuncFromLemmaCategoryPronunciation private constructor(
         lemma: Lemma,
         category: Category,
         pronunciations: Set<Pronunciation>?,
         val lemmaExtractor: (Lex) -> Lemma,
         val categoryExtractor: (Lex) -> Category,
-    ) : KeyLCP(lemma, category, pronunciations) {
+    ) : FromLemmaCategoryPronunciation(lemma, category, pronunciations) {
 
         override fun toLongString(): String = "KEYF ${javaClass.simpleName} LCP_${lemmaExtractor.toCaseSensitiveOrLowerCased()}_${categoryExtractor.toTypeOrPos()} $this"
 
@@ -170,7 +170,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             pronunciations: Set<Pronunciation>?,
             lemmaExtractor: (Lex) -> Lemma,
             categoryExtractor: (Lex) -> Category,
-        ) : FuncKeyLCP(lemma, category, pronunciations, lemmaExtractor, categoryExtractor), MonoValued {
+        ) : FuncFromLemmaCategoryPronunciation(lemma, category, pronunciations, lemmaExtractor, categoryExtractor), MonoValued {
 
             override fun invoke(model: CoreModel): Lex {
                 return Finder.getLexesHavingPronunciations(
@@ -221,7 +221,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             pronunciations: Set<Pronunciation>?,
             lemmaExtractor: (Lex) -> Lemma,
             categoryExtractor: (Lex) -> Category,
-        ) : FuncKeyLCP(lemma, category, pronunciations, lemmaExtractor, categoryExtractor), MultiValued {
+        ) : FuncFromLemmaCategoryPronunciation(lemma, category, pronunciations, lemmaExtractor, categoryExtractor), MultiValued {
 
             override fun invoke(model: CoreModel): Array<Lex> {
                 return Finder.getLexesHavingPronunciations(
@@ -271,8 +271,8 @@ interface KeyF<R> : Key, (CoreModel) -> R {
                 lex: Lex,
                 lemmaExtractor: (Lex) -> Lemma,
                 categoryExtractor: (Lex) -> Category,
-            ): FuncKeyLCP {
-                return FuncKeyLCP(
+            ): FuncFromLemmaCategoryPronunciation {
+                return FuncFromLemmaCategoryPronunciation(
                     lemmaExtractor.invoke(lex),
                     categoryExtractor.invoke(lex),
                     lex.pronunciations,
@@ -292,13 +292,13 @@ interface KeyF<R> : Key, (CoreModel) -> R {
      * @property lemmaExtractor lemma extractor function from lex
      * @property categoryExtractor category extractor function from lex
      */
-    open class FuncKeyLCD private constructor(
+    open class FuncFromLemmaCategoryDiscriminant private constructor(
         lemma: Lemma,
         category: Category,
         discriminant: Discriminant?,
         val lemmaExtractor: (Lex) -> Lemma,
         val categoryExtractor: (Lex) -> Category,
-    ) : KeyLCD(lemma, category, discriminant) {
+    ) : FromLemmaCategoryDiscriminant(lemma, category, discriminant) {
 
         override fun toLongString(): String = "KEYF ${javaClass.simpleName} LCD_${lemmaExtractor.toCaseSensitiveOrLowerCased()}_${categoryExtractor.toTypeOrPos()} $this"
 
@@ -312,7 +312,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             discriminant: Discriminant?,
             lemmaExtractor: (Lex) -> Lemma,
             categoryExtractor: (Lex) -> Category,
-        ) : FuncKeyLCD(lemma, category, discriminant, lemmaExtractor, categoryExtractor), MonoValued {
+        ) : FuncFromLemmaCategoryDiscriminant(lemma, category, discriminant, lemmaExtractor, categoryExtractor), MonoValued {
 
             override fun invoke(model: CoreModel): Lex {
                 return Finder.getLexesHavingDiscriminant(
@@ -350,7 +350,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             discriminant: Discriminant?,
             lemmaExtractor: (Lex) -> Lemma,
             categoryExtractor: (Lex) -> Category,
-        ) : FuncKeyLCD(lemma, category, discriminant, lemmaExtractor, categoryExtractor), MultiValued {
+        ) : FuncFromLemmaCategoryDiscriminant(lemma, category, discriminant, lemmaExtractor, categoryExtractor), MultiValued {
 
             override fun invoke(model: CoreModel): Array<Lex> {
                 return Finder.getLexesHavingDiscriminant(
@@ -386,8 +386,8 @@ interface KeyF<R> : Key, (CoreModel) -> R {
                 lex: Lex,
                 lemmaExtractor: (Lex) -> Lemma,
                 categoryExtractor: (Lex) -> Category,
-            ): FuncKeyLCD {
-                return FuncKeyLCD(
+            ): FuncFromLemmaCategoryDiscriminant {
+                return FuncFromLemmaCategoryDiscriminant(
                     lemmaExtractor.invoke(lex),
                     categoryExtractor.invoke(lex),
                     lex.discriminant,

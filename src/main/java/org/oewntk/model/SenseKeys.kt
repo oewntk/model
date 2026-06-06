@@ -67,6 +67,6 @@ object SenseKeys {
         val ssType = synset.type.toPosNum()
         val lexfileNum = "%02d".format(synset.lexfile.toLexFileNum())
         val lexfileIdx = "%02d".format(idx+ discriminant)
-        return "$escapedLemma%$ssType:$lexfileNum:$lexfileIdx::99" //TODO
+        return "$escapedLemma%$ssType:$lexfileNum:$lexfileIdx::99" //TODO 99 is to avoid collisions with existing
     }
 }

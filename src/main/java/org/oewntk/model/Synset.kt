@@ -37,7 +37,10 @@ import java.util.*
 @kotlinx.serialization.Serializable
 data class Synset(
 
+    // key
     val synsetId: SynsetId,
+
+    // value
     val type: SynsetType,
     val domain: Domain,
     val members: Array<Lemma>,
@@ -53,10 +56,10 @@ data class Synset(
     var source: String? = null
 
     // computed properties (key, value)
-    val value: Array<Any?>
-        get() = arrayOf(type, domain, members, definitions, examples, usages, relations, ili, wikidata, source)
     val key: SenseKey
         get() = synsetId
+    val value: Array<Any?>
+        get() = arrayOf(type, domain, members, definitions, examples, usages, relations, ili, wikidata, source)
 
     // computed properties
     val partOfSpeech: PartOfSpeech

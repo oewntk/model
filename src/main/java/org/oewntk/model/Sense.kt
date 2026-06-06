@@ -41,7 +41,9 @@ import java.util.*
  */
 @kotlinx.serialization.Serializable
 data class Sense(
+    // key
     val senseId: SenseKey,
+    // value
     val lexId: LexId,
     val synsetId: SynsetId,
 
@@ -58,12 +60,12 @@ data class Sense(
     var tagCount: TagCount? = null
 
     // computed properties (key, value, properties)
+    val key: SenseKey
+        get() = senseId
     val value: Pair<LexId, SynsetId>
         get() = lexId to synsetId
     val properties: Array<Any?>
         get() = arrayOf(type, indexInLex, examples, adjPosition, relations, verbFrames, verbTemplates, verbTemplates)
-    val key: SenseKey
-        get() = senseId
 
     // computed properties
     val senseKey: SenseKey

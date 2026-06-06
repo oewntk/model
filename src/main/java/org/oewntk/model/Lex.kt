@@ -48,10 +48,10 @@ data class Lex(
     var pronunciations: Set<Pronunciation>? = null
 
     // computed properties (key, value)
-    val value: Set<SenseKey>
-        get() = senseKeys.toSet()
     val key: LexId
         get() = Triple(lemma, type, discriminant)
+    val value: Set<SenseKey>
+        get() = senseKeys.toSet()
     val key2: String
         get() = if (discriminant != null) "${type.value}$discriminant" else type.value.toString()
 

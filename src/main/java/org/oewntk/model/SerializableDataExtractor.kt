@@ -108,11 +108,7 @@ fun Synset.toData(): Map<String, Any> {
     ).apply {
         examples?.let { this["examples"] = it.map { example -> if (example.second == null) example.first else mapOf("text" to example.first, "source" to example.second) }.toList() }
         usages?.let { this["usages"] = it }
-        relations?.let {
-            mapOf(
-                "relation " to it.forEach { (rel, targets) -> this[rel] = targets.toList() }
-            )
-        }
+        relations?.let { this["relation"] = it }
         ili?.let { this["ili"] = it }
         wikidata?.let { this["wikidata"] = it.joinToString(separator = ";") }
     }
@@ -126,7 +122,7 @@ fun synsetFromData(map: Map<String, Any>): Synset {
     val definitions = safeCast<List<String>>(map["definition"]!!)
     val examples = map["example"]?.let { safeCast<List<Pair<String, String?>>>(it) }
     val usages = map["usage"]?.let { safeCast<List<String>>(it) }
-    val relations = map["relation"]?.let { safeCast<Map<String, Set<SynsetId>>>(it) }
+    val relations = map["relation"]?.let { safeCast<Map<Relation, List<SenseKey>>>(it).mapValues { e -> e.value.toSet() } }
     val ili = map["ili"] as String?
     val wikidata = map["wikidata"]?.let { safeCast<String>(it).split(";") }
     return Synset(synsetId, type, domain, members.toTypedArray(), definitions.toTypedArray(), examples?.toTypedArray(), usages?.toTypedArray(), relations, ili, wikidata)
@@ -150,9 +146,10 @@ fun Sense.toData(): Map<String, Any> {
             verbFrames?.let { this["verbFrames"] = it.joinToString(separator = ";") }
             adjPosition?.let { this["adjPosition"] = it }
             relations?.let {
-                mapOf(
-                    "relation " to it.forEach { (rel, targets) -> this[rel] = targets.toList() }
-                )
+                val r = it
+                //.mapValues { e -> e.value.toList() }
+                //.toMap()
+                this["relation"] = r
             }
         }
 }
@@ -163,9 +160,9 @@ fun senseFromData(map: Map<String, Any>): Sense {
     val lexId = lexIdFromData(map)
     val index = map["index"] as Int
     val examples = map["definition"]?.let { safeCast<List<Pair<String, String?>>>(it) }
-    val relations = map["usage"]?.let { safeCast<Map<String, Set<SenseKey>>>(it) }
-    val verbFrames = map["verbFrames"] ?.let { safeCast<String>(it).split(";") }
+    val verbFrames = map["verbFrames"]?.let { safeCast<String>(it).split(";") }
     val adjPosition = map["adjPosition"] as String?
+    val relations = map["relation"]?.let { safeCast<Map<Relation, List<SenseKey>>>(it).mapValues { e -> e.value.toSet() } }
     return Sense(id, lexId, synsetId, index, examples?.toTypedArray(), verbFrames?.toTypedArray(), adjPosition, relations)
 }
 

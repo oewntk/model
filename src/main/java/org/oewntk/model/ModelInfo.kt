@@ -3,8 +3,7 @@
  */
 package org.oewntk.model
 
-import org.oewntk.model.Key.*
-import java.util.Locale
+import java.util.*
 
 /**
  * Model info
@@ -32,24 +31,24 @@ object ModelInfo {
             .count()
 
         val distinctByKeyOEWNShallowLexCount = model.lexes
-            .map { UsingDiscriminant.of(it) }
+            .map { Key.UsingDiscriminant.of(it) }
             .distinct()
             .count()
         val distinctByKeyOEWNDeepLexCount = model.lexes
-            .map { UsingPronunciation.of(it) }
+            .map { Key.UsingPronunciation.of(it) }
             .distinct()
             .count()
 
         val distinctByKeyICLexCount = model.lexes
-            .map { UsingPronunciation.ofIgnoringCase(it) }
+            .map { Key.UsingDiscriminant.ofIgnoringCase(it) }
             .distinct()
             .count()
         val distinctByKeyPOSLexCount = model.lexes
-            .map { UsingPronunciation.ofUsingPartOfSpeech(it) }
+            .map { Key.UsingDiscriminant.ofUsingPartOfSpeech(it) }
             .distinct()
             .count()
         val distinctByKeyPWNLexCount = model.lexes
-            .map { Base.ofIgnoringCaseUsingPartOfSpeech(it) }
+            .map { Key.Base.ofIgnoringCaseUsingPartOfSpeech(it) }
             .distinct()
             .count()
 
@@ -95,10 +94,10 @@ object ModelInfo {
                 format("lexes with discriminant", withDiscriminantLexCount) +
                 format("lexes with pronunciation", withPronunciationLexCount) +
                 format("lexes with multi senses", withMultiSenseLexCount) +
-                format("distinct lexes by (case-sensitive lemma   | type | discrim.) (shallow)", distinctByKeyOEWNShallowLexCount) +
-                format("distinct lexes by (case-sensitive lemma   | type | pronunc.) (deep)", distinctByKeyOEWNDeepLexCount) +
-                format("distinct lexes by (case-sensitive lemma   | pos  | pronunc.) (pos)", distinctByKeyPOSLexCount) +
-                format("distinct lexes by (case-insensitive lemma | type | pronunc.) (ic)", distinctByKeyICLexCount) +
+                format("distinct lexes by (case-sensitive lemma   | type | discr.) (shallow)", distinctByKeyOEWNShallowLexCount) +
+                format("distinct lexes by (case-sensitive lemma   | type | pronun.) (deep)", distinctByKeyOEWNDeepLexCount) +
+                format("distinct lexes by (case-sensitive lemma   | pos  | discr.) (pos)", distinctByKeyPOSLexCount) +
+                format("distinct lexes by (case-insensitive lemma | type | discr.) (ci)", distinctByKeyICLexCount) +
                 format("distinct lexes by (case-insensitive lemma | pos) (pwn)", distinctByKeyPWNLexCount) +
                 format("senses", model.senses.size) +
                 format("distinct sense sets in lexes", distinctSenseGroupsCount) +

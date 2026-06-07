@@ -116,6 +116,8 @@ interface Key {
 
             fun ofIgnoringCase(lex: Lex): UsingDiscriminant = of(lex, Lex::lCLemma)
 
+            fun ofUsingPartOfSpeech(lex: Lex): UsingDiscriminant = UsingDiscriminant.of(lex) { it.partOfSpeech.toCategory() }
+
             fun from(lemma: Lemma, category: Category, discriminant: Discriminant?): UsingDiscriminant = UsingDiscriminant(lemma, category, discriminant)
 
             val wpdComparator: Comparator<UsingDiscriminant> = compareBy<UsingDiscriminant> { it.lemma }

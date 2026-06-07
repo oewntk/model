@@ -219,6 +219,9 @@ open class CoreModel(
         return this
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
+    override fun toString() = "@${hashCode().toHexString()} $source"
+
     /**
      * Info about this model
      *

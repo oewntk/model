@@ -38,37 +38,18 @@ interface Key {
     ) : Base(), Comparable<FromLemmaCategory>, Serializable {
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-            if (other == null || javaClass != other.javaClass) {
-                return false
-            }
-            val that = other as FromLemmaCategory
-            if (lemma != that.lemma) {
-                return false
-            }
-            return this.category == that.category
+            if (this === other) return true
+            if (other !is FromLemmaCategory) return false
+            return if (lemma != other.lemma) false else this.category == other.category
         }
 
-        override fun hashCode(): Int {
-            return Objects.hash(lemma, category)
-        }
+        override fun hashCode(): Int = Objects.hash(lemma, category)
 
-        override fun compareTo(other: FromLemmaCategory): Int {
-            if (this == other) {
-                return 0
-            }
-            return wpComparator.compare(this, other)
-        }
+        override fun compareTo(other: FromLemmaCategory): Int = if (this == other) 0 else wpComparator.compare(this, other)
 
-        override fun toString(): String {
-            return "($lemma,$category)"
-        }
+        override fun toString(): String = "($lemma,$category)"
 
-        override fun toLongString(): String {
-            return "KEY LC ${javaClass.simpleName} $this"
-        }
+        override fun toLongString(): String = "KEY LC ${javaClass.simpleName} $this"
 
         companion object {
 
@@ -122,42 +103,22 @@ interface Key {
     ) : Base(), Comparable<FromLemmaCategoryPronunciation> {
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-            if (other == null || javaClass != other.javaClass) {
+            if (this === other) return true
+            if (other !is FromLemmaCategoryPronunciation) return false
+            if (lemma != other.lemma)
                 return false
-            }
-            val that = other as FromLemmaCategoryPronunciation
-            if (lemma != that.lemma) {
+            if (this.category != other.category)
                 return false
-            }
-            if (this.category != that.category) {
-                return false
-            }
-            val p1 = pronunciations ?: emptySet()
-            val p2 = that.pronunciations ?: emptySet()
-            return p1 == p2
+            return (pronunciations ?: emptySet()) == (other.pronunciations ?: emptySet<Set<Pronunciation>>())
         }
 
-        override fun hashCode(): Int {
-            return Objects.hash(lemma, category, pronunciations)
-        }
+        override fun hashCode(): Int = Objects.hash(lemma, category, pronunciations)
 
-        override fun compareTo(other: FromLemmaCategoryPronunciation): Int {
-            if (this == other) {
-                return 0
-            }
-            return wpaComparator.compare(this, other)
-        }
+        override fun compareTo(other: FromLemmaCategoryPronunciation): Int = if (this == other) 0 else wpaComparator.compare(this, other)
 
-        override fun toString(): String {
-            return "($lemma,$category,$pronunciations)"
-        }
+        override fun toString(): String = "($lemma,$category,$pronunciations)"
 
-        override fun toLongString(): String {
-            return "KEY LCP ${javaClass.simpleName} $this"
-        }
+        override fun toLongString(): String = "KEY LCP ${javaClass.simpleName} $this"
 
         companion object {
 
@@ -223,40 +184,22 @@ interface Key {
     ) : Base(), Comparable<FromLemmaCategoryDiscriminant> {
 
         override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-            if (other == null || javaClass != other.javaClass) {
+            if (this === other) return true
+            if (other !is FromLemmaCategoryDiscriminant) return false
+            if (lemma != other.lemma)
                 return false
-            }
-            val that = other as FromLemmaCategoryDiscriminant
-            if (lemma != that.lemma) {
+            if (this.category != other.category)
                 return false
-            }
-            if (this.category != that.category) {
-                return false
-            }
-            return this.discriminant == that.discriminant
+            return this.discriminant == other.discriminant
         }
 
-        override fun hashCode(): Int {
-            return Objects.hash(lemma, category, discriminant)
-        }
+        override fun hashCode(): Int = Objects.hash(lemma, category, discriminant)
 
-        override fun compareTo(other: FromLemmaCategoryDiscriminant): Int {
-            if (this == other) {
-                return 0
-            }
-            return wpdComparator.compare(this, other)
-        }
+        override fun compareTo(other: FromLemmaCategoryDiscriminant): Int = if (this == other) 0 else wpdComparator.compare(this, other)
 
-        override fun toString(): String {
-            return "($lemma,$category,$discriminant)"
-        }
+        override fun toString(): String = "($lemma,$category,$discriminant)"
 
-        override fun toLongString(): String {
-            return "KEY LCD ${javaClass.simpleName} $this"
-        }
+        override fun toLongString(): String = "KEY LCD ${javaClass.simpleName} $this"
 
         companion object {
 

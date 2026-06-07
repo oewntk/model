@@ -21,7 +21,7 @@ object ModelInfo {
             .map { it.lemma }
             .distinct()
             .count()
-        val lcWordCount = model.lexes
+        val icWordCount = model.lexes
             .map { it.lCLemma }
             .distinct()
             .count()
@@ -31,26 +31,28 @@ object ModelInfo {
             .distinct()
             .count()
 
-        val distinctByKeyOEWNLexCount = model.lexes
+        val distinctByKeyOEWNShallowLexCount = model.lexes
+            .map { FromLemmaCategoryDiscriminant.of_t(it) }
+            .distinct()
+            .count()
+        val distinctByKeyOEWNDeepLexCount = model.lexes
             .map { FromLemmaCategoryPronunciation.of_t(it) }
             .distinct()
             .count()
-        val distinctByKeyShallowLexCount = model.lexes
-            .map { FromLemmaCategoryDiscriminant.of_t(it) }
+
+        val distinctByKeyICLexCount = model.lexes
+            .map { FromLemmaCategoryPronunciation.of_lc_t(it) }
             .distinct()
             .count()
         val distinctByKeyPOSLexCount = model.lexes
             .map { FromLemmaCategoryPronunciation.of_p(it) }
             .distinct()
             .count()
-        val distinctByKeyICLexCount = model.lexes
-            .map { FromLemmaCategoryPronunciation.of_lc_t(it) }
-            .distinct()
-            .count()
         val distinctByKeyPWNLexCount = model.lexes
             .map { FromLemmaCategory.of_lc_p(it) }
             .distinct()
             .count()
+
         val distinctSenseGroupsCount = model.lexes
             .map { it.senseKeys.toSet() }
             .distinct()
@@ -86,18 +88,18 @@ object ModelInfo {
             .sumOf { it.size.toLong() }
 
         return format("lexes", model.lexes.size) +
-                format("lemmas (distinct CS)", csWordCount) +
-                format("lemmas (distinct LC)", lcWordCount) +
+                format("lemmas (distinct case sensitive)", csWordCount) +
+                format("lemmas (distinct ignore case)", icWordCount) +
                 format("lemmas (cased)", casedCount) +
                 format("discriminant types", discriminantCount) +
                 format("lexes with discriminant", withDiscriminantLexCount) +
                 format("lexes with pronunciation", withPronunciationLexCount) +
                 format("lexes with multi senses", withMultiSenseLexCount) +
-                format("distinct lexes by key W_P_A_type (deep)", distinctByKeyOEWNLexCount) +
-                format("distinct lexes by key W_P_D_type (shallow)", distinctByKeyShallowLexCount) +
-                format("distinct lexes by key W_P_A_pos (pos)", distinctByKeyPOSLexCount) +
-                format("distinct lexes by key W_P_A_lc_type (ic)", distinctByKeyICLexCount) +
-                format("distinct lexes by key W_P_lc_pos (pwn)", distinctByKeyPWNLexCount) +
+                format("distinct lexes by (case-sensitive lemma   | type | discrim.) (shallow)", distinctByKeyOEWNShallowLexCount) +
+                format("distinct lexes by (case-sensitive lemma   | type | pronunc.) (deep)", distinctByKeyOEWNDeepLexCount) +
+                format("distinct lexes by (case-sensitive lemma   | pos  | pronunc.) (pos)", distinctByKeyPOSLexCount) +
+                format("distinct lexes by (case-insensitive lemma | type | pronunc.) (ic)", distinctByKeyICLexCount) +
+                format("distinct lexes by (case-insensitive lemma | pos) (pwn)", distinctByKeyPWNLexCount) +
                 format("senses", model.senses.size) +
                 format("distinct sense sets in lexes", distinctSenseGroupsCount) +
                 format("senses in sense sets", sensesInSenseGroupsSum) +
@@ -179,7 +181,7 @@ object ModelInfo {
     /**
      * Format for count output
      */
-    private const val COUNT_TEMPLATE = "%-50s: %6d%n"
+    private const val COUNT_TEMPLATE = "%-70s: %6d%n"
 
     private fun format(label: String, value: Any): String {
         return String.format(COUNT_TEMPLATE, label, value)

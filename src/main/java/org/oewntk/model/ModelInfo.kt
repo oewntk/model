@@ -32,20 +32,20 @@ object ModelInfo {
             .count()
 
         val distinctByKeyOEWNShallowLexCount = model.lexes
-            .map { FromLemmaCategoryDiscriminant.of_t(it) }
+            .map { UsingDiscriminant.of_t(it) }
             .distinct()
             .count()
         val distinctByKeyOEWNDeepLexCount = model.lexes
-            .map { FromLemmaCategoryPronunciation.of_t(it) }
+            .map { UsingPronunciation.of_t(it) }
             .distinct()
             .count()
 
         val distinctByKeyICLexCount = model.lexes
-            .map { FromLemmaCategoryPronunciation.of_lc_t(it) }
+            .map { UsingPronunciation.of_lc_t(it) }
             .distinct()
             .count()
         val distinctByKeyPOSLexCount = model.lexes
-            .map { FromLemmaCategoryPronunciation.of_p(it) }
+            .map { UsingPronunciation.of_p(it) }
             .distinct()
             .count()
         val distinctByKeyPWNLexCount = model.lexes

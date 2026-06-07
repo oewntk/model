@@ -38,13 +38,13 @@ object LibTestModelDuplicates {
     }
 
     fun testDuplicatesForKeyOEWN(model: CoreModel, ps: PrintStream) {
-        testDuplicatesForKeyMono(model, { KeyF.FuncFromLemmaCategoryPronunciation.Mono.of(Lex::lemma, { lex -> lex.type.toCategory() }, it) }, ps)
+        testDuplicatesForKeyMono(model, { KeyF.FuncUsingPronunciation.Mono.of(Lex::lemma, { lex -> lex.type.toCategory() }, it) }, ps)
     }
 
     fun testDuplicatesForKeyPos(model: CoreModel, ps: PrintStream) {
         testDuplicatesForKeyMulti(
             model,
-            { KeyF.FuncFromLemmaCategoryPronunciation.Multi.of(Lex::lemma, { lex -> lex.partOfSpeech.toCategory() }, it) },
+            { KeyF.FuncUsingPronunciation.Multi.of(Lex::lemma, { lex -> lex.partOfSpeech.toCategory() }, it) },
             ps
         )
     }
@@ -52,7 +52,7 @@ object LibTestModelDuplicates {
     fun testDuplicatesForKeyIC(model: CoreModel, ps: PrintStream) {
         testDuplicatesForKeyMulti(
             model,
-            { KeyF.FuncFromLemmaCategoryPronunciation.Multi.of(Lex::lCLemma, { lex -> lex.type.toCategory() }, it) },
+            { KeyF.FuncUsingPronunciation.Multi.of(Lex::lCLemma, { lex -> lex.type.toCategory() }, it) },
             ps
         )
     }

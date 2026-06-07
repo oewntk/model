@@ -6,8 +6,8 @@ package org.oewntk.model
 
 import org.oewntk.model.Finder.getLexes
 import org.oewntk.model.Finder.getLexesHavingPos
-import org.oewntk.model.Key.FromLemmaCategory.Companion.of_lc_p
-import org.oewntk.model.Key.UsingPronunciation.Companion.of_p
+import org.oewntk.model.Key.Base.Companion.ofIgnoringCaseUsingPartOfSpeech
+import org.oewntk.model.Key.UsingPronunciation.Companion.ofUsingPartOfSpeech
 import java.io.PrintStream
 
 object LibTestModel {
@@ -101,18 +101,18 @@ object LibTestModel {
     }
 
     private fun dumpKeyEquals(lex1: Lex, lex2: Lex, ps: PrintStream) {
-        ps.printf("\t--- key = %s%n", Key.UsingPronunciation.of_t(lex1) == Key.UsingPronunciation.of_t(lex2))
-        ps.printf("\tsha key = %s%n", Key.UsingDiscriminant.of_t(lex1) == Key.UsingDiscriminant.of_t(lex2))
-        ps.printf("\tic  key = %s%n", Key.UsingDiscriminant.of_lc_t(lex1) == Key.UsingDiscriminant.of_lc_t(lex2))
-        ps.printf("\tpos key = %s%n", of_p(lex1) == of_p(lex2))
-        ps.printf("\tpwn key = %s%n", of_lc_p(lex1) == of_lc_p(lex2))
+        ps.printf("\t--- key = %s%n", Key.UsingPronunciation.of(lex1) == Key.UsingPronunciation.of(lex2))
+        ps.printf("\tsha key = %s%n", Key.UsingDiscriminant.of(lex1) == Key.UsingDiscriminant.of(lex2))
+        ps.printf("\tic  key = %s%n", Key.UsingDiscriminant.ofIgnoringCase(lex1) == Key.UsingDiscriminant.ofIgnoringCase(lex2))
+        ps.printf("\tpos key = %s%n", ofUsingPartOfSpeech(lex1) == ofUsingPartOfSpeech(lex2))
+        ps.printf("\tpwn key = %s%n", ofIgnoringCaseUsingPartOfSpeech(lex1) == ofIgnoringCaseUsingPartOfSpeech(lex2))
     }
 
     private fun dumpKeys(lex: Lex, ps: PrintStream) {
-        ps.printf("\t--- key = %s%n", Key.UsingPronunciation.of_t(lex))
-        ps.printf("\tsha key = %s%n", Key.UsingDiscriminant.of_t(lex))
-        ps.printf("\tigc key = %s%n", Key.UsingPronunciation.of_lc_t(lex))
-        ps.printf("\tpos key = %s%n", of_p(lex))
-        ps.printf("\tpwn key = %s%n", of_lc_p(lex))
+        ps.printf("\t--- key = %s%n", Key.UsingPronunciation.of(lex))
+        ps.printf("\tsha key = %s%n", Key.UsingDiscriminant.of(lex))
+        ps.printf("\tigc key = %s%n", Key.UsingPronunciation.ofIgnoringCase(lex))
+        ps.printf("\tpos key = %s%n", ofUsingPartOfSpeech(lex))
+        ps.printf("\tpwn key = %s%n", ofIgnoringCaseUsingPartOfSpeech(lex))
     }
 }

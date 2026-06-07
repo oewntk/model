@@ -60,7 +60,7 @@ object LibTestModelDuplicates {
     fun testDuplicatesForKeyPWN(model: CoreModel, ps: PrintStream) {
         testDuplicatesForKeyMulti(
             model,
-            { KeyF.FuncFromLemmaCategory.Multi.of(Lex::lCLemma, { lex -> lex.type.toCategory() }, it) },
+            { KeyF.FuncBase.Multi.of(Lex::lCLemma, { lex -> lex.type.toCategory() }, it) },
             ps
         )
     }

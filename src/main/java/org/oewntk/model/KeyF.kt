@@ -32,13 +32,13 @@ interface KeyF<R> : Key, (CoreModel) -> R {
      * @property lemmaExtractor     lemma extractor function from lex
      * @property categoryExtractor  category extractor function from lex
      */
-    open class FuncFromLemmaCategory private constructor(
+    open class FuncBase private constructor(
         override var lemma: Lemma,
         override var category: Category,
         val lemmaExtractor: (Lex) -> Lemma,
         val categoryExtractor: (Lex) -> Category,
 
-        ) : FromLemmaCategory(lemma, category) {
+        ) : Base(lemma, category) {
 
         override fun toLongString(): String = "KEYF ${javaClass.simpleName} LC_${lemmaExtractor.toCaseSensitiveOrLowerCased()}_${categoryExtractor.toTypeOrPos()} $this"
 
@@ -50,7 +50,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             category: Category,
             lemmaExtractor: (Lex) -> Lemma,
             categoryExtractor: (Lex) -> Category,
-        ) : FuncFromLemmaCategory(lemma, category, lemmaExtractor, categoryExtractor), MonoValued {
+        ) : FuncBase(lemma, category, lemmaExtractor, categoryExtractor), MonoValued {
 
             override fun invoke(model: CoreModel): Lex {
                 return Finder.getLexesHaving(model, lemma, category, lemmaExtractor, categoryExtractor)
@@ -91,7 +91,7 @@ interface KeyF<R> : Key, (CoreModel) -> R {
             category: Category,
             lemmaExtractor: (Lex) -> Lemma,
             categoryExtractor: (Lex) -> Category,
-        ) : FuncFromLemmaCategory(lemma, category, lemmaExtractor, categoryExtractor), MultiValued {
+        ) : FuncBase(lemma, category, lemmaExtractor, categoryExtractor), MultiValued {
 
             override fun invoke(model: CoreModel): Array<Lex> {
                 return Finder.getLexesHaving(model, lemma, category, lemmaExtractor, categoryExtractor)
@@ -131,8 +131,8 @@ interface KeyF<R> : Key, (CoreModel) -> R {
                 lex: Lex,
                 lemmaExtractor: (Lex) -> Lemma,
                 categoryExtractor: (Lex) -> Category,
-            ): FuncFromLemmaCategory {
-                return FuncFromLemmaCategory(
+            ): FuncBase {
+                return FuncBase(
                     lemmaExtractor.invoke(lex),
                     categoryExtractor.invoke(lex),
                     lemmaExtractor,

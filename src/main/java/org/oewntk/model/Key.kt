@@ -16,7 +16,7 @@ import java.util.*
 interface Key {
 
     @kotlinx.serialization.Serializable
-    sealed class Base : Key, Serializable {
+    sealed class Proto : Key, Serializable {
 
         abstract val lemma: Lemma
 
@@ -32,20 +32,20 @@ interface Key {
      * @property category category: part-of-speech or type (C for category)
      */
     @kotlinx.serialization.Serializable
-    open class FromLemmaCategory(
+    open class Base(
         override val lemma: Lemma,
         override val category: Category,
-    ) : Base(), Comparable<FromLemmaCategory>, Serializable {
+    ) : Proto(), Comparable<Base>, Serializable {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
-            if (other !is FromLemmaCategory) return false
+            if (other !is Base) return false
             return if (lemma != other.lemma) false else this.category == other.category
         }
 
         override fun hashCode(): Int = Objects.hash(lemma, category)
 
-        override fun compareTo(other: FromLemmaCategory): Int = if (this == other) 0 else wpComparator.compare(this, other)
+        override fun compareTo(other: Base): Int = if (this == other) 0 else wpComparator.compare(this, other)
 
         override fun toString(): String = "($lemma,$category)"
 
@@ -57,25 +57,19 @@ interface Key {
                 lex: Lex,
                 lemmaExtractor: (Lex) -> Lemma = Lex::lemma,
                 categoryExtractor: (Lex) -> Category = { it.type.toCategory() },
-            ): FromLemmaCategory {
-                return FromLemmaCategory(lemmaExtractor(lex), categoryExtractor(lex))
-            }
+            ): Base = Base(lemmaExtractor(lex), categoryExtractor(lex))
 
-            fun of_t(lex: Lex): FromLemmaCategory = of(lex)
+            fun ofIgnoringCase(lex: Lex): Base = of(lex, Lex::lCLemma)
 
-            fun of_p(lex: Lex): FromLemmaCategory = of(lex) { it.partOfSpeech.toCategory() }
+            fun ofIgnoringCaseUsingPartOfSpeech(lex: Lex): Base = of(lex) { it.partOfSpeech.toCategory() }
 
-            fun of_lc_t(lex: Lex): FromLemmaCategory = of(lex, Lex::lCLemma)
+            fun ofUsingPartOfSpeech(lex: Lex): Base = of(lex) { it.partOfSpeech.toCategory() }
 
-            fun of_lc_p(lex: Lex): FromLemmaCategory = of(lex) { it.partOfSpeech.toCategory() }
+            fun from(lemma: Lemma, category: Category): Base = Base(lemma, category)
 
-            fun from(lemma: Lemma, category: Category): FromLemmaCategory {
-                return FromLemmaCategory(lemma, category)
-            }
-
-            val wpComparator: Comparator<FromLemmaCategory> = Comparator
-                .comparing { k: FromLemmaCategory -> k.lemma }
-                .thenComparing { k: FromLemmaCategory -> k.category }
+            val wpComparator: Comparator<Base> = Comparator
+                .comparing { k: Base -> k.lemma }
+                .thenComparing { k: Base -> k.category }
 
         }
     }
@@ -92,7 +86,7 @@ interface Key {
         override val lemma: Lemma,
         override val category: Category,
         val discriminant: Discriminant?,
-    ) : Base(), Comparable<UsingDiscriminant> {
+    ) : Proto(), Comparable<UsingDiscriminant> {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
@@ -118,21 +112,11 @@ interface Key {
                 lex: Lex,
                 lemmaExtractor: (Lex) -> Lemma = Lex::lemma,
                 categoryExtractor: (Lex) -> Category = { it.type.toCategory() },
-            ): UsingDiscriminant {
-                return UsingDiscriminant(lemmaExtractor(lex), categoryExtractor(lex), lex.discriminant)
-            }
+            ): UsingDiscriminant = UsingDiscriminant(lemmaExtractor(lex), categoryExtractor(lex), lex.discriminant)
 
-            fun of_t(lex: Lex): UsingDiscriminant = of(lex)
+            fun ofIgnoringCase(lex: Lex): UsingDiscriminant = of(lex, Lex::lCLemma)
 
-            fun of_p(lex: Lex): UsingDiscriminant  = of(lex, Lex::lemma) { it.partOfSpeech.toCategory() }
-
-            fun of_lc_t(lex: Lex): UsingDiscriminant  = of(lex, Lex::lCLemma) { it.type.toCategory() }
-
-            fun of_lc_p(lex: Lex): UsingDiscriminant = of(lex, Lex::lCLemma) { it.partOfSpeech.toCategory() }
-
-            fun from(lemma: Lemma, category: Category, discriminant: Discriminant?): UsingDiscriminant {
-                return UsingDiscriminant(lemma, category, discriminant)
-            }
+            fun from(lemma: Lemma, category: Category, discriminant: Discriminant?): UsingDiscriminant = UsingDiscriminant(lemma, category, discriminant)
 
             val wpdComparator: Comparator<UsingDiscriminant> = compareBy<UsingDiscriminant> { it.lemma }
                 .thenBy { it.category }
@@ -152,7 +136,7 @@ interface Key {
         override var lemma: Lemma,
         override var category: Category,
         val pronunciations: Set<Pronunciation>?,
-    ) : Key.Base(), Comparable<UsingPronunciation> {
+    ) : Proto(), Comparable<UsingPronunciation> {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
@@ -176,27 +160,15 @@ interface Key {
 
             fun of(
                 lex: Lex,
-                lemmaExtractor: (Lex) -> Lemma,
-                categoryExtractor: (Lex) -> Category,
-            ): UsingPronunciation {
-                return UsingPronunciation(lemmaExtractor(lex), categoryExtractor(lex), lex.pronunciations)
-            }
+                lemmaExtractor: (Lex) -> Lemma = Lex::lemma,
+                categoryExtractor: (Lex) -> Category = { it.type.toCategory() },
+            ): UsingPronunciation = UsingPronunciation(lemmaExtractor(lex), categoryExtractor(lex), lex.pronunciations)
 
-            fun of_t(lex: Lex): UsingPronunciation {
-                return of(lex, Lex::lemma) { it.type.toCategory() }
-            }
+            fun ofUsingPartOfSpeech(lex: Lex): UsingPronunciation = of(lex) { it.partOfSpeech.toCategory() }
 
-            fun of_p(lex: Lex): UsingPronunciation {
-                return of(lex, Lex::lemma) { it.partOfSpeech.toCategory() }
-            }
+            fun ofIgnoringCase(lex: Lex): UsingPronunciation = of(lex, Lex::lCLemma)
 
-            fun of_lc_t(lex: Lex): UsingPronunciation {
-                return of(lex, Lex::lCLemma) { it.type.toCategory() }
-            }
-
-            fun from(lemma: Lemma, category: Category, pronunciations: Set<Pronunciation>): UsingPronunciation {
-                return UsingPronunciation(lemma, category, pronunciations)
-            }
+            fun from(lemma: Lemma, category: Category, pronunciations: Set<Pronunciation>): UsingPronunciation = UsingPronunciation(lemma, category, pronunciations)
 
             private val pronunciationsComparator: Comparator<Set<Pronunciation>?> =
                 Comparator { ps1: Set<Pronunciation>?, ps2: Set<Pronunciation>? ->

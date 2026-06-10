@@ -61,7 +61,7 @@ class Model(
     var source2: String? = null
 
     /**
-     * Language model
+     * Private constructor that injects template and data count into senses
      *
      * @param  lexes                  lexes
      * @param  senses                 senses
@@ -103,7 +103,7 @@ class Model(
     }
 
     /**
-     * Constructor from core model
+     * Constructor from core model and frame and template data
      *
      * @param coreModel             base model
      * @param verbFrames            verb frames

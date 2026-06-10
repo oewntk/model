@@ -45,9 +45,9 @@ data class DataModel(
  * @property source2              source2
  */
 class Model(
-    override val lexes: Collection<Lex>,
-    override val senses: Collection<Sense>,
-    override val synsets: Collection<Synset>,
+    lexes: Collection<Lex>,
+    senses: Collection<Sense>,
+    synsets: Collection<Synset>,
     val verbFrames: Collection<VerbFrame>,
     val verbTemplates: Collection<VerbTemplate>,
 ) : CoreModel(lexes, senses, synsets) {

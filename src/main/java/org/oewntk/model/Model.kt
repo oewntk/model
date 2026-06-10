@@ -71,7 +71,7 @@ class Model(
      * @param  senseToVerbTemplates   sensekey-to-verb template
      * @param  senseToTagCounts       sensekey-to-tagcount
      */
-    constructor(
+    private constructor(
         lexes: Collection<Lex>,
         senses: Collection<Sense>,
         synsets: Collection<Synset>,

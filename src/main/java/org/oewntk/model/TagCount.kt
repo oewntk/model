@@ -15,12 +15,12 @@ import java.io.Serializable
  */
 @kotlinx.serialization.Serializable
 data class TagCount(
-    private val senseNum: Int,
+    val senseNum: Int,
     val count: Int,
 
     ) : Serializable {
 
     override fun toString(): String {
-        return count.toString()
+        return "$count for #$senseNum"
     }
 }

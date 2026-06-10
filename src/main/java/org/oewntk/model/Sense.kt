@@ -50,13 +50,12 @@ data class Sense(
     val indexInLex: Int = 0,
     val examples: Array<Pair<String, String?>>? = null,
     val verbFrames: Array<VerbFrameId>? = null,
+    var verbTemplates: Array<VerbTemplateId>? = null,
     val adjPosition: AdjPosition? = null,
+    var tagCount: Int? = null,
     var relations: Map<Relation, Set<SenseKey>>? = null,
 
     ) : Comparable<Sense>, Serializable {
-
-    var verbTemplates: Array<Int>? = null
-    var tagCount: TagCount? = null
 
     // computed properties (key, value, properties)
     val key: SenseKey
@@ -80,7 +79,7 @@ data class Sense(
     val senseKey: SenseKey
         get() = senseId
     val intTagCount: Int
-        get() = if (tagCount == null) 0 else tagCount!!.count
+        get() = tagCount?: 0
     val flatRelations: List<Pair<Relation, SynsetId>>?
         get() = relations?.flatMap { (key, values) -> values.map { key to it } }
 

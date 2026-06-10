@@ -50,7 +50,10 @@ typealias PartOfSpeech = PartOfSpeechImpl
  * @property discriminant discriminant (nullable)
  */
 @kotlinx.serialization.Serializable
-data class LexIdImpl(val lemma: Lemma, val type: SynsetType, val discriminant: Discriminant?): Serializable
+data class LexIdImpl(val lemma: Lemma, val type: SynsetType, val discriminant: Discriminant?) : Serializable {
+
+    override fun toString() = "$lemma-type.value" + if (discriminant != null) "-$discriminant" else ""
+}
 
 /**
  * Synset type

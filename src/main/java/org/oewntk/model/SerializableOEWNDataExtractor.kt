@@ -76,7 +76,7 @@ fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?): Map<String, Any> {
  * - sent
  * - <relations>
  */
-fun Sense.toOEWNData(): Map<String, Any> {
+fun Sense.toOEWNData(compat: Boolean = false): Map<String, Any> {
     return mutableMapOf<String, Any>(
         "id" to senseKey,
         "synset" to synsetId,
@@ -84,6 +84,7 @@ fun Sense.toOEWNData(): Map<String, Any> {
         adjPosition?.let { this["adjposition"] = it }
         examples?.let { this["sent"] = it.map { it2 -> if (it2.second == null) it2.first else mapOf("text" to it2.first, "source" to it2.second) } }
         verbFrames?.let { this["subcat"] = it }
+        if (!compat) verbTemplates?.let { this["template"] = it }
         relations
             ?.filterNot { it.key in INVERSE_SENSE_RELATIONS_SET }
             ?.forEach { (rel: String, target) ->

@@ -160,10 +160,12 @@ fun senseFromData(map: Map<String, Any>): Sense {
     val lexId = lexIdFromData(map)
     val index = map["index"] as Int
     val examples = map["definition"]?.let { safeCast<List<Pair<String, String?>>>(it) }
-    val verbFrames = map["verbFrames"]?.let { safeCast<String>(it).split(";") }
+    val verbFrames = map["verbFrames"]?.let { safeCast<VerbFrameId>(it).split(";") }
+    val verbTemplates = map["verbTemplates"]?.let { safeCast<String>(it).split(";").map(String::toInt) }
     val adjPosition = map["adjPosition"] as String?
+    val tagCount = map["tagCount"] as Int?
     val relations = map["relation"]?.let { safeCast<Map<Relation, List<SenseKey>>>(it).mapValues { e -> e.value.toSet() } }
-    return Sense(id, lexId, synsetId, index, examples?.toTypedArray(), verbFrames?.toTypedArray(), adjPosition, relations)
+    return Sense(id, lexId, synsetId, index, examples?.toTypedArray(), verbFrames?.toTypedArray(), verbTemplates?.toTypedArray(), adjPosition, tagCount, relations)
 }
 
 // S E Q U E N C E S   O F   O B J E C T S

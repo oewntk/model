@@ -95,10 +95,12 @@ class Model(
         for ((sensekey, tagCount) in senseToTagCounts) {
             val sense = senseFinder(sensekey)
             if (sense != null) {
-                sense.tagCount = tagCount
-            } else if (WARN_UNRESOLVABLE_SENSE) {
+                if (tagCount.senseNum == sense.indexInLex + 1) {
+                    sense.tagCount = tagCount.count
+                } else
+                    Tracing.psErr.println("[W] Unmatched sensenum in $sense with tagcount $tagCount")
+            } else if (WARN_UNRESOLVABLE_SENSE)
                 Tracing.psErr.println("[W] Unresolvable $sensekey with tagcount $tagCount")
-            }
         }
     }
 
@@ -175,7 +177,7 @@ class Model(
         get() = arrayOf(source, source2)
 
     @OptIn(ExperimentalStdlibApi::class)
-    override fun toString() = "@${hashCode().toHexString()} ${sources.joinToString(prefix="[", postfix="]") { it?:"NULL"}}"
+    override fun toString() = "@${hashCode().toHexString()} ${sources.joinToString(prefix = "[", postfix = "]") { it ?: "NULL" }}"
 
     /**
      * Info about this model

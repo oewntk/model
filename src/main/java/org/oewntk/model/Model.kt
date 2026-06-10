@@ -20,6 +20,12 @@ data class DataModel(
     constructor (
         model: Model,
     ) : this(model.lexes, model.senses, model.synsets, model.verbFrames, model.verbTemplates)
+
+    constructor (
+        coreModel: CoreModel,
+        verbFrames: Collection<VerbFrame>,
+        verbTemplates: Collection<VerbTemplate>,
+    ) : this(coreModel.lexes, coreModel.senses, coreModel.synsets, verbFrames, verbTemplates)
 }
 
 /**
@@ -120,7 +126,7 @@ class Model(
      * @param sensesToTagCounts     collection of entries of type sensekey-to-tagcount
      */
     constructor(
-        coreModel: CoreModel,
+        coreModel: DataCoreModel,
         verbFrames: Collection<VerbFrame>,
         verbTemplates: Collection<VerbTemplate>,
         sensesToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateId>>>,

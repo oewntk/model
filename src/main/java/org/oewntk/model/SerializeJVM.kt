@@ -71,9 +71,9 @@ object SerializeJVM {
      * @throws IOException io exception
      */
     @Throws(IOException::class)
-    private fun serialize(os: OutputStream, `object`: Any?) {
+    private fun serialize(os: OutputStream, obj: Any?) {
         ObjectOutputStream(os).use { oos ->
-            oos.writeObject(`object`)
+            oos.writeObject(obj)
         }
     }
 }

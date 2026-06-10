@@ -7,6 +7,7 @@ import org.oewntk.model.MapFactory.map
 import java.io.Serializable
 
 @kotlinx.serialization.Serializable
+@kotlinx.serialization.SerialName("data_model")
 data class DataModel(
     override val lexes: Collection<Lex>,
     override val senses: Collection<Sense>,

@@ -20,6 +20,7 @@ import java.util.*
  * @property synsets        synsets (unmodifiable)
  */
 @kotlinx.serialization.Serializable
+@kotlinx.serialization.SerialName("base_model")
 sealed class BaseModel : Serializable {
 
     abstract val lexes: Collection<Lex>
@@ -28,6 +29,7 @@ sealed class BaseModel : Serializable {
 }
 
 @kotlinx.serialization.Serializable
+@kotlinx.serialization.SerialName("data_core_model")
 data class DataCoreModel(
     override val lexes: Collection<Lex>,
     override val senses: Collection<Sense>,
@@ -55,6 +57,7 @@ data class DataCoreModel(
  * @property synsetsById    transient synsets mapped by synset id
  */
 @kotlinx.serialization.Serializable
+@kotlinx.serialization.SerialName("core_model")
 open class CoreModel(
     override val lexes: Collection<Lex>,
     override val senses: Collection<Sense>,

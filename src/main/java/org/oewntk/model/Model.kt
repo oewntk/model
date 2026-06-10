@@ -103,7 +103,7 @@ class Model(
     }
 
     /**
-     * Constructor from base model
+     * Constructor from core model
      *
      * @param coreModel             base model
      * @param verbFrames            verb frames
@@ -112,7 +112,7 @@ class Model(
      * @param sensesToTagCounts     collection of entries of type sensekey-to-tagcount
      */
     constructor(
-        coreModel: DataCoreModel,
+        coreModel: CoreModel,
         verbFrames: Collection<VerbFrame>,
         verbTemplates: Collection<VerbTemplate>,
         sensesToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateId>>>,

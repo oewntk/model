@@ -103,20 +103,6 @@ class Model(
     }
 
     /**
-     * Constructor from data
-     *
-     * @param data data core model
-     */
-    constructor (
-        data: DataModel,
-        source0: String,
-        source20: String,
-    ) : this(data.lexes, data.senses, data.synsets, data.verbFrames, data.verbTemplates) {
-        source = source0
-        source2 = source20
-    }
-
-    /**
      * Constructor from base model
      *
      * @param coreModel             base model
@@ -140,6 +126,20 @@ class Model(
         sensesToVerbTemplates,
         sensesToTagCounts
     )
+
+    /**
+     * Constructor from data
+     *
+     * @param data data core model
+     */
+    constructor (
+        data: DataModel,
+        source0: String,
+        source20: String,
+    ) : this(data.lexes, data.senses, data.synsets, data.verbFrames, data.verbTemplates) {
+        source = source0
+        source2 = source20
+    }
 
     /**
      * Verb frames mapped by id

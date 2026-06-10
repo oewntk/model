@@ -66,12 +66,12 @@ object SerializeJVM {
     /**
      * Serialize object to output stream
      *
-     * @param os     output stream
-     * @param object object
+     * @param os output stream
+     * @param obj object
      * @throws IOException io exception
      */
     @Throws(IOException::class)
-    private fun serialize(os: OutputStream, obj: Any?) {
+    fun serialize(os: OutputStream, obj: Any?) {
         ObjectOutputStream(os).use { oos ->
             oos.writeObject(obj)
         }

@@ -92,13 +92,15 @@ class Model(
         }
 
         // set sense's tag counts
+
         for ((sensekey, tagCount) in senseToTagCounts) {
             val sense = senseFinder(sensekey)
             if (sense != null) {
-                if (tagCount.senseNum == sense.indexInLex + 1) {
-                    sense.tagCount = tagCount.count
-                } else
-                    Tracing.psErr.println("[W] Unmatched sensenum in $sense with tagcount $tagCount")
+                sense.tagCount = tagCount.count
+                if (sense.indexInLex + 1 != tagCount.senseNum) {
+                    if (WARN_IF_SENSENUM_NOT_EQUAL_INDEX) Tracing.psErr.println("[W] Unequal sense index ${sense.indexInLex + 1} in ${sense.senseId} with tag count sense num ${tagCount.senseNum}")
+                    if (WARN_IF_SENSENUM_LESS_THAN_INDEX && sense.indexInLex + 1 > tagCount.senseNum) Tracing.psErr.println("[W] Sense index ${sense.indexInLex + 1} in ${sense.senseId} more than tag count sense num ${tagCount.senseNum}")
+                }
             } else if (WARN_UNRESOLVABLE_SENSE)
                 Tracing.psErr.println("[W] Unresolvable $sensekey with tagcount $tagCount")
         }
@@ -189,6 +191,8 @@ class Model(
     }
 
     companion object {
-        const val WARN_UNRESOLVABLE_SENSE = false
+        private const val WARN_UNRESOLVABLE_SENSE = false
+        private const val WARN_IF_SENSENUM_NOT_EQUAL_INDEX = false
+        private const val WARN_IF_SENSENUM_LESS_THAN_INDEX = false
     }
 }

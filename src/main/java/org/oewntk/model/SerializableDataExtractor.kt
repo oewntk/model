@@ -40,7 +40,7 @@ fun LexId.toData(): Map<String, Any> {
 
 fun lexIdFromData(map: Map<String, Any>): LexId {
     val lemma = map["lemma"] as Lemma
-    val type = SynsetType.valueOf((map["type"] as String).uppercase())
+    val type = SynsetType.fromKey2(map["type"] as String)
     val discriminant = map["discriminant"] as Discriminant?
     return LexId(lemma, type, discriminant)
 }
@@ -116,7 +116,7 @@ fun Synset.toData(): Map<String, Any> {
 
 fun synsetFromData(map: Map<String, Any>): Synset {
     val synsetId = map["id"] as SynsetId
-    val type = SynsetType.valueOf((map["type"] as String).uppercase())
+    val type = SynsetType.fromKey2(map["type"] as String)
     val domain = map["domain"] as Domain
     val members = safeCast<List<Lemma>>(map["member"]!!)
     val definitions = safeCast<List<String>>(map["definition"]!!)

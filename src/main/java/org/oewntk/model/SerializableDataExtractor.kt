@@ -1,12 +1,12 @@
 package org.oewntk.model
 
-// O B J E C T
+// O B J E C T S
 
 /**
- * Pronunciation to OEWN serializable map
+ * Lex id to OEWN serializable dictionary
  *
- * @receiver pronunciation
- * @return map
+ * @receiver lex id
+ * @return dictionary
  * Keys:
  *  - lemma
  *  - type
@@ -22,18 +22,24 @@ fun LexId.toData(): Map<String, Any> {
         }
 }
 
-fun lexIdFromData(map: Map<String, Any>): LexId {
-    val lemma = map["lemma"] as Lemma
-    val type = SynsetType.fromKey2(map["type"] as String)
-    val discriminant = map["discriminant"] as Discriminant?
+/**
+ * LexId from dict
+ *
+ * @param dict dictionary
+ * @return lex id
+ */
+fun lexIdFromData(dict: Map<String, Any>): LexId {
+    val lemma = dict["lemma"] as Lemma
+    val type = SynsetType.fromKey2(dict["type"] as String)
+    val discriminant = dict["discriminant"] as Discriminant?
     return LexId(lemma, type, discriminant)
 }
 
 /**
- * Pronunciation to OEWN serializable map
+ * Pronunciation to OEWN serializable dict
  *
  * @receiver pronunciation
- * @return map
+ * @return dict
  * Keys:
  *  - value
  *  - variety
@@ -45,17 +51,23 @@ fun Pronunciation.toData(): Map<String, Any> {
         }
 }
 
-fun pronunciationFromData(map: Map<String, Any>): Pronunciation {
-    val value = map["value"] as PronunciationValue
-    val variety = map["variety"] as PronunciationVariety?
+/**
+ * Pronunciation from dict
+ *
+ * @param dict dictionary
+ * @return pronunciation
+ */
+fun pronunciationFromData(dict: Map<String, Any>): Pronunciation {
+    val value = dict["value"] as PronunciationValue
+    val variety = dict["variety"] as PronunciationVariety?
     return Pronunciation(value, variety)
 }
 
 /**
- * Lex to serializable map
+ * Lex to serializable dict
  *
  * @preceiver lex
- * @return serializable map
+ * @return serializable dict
  */
 fun Lex.toData(): Map<String, Any> {
     return mutableMapOf(
@@ -68,19 +80,25 @@ fun Lex.toData(): Map<String, Any> {
     }
 }
 
-fun lexFromData(map: Map<String, Any>): Lex {
-    val lexId = lexIdFromData(map)
-    val senseKeys = safeCast<List<SenseKey>>(map["sense"]!!)
+/**
+ * Lex from dict
+ *
+ * @param dict dictionary
+ * @return lex
+ */
+fun lexFromData(dict: Map<String, Any>): Lex {
+    val lexId = lexIdFromData(dict)
+    val senseKeys = safeCast<List<SenseKey>>(dict["sense"]!!)
     return Lex(lexId.lemma, lexId.type, lexId.discriminant, senseKeys).apply {
-        map["pronunciation"]?.let { pronunciations = safeCast<List<Map<String, Any>>>(it).map { p -> pronunciationFromData(p) }.toSet() }
+        dict["pronunciation"]?.let { pronunciations = safeCast<List<Map<String, Any>>>(it).map { p -> pronunciationFromData(p) }.toSet() }
     }
 }
 
 /**
- * Synset to serializable map
+ * Synset to serializable dict
  *
  * @preceiver synset
- * @return serializable map
+ * @return serializable dict
  */
 fun Synset.toData(): Map<String, Any> {
     return mutableMapOf(
@@ -98,25 +116,31 @@ fun Synset.toData(): Map<String, Any> {
     }
 }
 
-fun synsetFromData(map: Map<String, Any>): Synset {
-    val synsetId = map["id"] as SynsetId
-    val type = SynsetType.fromKey2(map["type"] as String)
-    val domain = map["domain"] as Domain
-    val members = safeCast<List<Lemma>>(map["member"]!!)
-    val definitions = safeCast<List<String>>(map["definition"]!!)
-    val examples = map["example"]?.let { safeCast<List<Pair<String, String?>>>(it) }
-    val usages = map["usage"]?.let { safeCast<List<String>>(it) }
-    val relations = map["relation"]?.let { safeCast<Map<Relation, List<SenseKey>>>(it).mapValues { e -> e.value.toSet() } }
-    val ili = map["ili"] as String?
-    val wikidata = map["wikidata"]?.let { safeCast<String>(it).split(";") }
+/**
+ * Synset from dict
+ *
+ * @param dict dictionary
+ * @return synset
+ */
+fun synsetFromData(dict: Map<String, Any>): Synset {
+    val synsetId = dict["id"] as SynsetId
+    val type = SynsetType.fromKey2(dict["type"] as String)
+    val domain = dict["domain"] as Domain
+    val members = safeCast<List<Lemma>>(dict["member"]!!)
+    val definitions = safeCast<List<String>>(dict["definition"]!!)
+    val examples = dict["example"]?.let { safeCast<List<Pair<String, String?>>>(it) }
+    val usages = dict["usage"]?.let { safeCast<List<String>>(it) }
+    val relations = dict["relation"]?.let { safeCast<Map<Relation, List<SenseKey>>>(it).mapValues { e -> e.value.toSet() } }
+    val ili = dict["ili"] as String?
+    val wikidata = dict["wikidata"]?.let { safeCast<String>(it).split(";") }
     return Synset(synsetId, type, domain, members.toTypedArray(), definitions.toTypedArray(), examples?.toTypedArray(), usages?.toTypedArray(), relations, ili, wikidata)
 }
 
 /**
- * Sense to serializable map
+ * Sense to serializable dict
  *
  * @preceiver sense
- * @return serializable map
+ * @return serializable dict
  */
 fun Sense.toData(): Map<String, Any> {
     return mutableMapOf<String, Any>(
@@ -129,52 +153,53 @@ fun Sense.toData(): Map<String, Any> {
             examples?.let { this["examples"] = it.map { example -> if (example.second == null) example.first else mapOf("text" to example.first, "source" to example.second) }.toList() }
             verbFrames?.let { this["verbFrames"] = it.joinToString(separator = ";") }
             adjPosition?.let { this["adjPosition"] = it }
-            relations?.let {
-                val r = it
-                //.mapValues { e -> e.value.toList() }
-                //.toMap()
-                this["relation"] = r
-            }
+            relations?.let { this["relation"] = it }
         }
 }
 
-fun senseFromData(map: Map<String, Any>): Sense {
-    val id = map["id"] as SenseKey
-    val synsetId = map["synset"] as SynsetId
-    val lexId = lexIdFromData(map)
-    val index = map["index"] as Int
-    val examples = map["definition"]?.let { safeCast<List<Pair<String, String?>>>(it) }
-    val verbFrames = map["verbFrames"]?.let { safeCast<VerbFrameId>(it).split(";") }
-    val verbTemplates = map["verbTemplates"]?.let { safeCast<String>(it).split(";").map(String::toInt) }
-    val adjPosition = map["adjPosition"] as String?
-    val tagCount = map["tagCount"] as Int?
-    val relations = map["relation"]?.let { safeCast<Map<Relation, List<SenseKey>>>(it).mapValues { e -> e.value.toSet() } }
+/**
+ * Sense from dict
+ *
+ * @param dict dictionary
+ * @return sense
+ */
+fun senseFromData(dict: Map<String, Any>): Sense {
+    val id = dict["id"] as SenseKey
+    val synsetId = dict["synset"] as SynsetId
+    val lexId = lexIdFromData(dict)
+    val index = dict["index"] as Int
+    val examples = dict["definition"]?.let { safeCast<List<Pair<String, String?>>>(it) }
+    val verbFrames = dict["verbFrames"]?.let { safeCast<VerbFrameId>(it).split(";") }
+    val verbTemplates = dict["verbTemplates"]?.let { safeCast<String>(it).split(";").map(String::toInt) }
+    val adjPosition = dict["adjPosition"] as String?
+    val tagCount = dict["tagCount"] as Int?
+    val relations = dict["relation"]?.let { safeCast<Map<Relation, List<SenseKey>>>(it).mapValues { e -> e.value.toSet() } }
     return Sense(id, lexId, synsetId, index, examples?.toTypedArray(), verbFrames?.toTypedArray(), verbTemplates?.toTypedArray(), adjPosition, tagCount, relations)
 }
 
 // S E Q U E N C E S   O F   O B J E C T S
 
 /**
- * Lexes to serializable hypermap
+ * Lexes to serializable hyperdict
  *
  * @preceiver sequence of lexes
- * @return lex serializable hypermap
+ * @return lex serializable hyperdict
  */
 fun Sequence<Lex>.toLexesData(): Sequence<Map<String, Any>> = map { it.toData() }
 
 /**
- * Synsets to serializable map
+ * Synsets to serializable dict
  *
  * @preceiver sequence of synsets
- * @return synset serializable map
+ * @return synset serializable dict
  */
 fun Sequence<Synset>.toSynsetsData(): Sequence<Map<String, Any>> = map { it.toData() }
 
 /**
- * Sense to serializable map
+ * Sense to serializable dict
  *
  * @preceiver sequence of senses
- * @return sense serializable map
+ * @return sense serializable dict
  */
 fun Sequence<Sense>.toSensesData(): Sequence<Map<String, Any>> = map { it.toData() }
 
@@ -187,7 +212,7 @@ fun Sequence<Sense>.toSensesData(): Sequence<Map<String, Any>> = map { it.toData
  * @param whichSynsets which synsets, by default all
  *
  * @receiver core model
- * @return lexes, synsets and senses as serializable maps
+ * @return lexes, synsets and senses as serializable dicts
  */
 fun CoreModel.toData(
     whichLexes: Sequence<Lex> = lexes.asSequence().sortedWith(compareBy(Lex::lemma).thenBy(Lex::key2)),

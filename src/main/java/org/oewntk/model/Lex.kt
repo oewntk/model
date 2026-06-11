@@ -82,7 +82,7 @@ data class Lex(
         key2: String,
         senseKeys: List<SenseKey> = ArrayList(),
         generated: Boolean = false
-    ) : this(lemma, SynsetType.fromChar(key2.lowercase(Locale.ENGLISH)[0]), if (key2.length > 1) key2.substring(1) else null, senseKeys, generated = generated)
+    ) : this(lemma, SynsetType.fromKey2(key2), SynsetType.discriminantFromKey2(key2), senseKeys, generated = generated)
 
     // identify
 

@@ -91,16 +91,25 @@ enum class SynsetTypeImpl(val value: Char) {
     companion object {
         fun fromCharOrNull(c: Char): SynsetTypeImpl? {
             return when (c) {
-                'n' -> N
-                'v' -> V
-                'a' -> A
-                'r' -> R
-                's' -> S
+                'n', 'N' -> N
+                'v', 'V' -> V
+                'a', 'A' -> A
+                'r', 'R' -> R
+                's', 'S' -> S
                 else -> null
             }
         }
 
         fun fromChar(c: Char): SynsetTypeImpl = fromCharOrNull(c) ?: throw IllegalArgumentException("Illegal SynsetType: $c")
+
+        fun fromKey2(key2: Key2): SynsetTypeImpl {
+            if (key2.isEmpty()) throw IllegalArgumentException("Illegal SynsetType: $key2")
+            return fromChar(key2[0])
+        }
+
+        fun discriminantFromKey2(key2: Key2): Discriminant? {
+            return if (key2.length > 1) key2.substring(1) else null
+        }
     }
 }
 

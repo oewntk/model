@@ -13,8 +13,7 @@ import java.util.*
  * @param senseId             sense id / sensekey
  * @param lexId               lexical item (lex) id this sense refers to
  * @param synsetId            synset id
- * @param type                synset type ss_type {'n', 'v', 'a', 'r', 's'}
- * @param indexInLex            zero-based index of this sense in lex list/array of senses
+ * @param indexInLex          zero-based index of this sense in lex list/array of senses
  * @param examples            examples
  * @param verbFrames          verb frames
  * @param adjPosition         adjective position {'a', 'ip', 'p'} meaning {attribute,immediate postnominal,predicate}

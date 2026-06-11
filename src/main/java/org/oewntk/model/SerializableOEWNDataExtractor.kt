@@ -8,6 +8,8 @@ const val INCLUDE_LEXFILE = false
 
 typealias Filename = String
 
+// O B J E C T S
+
 /**
  * Pronunciation to OEWN serializable map
  *
@@ -31,6 +33,13 @@ fun Pronunciation.toOEWNData(): Map<String, Any> {
     text
     source
 */
+
+fun lexIdFromOEWNData(map: Map<String, Any>): LexId {
+    val lemma = map["lemma"] as Lemma
+    val type = SynsetType.fromKey2(map["type"] as String)
+    val discriminant = map["discriminant"] as Discriminant?
+    return LexId(lemma, type, discriminant)
+}
 
 // L E X
 
@@ -59,6 +68,20 @@ fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?): Map<String, Any> {
         pronunciations?.let { this["pronunciation"] = it.map(Pronunciation::toOEWNData).toList() }
         if (INCLUDE_LEXFILE) lexfile.let { this["lexfile"] = it }
     }.toSortedMap()
+}
+
+/**
+ *  from dict
+ *
+ * @param dict dictionary
+ * @return
+ */
+fun lexFromOEWNData(map: Map<String, Any>): Lex {
+    val lexId = lexIdFromData(map)
+    val senseKeys = safeCast<List<SenseKey>>(map["sense"]!!)
+    return Lex(lexId.lemma, lexId.type, lexId.discriminant, senseKeys).apply {
+        map["pronunciation"]?.let { pronunciations = safeCast<List<Map<String, Any>>>(it).map { p -> pronunciationFromData(p) }.toSet() }
+    }
 }
 
 // S E N S E
@@ -103,6 +126,15 @@ fun Sequence<Sense>.toOEWNData(): List<Any> {
     return this
         .map(Sense::toOEWNData)
         .toList()
+}
+
+/**
+ *  from dict
+ *
+ * @param dict dictionary
+ * @return
+ */
+fun synsetFromOEWNData(map: Map<String, Any>): Synset {
 }
 
 // S Y N S E T

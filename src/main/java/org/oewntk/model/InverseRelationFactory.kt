@@ -3,6 +3,9 @@
  */
 package org.oewntk.model
 
+import org.oewntk.model.Sense.Companion.INVERSE_SENSE_RELATIONS
+import org.oewntk.model.Synset.Companion.INVERSE_SYNSET_RELATIONS
+
 /**
  * Generator of inverse synset relations
  */
@@ -10,26 +13,7 @@ object InverseRelationFactory {
 
     private const val LOG_ALREADY_PRESENT = false
 
-    private val INVERSE_SYNSET_RELATIONS = mapOf(
-        "hypernym" to "hyponym",
-        "instance_hypernym" to "instance_hyponym",
-        "mero_part" to "holo_part",
-        "mero_member" to "holo_member",
-        "mero_substance" to "holo_substance",
-        "causes" to "is_caused_by",
-        "entails" to "is_entailed_by",
-        "exemplifies" to "is_exemplified_by",
-        "domain_topic" to "has_domain_topic",
-        "domain_region" to "has_domain_region",
-    )
-
     val INVERSE_SYNSET_RELATIONS_SET = INVERSE_SYNSET_RELATIONS.values.toSet()
-
-    val INVERSE_SENSE_RELATIONS = mapOf(
-        "exemplifies" to "is_exemplified_by",
-        "domain_topic" to "has_domain_topic",
-        "domain_region" to "has_domain_region",
-    )
 
     val INVERSE_SENSE_RELATIONS_SET = INVERSE_SENSE_RELATIONS.values.toSet()
 

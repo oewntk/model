@@ -78,7 +78,7 @@ data class Sense(
     val senseKey: SenseKey
         get() = senseId
     val intTagCount: Int
-        get() = tagCount?: 0
+        get() = tagCount ?: 0
     val flatRelations: List<Pair<Relation, SynsetId>>?
         get() = relations?.flatMap { (key, values) -> values.map { key to it } }
 
@@ -176,5 +176,109 @@ data class Sense(
 
     override fun compareTo(other: Sense): Int {
         return senseId.compareTo(other.senseId)
+    }
+
+    companion object {
+
+        val VALID_SENSE_RELATIONS = arrayOf(
+            "antonym",
+            "similar",
+            "exemplifies",
+            "derivation",
+            "pertainym",
+            "participle",
+            "also",
+            "domain_region",
+            "domain_topic",
+
+            "state",
+            "result",
+            "event",
+            "property",
+            "location",
+            "destination",
+            "agent",
+            "undergoer",
+            "uses",
+            "instrument",
+            "by_means_of",
+            "material",
+            "vehicle",
+            "body_part",
+
+            "collocation",
+            "other"
+        )
+
+        val SENSE_RELATIONS = arrayOf(
+            "antonym",
+            "similar",
+            "exemplifies", "is_exemplified_by",
+            "derivation",
+            "pertainym",
+            "participle",
+            "also",
+            "domain_region", "has_domain_region",
+            "domain_topic", "has_domain_topic",
+
+            "agent",
+            "material",
+            "event",
+            "instrument",
+            "location",
+            "by_means_of",
+            "undergoer",
+            "property",
+            "result",
+            "state",
+            "uses",
+            "destination",
+            "body_part",
+            "vehicle",
+
+            "collocation",
+            "other"
+        )
+
+        val INVERSE_SENSE_RELATIONS = mapOf(
+            "exemplifies" to "is_exemplified_by",
+            "domain_topic" to "has_domain_topic",
+            "domain_region" to "has_domain_region",
+        )
+
+        /*
+        ignored
+          // antonym|
+          // also|
+          // participle|
+          // pertainym|
+          // derivation|
+          // domain_topic|
+          // has_domain_topic|
+          // domain_region|
+          // has_domain_region|
+          // exemplifies|
+          // is_exemplified_by|
+          // similar|
+          // other|
+          simple_aspect_ip|
+          secondary_aspect_ip|
+          simple_aspect_pi|
+          secondary_aspect_pi|
+          feminine|
+          has_feminine|
+          masculine|
+          has_masculine|
+          young|
+          has_young|
+          diminutive|
+          has_diminutive|
+          augmentative|
+          has_augmentative|
+          anto_gradable|
+          anto_simple|
+          anto_converse
+         */
+
     }
 }

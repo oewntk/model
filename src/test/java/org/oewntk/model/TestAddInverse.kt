@@ -5,12 +5,12 @@ package org.oewntk.model
 
 import org.junit.BeforeClass
 import org.junit.Test
-import org.oewntk.model.InverseRelationFactory.INVERSE_SENSE_RELATIONS
 import org.oewntk.model.LibDummyNanoModel.model
 import org.oewntk.model.LibDummyNanoModel.sense11
 import org.oewntk.model.LibDummyNanoModel.senseD11
 import org.oewntk.model.LibDummyNanoModel.synset1
 import org.oewntk.model.LibDummyNanoModel.synsetH1
+import org.oewntk.model.Sense.Companion.INVERSE_SENSE_RELATIONS
 import java.io.PrintStream
 
 class TestAddInverse {

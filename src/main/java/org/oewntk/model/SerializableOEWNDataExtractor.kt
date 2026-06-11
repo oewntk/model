@@ -3,6 +3,8 @@ package org.oewntk.model
 import org.oewntk.model.InverseRelationFactory.INVERSE_SENSE_RELATIONS_SET
 import org.oewntk.model.InverseRelationFactory.INVERSE_SYNSET_RELATIONS_SET
 import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
+import org.oewntk.model.Sense.Companion.SENSE_RELATIONS
+import org.oewntk.model.Synset.Companion.SYNSET_RELATIONS
 
 const val INCLUDE_LEXFILE = false
 
@@ -10,11 +12,36 @@ typealias Filename = String
 
 // O B J E C T S
 
+fun examplesFromOEWNData(list: List<Any>): Array<Pair<String, String?>> {
+    val data = safeCast<List<Any>>(list)
+    return data.map { example ->
+        when (example) {
+            is String -> example to null
+            is Map<*, *> -> example["source"] as String to example["text"] as String?
+            else -> throw IllegalArgumentException(example.toString())
+        }
+    }.toTypedArray()
+}
+
+fun synsetRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<SynsetId>>? {
+    val relations = safeCast<Map<Relation, List<SynsetId>>>(dict)
+        .filter { it.key in SYNSET_RELATIONS }
+        .mapValues { it.value.toSet() }
+    return relations.ifEmpty { null }
+}
+
+fun senseRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<SenseKey>>? {
+    val relations = safeCast<Map<Relation, List<SenseKey>>>(dict)
+        .filter { it.key in SENSE_RELATIONS }
+        .mapValues { it.value.toSet() }
+    return relations.ifEmpty { null }
+}
+
 /**
- * Pronunciation to OEWN serializable map
+ * Pronunciation to OEWN serializable dict
  *
  * @receiver pronunciation
- * @return map
+ * @return dict
  * Keys:
  *  - value
  *  - variety
@@ -26,29 +53,34 @@ fun Pronunciation.toOEWNData(): Map<String, Any> {
         }
 }
 
+/**
+ * Pronunciation from dict
+ *
+ * @param dict dictionary
+ * @return pronunciation
+ */
+fun pronunciationFromOEWNData(dict: Map<String, Any>): Pronunciation {
+    val value = dict["value"] as PronunciationValue
+    val variety = dict["variety"] as PronunciationVariety?
+    return Pronunciation(value, variety)
+}
+
 /*
  * Example (Pair<text, source>) to OEWN serializable data
- * @return text string if source is null a map otherwise
- * Keys if a map
+ * @return text string if source is null a dict otherwise
+ * Keys if a dict
     text
     source
 */
 
-fun lexIdFromOEWNData(map: Map<String, Any>): LexId {
-    val lemma = map["lemma"] as Lemma
-    val type = SynsetType.fromKey2(map["type"] as String)
-    val discriminant = map["discriminant"] as Discriminant?
-    return LexId(lemma, type, discriminant)
-}
-
 // L E X
 
 /**
- * Lex to OEWN serializable map
+ * Lex to OEWN serializable dict
  *
  * @receiver lex
  * @param resolver senseKey to sense resolver
- * @return map
+ * @return dict
  * Keys:
  * - form
  * - pronunciation
@@ -71,26 +103,29 @@ fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?): Map<String, Any> {
 }
 
 /**
- *  from dict
+ * Lex from dict
  *
+ * @param lemma lemma
+ * @param type synset type
+ * @param discriminant discriminant
  * @param dict dictionary
- * @return
+ * @return lex
  */
-fun lexFromOEWNData(map: Map<String, Any>): Lex {
-    val lexId = lexIdFromData(map)
-    val senseKeys = safeCast<List<SenseKey>>(map["sense"]!!)
-    return Lex(lexId.lemma, lexId.type, lexId.discriminant, senseKeys).apply {
-        map["pronunciation"]?.let { pronunciations = safeCast<List<Map<String, Any>>>(it).map { p -> pronunciationFromData(p) }.toSet() }
+fun lexFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?, dict: Map<String, Any>): Lex {
+    val senseDicts = safeCast<List<Map<String, Any>>>(dict["sense"]!!)
+    val senseKeys = senseDicts.map { safeCast<SenseKey>(it["id"]!!) }.toList()
+    return Lex(lemma, type, discriminant, senseKeys).apply {
+        dict["pronunciation"]?.let { pronunciations = safeCast<List<Map<String, Any>>>(it).map { p -> pronunciationFromOEWNData(p) }.toSet() }
     }
 }
 
 // S E N S E
 
 /**
- * Sense to OEWN serializable map
+ * Sense to OEWN serializable dict
  *
  * @receiver sense
- * @return map
+ * @return dict
  * Keys:
  * - id
  * - synset
@@ -117,6 +152,34 @@ fun Sense.toOEWNData(compat: Boolean = false): Map<String, Any> {
 }
 
 /**
+ * Lex from dict
+ *
+ * @param lemma lemma
+ * @param type synset type
+ * @param discriminant discriminant
+ * @param dict dictionary
+ * @return sense
+ */
+fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?, idx: Int, dict: Map<String, Any>): Sense {
+    val lexId: LexId = LexId(lemma, type, discriminant)
+    val senseId: SenseKey = safeCast(dict["id"]!!)
+    val synsetId: SynsetId = safeCast(dict["synset"]!!)
+    val indexInLex: Int = idx
+    val examples = dict["example"]?.let { examplesFromOEWNData(safeCast<List<Any>>(it)) }
+    val verbFrames: Array<VerbFrameId>? = null
+    val verbTemplates: Array<VerbTemplateId>? = null
+    val adjPosition: AdjPosition? = safeNullableCast(dict["adjposition"])
+    val tagCount: Int? = safeNullableCast(dict["tagcount"])
+    val relations: Map<Relation, Set<SenseKey>>? = senseRelationsFromOEWNData(dict)
+    return Sense(
+        senseId, lexId, synsetId, indexInLex,
+        adjPosition = adjPosition,
+        tagCount = tagCount,
+        relations = relations,
+    )
+}
+
+/**
  * Senses to OEWN serializable list
  *
  * @receiver sequence of senses
@@ -128,22 +191,13 @@ fun Sequence<Sense>.toOEWNData(): List<Any> {
         .toList()
 }
 
-/**
- *  from dict
- *
- * @param dict dictionary
- * @return
- */
-fun synsetFromOEWNData(map: Map<String, Any>): Synset {
-}
-
 // S Y N S E T
 
 /**
- * Synset to OEWN serializable map
+ * Synset to OEWN serializable dict
  *
  * @receiver synset
- * @return map
+ * @return dict
  * Keys:
  * - members
  * - partOfSpeech
@@ -156,10 +210,10 @@ fun synsetFromOEWNData(map: Map<String, Any>): Synset {
  */
 fun Synset.toOEWNData(): Map<String, Any> {
     return mutableMapOf(
-        // "id" to synsetId,
         "partOfSpeech" to partOfSpeech.value,
         "definition" to listOf(definition!!),
         "members" to members.toList(),
+        "domain" to domain,
     ).apply {
         examples?.let { this["example"] = it.map { it2 -> if (it2.second == null) it2.first else mapOf("source" to it2.second, "text" to it2.first) } }
         usages?.let { this["usage"] = it }
@@ -176,26 +230,59 @@ fun Synset.toOEWNData(): Map<String, Any> {
 }
 
 /**
- * Synsets to OEWN serializable map
+ * Synset from dict
+ *
+ * @param dict dictionary
+ * @return synset
+ */
+fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>): Synset {
+
+    val type = SynsetType.fromKey2(dict["partOfSpeech"] as String)
+    val domain = dict["domain"] as Domain
+    val members = safeCast<List<Lemma>>(dict["members"]!!)
+    val definitions = safeCast<List<String>>(dict["definition"]!!)
+    val examples = dict["example"]?.let { examplesFromOEWNData(safeCast<List<Any>>(it)) }
+    val usages = dict["usage"]?.let { safeCast<List<String>>(it) }
+    val relations: Map<Relation, Set<SenseKey>>? = synsetRelationsFromOEWNData(dict)
+    val ili = dict["ili"] as String?
+    val wikidata = dict["wikidata"]?.let {
+        when (it) {
+            is String -> listOf(it)
+            is List<*> -> safeCast<List<String>>(it)
+            else -> throw IllegalArgumentException(it.toString())
+        }
+    }
+    return Synset(
+        synsetId, type, domain, members.toTypedArray(), definitions.toTypedArray(),
+        examples = examples,
+        usages = usages?.toTypedArray(),
+        relations = relations,
+        ili = ili,
+        wikidata = wikidata
+    )
+}
+
+/**
+ * Synsets to OEWN serializable dict
  *
  * @receiver sequence of synsets
- * @return map of synset by id
+ * @return dict of synset by id
  */
 fun Sequence<Synset>.toOEWNData(): Map<SynsetId, Any> = this.associate { it.synsetId to it.toOEWNData() }
 
 /**
- * Synsets by id to OEWN serializable map
+ * Synsets by id to OEWN serializable dict
  */
 fun Map<SynsetId, Synset>.toOEWNData(): Map<SynsetId, Any> = this.mapValues { it.value.toOEWNData() }
 
 // M A P P E D   L E X E S
 
 /**
- * Lexes to OEWN serializable map
+ * Lexes to OEWN serializable dict
  *
  * @receiver sequence of lexes
  * @param senseResolver senseKey to sense resolver
- * @return map by lemma
+ * @return dict by lemma
  */
 fun Sequence<Lex>.toOEWNData(senseResolver: (SenseKey) -> Sense): Map<Lemma, Map<Key2, Map<String, Any>>> {
     val hypermap1: HyperMap1 = this.lexByLemmaThenByKey2()
@@ -216,7 +303,7 @@ fun Sequence<Lex>.toOEWNDataAlt(senseResolver: (SenseKey) -> Sense): Map<Lemma, 
 }
 
 /**
- * Hyper map to OEWN serializable map
+ * Hyper dict to OEWN serializable dict
  *
  * @receiver hypermap1 (lex by lemma then by key2)
  */
@@ -226,6 +313,40 @@ fun HyperMap1.toOEWNData(senseResolver: (SenseKey) -> Sense): Map<Lemma, Map<Key
             v.mapValues { (_: Key2, lex) -> lex.toOEWNData { senseResolver(it) } }.toSortedMap()
         }.toSortedMap()
 }
+
+/**
+ * Lexes and senses from dictionary
+ */
+fun lexesAndSensesFromOEWNData(dict: Map<Lemma, Map<Key2, Map<String, Any>>>): Pair<Sequence<Lex>, Sequence<Sense>> {
+
+    // lexes
+    val lexes = entries(dict).map {
+        val (lemma, key2, value2) = it
+        val lexDict = safeCast<Map<String, Any>>(value2)
+        lexFromOEWNData(lemma, SynsetType.fromKey2(key2), SynsetType.discriminantFromKey2(key2), lexDict)
+    }
+    // senses
+    val senses = entries(dict).flatMap {
+        val (lemma, key2, value2) = it
+        val lexDict = safeCast<Map<String, Any>>(value2)
+        val senseDicts = safeCast<List<Map<String, Any>>>(lexDict["sense"]!!)
+        senseDicts.withIndex().map { (idx, senseDict) ->
+            senseFromOEWNData(lemma, SynsetType.fromKey2(key2), SynsetType.discriminantFromKey2(key2), idx, senseDict)
+        }
+    }
+
+    return lexes to senses
+}
+
+fun keyPairs(dict: Map<Lemma, Map<Key2, Map<String, Any>>>): Sequence<Pair<Lemma, Key2>> = dict
+    .asSequence()
+    .flatMap { (key1, inner) -> inner.keys.map { key2 -> key1 to key2 } }
+
+fun entries(dict: Map<Lemma, Map<Key2, Map<String, Any>>>): Sequence<Triple<Lemma, Key2, Any>> = dict
+    .asSequence()
+    .flatMap { (key1, inner) ->
+        inner.map { (key2, thing) -> Triple(key1, key2, thing) }
+    }
 
 // M O D E L
 

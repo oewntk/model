@@ -165,18 +165,23 @@ fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant
     val senseId: SenseKey = safeCast(dict["id"]!!)
     val synsetId: SynsetId = safeCast(dict["synset"]!!)
     val indexInLex: Int = idx
-    val examples = dict["example"]?.let { examplesFromOEWNData(safeCast<List<Any>>(it)) }
-    val verbFrames: Array<VerbFrameId>? = null
-    val verbTemplates: Array<VerbTemplateId>? = null
+    val examples = dict["example"]?.let { examplesFromOEWNData(safeCast(it)) }
+    val verbFrames: Array<VerbFrameId>? = dict["subcat"]?.let { safeCast<List<VerbFrameId>>(it).toTypedArray() }
+    val verbTemplates: Array<VerbTemplateId>? = dict["template"]?.let { safeCast<List<VerbTemplateId>>(it).toTypedArray() }
     val adjPosition: AdjPosition? = safeNullableCast(dict["adjposition"])
     val tagCount: Int? = safeNullableCast(dict["tagcount"])
     val relations: Map<Relation, Set<SenseKey>>? = senseRelationsFromOEWNData(dict)
     return Sense(
         senseId, lexId, synsetId, indexInLex,
+        examples = examples,
         adjPosition = adjPosition,
+        verbFrames = verbFrames,
+        verbTemplates = verbTemplates,
         tagCount = tagCount,
         relations = relations,
-    )
+    ).apply {
+
+    }
 }
 
 /**

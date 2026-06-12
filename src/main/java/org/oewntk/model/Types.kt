@@ -5,6 +5,7 @@
 package org.oewntk.model
 
 import java.io.Serializable
+import java.util.Objects
 
 typealias Lemma = String
 typealias Key2 = String
@@ -52,7 +53,14 @@ typealias PartOfSpeech = PartOfSpeechImpl
 @kotlinx.serialization.Serializable
 data class LexIdImpl(val lemma: Lemma, val type: SynsetType, val discriminant: Discriminant?) : Serializable {
 
-    override fun toString() = "$lemma-type.value" + if (discriminant != null) "-$discriminant" else ""
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        return if (other is Lex) Objects.equals(lemma, other.lemma) && Objects.equals(type, other.type) && Objects.equals(discriminant, other.discriminant) else false
+    }
+
+    override fun hashCode(): Int = Objects.hash(lemma, type, discriminant)
+
+    override fun toString() = "$lemma-${type.value}" + if (discriminant != null) "-$discriminant" else ""
 }
 
 /**

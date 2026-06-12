@@ -72,6 +72,19 @@ data class Synset(
     val flatRelations: List<Pair<Relation, SynsetId>>?
         get() = relations?.flatMap { (key, values) -> values.map { key to it } }
 
+    // identity
+
+    override fun equals(other: Any?): Boolean {
+        // throw UnsupportedOperationException("$this / $other")
+        if (this === other) return true
+        return if (other is Synset) Objects.equals(key, other.key) && Objects.equals(value, other.value) else false
+    }
+
+    override fun hashCode(): Int {
+        // throw UnsupportedOperationException("$this")
+        return Objects.hash(key, *value)
+    }
+
     // mutation
 
     /**
@@ -166,19 +179,6 @@ data class Synset(
         val members = members
         val memberList = listOf(*members)
         return memberList.indexOf(lemma)
-    }
-
-    // identity
-
-    override fun equals(other: Any?): Boolean {
-        // throw UnsupportedOperationException("$this / $other")
-        if (this === other) return true
-        return if (other is Synset) Objects.equals(synsetId, other.synsetId) && Objects.equals(value, other.value) else false
-    }
-
-    override fun hashCode(): Int {
-        // throw UnsupportedOperationException("$this")
-        return Objects.hash(synsetId, *value)
     }
 
     // stringify

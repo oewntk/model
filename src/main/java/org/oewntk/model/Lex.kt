@@ -54,6 +54,8 @@ data class Lex(
         get() = senseKeys.toSet()
     val key2: String
         get() = if (discriminant != null) "${type.value}$discriminant" else type.value.toString()
+    val properties: Array<Any?>
+        get() = arrayOf(forms, pronunciations)
 
     // computed properties
     val lCLemma: LowerCasedLemma
@@ -89,12 +91,12 @@ data class Lex(
     override fun equals(other: Any?): Boolean {
         // throw UnsupportedOperationException("$this / $other")
         if (this === other) return true
-        return if (other is Lex) Objects.equals(key, other.key) && Objects.equals(value, other.value) else false
+        return if (other is Lex) Objects.equals(key, other.key) && Objects.equals(value, other.value) && Objects.equals(properties, other.properties) else false
     }
 
     override fun hashCode(): Int {
         // throw UnsupportedOperationException("$this")
-        return Objects.hash(key, value)
+        return Objects.hash(key, value, *properties)
     }
 
     // stringify

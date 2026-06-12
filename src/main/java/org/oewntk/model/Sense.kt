@@ -62,7 +62,7 @@ data class Sense(
     val value: Pair<LexId, SynsetId>
         get() = lexId to synsetId
     val properties: Array<Any?>
-        get() = arrayOf(type, indexInLex, examples, adjPosition, relations, verbFrames, verbTemplates, verbTemplates)
+        get() = arrayOf(type, indexInLex, examples, adjPosition, relations, verbFrames, verbTemplates, tagCount)
 
     // computed properties
     val lemma: Lemma

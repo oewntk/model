@@ -77,33 +77,34 @@ class Model(
         synsets: Collection<Synset>,
         verbFrames: Collection<VerbFrame>,
         verbTemplates: Collection<VerbTemplate>,
-        senseToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateId>>>,
-        senseToTagCounts: Collection<Pair<SenseKey, TagCount>>,
+        senseToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateId>>>?,
+        senseToTagCounts: Collection<Pair<SenseKey, TagCount>>?,
     ) : this(lexes, senses, synsets, verbFrames, verbTemplates) {
 
-        // set sense's verb templates
-        for ((sensekey, templatesIds) in senseToVerbTemplates) {
-            val sense = senseFinder(sensekey)
-            if (sense != null) {
-                sense.verbTemplates = templatesIds
-            } else if (WARN_UNRESOLVABLE_SENSE) {
-                Tracing.psErr.println("[W] Unresolvable $sensekey with templates ${templatesIds.contentToString()}")
-            }
-        }
-
-        // set sense's tag counts
-
-        for ((sensekey, tagCount) in senseToTagCounts) {
-            val sense = senseFinder(sensekey)
-            if (sense != null) {
-                sense.tagCount = tagCount.count
-                if (sense.indexInLex + 1 != tagCount.senseNum) {
-                    if (WARN_IF_SENSENUM_NOT_EQUAL_INDEX) Tracing.psErr.println("[W] Unequal sense index ${sense.indexInLex + 1} in ${sense.senseId} with tag count sense num ${tagCount.senseNum}")
-                    if (WARN_IF_SENSENUM_LESS_THAN_INDEX && sense.indexInLex + 1 > tagCount.senseNum) Tracing.psErr.println("[W] Sense index ${sense.indexInLex + 1} in ${sense.senseId} more than tag count sense num ${tagCount.senseNum}")
+        // inject sense's verb templates
+        if (senseToVerbTemplates != null)
+            for ((sensekey, templatesIds) in senseToVerbTemplates) {
+                val sense = senseFinder(sensekey)
+                if (sense != null) {
+                    sense.verbTemplates = templatesIds
+                } else if (WARN_UNRESOLVABLE_SENSE) {
+                    Tracing.psErr.println("[W] Unresolvable $sensekey with templates ${templatesIds.contentToString()}")
                 }
-            } else if (WARN_UNRESOLVABLE_SENSE)
-                Tracing.psErr.println("[W] Unresolvable $sensekey with tagcount $tagCount")
-        }
+            }
+
+        // inject sense's tag counts
+        if (senseToTagCounts != null)
+            for ((sensekey, tagCount) in senseToTagCounts) {
+                val sense = senseFinder(sensekey)
+                if (sense != null) {
+                    sense.tagCount = tagCount.count
+                    if (sense.indexInLex + 1 != tagCount.senseNum) {
+                        if (WARN_IF_SENSENUM_NOT_EQUAL_INDEX) Tracing.psErr.println("[W] Unequal sense index ${sense.indexInLex + 1} in ${sense.senseId} with tag count sense num ${tagCount.senseNum}")
+                        if (WARN_IF_SENSENUM_LESS_THAN_INDEX && sense.indexInLex + 1 > tagCount.senseNum) Tracing.psErr.println("[W] Sense index ${sense.indexInLex + 1} in ${sense.senseId} more than tag count sense num ${tagCount.senseNum}")
+                    }
+                } else if (WARN_UNRESOLVABLE_SENSE)
+                    Tracing.psErr.println("[W] Unresolvable $sensekey with tagcount $tagCount")
+            }
     }
 
     /**
@@ -119,8 +120,8 @@ class Model(
         coreModel: CoreModel,
         verbFrames: Collection<VerbFrame>,
         verbTemplates: Collection<VerbTemplate>,
-        sensesToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateId>>>,
-        sensesToTagCounts: Collection<Pair<SenseKey, TagCount>>,
+        sensesToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateId>>>?,
+        sensesToTagCounts: Collection<Pair<SenseKey, TagCount>>?,
     ) : this(
         coreModel.lexes,
         coreModel.senses,

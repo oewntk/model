@@ -77,7 +77,7 @@ data class Synset(
     override fun equals(other: Any?): Boolean {
         // throw UnsupportedOperationException("$this / $other")
         if (this === other) return true
-        return if (other is Synset) Objects.equals(key, other.key) && Objects.equals(value, other.value) else false
+        return if (other is Synset) Objects.equals(key, other.key) && value.contentEquals(other.value) else false
     }
 
     override fun hashCode(): Int {

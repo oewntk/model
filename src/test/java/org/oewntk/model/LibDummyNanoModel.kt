@@ -61,9 +61,14 @@ object LibDummyNanoModel {
     val sense22 = Sense(SENSEKEY22, lex2.key, SYNSETID2, indexInLex = 1)
     val senseD11 = Sense(SENSEKEY_D11, lexD1.key, SYNSETID_D1, indexInLex = 0)
 
-    val lexes = listOf(lex1, lex2, lexD1)
-    val senses = listOf(sense11, sense12, sense21, sense22, senseD11)
-    val synsets = listOf(synset1, synset2, synsetH1, synsetD1)
+    val lexes1 = listOf(lex1, lex2, lexD1)
+    val senses1 = listOf(sense11, sense12, sense21, sense22, senseD11)
+    val synsets1 = listOf(synset1, synset2, synsetH1, synsetD1)
 
-    val model = CoreModel(lexes, senses, synsets)
+    val lexes2 = listOf(lex1, lex2, lexD1)
+    val senses2 = listOf(sense11, sense12, sense21, sense22, senseD11)
+    val synsets2 = listOf(synset1, synset2, synsetH1, synsetD1)
+
+    val model1 = CoreModel(lexes1, senses1, synsets1)
+    val model2 = CoreModel(lexes2, senses2, synsets2)
 }

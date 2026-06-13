@@ -9,12 +9,20 @@ import org.junit.Assert.assertArrayEquals
 import org.junit.BeforeClass
 import org.junit.Test
 import org.oewntk.model.LibDummyNanoModel.lex1
+import org.oewntk.model.LibDummyNanoModel.lexes1
+import org.oewntk.model.LibDummyNanoModel.lexes2
+import org.oewntk.model.LibDummyNanoModel.model1
+import org.oewntk.model.LibDummyNanoModel.model2
 import org.oewntk.model.LibDummyNanoModel.pronunciation1
 import org.oewntk.model.LibDummyNanoModel.pronunciation21
 import org.oewntk.model.LibDummyNanoModel.pronunciation22
 import org.oewntk.model.LibDummyNanoModel.pronunciation3
 import org.oewntk.model.LibDummyNanoModel.sense11
+import org.oewntk.model.LibDummyNanoModel.senses1
+import org.oewntk.model.LibDummyNanoModel.senses2
 import org.oewntk.model.LibDummyNanoModel.synset1
+import org.oewntk.model.LibDummyNanoModel.synsets1
+import org.oewntk.model.LibDummyNanoModel.synsets2
 import org.oewntk.model.LibDummyNanoModelGenerator.genLeDiffWithDiscriminant
 import org.oewntk.model.LibDummyNanoModelGenerator.genLeDiffWithKey2
 import org.oewntk.model.LibDummyNanoModelGenerator.genLeDiffWithLemma
@@ -179,6 +187,26 @@ class TestEquals {
         genLeDiffWithKey2().let { assertNotEquals(it.first, it.second) }
         genLeDiffWithSenseKeys().let { assertNotEquals(it.first, it.second) }
         genLeDiffWithPronunciations().let { assertNotEquals(it.first, it.second) }
+    }
+
+    @Test
+    fun testLexCollection() {
+        assertEquals(lexes1, lexes2)
+    }
+
+    @Test
+    fun testSenseCollection() {
+        assertEquals(senses1, senses2)
+    }
+
+    @Test
+    fun testSynsetCollection() {
+        assertEquals(synsets1, synsets2)
+    }
+
+    @Test
+    fun testModels() {
+        assertEquals(model1, model2)
     }
 
     companion object {

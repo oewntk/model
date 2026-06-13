@@ -26,6 +26,20 @@ sealed class BaseModel : Serializable {
     abstract val lexes: Collection<Lex>
     abstract val senses: Collection<Sense>
     abstract val synsets: Collection<Synset>
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        return if (other is CoreModel)
+            Objects.equals(lexes, other.lexes)
+                    && Objects.equals(senses, other.senses)
+                    && Objects.equals(synsets, other.synsets)
+        else false
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(lexes, senses, synsets)
+    }
+
 }
 
 @kotlinx.serialization.Serializable
@@ -114,6 +128,19 @@ open class CoreModel(
      * @Transient
      */
     private val synsetsById: Map<SynsetId, Synset> by lazy { synsets.asSequence().synsetsById() }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        return if (other is CoreModel)
+            Objects.equals(lexes, other.lexes)
+                    && Objects.equals(senses, other.senses)
+                    && Objects.equals(synsets, other.synsets)
+        else false
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(lexes, senses, synsets)
+    }
 
     // F I N D E R S   A N D   R E S O L V E R S
 

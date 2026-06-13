@@ -5,7 +5,7 @@ package org.oewntk.model
 
 import org.junit.BeforeClass
 import org.junit.Test
-import org.oewntk.model.LibDummyNanoModel.model
+import org.oewntk.model.LibDummyNanoModel.model1
 import org.oewntk.model.LibDummyNanoModel.sense11
 import org.oewntk.model.LibDummyNanoModel.senseD11
 import org.oewntk.model.LibDummyNanoModel.synset1
@@ -50,14 +50,14 @@ class TestAddInverse {
     @Test
     fun testModel() {
         ps.println("model before generating inverses")
-        dump(model, ps)
+        dump(model1, ps)
         ps.println("generate inverses")
         ps.println("model after generating inverses")
-        model.generateInverseRelations(
+        model1.generateInverseRelations(
             INVERSE_SENSE_RELATIONS + mapOf("also" to "also"),
             INVERSE_SENSE_RELATIONS + mapOf("also" to "also"),
         )
-        dump(model, ps)
+        dump(model1, ps)
     }
 
     companion object {

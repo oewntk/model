@@ -5,6 +5,7 @@ package org.oewntk.model
 
 import org.oewntk.model.MapFactory.map
 import java.io.Serializable
+import java.util.*
 
 @kotlinx.serialization.Serializable
 @kotlinx.serialization.SerialName("data_model")
@@ -144,6 +145,21 @@ class Model(
     ) : this(data.lexes, data.senses, data.synsets, data.verbFrames, data.verbTemplates) {
         source = source0
         source2 = source20
+    }
+
+    // identity
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        return if (other is Model)
+            super.equals(other)
+                    && Objects.equals(verbFrames, other.verbFrames)
+                    && Objects.equals(verbTemplates, other.verbTemplates)
+        else false
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(super.hashCode(), verbFrames, verbTemplates)
     }
 
     /**

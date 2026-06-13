@@ -55,7 +55,7 @@ data class LexIdImpl(val lemma: Lemma, val type: SynsetType, val discriminant: D
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        return if (other is Lex) Objects.equals(lemma, other.lemma) && Objects.equals(type, other.type) && Objects.equals(discriminant, other.discriminant) else false
+        return if (other is LexId) Objects.equals(lemma, other.lemma) && Objects.equals(type, other.type) && Objects.equals(discriminant, other.discriminant) else false
     }
 
     override fun hashCode(): Int = Objects.hash(lemma, type, discriminant)

@@ -8,6 +8,13 @@ import junit.framework.TestCase.assertTrue
 import org.junit.Assert.assertArrayEquals
 import org.junit.BeforeClass
 import org.junit.Test
+import org.oewntk.model.LibDummyNanoModel.lex1
+import org.oewntk.model.LibDummyNanoModel.pronunciation1
+import org.oewntk.model.LibDummyNanoModel.pronunciation21
+import org.oewntk.model.LibDummyNanoModel.pronunciation22
+import org.oewntk.model.LibDummyNanoModel.pronunciation3
+import org.oewntk.model.LibDummyNanoModel.sense11
+import org.oewntk.model.LibDummyNanoModel.synset1
 import org.oewntk.model.LibDummyNanoModelGenerator.genLeDiffWithDiscriminant
 import org.oewntk.model.LibDummyNanoModelGenerator.genLeDiffWithKey2
 import org.oewntk.model.LibDummyNanoModelGenerator.genLeDiffWithLemma
@@ -30,13 +37,6 @@ import org.oewntk.model.LibDummyNanoModelGenerator.genSynsetDiffWithId
 import org.oewntk.model.LibDummyNanoModelGenerator.genSynsetDiffWithMembers
 import org.oewntk.model.LibDummyNanoModelGenerator.genSynsetDiffWithType
 import org.oewntk.model.LibDummyNanoModelGenerator.genSynsetEqual
-import org.oewntk.model.LibDummyNanoModelGenerator.lex1
-import org.oewntk.model.LibDummyNanoModelGenerator.pronunciation1
-import org.oewntk.model.LibDummyNanoModelGenerator.pronunciation21
-import org.oewntk.model.LibDummyNanoModelGenerator.pronunciation22
-import org.oewntk.model.LibDummyNanoModelGenerator.pronunciation3
-import org.oewntk.model.LibDummyNanoModelGenerator.sense11
-import org.oewntk.model.LibDummyNanoModelGenerator.synset1
 import java.io.PrintStream
 import java.util.*
 import kotlin.test.assertEquals

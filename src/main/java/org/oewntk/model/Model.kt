@@ -77,7 +77,7 @@ class Model(
         synsets: Collection<Synset>,
         verbFrames: Collection<VerbFrame>,
         verbTemplates: Collection<VerbTemplate>,
-        senseToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateId>>>?,
+        senseToVerbTemplates: Collection<Pair<SenseKey, List<VerbTemplateId>>>?,
         senseToTagCounts: Collection<Pair<SenseKey, TagCount>>?,
     ) : this(lexes, senses, synsets, verbFrames, verbTemplates) {
 
@@ -88,7 +88,7 @@ class Model(
                 if (sense != null) {
                     sense.verbTemplates = templatesIds
                 } else if (WARN_UNRESOLVABLE_SENSE) {
-                    Tracing.psErr.println("[W] Unresolvable $sensekey with templates ${templatesIds.contentToString()}")
+                    Tracing.psErr.println("[W] Unresolvable $sensekey with templates ${templatesIds.joinToString()}")
                 }
             }
 
@@ -120,7 +120,7 @@ class Model(
         coreModel: CoreModel,
         verbFrames: Collection<VerbFrame>,
         verbTemplates: Collection<VerbTemplate>,
-        sensesToVerbTemplates: Collection<Pair<SenseKey, Array<VerbTemplateId>>>?,
+        sensesToVerbTemplates: Collection<Pair<SenseKey, List<VerbTemplateId>>>?,
         sensesToTagCounts: Collection<Pair<SenseKey, TagCount>>?,
     ) : this(
         coreModel.lexes,

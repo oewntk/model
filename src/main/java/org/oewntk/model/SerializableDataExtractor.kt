@@ -133,7 +133,7 @@ fun synsetFromData(dict: Map<String, Any>): Synset {
     val relations = dict["relation"]?.let { safeCast<Map<Relation, List<SenseKey>>>(it).mapValues { e -> e.value.toSet() } }
     val ili = dict["ili"] as String?
     val wikidata = dict["wikidata"]?.let { safeCast<String>(it).split(";") }
-    return Synset(synsetId, type, domain, members.toTypedArray(), definitions.toTypedArray(), examples?.toTypedArray(), usages?.toTypedArray(), relations, ili, wikidata)
+    return Synset(synsetId, type, domain, members.toSet(), definitions, examples, usages, relations, ili, wikidata)
 }
 
 /**
@@ -174,7 +174,7 @@ fun senseFromData(dict: Map<String, Any>): Sense {
     val adjPosition = dict["adjPosition"] as String?
     val tagCount = dict["tagCount"] as Int?
     val relations = dict["relation"]?.let { safeCast<Map<Relation, List<SenseKey>>>(it).mapValues { e -> e.value.toSet() } }
-    return Sense(id, lexId, synsetId, index, examples?.toTypedArray(), verbFrames?.toTypedArray(), verbTemplates?.toTypedArray(), adjPosition, tagCount, relations)
+    return Sense(id, lexId, synsetId, index, examples, verbFrames, verbTemplates, adjPosition, tagCount, relations)
 }
 
 // S E Q U E N C E S   O F   O B J E C T S

@@ -138,7 +138,7 @@ object LibTestModelQueries {
         return toShort(synset)
     }
 
-    private fun toShort(synset: Synset) = "${synset.synsetId} ${synset.members.contentToString()} '${synset.toShortDefinition()}'"
+    private fun toShort(synset: Synset) = "${synset.synsetId} ${synset.members.joinToString()} '${synset.toShortDefinition()}'"
 
     private fun Synset?.toShortDefinition(): String {
         val definition = this!!.definition

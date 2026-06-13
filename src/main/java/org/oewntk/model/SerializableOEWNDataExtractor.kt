@@ -10,9 +10,21 @@ const val INCLUDE_LEXFILE = false
 
 typealias Filename = String
 
+// U T I L S
+
+fun keyPairs(dict: Map<Lemma, Map<Key2, Map<String, Any>>>): Sequence<Pair<Lemma, Key2>> = dict
+    .asSequence()
+    .flatMap { (key1, inner) -> inner.keys.map { key2 -> key1 to key2 } }
+
+fun entries(dict: Map<Lemma, Map<Key2, Map<String, Any>>>): Sequence<Triple<Lemma, Key2, Any>> = dict
+    .asSequence()
+    .flatMap { (key1, inner) ->
+        inner.map { (key2, thing) -> Triple(key1, key2, thing) }
+    }
+
 // O B J E C T S
 
-fun examplesFromOEWNData(list: List<Any>): Array<Pair<String, String?>> {
+fun examplesFromOEWNData(list: List<Any>): List<Pair<String, String?>> {
     val data = safeCast<List<Any>>(list)
     return data.map { example ->
         when (example) {
@@ -20,7 +32,7 @@ fun examplesFromOEWNData(list: List<Any>): Array<Pair<String, String?>> {
             is Map<*, *> -> example["source"] as String to example["text"] as String?
             else -> throw IllegalArgumentException(example.toString())
         }
-    }.toTypedArray()
+    }.toList()
 }
 
 fun synsetRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<SynsetId>>? {
@@ -166,8 +178,8 @@ fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant
     val synsetId: SynsetId = safeCast(dict["synset"]!!)
     val indexInLex: Int = idx
     val examples = dict["example"]?.let { examplesFromOEWNData(safeCast(it)) }
-    val verbFrames: Array<VerbFrameId>? = dict["subcat"]?.let { safeCast<List<VerbFrameId>>(it).toTypedArray() }
-    val verbTemplates: Array<VerbTemplateId>? = dict["template"]?.let { safeCast<List<VerbTemplateId>>(it).toTypedArray() }
+    val verbFrames: List<VerbFrameId>? = dict["subcat"]?.let { safeCast(it) }
+    val verbTemplates: List<VerbTemplateId>? = dict["template"]?.let { safeCast(it) }
     val adjPosition: AdjPosition? = safeNullableCast(dict["adjposition"])
     val tagCount: Int? = safeNullableCast(dict["tagcount"])
     val relations: Map<Relation, Set<SenseKey>>? = senseRelationsFromOEWNData(dict)
@@ -246,21 +258,21 @@ fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>): Synset {
     val domain = dict["domain"] as Domain
     val members = safeCast<List<Lemma>>(dict["members"]!!)
     val definitions = safeCast<List<String>>(dict["definition"]!!)
-    val examples = dict["example"]?.let { examplesFromOEWNData(safeCast<List<Any>>(it)) }
+    val examples = dict["example"]?.let { examplesFromOEWNData(safeCast(it)) }
     val usages = dict["usage"]?.let { safeCast<List<String>>(it) }
     val relations: Map<Relation, Set<SenseKey>>? = synsetRelationsFromOEWNData(dict)
     val ili = dict["ili"] as String?
     val wikidata = dict["wikidata"]?.let {
         when (it) {
             is String -> listOf(it)
-            is List<*> -> safeCast<List<String>>(it)
+            is List<*> -> safeCast(it)
             else -> throw IllegalArgumentException(it.toString())
         }
     }
     return Synset(
-        synsetId, type, domain, members.toTypedArray(), definitions.toTypedArray(),
+        synsetId, type, domain, members.toSet(), definitions,
         examples = examples,
-        usages = usages?.toTypedArray(),
+        usages = usages,
         relations = relations,
         ili = ili,
         wikidata = wikidata
@@ -342,16 +354,6 @@ fun lexesAndSensesFromOEWNData(dict: Map<Lemma, Map<Key2, Map<String, Any>>>): P
 
     return lexes to senses
 }
-
-fun keyPairs(dict: Map<Lemma, Map<Key2, Map<String, Any>>>): Sequence<Pair<Lemma, Key2>> = dict
-    .asSequence()
-    .flatMap { (key1, inner) -> inner.keys.map { key2 -> key1 to key2 } }
-
-fun entries(dict: Map<Lemma, Map<Key2, Map<String, Any>>>): Sequence<Triple<Lemma, Key2, Any>> = dict
-    .asSequence()
-    .flatMap { (key1, inner) ->
-        inner.map { (key2, thing) -> Triple(key1, key2, thing) }
-    }
 
 // M O D E L
 

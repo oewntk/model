@@ -47,9 +47,9 @@ data class Sense(
     val synsetId: SynsetId,
 
     val indexInLex: Int = 0,
-    val examples: Array<Pair<String, String?>>? = null,
-    val verbFrames: Array<VerbFrameId>? = null,
-    var verbTemplates: Array<VerbTemplateId>? = null,
+    val examples: List<Pair<String, String?>>? = null,
+    val verbFrames: List<VerbFrameId>? = null,
+    var verbTemplates: List<VerbTemplateId>? = null,
     val adjPosition: AdjPosition? = null,
     var tagCount: Int? = null,
     var relations: Map<Relation, Set<SenseKey>>? = null,

@@ -31,8 +31,8 @@ object LibDummyNanoModel {
         SYNSETID1,
         STYPE,
         DOMAIN1,
-        arrayOf(LEMMA1, LEMMA2),
-        arrayOf("tell a joke", "speak humorously"),
+        setOf(LEMMA1, LEMMA2),
+        listOf("tell a joke", "speak humorously"),
         null,
         null,
     )
@@ -40,8 +40,8 @@ object LibDummyNanoModel {
         SYNSETID2,
         STYPE,
         DOMAIN2,
-        arrayOf(LEMMA1, LEMMA2),
-        arrayOf("act in a funny teasing way")
+        setOf(LEMMA1, LEMMA2),
+        listOf("act in a funny teasing way")
     )
     val sense11 = Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0)
     val sense12 = Sense(SENSEKEY12, lex1.key, SYNSETID2, indexInLex = 1)
@@ -55,8 +55,8 @@ object LibDummyNanoModel {
         SYNSETID_H1,
         STYPE,
         DOMAIN1,
-        arrayOf("communicate", "intercommunicate"),
-        arrayOf("transmit thoughts or feelings")
+        setOf("communicate", "intercommunicate"),
+        listOf("transmit thoughts or feelings")
     )
 
     const val SYNSETID_D1 = "10240982-n"
@@ -64,8 +64,8 @@ object LibDummyNanoModel {
         SYNSETID_D1,
         SynsetType.N,
         "person",
-        arrayOf("jester", "fool", "motley fool"),
-        arrayOf("a professional clown employed to entertain a king or nobleman in the Middle Ages")
+        setOf("jester", "fool", "motley fool"),
+        listOf("a professional clown employed to entertain a king or nobleman in the Middle Ages")
     )
 
     const val SENSEKEY_D11 = "jester%1:18:00::"

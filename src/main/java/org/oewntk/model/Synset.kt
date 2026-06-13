@@ -43,10 +43,10 @@ data class Synset(
     // value
     val type: SynsetType,
     val domain: Domain,
-    val members: Array<Lemma>,
-    val definitions: Array<String>,
-    val examples: Array<Pair<String, String?>>? = null,
-    val usages: Array<String>? = null,
+    val members: Set<Lemma>,
+    val definitions: List<String>,
+    val examples: List<Pair<String, String?>>? = null,
+    val usages: List<String>? = null,
     var relations: Map<Relation, Set<SynsetId>>? = null,
     val ili: String? = null,
     val wikidata: List<String>? = null,
@@ -175,11 +175,7 @@ data class Synset(
      * @param lemma member lemma
      * @return index of member is members, -1 if not found
      */
-    fun findIndexOfMember(lemma: Lemma): Int {
-        val members = members
-        val memberList = listOf(*members)
-        return memberList.indexOf(lemma)
-    }
+    fun findIndexOfMember(lemma: Lemma): Int = members.toList().indexOf(lemma)
 
     // stringify
 

@@ -91,7 +91,7 @@ data class Lex(
     override fun equals(other: Any?): Boolean {
         // throw UnsupportedOperationException("$this / $other")
         if (this === other) return true
-        return if (other is Lex) Objects.equals(key, other.key) && Objects.equals(value, other.value) && Objects.equals(properties, other.properties) else false
+        return if (other is Lex) Objects.equals(key, other.key) && Objects.equals(value, other.value) && Arrays.equals(properties, other.properties) else false
     }
 
     override fun hashCode(): Int {

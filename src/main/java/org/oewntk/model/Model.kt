@@ -140,11 +140,11 @@ class Model(
      */
     constructor (
         data: DataModel,
-        source0: String,
-        source20: String,
+        source: String,
+        source2: String,
     ) : this(data.lexes, data.senses, data.synsets, data.verbFrames, data.verbTemplates) {
-        source = source0
-        source2 = source20
+        this.source = source
+        this.source2 = source2
     }
 
     // identity

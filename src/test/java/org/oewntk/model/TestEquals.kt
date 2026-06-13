@@ -13,6 +13,7 @@ import org.oewntk.model.LibDummyNanoModel.lexes1
 import org.oewntk.model.LibDummyNanoModel.lexes2
 import org.oewntk.model.LibDummyNanoModel.model1
 import org.oewntk.model.LibDummyNanoModel.model2
+import org.oewntk.model.LibDummyNanoModel.model3
 import org.oewntk.model.LibDummyNanoModel.pronunciation1
 import org.oewntk.model.LibDummyNanoModel.pronunciation21
 import org.oewntk.model.LibDummyNanoModel.pronunciation22
@@ -206,7 +207,13 @@ class TestEquals {
 
     @Test
     fun testModels() {
+        assertFalse(model1 === model2)
+        assertTrue(model1 == model2)
         assertEquals(model1, model2)
+
+        assertFalse(model1 === model3)
+        assertNotEquals(model1, model3)
+        assertFalse(model1 == model3)
     }
 
     companion object {

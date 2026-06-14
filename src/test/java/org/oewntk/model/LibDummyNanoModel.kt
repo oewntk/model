@@ -73,13 +73,13 @@ object LibDummyNanoModel {
     val senses3 = listOf(sense11, sense12, sense21, sense22)
     val synsets3 = listOf(synset1, synset2)
 
-    val coreModel1 = CoreModel(lexes1, senses1, synsets1, source="#1")
-    val coreModel2 = CoreModel(lexes2, senses2, synsets2, source="#2")
-    val coreModel3 = CoreModel(lexes3, senses3, synsets3, source="#3")
+    val coreModel1 = CoreModel(lexes1.toSet(), senses1.toSet(), synsets1.toSet(), source="#1")
+    val coreModel2 = CoreModel(lexes2.toSet(), senses2.toSet(), synsets2.toSet(), source="#2")
+    val coreModel3 = CoreModel(lexes3.toSet(), senses3.toSet(), synsets3.toSet(), source="#3")
 
-    val dataModel1 = DataModel(coreModel1, listOf(), listOf())
-    val dataModel2 = DataModel(coreModel2, listOf(), listOf())
-    val dataModel3 = DataModel(coreModel3, listOf(), listOf())
+    val dataModel1 = DataModel(coreModel1, emptySet(), emptySet())
+    val dataModel2 = DataModel(coreModel2, emptySet(), emptySet())
+    val dataModel3 = DataModel(coreModel3, emptySet(), emptySet())
 
     val model1 = Model(dataModel1, source="#1", source2="#1_2")
     val model2 = Model(dataModel2, source="#2", source2="#2_2")

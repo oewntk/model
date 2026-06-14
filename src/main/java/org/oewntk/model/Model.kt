@@ -10,11 +10,11 @@ import java.util.*
 @kotlinx.serialization.Serializable
 @kotlinx.serialization.SerialName("data_model")
 data class DataModel(
-    override val lexes: Collection<Lex>,
-    override val senses: Collection<Sense>,
-    override val synsets: Collection<Synset>,
-    val verbFrames: Collection<VerbFrame>,
-    val verbTemplates: Collection<VerbTemplate>,
+    override val lexes: Set<Lex>,
+    override val senses: Set<Sense>,
+    override val synsets: Set<Synset>,
+    val verbFrames: Set<VerbFrame>,
+    val verbTemplates: Set<VerbTemplate>,
 
     ) : BaseModel(), Serializable {
 
@@ -24,8 +24,8 @@ data class DataModel(
 
     constructor (
         coreModel: CoreModel,
-        verbFrames: Collection<VerbFrame>,
-        verbTemplates: Collection<VerbTemplate>,
+        verbFrames: Set<VerbFrame>,
+        verbTemplates: Set<VerbTemplate>,
     ) : this(coreModel.lexes, coreModel.senses, coreModel.synsets, verbFrames, verbTemplates)
 
     override fun equals(other: Any?): Boolean {
@@ -68,11 +68,11 @@ data class DataModel(
  * @property source2              source2
  */
 class Model(
-    lexes: Collection<Lex>,
-    senses: Collection<Sense>,
-    synsets: Collection<Synset>,
-    val verbFrames: Collection<VerbFrame>,
-    val verbTemplates: Collection<VerbTemplate>,
+    lexes: Set<Lex>,
+    senses: Set<Sense>,
+    synsets: Set<Synset>,
+    val verbFrames: Set<VerbFrame>,
+    val verbTemplates: Set<VerbTemplate>,
 ) : CoreModel(lexes, senses, synsets) {
 
     var source2: String? = null
@@ -89,11 +89,11 @@ class Model(
      * @param  senseToTagCounts       sensekey-to-tagcount
      */
     private constructor(
-        lexes: Collection<Lex>,
-        senses: Collection<Sense>,
-        synsets: Collection<Synset>,
-        verbFrames: Collection<VerbFrame>,
-        verbTemplates: Collection<VerbTemplate>,
+        lexes: Set<Lex>,
+        senses: Set<Sense>,
+        synsets: Set<Synset>,
+        verbFrames: Set<VerbFrame>,
+        verbTemplates: Set<VerbTemplate>,
         senseToVerbTemplates: Collection<Pair<SenseKey, List<VerbTemplateId>>>?,
         senseToTagCounts: Collection<Pair<SenseKey, TagCount>>?,
     ) : this(lexes, senses, synsets, verbFrames, verbTemplates) {
@@ -135,8 +135,8 @@ class Model(
      */
     constructor(
         coreModel: CoreModel,
-        verbFrames: Collection<VerbFrame>,
-        verbTemplates: Collection<VerbTemplate>,
+        verbFrames: Set<VerbFrame>,
+        verbTemplates: Set<VerbTemplate>,
         sensesToVerbTemplates: Collection<Pair<SenseKey, List<VerbTemplateId>>>?,
         sensesToTagCounts: Collection<Pair<SenseKey, TagCount>>?,
     ) : this(

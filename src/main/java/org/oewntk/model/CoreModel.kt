@@ -135,10 +135,21 @@ open class CoreModel(
         return if (other is CoreModel) {
             val eq = lexes == other.lexes && senses == other.senses && synsets == other.synsets
             if (!eq) {
-                val eqLexes = lexes.toSet() == other.lexes.toSet()
-                val eqSenses = senses.toSet() == other.senses.toSet()
-                val eqSynsets = synsets.toSet() == other.synsets.toSet()
-                println("$this != $other  $eqLexes $eqSenses $eqSynsets")
+                val eqLexes = lexes == other.lexes
+                val eqSenses = senses == other.senses
+                val eqSynsets = synsets == other.synsets
+
+                val lexesSet = lexes.toSet()
+                val sensesSet = senses.toSet()
+                val synsetsSet = synsets.toSet()
+                val otherLexesSet = other.lexes.toSet()
+                val otherSensesSet = other.senses.toSet()
+                val otherSynsetsSet = other.synsets.toSet()
+
+                val eqLexesSet = lexesSet == otherLexesSet
+                val eqSensesSet = sensesSet == otherSensesSet
+                val eqSynsetsSet = synsetsSet == otherSynsetsSet
+                println("$this != $other  $eqLexes $eqSenses $eqSynsets $eqLexesSet $eqSensesSet $eqSynsetsSet")
             }
             eq
         } else false

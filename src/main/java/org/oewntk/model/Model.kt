@@ -27,6 +27,22 @@ data class DataModel(
         verbFrames: Collection<VerbFrame>,
         verbTemplates: Collection<VerbTemplate>,
     ) : this(coreModel.lexes, coreModel.senses, coreModel.synsets, verbFrames, verbTemplates)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        return if (other is DataModel)
+            lexes == other.lexes
+                    && senses == other.senses
+                    && synsets == other.synsets
+                    && verbFrames == other.verbFrames
+                    && verbTemplates == other.verbTemplates
+        else false
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(lexes, senses, synsets, verbFrames, verbTemplates)
+    }
+
 }
 
 /**
@@ -151,11 +167,10 @@ class Model(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        return if (other is Model)
-            super.equals(other)
-                    && Objects.equals(verbFrames, other.verbFrames)
-                    && Objects.equals(verbTemplates, other.verbTemplates)
-        else false
+        return if (other is Model) {
+            val superEq = super.equals(other)
+            superEq && verbFrames == other.verbFrames && verbTemplates == other.verbTemplates
+        } else false
     }
 
     override fun hashCode(): Int {

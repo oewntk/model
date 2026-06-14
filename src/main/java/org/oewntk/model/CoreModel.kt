@@ -27,19 +27,6 @@ sealed class BaseModel : Serializable {
     abstract val senses: Collection<Sense>
     abstract val synsets: Collection<Synset>
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        return if (other is CoreModel)
-            Objects.equals(lexes, other.lexes)
-                    && Objects.equals(senses, other.senses)
-                    && Objects.equals(synsets, other.synsets)
-        else false
-    }
-
-    override fun hashCode(): Int {
-        return Objects.hash(lexes, senses, synsets)
-    }
-
 }
 
 @kotlinx.serialization.Serializable
@@ -54,6 +41,20 @@ data class DataCoreModel(
     constructor (
         model: CoreModel,
     ) : this(model.lexes, model.senses, model.synsets)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        return if (other is DataCoreModel)
+            lexes == other.lexes
+                    && senses == other.senses
+                    && synsets == other.synsets
+        else false
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(lexes, senses, synsets)
+    }
+
 }
 
 /**
@@ -131,11 +132,16 @@ open class CoreModel(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        return if (other is CoreModel)
-            Objects.equals(lexes, other.lexes)
-                    && Objects.equals(senses, other.senses)
-                    && Objects.equals(synsets, other.synsets)
-        else false
+        return if (other is CoreModel) {
+            val eq = lexes == other.lexes && senses == other.senses && synsets == other.synsets
+            if (!eq) {
+                val eqLexes = lexes.toSet() == other.lexes.toSet()
+                val eqSenses = senses.toSet() == other.senses.toSet()
+                val eqSynsets = synsets.toSet() == other.synsets.toSet()
+                println("$this != $other  $eqLexes $eqSenses $eqSynsets")
+            }
+            eq
+        } else false
     }
 
     override fun hashCode(): Int {

@@ -87,7 +87,11 @@ data class Sense(
     override fun equals(other: Any?): Boolean {
         // throw UnsupportedOperationException("$this / $other")
         if (this === other) return true
-        return if (other is Sense) Objects.equals(key, other.key) && Objects.equals(value, other.value) && properties.contentEquals(other.properties) else false
+        return if (other is Sense) {
+            key == other.key
+                    && value == other.value
+                    && properties.contentEquals(other.properties)
+        } else false
     }
 
     override fun hashCode(): Int {

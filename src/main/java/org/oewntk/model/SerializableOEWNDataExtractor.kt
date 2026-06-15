@@ -6,8 +6,6 @@ import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
 import org.oewntk.model.Sense.Companion.SENSE_RELATIONS
 import org.oewntk.model.Synset.Companion.SYNSET_RELATIONS
 
-const val INCLUDE_LEXFILE = false
-
 typealias Filename = String
 
 // U T I L S
@@ -99,7 +97,7 @@ fun pronunciationFromOEWNData(dict: Map<String, Any>): Pronunciation {
  * - sense
  * - source
  */
-fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?): Map<String, Any> {
+fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?, includeLexFile: Boolean = false): Map<String, Any> {
     val serializedSenses = senseKeys
         .map { resolver.invoke(it)!! }
         .map(Sense::toOEWNData)
@@ -110,7 +108,7 @@ fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?): Map<String, Any> {
     ).apply {
         forms?.let { this["form"] = it.map { it2 -> it2 }.toList() }
         pronunciations?.let { this["pronunciation"] = it.map(Pronunciation::toOEWNData).toList() }
-        if (INCLUDE_LEXFILE) lexfile.let { this["lexfile"] = it }
+        if (includeLexFile) lexfile.let { this["lexfile"] = it }
     }.toSortedMap()
 }
 
@@ -146,7 +144,7 @@ fun lexFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?,
  * - sent
  * - <relations>
  */
-fun Sense.toOEWNData(compat: Boolean = false): Map<String, Any> {
+fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Boolean = true): Map<String, Any> {
     return mutableMapOf<String, Any>(
         "id" to senseKey,
         "synset" to synsetId,
@@ -154,12 +152,13 @@ fun Sense.toOEWNData(compat: Boolean = false): Map<String, Any> {
         adjPosition?.let { this["adjposition"] = it }
         examples?.let { this["sent"] = it.map { it2 -> if (it2.second == null) it2.first else mapOf("text" to it2.first, "source" to it2.second) } }
         verbFrames?.let { this["subcat"] = it }
-        if (!compat) verbTemplates?.let { this["template"] = it }
+        if (includeVerbTemplates) verbTemplates?.let { this["template"] = it }
         relations
             ?.filterNot { it.key in INVERSE_SENSE_RELATIONS_SET }
             ?.forEach { (rel: String, target) ->
                 this[rel] = target.toList()
             }
+        if (includeTagCount) tagCount?.let { this["tagcount"] = it }
     }.toSortedMap()
 }
 
@@ -225,10 +224,10 @@ fun Sequence<Sense>.toOEWNData(): List<Any> {
  * - ili
  * - <relations>
  */
-fun Synset.toOEWNData(): Map<String, Any> {
+fun Synset.toOEWNData(includeLexFile: Boolean = false): Map<String, Any> {
     return mutableMapOf(
-        "partOfSpeech" to partOfSpeech.value,
-        "definition" to listOf(definition!!),
+        "partOfSpeech" to type.value,
+        "definition" to definitions,
         "members" to members.toList(),
         "domain" to domain,
     ).apply {
@@ -242,7 +241,7 @@ fun Synset.toOEWNData(): Map<String, Any> {
         wikidata?.let { if (it.isNotEmpty()) this["wikidata"] = if (it.size == 1) it[0] else it }
         ili?.let { this["ili"] = it }
         source?.let { this["source"] = it }
-        if (INCLUDE_LEXFILE) this["lexfile"] = lexfile
+        if (includeLexFile) this["lexfile"] = lexfile
     }.toSortedMap()
 }
 
@@ -306,7 +305,6 @@ fun Sequence<Lex>.toOEWNData(senseResolver: (SenseKey) -> Sense): Map<Lemma, Map
     return hypermap1.toOEWNData(senseResolver)
 }
 
-// TODO remove
 fun Sequence<Lex>.toOEWNDataAlt(senseResolver: (SenseKey) -> Sense): Map<Lemma, Map<Key2, Map<String, Any>>> {
     return mutableMapOf<String, Map<Key2, Map<String, Any>>>()
         .apply {
@@ -327,7 +325,7 @@ fun Sequence<Lex>.toOEWNDataAlt(senseResolver: (SenseKey) -> Sense): Map<Lemma, 
 fun HyperMap1.toOEWNData(senseResolver: (SenseKey) -> Sense): Map<Lemma, Map<Key2, Map<String, Any>>> {
     return this
         .mapValues { (_: Lemma, v) ->
-            v.mapValues { (_: Key2, lex) -> lex.toOEWNData { senseResolver(it) } }.toSortedMap()
+            v.mapValues { (_: Key2, lex) -> lex.toOEWNData(resolver = { senseResolver(it) }) }.toSortedMap()
         }.toSortedMap()
 }
 

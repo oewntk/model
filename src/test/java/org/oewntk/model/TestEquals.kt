@@ -54,47 +54,6 @@ import kotlin.test.assertNotEquals
 class TestEquals {
 
     @Test
-    fun testPairs() {
-        val obj1 = "jest" to "joke"
-        val obj2 = "jest" to "joke"
-        assertTrue(Objects.equals(obj1, obj2))
-        assertEquals(obj1, obj2)
-    }
-
-    @Test
-    fun testTriples() {
-        val obj1 = Triple("jest", "joke", "jester")
-        val obj2 = Triple("jest", "joke", "jester")
-        assertTrue(Objects.equals(obj1, obj2))
-        assertEquals(obj1, obj2)
-    }
-
-    @Test
-    fun testArrays() {
-        val obj1 = arrayOf("jest", "joke")
-        val obj2 = arrayOf("jest", "joke")
-        assertFalse(Objects.equals(obj1, obj2))
-        assertTrue(Arrays.equals(obj1, obj2))
-        assertNotEquals(obj1, obj2)
-    }
-
-    @Test
-    fun testLists() {
-        val obj1 = listOf("jest", "joke")
-        val obj2 = listOf("jest", "joke")
-        assertTrue(Objects.equals(obj1, obj2))
-        assertEquals(obj1, obj2)
-    }
-
-    @Test
-    fun testSets() {
-        val obj1 = setOf("jest", "joke")
-        val set2 = setOf("jest", "joke")
-        assertTrue(Objects.equals(obj1, set2))
-        assertEquals(obj1, set2)
-    }
-
-    @Test
     fun testLexId() {
         val obj1 = LexId("jest", SynsetType.V, null)
         val obj2 = LexId("jest", SynsetType.V, null)

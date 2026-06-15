@@ -185,4 +185,9 @@ data class Lex(
                 .mapValues { it.value.toSet() }
         }
     }
+
+    companion object {
+
+        val lexComparator: Comparator<Lex> = compareBy(Lex::lemma).thenBy(Lex::key2)
+    }
 }

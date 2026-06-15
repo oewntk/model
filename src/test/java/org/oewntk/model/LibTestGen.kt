@@ -80,11 +80,15 @@ object LibTestGen {
 
     fun genModelSerializables(model: CoreModel): Sequence<Pair<Map<String, Any>, Filename>> {
         return sequence {
-            val someSerializedLexes = model.lexSubset()
+            val someSerializedLexes = model
+                .lexSubset()
+                .asSequence()
                 .toOEWNData(model.senseResolver)
             yield(someSerializedLexes to "entries-some") // yield content with source file base
 
-            val someSerializedSynsets = model.synsetSubset()
+            val someSerializedSynsets = model
+                .synsetSubset()
+                .asSequence()
                 .toOEWNData()
             yield(someSerializedSynsets to "data-some")  // yield content with source file base
         }

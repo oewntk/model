@@ -33,9 +33,9 @@ sealed class BaseModel : Serializable {
 @kotlinx.serialization.Serializable
 @kotlinx.serialization.SerialName("data_core_model")
 data class DataCoreModel(
-    override val lexes: Set<Lex>,
-    override val senses: Set<Sense>,
-    override val synsets: Set<Synset>,
+    override val lexes: List<Lex>,
+    override val senses: List<Sense>,
+    override val synsets: List<Synset>,
 
     ) : BaseModel(), Serializable {
 
@@ -75,9 +75,9 @@ data class DataCoreModel(
 @kotlinx.serialization.Serializable
 @kotlinx.serialization.SerialName("core_model")
 open class CoreModel(
-    override val lexes: Set<Lex>,
-    override val senses: Set<Sense>,
-    override val synsets: Set<Synset>,
+    override val lexes: List<Lex>,
+    override val senses: List<Sense>,
+    override val synsets: List<Synset>,
     var source: String? = null,
 
     ) : BaseModel(), Serializable {

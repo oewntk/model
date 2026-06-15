@@ -34,7 +34,7 @@ object ModelEquals {
                 val sensesID = identityHashCode(senses)
                 val otherSensesID = identityHashCode(other.senses)
 
-                fun <T> Set<T>.zipEquals(other: Set<T>): Boolean = zip(other).none { (o1, o2) -> (o1 != o2) }
+                fun <T> List<T>.zipEquals(other: List<T>): Boolean = zip(other).none { (o1, o2) -> (o1 != o2) }
                 val zipEqLexes = lexes.zipEquals(other.lexes)
                 val zipEqSynsets = synsets.zipEquals(other.synsets)
                 val zipEqSenses = senses.zipEquals(other.senses)
@@ -76,28 +76,28 @@ object ModelEquals {
         } else false
     }
 
-    fun checkLexesEq(lexes1: Set<Lex>, lexes2: Set<Lex>) {
+    fun checkLexesEq(lexes1: List<Lex>, lexes2: List<Lex>) {
         if (lexes1 != lexes2) {
             val report = "different lexes"
             if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
         }
     }
 
-    fun checkSynsetsEq(synsets1: Set<Synset>, synsets2: Set<Synset>) {
+    fun checkSynsetsEq(synsets1: List<Synset>, synsets2: List<Synset>) {
         if (synsets1 != synsets2) {
             val report = "different synsets"
             if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
         }
     }
 
-    fun checkSensesEq(senses1: Set<Sense>, senses2: Set<Sense>) {
+    fun checkSensesEq(senses1: List<Sense>, senses2: List<Sense>) {
         if (senses1 != senses2) {
             val report = "different senses"
             if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
         }
     }
 
-    fun checkZipLexesEq(lexes1: Set<Lex>, lexes2: Set<Lex>) {
+    fun checkZipLexesEq(lexes1: List<Lex>, lexes2: List<Lex>) {
         lexes1.zip(lexes2).forEach { (lex1, lex2) ->
             if (lex1 != lex2) {
                 val keyEq = lex1.key == lex2.key
@@ -111,7 +111,7 @@ object ModelEquals {
         }
     }
 
-    fun checkZipSynsetsEq(synsets1: Set<Synset>, synsets2: Set<Synset>) {
+    fun checkZipSynsetsEq(synsets1: List<Synset>, synsets2: List<Synset>) {
         synsets1.zip(synsets2).forEach { (synset1, synset2) ->
             if (synset1 != synset2) {
                 val keyEq = synset1.key == synset2.key
@@ -132,7 +132,7 @@ object ModelEquals {
         }
     }
 
-    fun checkZipSensesEq(senses1: Set<Sense>, senses2: Set<Sense>) {
+    fun checkZipSensesEq(senses1: List<Sense>, senses2: List<Sense>) {
         senses1.zip(senses2).forEach { (sense1, sense2) ->
             if (sense1 != sense2) {
                 Tracing.psErr.println("$sense1 != $sense2")
@@ -153,8 +153,8 @@ object ModelEquals {
     }
 
     fun checkDataEq(
-        data1: Triple<Set<Lex>, Set<Synset>, Set<Sense>>,
-        data2: Triple<Set<Lex>, Set<Synset>, Set<Sense>>
+        data1: Triple<List<Lex>, List<Synset>, List<Sense>>,
+        data2: Triple<List<Lex>, List<Synset>, List<Sense>>
     ) {
         val (lexes1, synsets1, senses1) = data1
         val (lexes2, synsets2, senses2) = data2

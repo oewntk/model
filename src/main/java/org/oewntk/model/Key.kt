@@ -163,7 +163,7 @@ interface Key {
                 lex: Lex,
                 lemmaExtractor: (Lex) -> Lemma = Lex::lemma,
                 categoryExtractor: (Lex) -> Category = { it.type.toCategory() },
-            ): UsingPronunciation = UsingPronunciation(lemmaExtractor(lex), categoryExtractor(lex), lex.pronunciations)
+            ): UsingPronunciation = UsingPronunciation(lemmaExtractor(lex), categoryExtractor(lex), lex.pronunciations?.toSet())
 
             fun ofUsingPartOfSpeech(lex: Lex): UsingPronunciation = of(lex) { it.partOfSpeech.toCategory() }
 

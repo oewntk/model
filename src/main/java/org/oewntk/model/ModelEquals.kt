@@ -22,30 +22,6 @@ object ModelEquals {
         }
     }
 
-    fun checkZipSensesEq(senses1: Set<Sense>, senses2: Set<Sense>) {
-        senses1.zip(senses2).forEach { (sense1, sense2) ->
-            if (sense1 != sense2) {
-                Tracing.psErr.println("$sense1 != $sense2")
-                val keyEq = sense1.key == sense2.key
-                val valueEq = sense1.value == sense2.value
-                val typeEq = sense1.type == sense2.type
-                val indexInLexEq = sense1.indexInLex == sense2.indexInLex
-                val examplesEq = sense1.examples == sense2.examples
-                val adjPositionEq = sense1.adjPosition == sense2.adjPosition
-                val relationsEq = sense1.relations == sense2.relations
-                val verbFramesEq = sense1.verbFrames == sense2.verbFrames
-                val verbTemplatesEq = sense1.verbTemplates == sense2.verbTemplates
-                val tagCountEq = sense1.tagCount == sense2.tagCount
-                val report = "$sense1 != $sense2 : k=$keyEq v=$valueEq t=$typeEq i=$indexInLexEq e=$examplesEq ap=$adjPositionEq r=$relationsEq vf=$verbFramesEq vt=$verbTemplatesEq c=$tagCountEq"
-                if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
-            }
-        }
-        if (senses1 != senses2) {
-            val report = "different senses"
-            if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
-        }
-    }
-
     fun checkZipSynsetsEq(synsets1: Set<Synset>, synsets2: Set<Synset>) {
         synsets1.zip(synsets2).forEach { (synset1, synset2) ->
             if (synset1 != synset2) {
@@ -67,6 +43,30 @@ object ModelEquals {
         }
         if (synsets1 != synsets2) {
             val report = "different synsets"
+            if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
+        }
+    }
+
+    fun checkZipSensesEq(senses1: Set<Sense>, senses2: Set<Sense>) {
+        senses1.zip(senses2).forEach { (sense1, sense2) ->
+            if (sense1 != sense2) {
+                Tracing.psErr.println("$sense1 != $sense2")
+                val keyEq = sense1.key == sense2.key
+                val valueEq = sense1.value == sense2.value
+                val typeEq = sense1.type == sense2.type
+                val indexInLexEq = sense1.indexInLex == sense2.indexInLex
+                val examplesEq = sense1.examples == sense2.examples
+                val adjPositionEq = sense1.adjPosition == sense2.adjPosition
+                val relationsEq = sense1.relations == sense2.relations
+                val verbFramesEq = sense1.verbFrames == sense2.verbFrames
+                val verbTemplatesEq = sense1.verbTemplates == sense2.verbTemplates
+                val tagCountEq = sense1.tagCount == sense2.tagCount
+                val report = "$sense1 != $sense2 : k=$keyEq v=$valueEq t=$typeEq i=$indexInLexEq e=$examplesEq ap=$adjPositionEq r=$relationsEq vf=$verbFramesEq vt=$verbTemplatesEq c=$tagCountEq"
+                if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
+            }
+        }
+        if (senses1 != senses2) {
+            val report = "different senses"
             if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
         }
     }

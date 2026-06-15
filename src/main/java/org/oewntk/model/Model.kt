@@ -5,6 +5,7 @@ package org.oewntk.model
 
 import org.oewntk.model.MapFactory.map
 import java.io.Serializable
+import java.lang.System.identityHashCode
 import java.util.*
 
 @kotlinx.serialization.Serializable
@@ -211,7 +212,7 @@ class Model(
         get() = arrayOf(source, source2)
 
     @OptIn(ExperimentalStdlibApi::class)
-    override fun toString() = "@${hashCode().toHexString()} ${sources.joinToString(prefix = "[", postfix = "]") { it ?: "NULL" }}"
+    override fun toString() = "@${identityHashCode(this).toHexString()} #${hashCode().toHexString()} ${sources.joinToString(prefix = "[", postfix = "]") { it ?: "NULL" }}"
 
     /**
      * Info about this model

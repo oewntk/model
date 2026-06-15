@@ -10,6 +10,7 @@ import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
 import org.oewntk.model.MapFactory.sensesById
 import org.oewntk.model.MapFactory.synsetsById
 import java.io.Serializable
+import java.lang.System.identityHashCode
 import java.util.*
 
 /**
@@ -133,25 +134,7 @@ open class CoreModel(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         return if (other is CoreModel) {
-            val eq = lexes == other.lexes && senses == other.senses && synsets == other.synsets
-            if (!eq) {
-                val eqLexes = lexes == other.lexes
-                val eqSenses = senses == other.senses
-                val eqSynsets = synsets == other.synsets
-
-                val lexesSet = lexes.toSet()
-                val sensesSet = senses.toSet()
-                val synsetsSet = synsets.toSet()
-                val otherLexesSet = other.lexes.toSet()
-                val otherSensesSet = other.senses.toSet()
-                val otherSynsetsSet = other.synsets.toSet()
-
-                val eqLexesSet = lexesSet == otherLexesSet
-                val eqSensesSet = sensesSet == otherSensesSet
-                val eqSynsetsSet = synsetsSet == otherSynsetsSet
-                println("$this != $other  $eqLexes $eqSenses $eqSynsets $eqLexesSet $eqSensesSet $eqSynsetsSet")
-            }
-            eq
+            lexes == other.lexes && senses == other.senses && synsets == other.synsets
         } else false
     }
 
@@ -267,7 +250,7 @@ open class CoreModel(
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    override fun toString() = "@${hashCode().toHexString()} $source"
+    override fun toString() = "@${identityHashCode(this).toHexString()} #${hashCode().toHexString()} $source"
 
     /**
      * Info about this model

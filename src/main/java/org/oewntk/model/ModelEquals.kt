@@ -1,8 +1,101 @@
 package org.oewntk.model
 
+import java.lang.System.identityHashCode
+
 object ModelEquals {
 
     const val FAIL = true
+
+    @OptIn(ExperimentalStdlibApi::class)
+    fun CoreModel.dataEquals(other: Any?): Boolean {
+        if (this === other) return true
+        return if (other is CoreModel) {
+            val eq = lexes == other.lexes && senses == other.senses && synsets == other.synsets
+            if (!eq) {
+                val eqLexes = lexes == other.lexes
+                val eqSenses = senses == other.senses
+                val eqSynsets = synsets == other.synsets
+
+                val lexesSet = lexes.toSet()
+                val sensesSet = senses.toSet()
+                val synsetsSet = synsets.toSet()
+                val otherLexesSet = other.lexes.toSet()
+                val otherSensesSet = other.senses.toSet()
+                val otherSynsetsSet = other.synsets.toSet()
+
+                val eqLexesSet = lexesSet == otherLexesSet
+                val eqSensesSet = sensesSet == otherSensesSet
+                val eqSynsetsSet = synsetsSet == otherSynsetsSet
+
+                val lexesID = identityHashCode(lexes)
+                val otherLexesID = identityHashCode(other.lexes)
+                val synsetsID = identityHashCode(synsets)
+                val otherSynsetsID = identityHashCode(other.synsets)
+                val sensesID = identityHashCode(senses)
+                val otherSensesID = identityHashCode(other.senses)
+
+                fun <T> Set<T>.zipEquals(other: Set<T>): Boolean = zip(other).none { (o1, o2) -> (o1 != o2) }
+                val zipEqLexes = lexes.zipEquals(other.lexes)
+                val zipEqSynsets = synsets.zipEquals(other.synsets)
+                val zipEqSenses = senses.zipEquals(other.senses)
+
+                println("-----ID(lexes) ID(synsets) ID(senses)")
+                println("  A= $lexesID $synsetsID $sensesID")
+                println("  B= $otherLexesID $otherSynsetsID $otherSensesID")
+                println("-----class(lexes) class(synsets) class(senses)")
+                println("  A= ${lexes.javaClass.name} ${synsets.javaClass.name} ${senses.javaClass.name}")
+                println("  B= ${other.lexes.javaClass.name} ${other.synsets.javaClass.name} ${other.senses.javaClass.name}")
+                println("-----hash(lexes) hash(synsets) hash(senses)")
+                println("  A= ${lexes.hashCode()} ${synsets.hashCode()} ${senses.hashCode()}")
+                println("  B= ${other.lexes.hashCode()} ${other.synsets.hashCode()} ${other.senses.hashCode()}")
+                println("-----equals(lexes) equals(synsets) equals(senses)")
+                println("     $eqLexes $eqSynsets $eqSenses")
+                println("-----zipEquals(lexes) zipEquals(synsets) zipEquals(senses)")
+                println("     $zipEqLexes $zipEqSynsets $zipEqSenses")
+
+                val lexesSetID = identityHashCode(lexesSet).toHexString()
+                val otherLexesSetID = identityHashCode(otherLexesSet).toHexString()
+                val synsetsSetID = identityHashCode(synsetsSet).toHexString()
+                val otherSynsetsSetID = identityHashCode(otherSynsetsSet).toHexString()
+                val sensesSetID = identityHashCode(sensesSet).toHexString()
+                val otherSensesSetID = identityHashCode(otherSensesSet).toHexString()
+
+                println("-----ID(set(lexes)) ID(set(synsets)) ID(set(senses))")
+                println("  A'= $lexesSetID $synsetsSetID $sensesSetID")
+                println("  B'= $otherLexesSetID $otherSynsetsSetID $otherSensesSetID")
+                println("-----class(set(lexes)) class(set(synsets)) class(set(senses))")
+                println("  A'= ${lexesSet.javaClass.name} ${synsetsSet.javaClass.name} ${sensesSet.javaClass.name}")
+                println("  B'= ${otherLexesSet.javaClass.name} ${otherSynsetsSet.javaClass.name} ${otherSensesSet.javaClass.name}")
+                println("-----hash(lexes) hash(synsets) hash(senses)")
+                println("  A'= ${lexesSet.hashCode()} ${synsetsSet.hashCode()} ${sensesSet.hashCode()}")
+                println("  B'= ${otherLexesSet.hashCode()} ${otherSynsetsSet.hashCode()} ${otherSensesSet.hashCode()}")
+                println("-----equals(set(lexes)) equals(set(synsets)) equals(set(senses))")
+                println("     $eqLexesSet $eqSynsetsSet $eqSensesSet")
+            }
+            eq
+        } else false
+    }
+
+    fun checkLexesEq(lexes1: Set<Lex>, lexes2: Set<Lex>) {
+        if (lexes1 != lexes2) {
+            val report = "different lexes"
+            if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
+        }
+    }
+
+    fun checkSynsetsEq(synsets1: Set<Synset>, synsets2: Set<Synset>) {
+        if (synsets1 != synsets2) {
+            val report = "different synsets"
+            if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
+        }
+    }
+
+    fun checkSensesEq(senses1: Set<Sense>, senses2: Set<Sense>) {
+        if (senses1 != senses2) {
+            val report = "different senses"
+            if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
+        }
+    }
 
     fun checkZipLexesEq(lexes1: Set<Lex>, lexes2: Set<Lex>) {
         lexes1.zip(lexes2).forEach { (lex1, lex2) ->
@@ -15,10 +108,6 @@ object ModelEquals {
                 val report = "$lex1 != $lex2 : k=$keyEq v=$valueEq t=$typeEq f=$formsEq p=$pronunciationsEq"
                 if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
             }
-        }
-        if (lexes1 != lexes2) {
-            val report = "different lexes"
-            if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
         }
     }
 
@@ -41,10 +130,6 @@ object ModelEquals {
                 if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
             }
         }
-        if (synsets1 != synsets2) {
-            val report = "different synsets"
-            if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
-        }
     }
 
     fun checkZipSensesEq(senses1: Set<Sense>, senses2: Set<Sense>) {
@@ -64,10 +149,6 @@ object ModelEquals {
                 val report = "$sense1 != $sense2 : k=$keyEq v=$valueEq t=$typeEq i=$indexInLexEq e=$examplesEq ap=$adjPositionEq r=$relationsEq vf=$verbFramesEq vt=$verbTemplatesEq c=$tagCountEq"
                 if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
             }
-        }
-        if (senses1 != senses2) {
-            val report = "different senses"
-            if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
         }
     }
 

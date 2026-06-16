@@ -97,7 +97,7 @@ open class CoreModel(
      * Lexes mapped by lemma then key2
      * @Transient
      */
-    private val lexHyperMap: HyperMap by lazy { lexes.asSequence().groupByLemmaThenByKey2() }
+    val lexHyperMap: HyperMap by lazy { lexes.asSequence().groupByLemmaThenByKey2() }
 
     /**
      * Lex mapped by lemma then key2

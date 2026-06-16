@@ -81,13 +81,12 @@ class Model(
     /**
      * Private constructor that injects template and data count into senses
      *
-     * @param  lexes                  lexes
-     * @param  senses                 senses
-     * @param  synsets                synsets
-     * @param  verbFrames             verb frames
-     * @param  verbTemplates          verb templates
-     * @param  senseToVerbTemplates   sensekey-to-verb template
-     * @param  senseToTagCounts       sensekey-to-tagcount
+     * @param lexes         lexes
+     * @param senses        senses
+     * @param synsets       synsets
+     * @param verbFrames    verb frames
+     * @param verbTemplates verb templates
+     * @param injector      template and tagcount injector (into sensed)
      */
     private constructor(
         lexes: List<Lex>,
@@ -95,59 +94,32 @@ class Model(
         synsets: List<Synset>,
         verbFrames: List<VerbFrame>,
         verbTemplates: List<VerbTemplate>,
-        senseToVerbTemplates: Collection<Pair<SenseKey, List<VerbTemplateId>>>?,
-        senseToTagCounts: Collection<Pair<SenseKey, TagCount>>?,
+        injector: Injector,
     ) : this(lexes, senses, synsets, verbFrames, verbTemplates) {
 
-        // inject sense's verb templates
-        if (senseToVerbTemplates != null)
-            for ((sensekey, templatesIds) in senseToVerbTemplates) {
-                val sense = senseFinder(sensekey)
-                if (sense != null) {
-                    sense.verbTemplates = templatesIds.toSet()
-                } else if (WARN_UNRESOLVABLE_SENSE) {
-                    Tracing.psErr.println("[W] Unresolvable $sensekey with templates ${templatesIds.joinToString()}")
-                }
-            }
-
-        // inject sense's tag counts
-        if (senseToTagCounts != null)
-            for ((sensekey, tagCount) in senseToTagCounts) {
-                val sense = senseFinder(sensekey)
-                if (sense != null) {
-                    sense.tagCount = tagCount.count
-                    if (sense.indexInLex + 1 != tagCount.senseNum) {
-                        if (WARN_IF_SENSENUM_NOT_EQUAL_INDEX) Tracing.psErr.println("[W] Unequal sense index ${sense.indexInLex + 1} in ${sense.senseId} with tag count sense num ${tagCount.senseNum}")
-                        if (WARN_IF_SENSENUM_LESS_THAN_INDEX && sense.indexInLex + 1 > tagCount.senseNum) Tracing.psErr.println("[W] Sense index ${sense.indexInLex + 1} in ${sense.senseId} more than tag count sense num ${tagCount.senseNum}")
-                    }
-                } else if (WARN_UNRESOLVABLE_SENSE)
-                    Tracing.psErr.println("[W] Unresolvable $sensekey with tagcount $tagCount")
-            }
+        injector.inject(this)
     }
 
     /**
      * Constructor from core model and frame and template data
      *
-     * @param coreModel             base model
-     * @param verbFrames            verb frames
-     * @param verbTemplates         verb templates
-     * @param sensesToVerbTemplates collection of entries of type sensekey-to-verb template
-     * @param sensesToTagCounts     collection of entries of type sensekey-to-tagcount
-     */
+     * @param coreModel     base model
+     * @param verbFrames    verb frames
+     * @param verbTemplates verb templates
+     * @param injector      template and tagcount injector (into sensed)
+      */
     constructor(
         coreModel: CoreModel,
         verbFrames: List<VerbFrame>,
         verbTemplates: List<VerbTemplate>,
-        sensesToVerbTemplates: Collection<Pair<SenseKey, List<VerbTemplateId>>>?,
-        sensesToTagCounts: Collection<Pair<SenseKey, TagCount>>?,
+        injector: Injector,
     ) : this(
         coreModel.lexes,
         coreModel.senses,
         coreModel.synsets,
         verbFrames,
         verbTemplates,
-        sensesToVerbTemplates,
-        sensesToTagCounts
+        injector,
     )
 
     /**
@@ -221,11 +193,5 @@ class Model(
      */
     override fun info(): String {
         return super.info() + ", verb frames: ${verbFrames.size}, verb templates: ${verbTemplates.size}"
-    }
-
-    companion object {
-        private const val WARN_UNRESOLVABLE_SENSE = false
-        private const val WARN_IF_SENSENUM_NOT_EQUAL_INDEX = false
-        private const val WARN_IF_SENSENUM_LESS_THAN_INDEX = false
     }
 }

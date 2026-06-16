@@ -80,12 +80,12 @@ object LibDummyNanoModelGenerator {
         Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, adjPosition = "ip")
 
     fun genSenseDiffWithVerbFrames(): Pair<Sense, Sense> =
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, verbFrames = listOf("vt","vta")) to
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, verbFrames = listOf("vt","vti"))
+        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, verbFrames = setOf("vt","vta")) to
+        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, verbFrames = setOf("vt","vti"))
 
     fun genSenseDiffWithVerbTemplates(): Pair<Sense, Sense> =
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, verbTemplates = listOf(1,2,3)) to
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, verbTemplates = listOf(4,5,6))
+        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, verbTemplates = setOf(1,2,3)) to
+        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, verbTemplates = setOf(4,5,6))
 
     // @formatter:off
 

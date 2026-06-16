@@ -41,7 +41,7 @@ data class Lex(
 
     // state
     val generated: Boolean = false
-) : Serializable {
+) : Comparable<Lex>, Serializable {
 
     // properties
     var forms: Set<Morph>? = null
@@ -50,8 +50,8 @@ data class Lex(
     // computed properties (key, value)
     val key: LexId
         get() = LexId(lemma, type, discriminant)
-    val value: Set<SenseKey>
-        get() = senseKeys.toSet()
+    val value: List<SenseKey>
+        get() = senseKeys
     val key2: String
         get() = if (discriminant != null) "${type.value}$discriminant" else type.value.toString()
     val properties: Array<Any?>
@@ -101,6 +101,12 @@ data class Lex(
     override fun hashCode(): Int {
         // throw UnsupportedOperationException("$this")
         return Objects.hash(key, value, *properties)
+    }
+
+    // ordering
+
+    override fun compareTo(other: Lex): Int {
+        return lexComparator.compare(this, other)
     }
 
     // stringify
@@ -167,7 +173,7 @@ data class Lex(
          * @receiver lexes
          * @return lexes grouped by (case-sensitive) lemma
          */
-        fun Sequence<Lex>.groupByLemma(): Map<Lemma, Collection<Lex>> {
+        fun Sequence<Lex>.groupByLemma(): Map<Lemma, Set<Lex>> {
             return this
                 .groupBy(Lex::lemma)
                 .mapValues { it.value.toSet() }
@@ -179,7 +185,7 @@ data class Lex(
          * @receiver lexes
          * @return lexes grouped by lowercased lemma
          */
-        fun Sequence<Lex>.groupByLCLemma(): Map<LowerCasedLemma, Collection<Lex>> {
+        fun Sequence<Lex>.groupByLCLemma(): Map<LowerCasedLemma, Set<Lex>> {
             return this
                 .groupBy(Lex::lCLemma)
                 .mapValues { it.value.toSet() }
@@ -188,6 +194,7 @@ data class Lex(
 
     companion object {
 
-        val lexComparator: Comparator<Lex> = compareBy(Lex::lemma).thenBy(Lex::key2)
+        private val lexComparator: Comparator<Lex> = compareBy(Lex::lemma).thenBy(Lex::key2)
+
     }
 }

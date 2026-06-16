@@ -169,8 +169,8 @@ fun senseFromData(dict: Map<String, Any>): Sense {
     val lexId = lexIdFromData(dict)
     val index = dict["index"] as Int
     val examples = dict["definition"]?.let { safeCast<List<Pair<String, String?>>>(it) }
-    val verbFrames = dict["verbFrames"]?.let { safeCast<VerbFrameId>(it).split(";") }
-    val verbTemplates = dict["verbTemplates"]?.let { safeCast<String>(it).split(";").map(String::toInt) }
+    val verbFrames = dict["verbFrames"]?.let { safeCast<VerbFrameId>(it).split(";") }?.toSet()
+    val verbTemplates = dict["verbTemplates"]?.let { safeCast<String>(it).split(";").map(String::toInt) }?.toSet()
     val adjPosition = dict["adjPosition"] as String?
     val tagCount = dict["tagCount"] as Int?
     val relations = dict["relation"]?.let { safeCast<Map<Relation, List<SenseKey>>>(it).mapValues { e -> e.value.toSet() } }

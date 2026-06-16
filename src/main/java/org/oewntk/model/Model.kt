@@ -104,7 +104,7 @@ class Model(
             for ((sensekey, templatesIds) in senseToVerbTemplates) {
                 val sense = senseFinder(sensekey)
                 if (sense != null) {
-                    sense.verbTemplates = templatesIds
+                    sense.verbTemplates = templatesIds.toSet()
                 } else if (WARN_UNRESOLVABLE_SENSE) {
                     Tracing.psErr.println("[W] Unresolvable $sensekey with templates ${templatesIds.joinToString()}")
                 }

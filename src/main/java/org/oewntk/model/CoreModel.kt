@@ -16,9 +16,9 @@ import java.util.*
 /**
  * Sealed Base language model
  *
- * @property lexes          lexical items (unmodifiable)
- * @property senses         senses (unmodifiable)
- * @property synsets        synsets (unmodifiable)
+ * @property lexes          lexical items
+ * @property senses         senses
+ * @property synsets        synsets
  */
 @kotlinx.serialization.Serializable
 @kotlinx.serialization.SerialName("base_model")

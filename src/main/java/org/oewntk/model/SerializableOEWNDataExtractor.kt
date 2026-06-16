@@ -186,8 +186,8 @@ fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant
         senseId, lexId, synsetId, indexInLex,
         examples = examples,
         adjPosition = adjPosition,
-        verbFrames = verbFrames,
-        verbTemplates = verbTemplates,
+        verbFrames = verbFrames?.toSet(),
+        verbTemplates = verbTemplates?.toSet(),
         tagCount = tagCount,
         relations = relations,
     ).apply {

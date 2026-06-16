@@ -48,8 +48,8 @@ data class Sense(
 
     val indexInLex: Int = 0,
     val examples: List<Pair<String, String?>>? = null,
-    val verbFrames: List<VerbFrameId>? = null,
-    var verbTemplates: List<VerbTemplateId>? = null,
+    val verbFrames: Set<VerbFrameId>? = null,
+    var verbTemplates: Set<VerbTemplateId>? = null,
     val adjPosition: AdjPosition? = null,
     var tagCount: Int? = null,
     var relations: Map<Relation, Set<SenseKey>>? = null,
@@ -85,7 +85,6 @@ data class Sense(
     // identity
 
     override fun equals(other: Any?): Boolean {
-        // throw UnsupportedOperationException("$this / $other")
         if (this === other) return true
         return if (other is Sense) {
             key == other.key
@@ -95,8 +94,13 @@ data class Sense(
     }
 
     override fun hashCode(): Int {
-        // throw UnsupportedOperationException("$this")
         return Objects.hash(key, value, *properties)
+    }
+
+    // ordering
+
+    override fun compareTo(other: Sense): Int {
+        return senseId.compareTo(other.senseId)
     }
 
     // mutation
@@ -174,12 +178,6 @@ data class Sense(
     fun toLongString(): String {
         val relationsStr = relations?.joinToString(",") ?: ""
         return "[${indexInLex + 1}] of '${lemma}' $senseId ${type.value} $synsetId {$relationsStr}"
-    }
-
-    // ordering
-
-    override fun compareTo(other: Sense): Int {
-        return senseId.compareTo(other.senseId)
     }
 
     companion object {

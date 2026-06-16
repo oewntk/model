@@ -88,6 +88,12 @@ data class Synset(
         return Objects.hash(key, *value)
     }
 
+    // ordering
+
+    override fun compareTo(other: Synset): Int {
+        return synsetId.compareTo(other.synsetId)
+    }
+
     // mutation
 
     /**
@@ -192,12 +198,6 @@ data class Synset(
         val membersStr = members.joinToString(",")
         val relationsStr = relations?.joinToString(",") ?: ""
         return "$synsetId ${type.value} {$membersStr} '$definition' {$relationsStr}"
-    }
-
-    // ordering
-
-    override fun compareTo(other: Synset): Int {
-        return synsetId.compareTo(other.synsetId)
     }
 
     companion object {

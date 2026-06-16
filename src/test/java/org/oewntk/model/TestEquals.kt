@@ -6,7 +6,6 @@ package org.oewntk.model
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import org.junit.Assert.assertArrayEquals
-import org.junit.BeforeClass
 import org.junit.Test
 import org.oewntk.model.LibDummyNanoModel.lex1
 import org.oewntk.model.LibDummyNanoModel.lexes1
@@ -46,7 +45,6 @@ import org.oewntk.model.LibDummyNanoModelGenerator.genSynsetDiffWithId
 import org.oewntk.model.LibDummyNanoModelGenerator.genSynsetDiffWithMembers
 import org.oewntk.model.LibDummyNanoModelGenerator.genSynsetDiffWithType
 import org.oewntk.model.LibDummyNanoModelGenerator.genSynsetEqual
-import java.io.PrintStream
 import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -178,18 +176,10 @@ class TestEquals {
         //assertFalse(model1 == model3)
     }
 
-    companion object {
-
-        private val silent = if (System.getProperties().containsKey("VERBOSE")) false
-        else if (System.getProperties().containsKey("SILENT")) true
-        else true
-
-        private val ps: PrintStream = if (!silent) Tracing.psInfo else Tracing.psNull
-
-        @Suppress("EmptyMethod")
-        @JvmStatic
-        @BeforeClass
-        fun init() {
-        }
-    }
+    //companion object {
+    //    @JvmStatic
+    //    @BeforeClass
+    //    fun init() {
+    //    }
+    //}
 }

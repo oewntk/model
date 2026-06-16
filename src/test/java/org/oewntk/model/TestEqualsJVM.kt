@@ -5,9 +5,7 @@ package org.oewntk.model
 
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
-import org.junit.BeforeClass
 import org.junit.Test
-import java.io.PrintStream
 import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -86,17 +84,10 @@ class TestEqualsJVM {
         assertEquals(obj1, obj2)
     }
 
-    companion object {
-
-        // private val silent = if (System.getProperties().containsKey("VERBOSE")) false
-        // else if (System.getProperties().containsKey("SILENT")) true
-        // else true
-
-        // private val ps: PrintStream = if (!silent) Tracing.psInfo else Tracing.psNull
-
-        // @JvmStatic
-        // @BeforeClass
-        // fun init() {
-        // }
-    }
+    //companion object {
+    //    @JvmStatic
+    //    @BeforeClass
+    //    fun init() {
+    //    }
+    //}
 }

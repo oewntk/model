@@ -35,6 +35,7 @@ class TestEqualsJVM {
         val obj3 = arrayOf("joke", "jest")
         assertFalse(Objects.equals(obj1, obj2))
         assertNotEquals(obj1, obj2)
+        @Suppress("ReplaceJavaStaticMethodWithKotlinAnalog")
         assertTrue(Arrays.equals(obj1, obj2))
         assertTrue(obj1.contentEquals(obj2))
         assertNotEquals(obj1, obj2)

@@ -2,6 +2,7 @@ package org.oewntk.model
 
 import java.io.File
 
+@Suppress("SimplifyBooleanWithConstants")
 object Validator {
 
     private const val VERBOSE_PENDING: Boolean = false

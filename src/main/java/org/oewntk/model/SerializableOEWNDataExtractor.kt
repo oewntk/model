@@ -177,7 +177,7 @@ fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant
     val senseId: SenseKey = safeCast(dict["id"]!!)
     val synsetId: SynsetId = safeCast(dict["synset"]!!)
     val indexInLex: Int = idx
-    val examples = dict["example"]?.let { examplesFromOEWNData(safeCast(it)) }
+    val examples = dict["sent"]?.let { examplesFromOEWNData(safeCast(it)) }
     val verbFrames: List<VerbFrameId>? = dict["subcat"]?.let { safeCast(it) }
     val verbTemplates: List<VerbTemplateId>? = dict["template"]?.let { safeCast(it) }
     val adjPosition: AdjPosition? = safeNullableCast(dict["adjposition"])

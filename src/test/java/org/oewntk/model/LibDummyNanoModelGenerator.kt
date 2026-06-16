@@ -21,7 +21,6 @@ import org.oewntk.model.LibDummyNanoModel.pronunciation21
 
 object LibDummyNanoModelGenerator {
 
-
     // @formatter:off
     fun genSynsetEqual(): Pair<Synset, Synset> =
         Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, null, null) to

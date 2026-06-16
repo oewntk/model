@@ -106,7 +106,7 @@ fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?, includeLexFile: Boolean = fal
         "sense" to serializedSenses,
         // "key2" to key2,
     ).apply {
-        forms?.let { this["form"] = it.map { it2 -> it2 }.toList() }
+        forms?.let { this["form"] = it.toList() }
         pronunciations?.let { this["pronunciation"] = it.map(Pronunciation::toOEWNData).toList() }
         if (includeLexFile) lexfile.let { this["lexfile"] = it }
     }.toSortedMap()

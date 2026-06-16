@@ -6,6 +6,8 @@ object ModelEquals {
 
     const val FAIL = true
 
+    fun <T> Collection<T>.zipEquals(other: Collection<T>): Boolean = zip(other).none { (o1, o2) -> (o1 != o2) }
+
     @OptIn(ExperimentalStdlibApi::class)
     fun CoreModel.dataEquals(other: Any?): Boolean {
         if (this === other) return true
@@ -16,16 +18,9 @@ object ModelEquals {
                 val eqSenses = senses == other.senses
                 val eqSynsets = synsets == other.synsets
 
-                val lexesSet = lexes.toSet()
-                val sensesSet = senses.toSet()
-                val synsetsSet = synsets.toSet()
-                val otherLexesSet = other.lexes.toSet()
-                val otherSensesSet = other.senses.toSet()
-                val otherSynsetsSet = other.synsets.toSet()
-
-                val eqLexesSet = lexesSet == otherLexesSet
-                val eqSensesSet = sensesSet == otherSensesSet
-                val eqSynsetsSet = synsetsSet == otherSynsetsSet
+                val zipEqLexes = lexes.zipEquals(other.lexes)
+                val zipEqSynsets = synsets.zipEquals(other.synsets)
+                val zipEqSenses = senses.zipEquals(other.senses)
 
                 val lexesID = identityHashCode(lexes)
                 val otherLexesID = identityHashCode(other.lexes)
@@ -33,11 +28,6 @@ object ModelEquals {
                 val otherSynsetsID = identityHashCode(other.synsets)
                 val sensesID = identityHashCode(senses)
                 val otherSensesID = identityHashCode(other.senses)
-
-                fun <T> List<T>.zipEquals(other: List<T>): Boolean = zip(other).none { (o1, o2) -> (o1 != o2) }
-                val zipEqLexes = lexes.zipEquals(other.lexes)
-                val zipEqSynsets = synsets.zipEquals(other.synsets)
-                val zipEqSenses = senses.zipEquals(other.senses)
 
                 println("-----ID(lexes) ID(synsets) ID(senses)")
                 println("  A= $lexesID $synsetsID $sensesID")
@@ -52,6 +42,32 @@ object ModelEquals {
                 println("     $eqLexes $eqSynsets $eqSenses")
                 println("-----zipEquals(lexes) zipEquals(synsets) zipEquals(senses)")
                 println("     $zipEqLexes $zipEqSynsets $zipEqSenses")
+            }
+            eq
+        } else false
+    }
+
+    @OptIn(ExperimentalStdlibApi::class)
+    fun CoreModel.dataSetsEquals(other: Any?): Boolean {
+        if (this === other) return true
+        return if (other is CoreModel) {
+            val lexesSet = lexes.toSet()
+            val sensesSet = senses.toSet()
+            val synsetsSet = synsets.toSet()
+            val otherLexesSet = other.lexes.toSet()
+            val otherSensesSet = other.senses.toSet()
+            val otherSynsetsSet = other.synsets.toSet()
+
+            val eq = lexesSet == otherLexesSet && sensesSet == otherSensesSet && synsetsSet == otherSynsetsSet
+            if (!eq) {
+
+                val eqLexesSet = lexesSet == otherLexesSet
+                val eqSensesSet = sensesSet == otherSensesSet
+                val eqSynsetsSet = synsetsSet == otherSynsetsSet
+
+                val zipEqLexesSet = lexesSet.zipEquals(otherLexesSet)
+                val zipEqSynsetsSet = synsetsSet.zipEquals(otherSynsetsSet)
+                val zipEqSensesSet = sensesSet.zipEquals(otherSensesSet)
 
                 val lexesSetID = identityHashCode(lexesSet).toHexString()
                 val otherLexesSetID = identityHashCode(otherLexesSet).toHexString()
@@ -71,6 +87,8 @@ object ModelEquals {
                 println("  B'= ${otherLexesSet.hashCode()} ${otherSynsetsSet.hashCode()} ${otherSensesSet.hashCode()}")
                 println("-----equals(set(lexes)) equals(set(synsets)) equals(set(senses))")
                 println("     $eqLexesSet $eqSynsetsSet $eqSensesSet")
+                println("-----zipEquals(set(lexes)) zipEquals(set(synsets)) zipEquals(set(senses))")
+                println("     $zipEqLexesSet $zipEqSynsetsSet $zipEqSensesSet")
             }
             eq
         } else false

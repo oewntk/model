@@ -151,8 +151,8 @@ fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Bool
     ).apply {
         adjPosition?.let { this["adjposition"] = it }
         examples?.let { this["sent"] = it.map { it2 -> if (it2.second == null) it2.first else mapOf("text" to it2.first, "source" to it2.second) } }
-        verbFrames?.let { this["subcat"] = it }
-        if (includeVerbTemplates) verbTemplates?.let { this["template"] = it }
+        verbFrames?.let { this["subcat"] = it.toList() }
+        if (includeVerbTemplates) verbTemplates?.let { this["template"] = it.toList() }
         relations
             ?.filterNot { it.key in INVERSE_SENSE_RELATIONS_SET }
             ?.forEach { (rel: String, target) ->

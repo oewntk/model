@@ -125,6 +125,7 @@ fun lexFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?,
     val senseDicts = safeCast<List<Map<String, Any>>>(dict["sense"]!!)
     val senseKeys = senseDicts.map { safeCast<SenseKey>(it["id"]!!) }.toList()
     return Lex(lemma, type, discriminant, senseKeys).apply {
+        dict["form"]?.let { forms = safeCast<List<String>>(it).toSet() }
         dict["pronunciation"]?.let { pronunciations = safeCast<List<Map<String, Any>>>(it).map { p -> pronunciationFromOEWNData(p) }.toSet() }
     }
 }

@@ -27,7 +27,7 @@ fun examplesFromOEWNData(list: List<Any>): List<Pair<String, String?>> {
     return data.map { example ->
         when (example) {
             is String -> example to null
-            is Map<*, *> -> example["source"] as String to example["text"] as String?
+            is Map<*, *> -> example["text"] as String to example["source"] as String?
             else -> throw IllegalArgumentException(example.toString())
         }
     }.toList()
@@ -252,7 +252,7 @@ fun Synset.toOEWNData(includeLexFile: Boolean = false): Map<String, Any> {
  * @param dict dictionary
  * @return synset
  */
-fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>): Synset {
+fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFile: Boolean = false): Synset {
 
     val type = SynsetType.fromKey2(dict["partOfSpeech"] as String)
     val domain = dict["domain"] as Domain
@@ -269,14 +269,19 @@ fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>): Synset {
             else -> throw IllegalArgumentException(it.toString())
         }
     }
+    val source = dict["source"] as String?
+    val lexfile = dict["lexfile"] as String?
     return Synset(
         synsetId, type, domain, members.toSet(), definitions,
         examples = examples,
         usages = usages,
         relations = relations,
         ili = ili,
-        wikidata = wikidata
-    )
+        wikidata = wikidata,
+    ).apply {
+        this.source = source
+        if (includeLexFile && lexfile != null) this.lexfile = lexfile
+    }
 }
 
 /**

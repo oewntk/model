@@ -227,7 +227,7 @@ object Validator {
                 //Tracing.psErr.println("[E] ${instances.size} synsets have member(s) without entries\n$state")
             }
         } else {
-            if (verbose) Tracing.psInfo.println("[I]\t0 synsets have member(s) without entries")
+            if (verbose) Tracing.psInfo.println("[I] 0 synsets have member(s) without entries")
         }
         return this
     }
@@ -251,7 +251,7 @@ object Validator {
                 // Tracing.psErr.println("[E] ${instances.size} synsets have member(s) without resolvable sense\n$state")
             }
         } else {
-            if (verbose) Tracing.psInfo.println("[I]\t0 synsets have member(s) without resolvable sense")
+            if (verbose) Tracing.psInfo.println("[I] 0 synsets have member(s) without resolvable sense")
         }
         return this
     }

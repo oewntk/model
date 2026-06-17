@@ -203,7 +203,7 @@ object Validator {
                 //Tracing.psErr.println("[E] ${instances.size} synsets have member duplicate(s)\n$state")
             }
         } else {
-            if (verbose) Tracing.psInfo.println("[I]\t0 synsets have member duplicate(s)")
+            if (verbose) Tracing.psInfo.println("[I] 0 synsets have member duplicate(s)")
         }
         return this
     }

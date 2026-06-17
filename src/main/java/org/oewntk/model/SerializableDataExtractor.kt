@@ -2,6 +2,26 @@ package org.oewntk.model
 
 // O B J E C T S
 
+/**
+ * SynsetType from dict
+ *
+ * @return type
+ */
+fun typeFromData(dict: Map<String, Any>): SynsetType {
+    return dict["type"].let {
+        when (it) {
+            is String -> SynsetType.fromKey2(it)
+            is Char -> SynsetType.fromChar(it)
+            else -> throw IllegalArgumentException(it.toString())
+        }
+    }
+}
+
+/**
+ * Example from dict
+ *
+ * @return list of examples
+ */
 fun examplesFromData(list: List<Any>): List<Pair<String, String?>> {
     val data = safeCast<List<Any>>(list)
     return data.map { example ->
@@ -12,6 +32,35 @@ fun examplesFromData(list: List<Any>): List<Pair<String, String?>> {
         }
     }.toList()
 }
+
+/**
+ * Pronunciation to serializable dict
+ *
+ * @receiver pronunciation
+ * @return dict
+ * Keys:
+ *  - value
+ *  - variety
+ */
+fun Pronunciation.toData(): Map<String, Any> {
+    return mutableMapOf("value" to value)
+        .apply {
+            variety?.let { this["variety"] = it }
+        }
+}
+
+/**
+ * Pronunciation from dict
+ *
+ * @param dict dictionary
+ * @return pronunciation
+ */
+fun pronunciationFromData(dict: Map<String, Any>): Pronunciation {
+    val value = dict["value"] as PronunciationValue
+    val variety = dict["variety"] as PronunciationVariety?
+    return Pronunciation(value, variety)
+}
+
 
 /**
  * Lex id to serializable dictionary
@@ -41,37 +90,9 @@ fun LexId.toData(): Map<String, Any> {
  */
 fun lexIdFromData(dict: Map<String, Any>): LexId {
     val lemma = dict["lemma"] as Lemma
-    val type = SynsetType.fromKey2(dict["type"] as String)
+    val type: SynsetType = typeFromData(dict)
     val discriminant = dict["discriminant"] as Discriminant?
     return LexId(lemma, type, discriminant)
-}
-
-/**
- * Pronunciation to serializable dict
- *
- * @receiver pronunciation
- * @return dict
- * Keys:
- *  - value
- *  - variety
- */
-fun Pronunciation.toData(): Map<String, Any> {
-    return mutableMapOf("value" to value)
-        .apply {
-            variety?.let { this["variety"] = it }
-        }
-}
-
-/**
- * Pronunciation from dict
- *
- * @param dict dictionary
- * @return pronunciation
- */
-fun pronunciationFromData(dict: Map<String, Any>): Pronunciation {
-    val value = dict["value"] as PronunciationValue
-    val variety = dict["variety"] as PronunciationVariety?
-    return Pronunciation(value, variety)
 }
 
 /**
@@ -139,7 +160,7 @@ fun Synset.toData(includeLexFile: Boolean = false): Map<String, Any> {
  */
 fun synsetFromData(dict: Map<String, Any>, includeLexFile: Boolean = false): Synset {
     val synsetId = dict["id"] as SynsetId
-    val type = SynsetType.fromKey2(dict["type"] as String)
+    val type = typeFromData(dict)
     val domain = dict["domain"] as Domain
     val members = safeCast<List<Lemma>>(dict["member"]!!)
     val definitions = safeCast<List<String>>(dict["definition"]!!)

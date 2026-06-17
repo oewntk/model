@@ -182,7 +182,6 @@ class TestEquals {
         checkDiffs(model1, model3, ps = ps)
     }
 
-
     companion object {
 
         private val silent = if (System.getProperties().containsKey("VERBOSE")) false

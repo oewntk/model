@@ -45,6 +45,8 @@ import org.oewntk.model.LibDummyNanoModelGenerator.genSynsetDiffWithId
 import org.oewntk.model.LibDummyNanoModelGenerator.genSynsetDiffWithMembers
 import org.oewntk.model.LibDummyNanoModelGenerator.genSynsetDiffWithType
 import org.oewntk.model.LibDummyNanoModelGenerator.genSynsetEqual
+import org.oewntk.model.ModelEquals.checkDiffs
+import java.io.PrintStream
 import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -168,18 +170,30 @@ class TestEquals {
     @Test
     fun testModels() {
         assertFalse(model1 === model2)
-        //assertTrue(model1 == model2)
-        //assertEquals(model1, model2)
-
-        assertFalse(model1 === model3)
-        //assertNotEquals(model1, model3)
-        //assertFalse(model1 == model3)
+        assertTrue(model1 == model2)
+        assertEquals(model1, model2)
     }
 
-    //companion object {
+    @Test
+    fun testDiffModels() {
+        assertFalse(model1 === model3)
+        assertFalse(model1 == model3)
+        assertNotEquals(model1, model3)
+        checkDiffs(model1, model3, ps = ps)
+    }
+
+
+    companion object {
+
+        private val silent = if (System.getProperties().containsKey("VERBOSE")) false
+        else if (System.getProperties().containsKey("SILENT")) true
+        else true
+
+        private val ps: PrintStream = if (!silent) Tracing.psInfo else Tracing.psNull
+
     //    @JvmStatic
     //    @BeforeClass
     //    fun init() {
     //    }
-    //}
+    }
 }

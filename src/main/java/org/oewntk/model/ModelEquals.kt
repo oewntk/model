@@ -1,5 +1,6 @@
 package org.oewntk.model
 
+import java.io.PrintStream
 import java.lang.System.identityHashCode
 
 object ModelEquals {
@@ -183,6 +184,46 @@ object ModelEquals {
         if (!eq) {
             val report = "lexes=$eqLexes synsets=$eqSynsets senses=$eqSenses"
             if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
+        }
+    }
+
+    fun checkDiffs(modelA: Model, modelB: Model, ps: PrintStream = System.out) {
+        val data1 = Triple(modelA.lexes, modelA.synsets, modelA.senses)
+        val data2 = Triple(modelB.lexes, modelB.synsets, modelB.senses)
+        try {
+            checkDataEq(data1, data2)
+        } catch (e: IllegalStateException) {
+            ps.println("[E] ${e.message}")
+            try {
+                checkZipLexesEq(modelA.lexes, modelB.lexes)
+            } catch (e2: IllegalStateException) {
+                ps.println("[E] ${e2.message}")
+            }
+            try {
+                checkZipSynsetsEq(modelA.synsets, modelB.synsets)
+            } catch (e2: IllegalStateException) {
+                ps.println("[E] ${e2.message}")
+            }
+            try {
+                checkZipSensesEq(modelA.senses, modelB.senses)
+            } catch (e2: IllegalStateException) {
+                ps.println("[E] ${e2.message}")
+            }
+            try {
+                checkLexesEq(modelA.lexes, modelB.lexes)
+            } catch (e2: IllegalStateException) {
+                ps.println("[E] ${e2.message}")
+            }
+            try {
+                checkSynsetsEq(modelA.synsets, modelB.synsets)
+            } catch (e2: IllegalStateException) {
+                ps.println("[E] ${e2.message}")
+            }
+            try {
+                checkSensesEq(modelA.senses, modelB.senses)
+            } catch (e2: IllegalStateException) {
+                ps.println("[E] ${e2.message}")
+            }
         }
     }
 }

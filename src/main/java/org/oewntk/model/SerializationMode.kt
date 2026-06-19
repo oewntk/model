@@ -25,7 +25,7 @@ enum class SerializationMode {
                 MODEL -> throw IllegalArgumentException("$obj ${obj::class}")
             }
 
-            else -> throw IllegalArgumentException("$obj ${obj::class}")
+            else -> throw IllegalArgumentException("${obj::class} $obj")
         }
     }
 }

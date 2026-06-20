@@ -31,16 +31,16 @@ fun examplesFromOEWNData(list: List<Any>): List<Pair<String, String?>> {
     }.toList()
 }
 
-fun synsetRelationsFromOEWNData(dict: Map<Relation, Any>, filteroutRedundant: Boolean = false): Map<Relation, Set<SynsetId>>? {
+fun synsetRelationsFromOEWNData(dict: Map<Relation, Any>, leaveRedundant: Boolean = false): Map<Relation, Set<SynsetId>>? {
     val relations = safeCast<Map<Relation, List<SynsetId>>>(dict)
-        .filterNot { if (filteroutRedundant) it.key in INVERSE_SYNSET_RELATIONS_SET else false }
+        .filterNot { if (leaveRedundant) it.key in INVERSE_SYNSET_RELATIONS_SET else false }
         .mapValues { it.value.toSet() }
     return relations.ifEmpty { null }
 }
 
-fun senseRelationsFromOEWNData(dict: Map<Relation, Any>, filteroutRedundant: Boolean = false): Map<Relation, Set<SenseKey>>? {
+fun senseRelationsFromOEWNData(dict: Map<Relation, Any>, leaveRedundant: Boolean = false): Map<Relation, Set<SenseKey>>? {
     val relations = safeCast<Map<Relation, List<SenseKey>>>(dict)
-        .filterNot { if (filteroutRedundant) it.key in INVERSE_SENSE_RELATIONS_SET else false }
+        .filterNot { if (leaveRedundant) it.key in INVERSE_SENSE_RELATIONS_SET else false }
         .mapValues { it.value.toSet() }
     return relations.ifEmpty { null }
 }
@@ -170,7 +170,7 @@ fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Bool
  * @param dict dictionary
  * @return sense
  */
-fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?, idx: Int, dict: Map<String, Any>, filteroutRedundantRelation: Boolean = false): Sense {
+fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?, idx: Int, dict: Map<String, Any>, leaveRedundantRelation: Boolean = false): Sense {
     val lexId: LexId = LexId(lemma, type, discriminant)
     val senseId: SenseKey = safeCast(dict["id"]!!)
     val synsetId: SynsetId = safeCast(dict["synset"]!!)
@@ -180,7 +180,7 @@ fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant
     val verbTemplates: List<VerbTemplateId>? = dict["template"]?.let { safeCast(it) }
     val adjPosition: AdjPosition? = safeNullableCast(dict["adjposition"])
     val tagCount: Int? = safeNullableCast(dict["tagcount"])
-    val relations: Map<Relation, Set<SenseKey>>? = senseRelationsFromOEWNData(dict, filteroutRedundant = filteroutRedundantRelation)
+    val relations: Map<Relation, Set<SenseKey>>? = senseRelationsFromOEWNData(dict, leaveRedundant = leaveRedundantRelation)
     return Sense(
         senseId, lexId, synsetId, indexInLex,
         examples = examples,
@@ -250,7 +250,7 @@ fun Synset.toOEWNData(includeLexFile: Boolean = false, ignoreRedundantRelation: 
  * @param dict dictionary
  * @return synset
  */
-fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFile: Boolean = false, filteroutRedundantRelation: Boolean = false): Synset {
+fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFile: Boolean = false, leaveRedundantRelation: Boolean = false): Synset {
 
     val type = SynsetType.fromKey2(dict["partOfSpeech"] as String)
     val domain = dict["domain"] as Domain
@@ -258,7 +258,7 @@ fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFil
     val definitions = safeCast<List<String>>(dict["definition"]!!)
     val examples = dict["example"]?.let { examplesFromOEWNData(safeCast(it)) }
     val usages = dict["usage"]?.let { safeCast<List<String>>(it) }
-    val relations: Map<Relation, Set<SenseKey>>? = synsetRelationsFromOEWNData(dict, filteroutRedundant = filteroutRedundantRelation)
+    val relations: Map<Relation, Set<SenseKey>>? = synsetRelationsFromOEWNData(dict, leaveRedundant = leaveRedundantRelation)
     val ili = dict["ili"] as String?
     val wikidata = dict["wikidata"]?.let {
         when (it) {

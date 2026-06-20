@@ -170,7 +170,7 @@ fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Bool
  * @param dict dictionary
  * @return sense
  */
-fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?, idx: Int, dict: Map<String, Any>): Sense {
+fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?, idx: Int, dict: Map<String, Any>, filteroutRedundantRelation: Boolean = false): Sense {
     val lexId: LexId = LexId(lemma, type, discriminant)
     val senseId: SenseKey = safeCast(dict["id"]!!)
     val synsetId: SynsetId = safeCast(dict["synset"]!!)
@@ -180,7 +180,7 @@ fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant
     val verbTemplates: List<VerbTemplateId>? = dict["template"]?.let { safeCast(it) }
     val adjPosition: AdjPosition? = safeNullableCast(dict["adjposition"])
     val tagCount: Int? = safeNullableCast(dict["tagcount"])
-    val relations: Map<Relation, Set<SenseKey>>? = senseRelationsFromOEWNData(dict)
+    val relations: Map<Relation, Set<SenseKey>>? = senseRelationsFromOEWNData(dict, filteroutRedundant = filteroutRedundantRelation)
     return Sense(
         senseId, lexId, synsetId, indexInLex,
         examples = examples,
@@ -223,7 +223,7 @@ fun Sequence<Sense>.toOEWNData(): List<Any> {
  * - ili
  * - <relations>
  */
-fun Synset.toOEWNData(includeLexFile: Boolean = false): Map<String, Any> {
+fun Synset.toOEWNData(includeLexFile: Boolean = false, ignoreRedundantRelation: Boolean = false): Map<String, Any> {
     return mutableMapOf(
         "partOfSpeech" to type.value,
         "definition" to definitions,
@@ -233,7 +233,7 @@ fun Synset.toOEWNData(includeLexFile: Boolean = false): Map<String, Any> {
         examples?.let { this["example"] = it.map { it2 -> if (it2.second == null) it2.first else mapOf("source" to it2.second, "text" to it2.first) } }
         usages?.let { this["usage"] = it }
         relations
-            ?.filterNot { it.key in INVERSE_SYNSET_RELATIONS_SET }
+            ?.filterNot { if (ignoreRedundantRelation) false else it.key in INVERSE_SYNSET_RELATIONS_SET }
             ?.forEach { (rel, target) ->
                 this[rel] = target.toList()
             }
@@ -250,7 +250,7 @@ fun Synset.toOEWNData(includeLexFile: Boolean = false): Map<String, Any> {
  * @param dict dictionary
  * @return synset
  */
-fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFile: Boolean = false): Synset {
+fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFile: Boolean = false, filteroutRedundantRelation: Boolean = false): Synset {
 
     val type = SynsetType.fromKey2(dict["partOfSpeech"] as String)
     val domain = dict["domain"] as Domain
@@ -258,7 +258,7 @@ fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFil
     val definitions = safeCast<List<String>>(dict["definition"]!!)
     val examples = dict["example"]?.let { examplesFromOEWNData(safeCast(it)) }
     val usages = dict["usage"]?.let { safeCast<List<String>>(it) }
-    val relations: Map<Relation, Set<SenseKey>>? = synsetRelationsFromOEWNData(dict)
+    val relations: Map<Relation, Set<SenseKey>>? = synsetRelationsFromOEWNData(dict, filteroutRedundant = filteroutRedundantRelation)
     val ili = dict["ili"] as String?
     val wikidata = dict["wikidata"]?.let {
         when (it) {

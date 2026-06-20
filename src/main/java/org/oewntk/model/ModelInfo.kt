@@ -77,14 +77,14 @@ object ModelInfo {
         val senseRelationSum = model.senses
             .mapNotNull { it.relations }
             .flatMap { it.values }
-            .sumOf { it.size.toLong() }
+            .sumOf { it.size}
 
         val withRelationSynsetCount = model.synsets
             .count { it.relations != null }
         val synsetRelationSum = model.synsets
             .mapNotNull { it.relations }
             .flatMap { it.values }
-            .sumOf { it.size.toLong() }
+            .sumOf { it.size }
 
         return formatCounts("lexes", model.lexes.size) +
                 formatCounts("lemmas (distinct case sensitive)", csWordCount) +
@@ -193,8 +193,8 @@ object ModelInfo {
             .sorted()
             .distinct()
         return format("inverses generated", model.generatedInverses) +
-                format("synset relations", synsetRelations) +
-                format("sense relations", senseRelations, last = true)
+                format("synset relations types", synsetRelations) +
+                format("sense relations types", senseRelations, last = true)
     }
 
     /**

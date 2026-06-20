@@ -86,27 +86,27 @@ object ModelInfo {
             .flatMap { it.values }
             .sumOf { it.size.toLong() }
 
-        return format("lexes", model.lexes.size) +
-                format("lemmas (distinct case sensitive)", csWordCount) +
-                format("lemmas (distinct ignore case)", icWordCount) +
-                format("lemmas (cased)", casedCount) +
-                format("discriminant types", discriminantCount) +
-                format("lexes with discriminant", withDiscriminantLexCount) +
-                format("lexes with pronunciation", withPronunciationLexCount) +
-                format("lexes with multi senses", withMultiSenseLexCount) +
-                format("distinct lexes by (case-sensitive lemma   | type | discr.) (shallow)", distinctByKeyOEWNShallowLexCount) +
-                format("distinct lexes by (case-sensitive lemma   | type | pronun.) (deep)", distinctByKeyOEWNDeepLexCount) +
-                format("distinct lexes by (case-sensitive lemma   | pos  | discr.) (pos)", distinctByKeyPOSLexCount) +
-                format("distinct lexes by (case-insensitive lemma | type | discr.) (ci)", distinctByKeyICLexCount) +
-                format("distinct lexes by (case-insensitive lemma | pos) (pwn)", distinctByKeyPWNLexCount) +
-                format("senses", model.senses.size) +
-                format("distinct sense sets in lexes", distinctSenseGroupsCount) +
-                format("senses in sense sets", sensesInSenseGroupsSum) +
-                format("senses with relations", withRelationSenseCount) +
-                format("sense relations", senseRelationSum) +
-                format("synsets", model.synsets.size) +
-                format("synsets with relations", withRelationSynsetCount) +
-                format("synset relations", synsetRelationSum)
+        return formatCounts("lexes", model.lexes.size) +
+                formatCounts("lemmas (distinct case sensitive)", csWordCount) +
+                formatCounts("lemmas (distinct ignore case)", icWordCount) +
+                formatCounts("lemmas (cased)", casedCount) +
+                formatCounts("discriminant types", discriminantCount) +
+                formatCounts("lexes with discriminant", withDiscriminantLexCount) +
+                formatCounts("lexes with pronunciation", withPronunciationLexCount) +
+                formatCounts("lexes with multi senses", withMultiSenseLexCount) +
+                formatCounts("distinct lexes by (case-sensitive lemma   | type | discr.) (shallow)", distinctByKeyOEWNShallowLexCount) +
+                formatCounts("distinct lexes by (case-sensitive lemma   | type | pronun.) (deep)", distinctByKeyOEWNDeepLexCount) +
+                formatCounts("distinct lexes by (case-sensitive lemma   | pos  | discr.) (pos)", distinctByKeyPOSLexCount) +
+                formatCounts("distinct lexes by (case-insensitive lemma | type | discr.) (ci)", distinctByKeyICLexCount) +
+                formatCounts("distinct lexes by (case-insensitive lemma | pos) (pwn)", distinctByKeyPWNLexCount) +
+                formatCounts("senses", model.senses.size) +
+                formatCounts("distinct sense sets in lexes", distinctSenseGroupsCount) +
+                formatCounts("senses in sense sets", sensesInSenseGroupsSum) +
+                formatCounts("senses with relations", withRelationSenseCount) +
+                formatCounts("sense relations", senseRelationSum) +
+                formatCounts("synsets", model.synsets.size) +
+                formatCounts("synsets with relations", withRelationSynsetCount) +
+                formatCounts("synset relations", synsetRelationSum, last = true)
     }
 
     /**
@@ -151,20 +151,20 @@ object ModelInfo {
             .filter { !it.examples.isNullOrEmpty() }
             .sumOf { it.examples!!.size.toLong() }
 
-        return format("lexes with morphs", withMorphLexCount) +
-                format("senses with verb frames", withVerbFramesSenseCount) +
-                format("senses with verb templates", withVerbTemplatesSenseCount) +
-                format("senses with tag count", withTagCountSenseCount) +
-                format("senses with examples", withExamplesSenseCount) +
-                format("synsets with examples", withSamplesSynsetCount) +
-                format("synset examples", sampleSum) +
-                format("pronunciations", pronunciationCount) +
-                format("pronunciation references", pronunciationRefSum) +
-                format("morphs", morphCount) +
-                format("morph references", morphRefSum)
+        return formatCounts("lexes with morphs", withMorphLexCount) +
+                formatCounts("senses with verb frames", withVerbFramesSenseCount) +
+                formatCounts("senses with verb templates", withVerbTemplatesSenseCount) +
+                formatCounts("senses with tag count", withTagCountSenseCount) +
+                formatCounts("senses with examples", withExamplesSenseCount) +
+                formatCounts("synsets with examples", withSamplesSynsetCount) +
+                formatCounts("synset examples", sampleSum) +
+                formatCounts("pronunciations", pronunciationCount) +
+                formatCounts("pronunciation references", pronunciationRefSum) +
+                formatCounts("morphs", morphCount) +
+                formatCounts("morph references", morphRefSum, last = true)
     }
 
-    private fun reportRelations(model: CoreModel): String {
+    private fun reportRelationCounts(model: CoreModel): String {
         val synsetRelationSum = model.synsets
             .mapNotNull { it.relations }
             .flatMap { it.values }
@@ -173,16 +173,45 @@ object ModelInfo {
             .mapNotNull { it.relations }
             .flatMap { it.values }
             .sumOf { it.size.toLong() }
-        return format("synset relations", synsetRelationSum) +
-                format("sense relations", senseRelationSum)
+        return formatCounts("synset relations", synsetRelationSum) +
+                formatCounts("sense relations", senseRelationSum, last = true)
+    }
+
+    /**
+     * Relation types
+     */
+    fun relations(model: CoreModel): String {
+        val synsetRelations = model.synsets
+            .mapNotNull { it.relations }
+            .flatMap { it.keys }
+            .sorted()
+            .distinct()
+
+        val senseRelations = model.senses
+            .mapNotNull { it.relations }
+            .flatMap { it.keys }
+            .sorted()
+            .distinct()
+        return format("inverses generated", model.generatedInverses) +
+                format("synset relations", synsetRelations) +
+                format("sense relations", senseRelations, last = true)
     }
 
     /**
      * Format for count output
      */
-    private const val COUNT_TEMPLATE = "%-70s: %6d%n"
+    private const val COUNT_TEMPLATE = "%-70s: %6d%s"
 
-    private fun format(label: String, value: Any): String {
-        return String.format(COUNT_TEMPLATE, label, value)
+    private fun formatCounts(label: String, value: Any, last: Boolean = false): String {
+        return String.format(COUNT_TEMPLATE, label, value, if (last) "" else "\n")
+    }
+
+    /**
+     * Format for info output
+     */
+    private const val INFO_TEMPLATE = "%-70s: %s%s"
+
+    private fun format(label: String, value: Any, last: Boolean = false): String {
+        return String.format(INFO_TEMPLATE, label, value, if (last) "" else "\n")
     }
 }

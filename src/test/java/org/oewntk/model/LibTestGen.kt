@@ -5,7 +5,6 @@ package org.oewntk.model
 
 import org.oewntk.model.LibModelSubset.lexSubset
 import org.oewntk.model.LibModelSubset.synsetSubset
-import kotlin.collections.forEach
 
 object LibTestGen {
 

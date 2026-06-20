@@ -3,6 +3,8 @@ package org.oewntk.model
 import org.oewntk.model.InverseRelationFactory.INVERSE_SENSE_RELATIONS_SET
 import org.oewntk.model.InverseRelationFactory.INVERSE_SYNSET_RELATIONS_SET
 import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
+import org.oewntk.model.Sense.Companion.SENSE_RELATIONS
+import org.oewntk.model.Synset.Companion.SYNSET_RELATIONS
 
 typealias Filename = String
 
@@ -31,16 +33,16 @@ fun examplesFromOEWNData(list: List<Any>): List<Pair<String, String?>> {
     }.toList()
 }
 
-fun synsetRelationsFromOEWNData(dict: Map<Relation, Any>, leaveRedundant: Boolean = false): Map<Relation, Set<SynsetId>>? {
+fun synsetRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<SynsetId>>? {
     val relations = safeCast<Map<Relation, List<SynsetId>>>(dict)
-        .filterNot { if (leaveRedundant) it.key in INVERSE_SYNSET_RELATIONS_SET else false }
+        .filter { it.key in SYNSET_RELATIONS }
         .mapValues { it.value.toSet() }
     return relations.ifEmpty { null }
 }
 
-fun senseRelationsFromOEWNData(dict: Map<Relation, Any>, leaveRedundant: Boolean = false): Map<Relation, Set<SenseKey>>? {
+fun senseRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<SenseKey>>? {
     val relations = safeCast<Map<Relation, List<SenseKey>>>(dict)
-        .filterNot { if (leaveRedundant) it.key in INVERSE_SENSE_RELATIONS_SET else false }
+        .filter { it.key in SENSE_RELATIONS }
         .mapValues { it.value.toSet() }
     return relations.ifEmpty { null }
 }
@@ -95,10 +97,10 @@ fun pronunciationFromOEWNData(dict: Map<String, Any>): Pronunciation {
  * - sense
  * - source
  */
-fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?, includeLexFile: Boolean = false): Map<String, Any> {
+fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?, includeLexFile: Boolean = false, leaveRedundantRelation: Boolean = false): Map<String, Any> {
     val serializedSenses = senseKeys
         .map { resolver.invoke(it)!! }
-        .map(Sense::toOEWNData)
+        .map { it.toOEWNData(leaveRedundantRelation = leaveRedundantRelation) }
         .toList()
     return mutableMapOf<String, Any>(
         "sense" to serializedSenses,
@@ -143,7 +145,7 @@ fun lexFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?,
  * - sent
  * - <relations>
  */
-fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Boolean = true): Map<String, Any> {
+fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Boolean = true, leaveRedundantRelation: Boolean = false): Map<String, Any> {
     return mutableMapOf<String, Any>(
         "id" to senseKey,
         "synset" to synsetId,
@@ -153,7 +155,7 @@ fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Bool
         verbFrames?.let { this["subcat"] = it.toList() }
         if (includeVerbTemplates) verbTemplates?.let { this["template"] = it.toList() }
         relations
-            ?.filterNot { it.key in INVERSE_SENSE_RELATIONS_SET }
+            ?.filterNot { if (leaveRedundantRelation) it.key in INVERSE_SENSE_RELATIONS_SET else false }
             ?.forEach { (rel: String, target) ->
                 this[rel] = target.toList()
             }
@@ -170,7 +172,7 @@ fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Bool
  * @param dict dictionary
  * @return sense
  */
-fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?, idx: Int, dict: Map<String, Any>, leaveRedundantRelation: Boolean = false): Sense {
+fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?, idx: Int, dict: Map<String, Any>): Sense {
     val lexId: LexId = LexId(lemma, type, discriminant)
     val senseId: SenseKey = safeCast(dict["id"]!!)
     val synsetId: SynsetId = safeCast(dict["synset"]!!)
@@ -180,7 +182,7 @@ fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant
     val verbTemplates: List<VerbTemplateId>? = dict["template"]?.let { safeCast(it) }
     val adjPosition: AdjPosition? = safeNullableCast(dict["adjposition"])
     val tagCount: Int? = safeNullableCast(dict["tagcount"])
-    val relations: Map<Relation, Set<SenseKey>>? = senseRelationsFromOEWNData(dict, leaveRedundant = leaveRedundantRelation)
+    val relations: Map<Relation, Set<SenseKey>>? = senseRelationsFromOEWNData(dict)
     return Sense(
         senseId, lexId, synsetId, indexInLex,
         examples = examples,
@@ -190,7 +192,6 @@ fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant
         tagCount = tagCount,
         relations = relations,
     ).apply {
-
     }
 }
 
@@ -200,9 +201,9 @@ fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant
  * @receiver sequence of senses
  * @return list of serialized senses
  */
-fun Sequence<Sense>.toOEWNData(): List<Any> {
+fun Sequence<Sense>.toOEWNData(leaveRedundantRelation: Boolean = false): List<Any> {
     return this
-        .map(Sense::toOEWNData)
+        .map { it.toOEWNData(leaveRedundantRelation = leaveRedundantRelation) }
         .toList()
 }
 
@@ -223,7 +224,7 @@ fun Sequence<Sense>.toOEWNData(): List<Any> {
  * - ili
  * - <relations>
  */
-fun Synset.toOEWNData(includeLexFile: Boolean = false, ignoreRedundantRelation: Boolean = false): Map<String, Any> {
+fun Synset.toOEWNData(includeLexFile: Boolean = false, leaveRedundantRelation: Boolean = false): Map<String, Any> {
     return mutableMapOf(
         "partOfSpeech" to type.value,
         "definition" to definitions,
@@ -233,7 +234,7 @@ fun Synset.toOEWNData(includeLexFile: Boolean = false, ignoreRedundantRelation: 
         examples?.let { this["example"] = it.map { it2 -> if (it2.second == null) it2.first else mapOf("source" to it2.second, "text" to it2.first) } }
         usages?.let { this["usage"] = it }
         relations
-            ?.filterNot { if (ignoreRedundantRelation) false else it.key in INVERSE_SYNSET_RELATIONS_SET }
+            ?.filterNot { if (leaveRedundantRelation) it.key in INVERSE_SYNSET_RELATIONS_SET else false }
             ?.forEach { (rel, target) ->
                 this[rel] = target.toList()
             }
@@ -250,7 +251,7 @@ fun Synset.toOEWNData(includeLexFile: Boolean = false, ignoreRedundantRelation: 
  * @param dict dictionary
  * @return synset
  */
-fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFile: Boolean = false, leaveRedundantRelation: Boolean = false): Synset {
+fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFile: Boolean = false): Synset {
 
     val type = SynsetType.fromKey2(dict["partOfSpeech"] as String)
     val domain = dict["domain"] as Domain
@@ -258,7 +259,7 @@ fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFil
     val definitions = safeCast<List<String>>(dict["definition"]!!)
     val examples = dict["example"]?.let { examplesFromOEWNData(safeCast(it)) }
     val usages = dict["usage"]?.let { safeCast<List<String>>(it) }
-    val relations: Map<Relation, Set<SenseKey>>? = synsetRelationsFromOEWNData(dict, leaveRedundant = leaveRedundantRelation)
+    val relations: Map<Relation, Set<SenseKey>>? = synsetRelationsFromOEWNData(dict)
     val ili = dict["ili"] as String?
     val wikidata = dict["wikidata"]?.let {
         when (it) {
@@ -288,12 +289,12 @@ fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFil
  * @receiver sequence of synsets
  * @return dict of synset by id
  */
-fun Sequence<Synset>.toOEWNData(): Map<SynsetId, Any> = this.associate { it.synsetId to it.toOEWNData() }
+fun Sequence<Synset>.toOEWNData(leaveRedundantRelation: Boolean = false): Map<SynsetId, Any> = this.associate { it.synsetId to it.toOEWNData(leaveRedundantRelation = leaveRedundantRelation) }
 
 /**
  * Synsets by id to OEWN serializable dict
  */
-fun Map<SynsetId, Synset>.toOEWNData(): Map<SynsetId, Any> = this.mapValues { it.value.toOEWNData() }
+fun Map<SynsetId, Synset>.toOEWNData(leaveRedundantRelation: Boolean = false): Map<SynsetId, Any> = this.mapValues { it.value.toOEWNData(leaveRedundantRelation = leaveRedundantRelation) }
 
 // M A P P E D   L E X E S
 
@@ -304,19 +305,19 @@ fun Map<SynsetId, Synset>.toOEWNData(): Map<SynsetId, Any> = this.mapValues { it
  * @param senseResolver senseKey to sense resolver
  * @return dict by lemma
  */
-fun Sequence<Lex>.toOEWNData(senseResolver: (SenseKey) -> Sense): Map<Lemma, Map<Key2, Map<String, Any>>> {
+fun Sequence<Lex>.toOEWNData(senseResolver: (SenseKey) -> Sense, leaveRedundantRelation: Boolean = false): Map<Lemma, Map<Key2, Map<String, Any>>> {
     val hypermap1: HyperMap1 = this.lexByLemmaThenByKey2()
-    return hypermap1.toOEWNData(senseResolver)
+    return hypermap1.toOEWNData(senseResolver, leaveRedundantRelation = leaveRedundantRelation)
 }
 
-fun Sequence<Lex>.toOEWNDataAlt(senseResolver: (SenseKey) -> Sense): Map<Lemma, Map<Key2, Map<String, Any>>> {
+fun Sequence<Lex>.toOEWNDataAlt(senseResolver: (SenseKey) -> Sense, leaveRedundantRelation: Boolean = false): Map<Lemma, Map<Key2, Map<String, Any>>> {
     return mutableMapOf<String, Map<Key2, Map<String, Any>>>()
         .apply {
             this@toOEWNDataAlt
                 .sortedBy { it.lemma }
                 .groupBy { it.lemma }
                 .forEach { (lemma, lexes) ->
-                    this[lemma] = lexes.associate { it.key2 to it.toOEWNData(senseResolver) }
+                    this[lemma] = lexes.associate { it.key2 to it.toOEWNData(senseResolver, leaveRedundantRelation = leaveRedundantRelation) }
                 }
         }
 }
@@ -326,10 +327,10 @@ fun Sequence<Lex>.toOEWNDataAlt(senseResolver: (SenseKey) -> Sense): Map<Lemma, 
  *
  * @receiver hypermap1 (lex by lemma then by key2)
  */
-fun HyperMap1.toOEWNData(senseResolver: (SenseKey) -> Sense): Map<Lemma, Map<Key2, Map<String, Any>>> {
+fun HyperMap1.toOEWNData(senseResolver: (SenseKey) -> Sense, leaveRedundantRelation: Boolean = false): Map<Lemma, Map<Key2, Map<String, Any>>> {
     return this
         .mapValues { (_: Lemma, v) ->
-            v.mapValues { (_: Key2, lex) -> lex.toOEWNData(resolver = { senseResolver(it) }) }.toSortedMap()
+            v.mapValues { (_: Key2, lex) -> lex.toOEWNData(resolver = { senseResolver(it) }, leaveRedundantRelation = leaveRedundantRelation) }.toSortedMap()
         }.toSortedMap()
 }
 
@@ -365,13 +366,13 @@ fun lexesAndSensesFromOEWNData(dict: Map<Lemma, Map<Key2, Map<String, Any>>>): P
  * @receiver core model
  * @yield content (either lex entries or synsets) to file
  */
-fun CoreModel.toOneOEWNData(): Sequence<Pair<Map<String, Any>, Filename>> {
+fun CoreModel.toOneOEWNData(leaveRedundantRelation: Boolean = false): Sequence<Pair<Map<String, Any>, Filename>> {
 
     return sequence {
-        val lexData = lexes.asSequence().toOEWNData(senseResolver)
+        val lexData = lexes.asSequence().toOEWNData(senseResolver, leaveRedundantRelation = leaveRedundantRelation)
         yield(lexData to "entries-all") // yield content with source file base
 
-        val synsetData = synsets.asSequence().toOEWNData()
+        val synsetData = synsets.asSequence().toOEWNData(leaveRedundantRelation = leaveRedundantRelation)
         yield(synsetData to "data-all")  // yield content with source file base
     }
 }
@@ -382,7 +383,7 @@ fun CoreModel.toOneOEWNData(): Sequence<Pair<Map<String, Any>, Filename>> {
  * @receiver core model
  * @yield content (either lex entries or synsets) to file
  */
-fun CoreModel.toSplitOEWNData(generated: Boolean = false): Sequence<Pair<Map<String, Any>, Filename>> {
+fun CoreModel.toSplitOEWNData(generated: Boolean = false, leaveRedundantRelation: Boolean = false): Sequence<Pair<Map<String, Any>, Filename>> {
 
     return sequence {
         lexes
@@ -392,7 +393,7 @@ fun CoreModel.toSplitOEWNData(generated: Boolean = false): Sequence<Pair<Map<Str
                 } else it.lexfile
             }
             .forEach { (file, lexes) ->
-                val lexData = lexes.asSequence().toOEWNData(senseResolver)
+                val lexData = lexes.asSequence().toOEWNData(senseResolver, leaveRedundantRelation = leaveRedundantRelation)
                 yield(lexData to file) // yield content with source file base
             }
 
@@ -400,7 +401,7 @@ fun CoreModel.toSplitOEWNData(generated: Boolean = false): Sequence<Pair<Map<Str
             .sortedBy { it.synsetId }
             .groupBy { it.lexfile }
             .forEach { (lexfile, synsets) ->
-                val synsetData = synsets.asSequence().toOEWNData()
+                val synsetData = synsets.asSequence().toOEWNData(leaveRedundantRelation = leaveRedundantRelation)
                 yield(synsetData to lexfile)  // yield content with source file base
             }
     }

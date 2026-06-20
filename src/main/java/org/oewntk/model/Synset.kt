@@ -203,7 +203,6 @@ data class Synset(
     companion object {
 
         val VALID_SYNSET_RELATIONS = arrayOf(
-
             "hypernym",  // "hyponym",
             "instance_hypernym",  // "instance_hyponym",
             "mero_part",  // "holo_part",
@@ -220,7 +219,6 @@ data class Synset(
         )
 
         val SYNSET_RELATIONS = arrayOf(
-
             "hypernym", "hyponym",
             "instance_hypernym", "instance_hyponym",
             "mero_part", "holo_part",

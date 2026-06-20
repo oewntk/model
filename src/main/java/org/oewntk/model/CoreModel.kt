@@ -3,6 +3,8 @@
  */
 package org.oewntk.model
 
+import org.oewntk.model.InverseRelationFactory.makeInverseSenseRelations
+import org.oewntk.model.InverseRelationFactory.makeInverseSynsetRelations
 import org.oewntk.model.Lex.Groups.groupByLCLemma
 import org.oewntk.model.Lex.Groups.groupByLemma
 import org.oewntk.model.Lex.Groups.groupByLemmaThenByKey2
@@ -223,13 +225,21 @@ open class CoreModel(
         get() = { synsetFinder(it)!! }
 
     /**
+     * Flag for inverse relations has been generated
+     * This does not preclude the inverse relation having been read from input.
+     */
+    var generatedInverses: Boolean = false
+        private set
+
+    /**
      * Generate inverse relations
      *
      * @return this model
      */
     fun generateInverseRelations(): CoreModel {
-        InverseRelationFactory.makeInverseSynsetRelations(synsetsById)
-        InverseRelationFactory.makeInverseSenseRelations(sensesById)
+        makeInverseSynsetRelations(synsetsById)
+        makeInverseSenseRelations(sensesById)
+        generatedInverses = true
         return this
     }
 
@@ -244,13 +254,17 @@ open class CoreModel(
         toSynsetRelationInverse: Map<Relation, Relation>,
         toSenseRelationInverse: Map<Relation, Relation>
     ): CoreModel {
-        InverseRelationFactory.makeInverseSynsetRelations(toSynsetRelationInverse, synsetsById)
-        InverseRelationFactory.makeInverseSenseRelations(toSenseRelationInverse, sensesById)
+        makeInverseSynsetRelations(toSynsetRelationInverse, synsetsById)
+        makeInverseSenseRelations(toSenseRelationInverse, sensesById)
+        generatedInverses = true
         return this
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    override fun toString() = "@${identityHashCode(this).toHexString()} #${hashCode().toHexString()} $source"
+    val id = identityHashCode(this).toHexString()
+
+    @OptIn(ExperimentalStdlibApi::class)
+    override fun toString() = "@$id #${hashCode().toHexString()} $source"
 
     /**
      * Info about this model

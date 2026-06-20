@@ -3,8 +3,6 @@ package org.oewntk.model
 import org.oewntk.model.InverseRelationFactory.INVERSE_SENSE_RELATIONS_SET
 import org.oewntk.model.InverseRelationFactory.INVERSE_SYNSET_RELATIONS_SET
 import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
-import org.oewntk.model.Sense.Companion.SENSE_RELATIONS
-import org.oewntk.model.Synset.Companion.SYNSET_RELATIONS
 
 typealias Filename = String
 
@@ -33,16 +31,16 @@ fun examplesFromOEWNData(list: List<Any>): List<Pair<String, String?>> {
     }.toList()
 }
 
-fun synsetRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<SynsetId>>? {
+fun synsetRelationsFromOEWNData(dict: Map<Relation, Any>, filteroutRedundant: Boolean = false): Map<Relation, Set<SynsetId>>? {
     val relations = safeCast<Map<Relation, List<SynsetId>>>(dict)
-        .filter { it.key in SYNSET_RELATIONS }
+        .filterNot { if (filteroutRedundant) it.key in INVERSE_SYNSET_RELATIONS_SET else false }
         .mapValues { it.value.toSet() }
     return relations.ifEmpty { null }
 }
 
-fun senseRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<SenseKey>>? {
+fun senseRelationsFromOEWNData(dict: Map<Relation, Any>, filteroutRedundant: Boolean = false): Map<Relation, Set<SenseKey>>? {
     val relations = safeCast<Map<Relation, List<SenseKey>>>(dict)
-        .filter { it.key in SENSE_RELATIONS }
+        .filterNot { if (filteroutRedundant) it.key in INVERSE_SENSE_RELATIONS_SET else false }
         .mapValues { it.value.toSet() }
     return relations.ifEmpty { null }
 }

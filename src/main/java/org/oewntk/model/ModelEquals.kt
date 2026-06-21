@@ -122,9 +122,10 @@ object ModelEquals {
                 val keyEq = lex1.key == lex2.key
                 val valueEq = lex1.value == lex2.value
                 val typeEq = lex1.type == lex2.type
+                val propertiesEq = lex1.properties.contentEquals(lex2.properties)
                 val formsEq = lex1.forms == lex2.forms
                 val pronunciationsEq = lex1.pronunciations == lex2.pronunciations
-                val report = "$lex1 != $lex2 : k=$keyEq v=$valueEq t=$typeEq f=$formsEq p=$pronunciationsEq"
+                val report = "$lex1 != $lex2 : k=$keyEq[t=$typeEq] v=$valueEq p=$propertiesEq[f=$formsEq p=$pronunciationsEq]"
                 if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
             }
         }
@@ -145,7 +146,7 @@ object ModelEquals {
                 val iliEq = synset1.ili == synset2.ili
                 val wikidataEq = synset1.wikidata == synset2.wikidata
                 val sourceEq = synset1.source == synset2.source
-                val report = "$synset1 != $synset2 : k=$keyEq v=$valueEq t=$typeEq d=$domainEq m=$membersEq def=$definitionsEq e=$examplesEq u=$usagesEq r=$relationsEq i=$iliEq w=$wikidataEq s=$sourceEq"
+                val report = "$synset1 != $synset2 : k=$keyEq v=$valueEq[t=$typeEq d=$domainEq m=$membersEq def=$definitionsEq e=$examplesEq u=$usagesEq r=$relationsEq i=$iliEq w=$wikidataEq s=$sourceEq]"
                 if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
             }
         }
@@ -157,6 +158,7 @@ object ModelEquals {
                 Tracing.psErr.println("$sense1 != $sense2")
                 val keyEq = sense1.key == sense2.key
                 val valueEq = sense1.value == sense2.value
+                val propertiesEq = sense1.properties.contentEquals(sense2.properties)
                 val typeEq = sense1.type == sense2.type
                 val indexInLexEq = sense1.indexInLex == sense2.indexInLex
                 val examplesEq = sense1.examples == sense2.examples
@@ -165,7 +167,7 @@ object ModelEquals {
                 val verbFramesEq = sense1.verbFrames == sense2.verbFrames
                 val verbTemplatesEq = sense1.verbTemplates == sense2.verbTemplates
                 val tagCountEq = sense1.tagCount == sense2.tagCount
-                val report = "$sense1 != $sense2 : k=$keyEq v=$valueEq t=$typeEq i=$indexInLexEq e=$examplesEq ap=$adjPositionEq r=$relationsEq vf=$verbFramesEq vt=$verbTemplatesEq c=$tagCountEq"
+                val report = "$sense1 != $sense2 : k=$keyEq v=$valueEq p=$propertiesEq[t=$typeEq i=$indexInLexEq e=$examplesEq ap=$adjPositionEq r=$relationsEq vf=$verbFramesEq vt=$verbTemplatesEq c=$tagCountEq]"
                 if (FAIL) throw IllegalStateException(report) else Tracing.psErr.println(report)
             }
         }

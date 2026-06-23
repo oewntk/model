@@ -194,7 +194,10 @@ data class Lex(
 
     companion object {
 
-        private val lexComparator: Comparator<Lex> = compareBy(Lex::lemma).thenBy(Lex::key2)
+        val lexIdComparator: Comparator<LexId> = compareBy(LexId::lemma)
+            .thenBy(LexId::type)
+            .thenBy(nullsFirst(naturalOrder()), LexId::discriminant)
 
+        val lexComparator: Comparator<Lex> = compareBy(lexIdComparator, Lex::key)
     }
 }

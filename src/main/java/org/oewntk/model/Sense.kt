@@ -84,6 +84,13 @@ data class Sense(
 
     // identity
 
+    /**
+     * Unique id property, as the sensekey is formed from lower-cased lemma this adds the case-sensitive lemma to make it unique.
+     * Used in NID maps
+     */
+    val uniqueId
+        get() = "$senseKey ${lemma.replace(' ', '_')}"
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         return if (other is Sense) {

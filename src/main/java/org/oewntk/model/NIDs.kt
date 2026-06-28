@@ -239,7 +239,7 @@ object NIDs {
         ps.println(data)
     }
 
-    private fun printMap(model: CoreModel, outDir: File, baseName: String, printFunction: (PrintStream) -> Unit) {
+    private fun print(outDir: File, baseName: String, printFunction: (PrintStream) -> Unit) {
         PrintStream(FileOutputStream(File(outDir, "$baseName.json")), true, StandardCharsets.UTF_8)
             .use { printFunction.invoke(it) }
     }
@@ -258,7 +258,7 @@ object NIDs {
      * @throws java.io.IOException io exception
      */
     @Throws(IOException::class)
-    fun printMaps(
+    fun printNIDs(
         model: CoreModel, outDir: File,
         wordsFile: String = "words",
         casedWordsFile: String = "casedwords",
@@ -267,11 +267,11 @@ object NIDs {
         synsetsFile: String = "synsets",
         sensesFile: String = "senses",
     ) {
-        printMap(model, outDir, wordsFile) { printWords(it, model.lexes) }
-        printMap(model, outDir, casedWordsFile) { printCasedWords(it, model.lexes) }
-        printMap(model, outDir, morphsFile) { printMorphs(it, model.lexes) }
-        printMap(model, outDir, pronunciationsFile) { printPronunciations(it, model.lexes) }
-        printMap(model, outDir, synsetsFile) { printSynsets(it, model.synsets) }
-        printMap(model, outDir, sensesFile) { printSenses(it, model.senses) }
+        print(outDir, wordsFile) { printWords(it, model.lexes) }
+        print(outDir, casedWordsFile) { printCasedWords(it, model.lexes) }
+        print(outDir, morphsFile) { printMorphs(it, model.lexes) }
+        print(outDir, pronunciationsFile) { printPronunciations(it, model.lexes) }
+        print(outDir, synsetsFile) { printSynsets(it, model.synsets) }
+        print(outDir, sensesFile) { printSenses(it, model.senses) }
     }
 }

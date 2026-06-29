@@ -8,6 +8,33 @@ import org.oewntk.model.Synset.Companion.SYNSET_RELATIONS
 
 typealias Filename = String
 
+// K E Y S
+
+const private val KEY_ADJPOSITION = "adjposition"
+const private val KEY_DEFINITION = "definition"
+const private val KEY_DOMAIN = "domain"
+const private val KEY_EXAMPLE = "example"
+const private val KEY_FORM = "form"
+const private val KEY_ID = "id"
+const private val KEY_ILI = "ili"
+const private val KEY_KEY2 = "key2"
+const private val KEY_LEXFILE = "lexfile"
+const private val KEY_MEMBERS = "members"
+const private val KEY_PART_OF_SPEECH = "partOfSpeech"
+const private val KEY_PRONUNCIATION = "pronunciation"
+const private val KEY_SENSE = "sense"
+const private val KEY_SENSE_EXAMPLE = "sent"
+const private val KEY_SOURCE = "source"
+const private val KEY_SYNSET = "synset"
+const private val KEY_TAGCOUNT = "tagcount"
+const private val KEY_TEXT = "text"
+const private val KEY_USAGE = "usage"
+const private val KEY_VALUE = "value"
+const private val KEY_VARIETY = "variety"
+const private val KEY_VERBFRAME = "subcat"
+const private val KEY_VERBTEMPLATE = "template"
+const private val KEY_WIKIDATA = "wikidata"
+
 // U T I L S
 
 fun keyPairs(dict: Map<Lemma, Map<Key2, Map<String, Any>>>): Sequence<Pair<Lemma, Key2>> = dict
@@ -27,7 +54,7 @@ fun examplesFromOEWNData(list: List<Any>): List<Pair<String, String?>> {
     return data.map { example ->
         when (example) {
             is String -> example to null
-            is Map<*, *> -> example["text"] as String to example["source"] as String?
+            is Map<*, *> -> example[ KEY_TEXT] as String to example[ KEY_SOURCE] as String?
             else -> throw IllegalArgumentException(example.toString())
         }
     }.toList()
@@ -57,9 +84,9 @@ fun senseRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<Sens
  *  - variety
  */
 fun Pronunciation.toOEWNData(): Map<String, Any> {
-    return mutableMapOf("value" to value)
+    return mutableMapOf( KEY_VALUE to value)
         .apply {
-            variety?.let { this["variety"] = it }
+            variety?.let { this[ KEY_VARIETY] = it }
         }
 }
 
@@ -70,8 +97,8 @@ fun Pronunciation.toOEWNData(): Map<String, Any> {
  * @return pronunciation
  */
 fun pronunciationFromOEWNData(dict: Map<String, Any>): Pronunciation {
-    val value = dict["value"] as PronunciationValue
-    val variety = dict["variety"] as PronunciationVariety?
+    val value = dict[ KEY_VALUE] as PronunciationValue
+    val variety = dict[ KEY_VARIETY] as PronunciationVariety?
     return Pronunciation(value, variety)
 }
 
@@ -103,12 +130,12 @@ fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?, includeLexFile: Boolean = fal
         .map { it.toOEWNData(leaveRedundantRelation = leaveRedundantRelation) }
         .toList()
     return mutableMapOf<String, Any>(
-        "sense" to serializedSenses,
-        // "key2" to key2,
+         KEY_SENSE to serializedSenses,
+        //  KEY_KEY2 to key2,
     ).apply {
-        forms?.let { this["form"] = it.toList() }
-        pronunciations?.let { this["pronunciation"] = it.map(Pronunciation::toOEWNData).toList() }
-        if (includeLexFile) lexfile.let { this["lexfile"] = it }
+        forms?.let { this[ KEY_FORM] = it.toList() }
+        pronunciations?.let { this[ KEY_PRONUNCIATION] = it.map(Pronunciation::toOEWNData).toList() }
+        if (includeLexFile) lexfile.let { this[ KEY_LEXFILE] = it }
     }.toSortedMap()
 }
 
@@ -122,11 +149,11 @@ fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?, includeLexFile: Boolean = fal
  * @return lex
  */
 fun lexFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?, dict: Map<String, Any>): Lex {
-    val senseDicts = safeCast<List<Map<String, Any>>>(dict["sense"]!!)
-    val senseKeys = senseDicts.map { safeCast<SenseKey>(it["id"]!!) }.toList()
+    val senseDicts = safeCast<List<Map<String, Any>>>(dict[ KEY_SENSE]!!)
+    val senseKeys = senseDicts.map { safeCast<SenseKey>(it[ KEY_ID]!!) }.toList()
     return Lex(lemma, type, discriminant, senseKeys).apply {
-        dict["form"]?.let { forms = safeCast<List<String>>(it).toSet() }
-        dict["pronunciation"]?.let { pronunciations = safeCast<List<Map<String, Any>>>(it).map { p -> pronunciationFromOEWNData(p) }.toSet() }
+        dict[ KEY_FORM]?.let { forms = safeCast<List<String>>(it).toSet() }
+        dict[ KEY_PRONUNCIATION]?.let { pronunciations = safeCast<List<Map<String, Any>>>(it).map { p -> pronunciationFromOEWNData(p) }.toSet() }
     }
 }
 
@@ -147,19 +174,19 @@ fun lexFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?,
  */
 fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Boolean = true, leaveRedundantRelation: Boolean = false): Map<String, Any> {
     return mutableMapOf<String, Any>(
-        "id" to senseKey,
-        "synset" to synsetId,
+         KEY_ID to senseKey,
+         KEY_SYNSET to synsetId,
     ).apply {
-        adjPosition?.let { this["adjposition"] = it }
-        examples?.let { this["sent"] = it.map { it2 -> if (it2.second == null) it2.first else mapOf("text" to it2.first, "source" to it2.second) } }
-        verbFrames?.let { this["subcat"] = it.toList() }
-        if (includeVerbTemplates) verbTemplates?.let { this["template"] = it.toList() }
+        adjPosition?.let { this[ KEY_ADJPOSITION] = it }
+        examples?.let { this[ KEY_SENSE_EXAMPLE] = it.map { it2 -> if (it2.second == null) it2.first else mapOf( KEY_TEXT to it2.first,  KEY_SOURCE to it2.second) } }
+        verbFrames?.let { this[ KEY_VERBFRAME] = it.toList() }
+        if (includeVerbTemplates) verbTemplates?.let { this[ KEY_VERBTEMPLATE] = it.toList() }
         relations
             ?.filterNot { if (leaveRedundantRelation) it.key in INVERSE_SENSE_RELATIONS_SET else false }
             ?.forEach { (rel: String, target) ->
                 this[rel] = target.toList()
             }
-        if (includeTagCount) tagCount?.let { this["tagcount"] = it }
+        if (includeTagCount) tagCount?.let { this[ KEY_TAGCOUNT] = it }
     }.toSortedMap()
 }
 
@@ -174,14 +201,14 @@ fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Bool
  */
 fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?, idx: Int, dict: Map<String, Any>): Sense {
     val lexId: LexId = LexId(lemma, type, discriminant)
-    val senseId: SenseKey = safeCast(dict["id"]!!)
-    val synsetId: SynsetId = safeCast(dict["synset"]!!)
+    val senseId: SenseKey = safeCast(dict[ KEY_ID]!!)
+    val synsetId: SynsetId = safeCast(dict[ KEY_SYNSET]!!)
     val indexInLex: Int = idx
-    val examples = dict["sent"]?.let { examplesFromOEWNData(safeCast(it)) }
-    val verbFrames: List<VerbFrameId>? = dict["subcat"]?.let { safeCast(it) }
-    val verbTemplates: List<VerbTemplateId>? = dict["template"]?.let { safeCast(it) }
-    val adjPosition: AdjPosition? = safeNullableCast(dict["adjposition"])
-    val tagCount: Int? = safeNullableCast(dict["tagcount"])
+    val examples = dict[ KEY_SENSE_EXAMPLE]?.let { examplesFromOEWNData(safeCast(it)) }
+    val verbFrames: List<VerbFrameId>? = dict[ KEY_VERBFRAME]?.let { safeCast(it) }
+    val verbTemplates: List<VerbTemplateId>? = dict[ KEY_VERBTEMPLATE]?.let { safeCast(it) }
+    val adjPosition: AdjPosition? = safeNullableCast(dict[ KEY_ADJPOSITION])
+    val tagCount: Int? = safeNullableCast(dict[ KEY_TAGCOUNT])
     val relations: Map<Relation, Set<SenseKey>>? = senseRelationsFromOEWNData(dict)
     return Sense(
         senseId, lexId, synsetId, indexInLex,
@@ -226,22 +253,22 @@ fun Sequence<Sense>.toOEWNData(leaveRedundantRelation: Boolean = false): List<An
  */
 fun Synset.toOEWNData(includeLexFile: Boolean = false, leaveRedundantRelation: Boolean = false): Map<String, Any> {
     return mutableMapOf(
-        "partOfSpeech" to type.value,
-        "definition" to definitions,
-        "members" to members.toList(),
-        "domain" to domain,
+         KEY_PART_OF_SPEECH to type.value,
+         KEY_DEFINITION to definitions,
+         KEY_MEMBERS to members.toList(),
+         KEY_DOMAIN to domain,
     ).apply {
-        examples?.let { this["example"] = it.map { it2 -> if (it2.second == null) it2.first else mapOf("source" to it2.second, "text" to it2.first) } }
-        usages?.let { this["usage"] = it }
+        examples?.let { this[ KEY_EXAMPLE] = it.map { it2 -> if (it2.second == null) it2.first else mapOf( KEY_SOURCE to it2.second,  KEY_TEXT to it2.first) } }
+        usages?.let { this[ KEY_USAGE] = it }
         relations
             ?.filterNot { if (leaveRedundantRelation) it.key in INVERSE_SYNSET_RELATIONS_SET else false }
             ?.forEach { (rel, target) ->
                 this[rel] = target.toList()
             }
-        wikidata?.let { if (it.isNotEmpty()) this["wikidata"] = if (it.size == 1) it[0] else it }
-        ili?.let { this["ili"] = it }
-        source?.let { this["source"] = it }
-        if (includeLexFile) this["lexfile"] = lexfile
+        wikidata?.let { if (it.isNotEmpty()) this[ KEY_WIKIDATA] = if (it.size == 1) it[0] else it }
+        ili?.let { this[ KEY_ILI] = it }
+        source?.let { this[ KEY_SOURCE] = it }
+        if (includeLexFile) this[ KEY_LEXFILE] = lexfile
     }.toSortedMap()
 }
 
@@ -253,23 +280,23 @@ fun Synset.toOEWNData(includeLexFile: Boolean = false, leaveRedundantRelation: B
  */
 fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFile: Boolean = false): Synset {
 
-    val type = SynsetType.fromKey2(dict["partOfSpeech"] as String)
-    val domain = dict["domain"] as Domain
-    val members = safeCast<List<Lemma>>(dict["members"]!!)
-    val definitions = safeCast<List<String>>(dict["definition"]!!)
-    val examples = dict["example"]?.let { examplesFromOEWNData(safeCast(it)) }
-    val usages = dict["usage"]?.let { safeCast<List<String>>(it) }
+    val type = SynsetType.fromKey2(dict[ KEY_PART_OF_SPEECH] as String)
+    val domain = dict[ KEY_DOMAIN] as Domain
+    val members = safeCast<List<Lemma>>(dict[ KEY_MEMBERS]!!)
+    val definitions = safeCast<List<String>>(dict[ KEY_DEFINITION]!!)
+    val examples = dict[ KEY_EXAMPLE]?.let { examplesFromOEWNData(safeCast(it)) }
+    val usages = dict[ KEY_USAGE]?.let { safeCast<List<String>>(it) }
     val relations: Map<Relation, Set<SenseKey>>? = synsetRelationsFromOEWNData(dict)
-    val ili = dict["ili"] as String?
-    val wikidata = dict["wikidata"]?.let {
+    val ili = dict[ KEY_ILI] as String?
+    val wikidata = dict[ KEY_WIKIDATA]?.let {
         when (it) {
             is String -> listOf(it)
             is List<*> -> safeCast(it)
             else -> throw IllegalArgumentException(it.toString())
         }
     }
-    val source = dict["source"] as String?
-    val lexfile = dict["lexfile"] as String?
+    val source = dict[ KEY_SOURCE] as String?
+    val lexfile = dict[ KEY_LEXFILE] as String?
     return Synset(
         synsetId, type, domain, members.toSet(), definitions,
         examples = examples,
@@ -349,7 +376,7 @@ fun lexesAndSensesFromOEWNData(dict: Map<Lemma, Map<Key2, Map<String, Any>>>): P
     val senses = entries(dict).flatMap {
         val (lemma, key2, value2) = it
         val lexDict = safeCast<Map<String, Any>>(value2)
-        val senseDicts = safeCast<List<Map<String, Any>>>(lexDict["sense"]!!)
+        val senseDicts = safeCast<List<Map<String, Any>>>(lexDict[ KEY_SENSE]!!)
         senseDicts.withIndex().map { (idx, senseDict) ->
             senseFromOEWNData(lemma, SynsetType.fromKey2(key2), SynsetType.discriminantFromKey2(key2), idx, senseDict)
         }

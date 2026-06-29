@@ -215,6 +215,7 @@ data class Synset(
             "domain_region",  // "has_domain_region"
             "attribute",
             "similar",
+            "verb_group", // wn31
             "also",
         )
 

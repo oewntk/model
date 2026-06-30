@@ -3,6 +3,7 @@
  */
 package org.oewntk.model
 
+import org.oewntk.model.SynsetTypeImpl.Companion.synsetTypeComparator
 import java.io.Serializable
 import java.util.*
 
@@ -195,7 +196,7 @@ data class Lex(
     companion object {
 
         val lexIdComparator: Comparator<LexId> = compareBy(LexId::lemma)
-            .thenBy(LexId::type)
+            .thenBy(synsetTypeComparator, LexId::type)
             .thenBy(nullsFirst(naturalOrder()), LexId::discriminant)
 
         val lexComparator: Comparator<Lex> = compareBy(lexIdComparator, Lex::key)

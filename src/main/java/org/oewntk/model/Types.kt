@@ -5,6 +5,7 @@
 package org.oewntk.model
 
 import java.io.Serializable
+import java.util.Comparator
 import java.util.Objects
 
 typealias Lemma = String
@@ -92,6 +93,7 @@ enum class SynsetTypeImpl(val value: Char) {
 
     abstract fun toPartOfSpeech(): PartOfSpeechImpl
     abstract fun toCategory(): CategoryImpl
+
     override fun toString(): String {
         throw IllegalAccessException("Illegal: use .value ${this.value}")
     }
@@ -118,6 +120,8 @@ enum class SynsetTypeImpl(val value: Char) {
         fun discriminantFromKey2(key2: Key2): Discriminant? {
             return if (key2.length > 1) key2.substring(1) else null
         }
+
+        val synsetTypeComparator: Comparator<SynsetTypeImpl> = compareBy(SynsetTypeImpl::value)
     }
 }
 

@@ -54,12 +54,17 @@ typealias PartOfSpeech = PartOfSpeechImpl
 @kotlinx.serialization.Serializable
 data class LexIdImpl(val lemma: Lemma, val type: SynsetType, val discriminant: Discriminant?) : Serializable {
 
+    val partOfSpeech
+        get() = type.toPartOfSpeech()
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        return if (other is LexId) Objects.equals(lemma, other.lemma) && Objects.equals(type, other.type) && Objects.equals(discriminant, other.discriminant) else false
+        return if (other is LexId) Objects.equals(lemma, other.lemma)
+                    && Objects.equals(partOfSpeech, other.partOfSpeech)
+                    && Objects.equals(discriminant, other.discriminant) else false
     }
 
-    override fun hashCode(): Int = Objects.hash(lemma, type, discriminant)
+    override fun hashCode(): Int = Objects.hash(lemma, partOfSpeech, discriminant)
 
     override fun toString() = "$lemma-${type.value}" + if (discriminant != null) "-$discriminant" else ""
 }
@@ -121,7 +126,7 @@ enum class SynsetTypeImpl(val value: Char) {
             return if (key2.length > 1) key2.substring(1) else null
         }
 
-        val synsetTypeComparator: Comparator<SynsetTypeImpl> = compareBy(SynsetTypeImpl::value)
+        val synsetTypeComparator: Comparator<SynsetType> = compareBy(SynsetType::value)
     }
 }
 
@@ -165,6 +170,8 @@ enum class PartOfSpeechImpl(val value: Char, val fullName: String) {
         fun fromChar(c: Char): PartOfSpeechImpl = fromCharOrNull(c) ?: throw IllegalArgumentException("Illegal PartOfSpeech: $c")
 
         fun fromFullName(fullName: String): PartOfSpeechImpl = fromFullNameOrNull(fullName) ?: throw IllegalArgumentException("Illegal PartOfSpeech: $fullName")
+
+        val partOfSpeechComparator: Comparator<PartOfSpeech> = compareBy(PartOfSpeech::value)
     }
 }
 

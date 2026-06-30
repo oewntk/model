@@ -155,7 +155,6 @@ object ModelEquals {
     fun checkZipSensesEq(senses1: List<Sense>, senses2: List<Sense>) {
         senses1.zip(senses2).forEach { (sense1, sense2) ->
             if (sense1 != sense2) {
-                Tracing.psErr.println("$sense1 != $sense2")
                 val keyEq = sense1.key == sense2.key
                 val valueEq = sense1.value == sense2.value
                 val propertiesEq = sense1.properties.contentEquals(sense2.properties)

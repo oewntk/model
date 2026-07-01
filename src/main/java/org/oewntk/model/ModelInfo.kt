@@ -203,7 +203,7 @@ object ModelInfo {
     private const val COUNT_TEMPLATE = "%-70s: %6d%s"
 
     private fun formatCounts(label: String, value: Any, last: Boolean = false): String {
-        return String.format(COUNT_TEMPLATE, label, value, if (last) "" else "\n")
+        return COUNT_TEMPLATE.format(label, value, if (last) "" else "\n")
     }
 
     /**
@@ -212,6 +212,6 @@ object ModelInfo {
     private const val INFO_TEMPLATE = "%-70s: %s%s"
 
     private fun format(label: String, value: Any, last: Boolean = false): String {
-        return String.format(INFO_TEMPLATE, label, value, if (last) "" else "\n")
+        return INFO_TEMPLATE.format(label, value, if (last) "" else "\n")
     }
 }

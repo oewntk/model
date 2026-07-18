@@ -18,6 +18,8 @@ typealias SynsetId = String
 typealias LowerCasedLemma = String
 typealias Relation = String
 
+typealias Example = ExampleImpl
+
 typealias Domain = String
 typealias Morph = String
 typealias PronunciationValue = String
@@ -197,3 +199,10 @@ enum class CategoryImpl(val value: Char) {
 
     abstract fun toPartOfSpeech(): PartOfSpeechImpl
 }
+
+
+/**
+ * Example
+ */
+@kotlinx.serialization.Serializable
+data class ExampleImpl(val text: String, val source: String?)

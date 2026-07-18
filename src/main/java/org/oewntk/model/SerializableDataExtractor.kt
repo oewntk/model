@@ -52,12 +52,12 @@ fun typeFromData(dict: Map<String, Any>): SynsetType {
  *
  * @return list of examples
  */
-fun examplesFromData(list: List<Any>): List<Pair<String, String?>> {
+fun examplesFromData(list: List<Any>): List<Example> {
     val data = safeCast<List<Any>>(list)
     return data.map { example ->
         when (example) {
-            is String -> example to null
-            is Map<*, *> -> example[KEY_TEXT] as String to example[KEY_SOURCE] as String?
+            is String -> Example(example, null)
+            is Map<*, *> -> Example(example[KEY_TEXT] as String, example[KEY_SOURCE] as String?)
             else -> throw IllegalArgumentException(example.toString())
         }
     }.toList()
@@ -172,7 +172,7 @@ fun Synset.toData(includeLexFile: Boolean = false): Map<String, Any> {
         KEY_MEMBERS to members.toList(),
         KEY_DEFINITION to (definitions.toList()),
     ).apply {
-        examples?.let { this[KEY_EXAMPLE] = it.map { example -> if (example.second == null) example.first else mapOf(KEY_TEXT to example.first, KEY_SOURCE to example.second) }.toList() }
+        examples?.let { this[KEY_EXAMPLE] = it.map { example -> if (example.source == null) example.text else mapOf(KEY_TEXT to example.text, KEY_SOURCE to example.source) }.toList() }
         usages?.let { this[KEY_USAGE] = it }
         relations?.let { this[KEY_RELATION] = it }
         ili?.let { this[KEY_ILI] = it }
@@ -228,7 +228,7 @@ fun Sense.toData(): Map<String, Any> {
     )
         .apply {
             putAll(lexId.toData())
-            examples?.let { this[KEY_SENSE_EXAMPLE] = it.map { example -> if (example.second == null) example.first else mapOf(KEY_TEXT to example.first, KEY_SOURCE to example.second) }.toList() }
+            examples?.let { this[KEY_SENSE_EXAMPLE] = it.map { example -> if (example.source == null) example.text else mapOf(KEY_TEXT to example.text, KEY_SOURCE to example.source) }.toList() }
             verbFrames?.let { this[KEY_VERBFRAME] = it.joinToString(separator = ";") }
             verbTemplates?.let { this[KEY_VERBTEMPLATE] = it.joinToString(separator = ";") }
             adjPosition?.let { this[KEY_ADJPOSITION] = it }

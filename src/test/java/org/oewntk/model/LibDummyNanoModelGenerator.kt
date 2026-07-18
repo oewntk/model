@@ -48,7 +48,7 @@ object LibDummyNanoModelGenerator {
 
     fun genSynsetDiffWithExamples(): Pair<Synset, Synset> =
         Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, null, null) to
-        Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, listOf("He often jokes when ..." to null), null)
+        Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, listOf(Example("He often jokes when ...", null)), null)
 
     // @formatter:on
 

@@ -45,7 +45,7 @@ data class Synset(
     val domain: Domain,
     val members: Set<Lemma>,
     val definitions: List<String>,
-    val examples: List<Pair<String, String?>>? = null,
+    val examples: List<Example>? = null,
     val usages: List<String>? = null,
     var relations: Map<Relation, Set<SynsetId>>? = null,
     val ili: String? = null,

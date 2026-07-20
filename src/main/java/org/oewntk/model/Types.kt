@@ -54,7 +54,7 @@ typealias PartOfSpeech = PartOfSpeechImpl
  * @property discriminant discriminant (nullable)
  */
 @kotlinx.serialization.Serializable
-data class LexIdImpl(val lemma: Lemma, val type: SynsetType, val discriminant: Discriminant?) : Serializable {
+data class LexIdImpl(val lemma: Lemma, val type: SynsetType, val discriminant: Discriminant? = null) : Serializable {
 
     val partOfSpeech
         get() = type.toPartOfSpeech()
@@ -205,4 +205,4 @@ enum class CategoryImpl(val value: Char) {
  * Example
  */
 @kotlinx.serialization.Serializable
-data class ExampleImpl(val text: String, val source: String?)
+data class ExampleImpl(val text: String, val source: String? = null)

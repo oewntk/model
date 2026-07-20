@@ -15,7 +15,7 @@ import java.util.*
 @kotlinx.serialization.Serializable
 data class Pronunciation(
     val value: PronunciationValue,
-    val variety: PronunciationVariety?,
+    val variety: PronunciationVariety? = null,
 ) : Comparable<Pronunciation>, Serializable {
 
     // identify

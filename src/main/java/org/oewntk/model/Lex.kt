@@ -35,7 +35,7 @@ data class Lex(
     // key
     val lemma: Lemma,
     val type: SynsetType,
-    val discriminant: Discriminant?,
+    val discriminant: Discriminant? = null,
 
     // value
     var senseKeys: List<SenseKey>,

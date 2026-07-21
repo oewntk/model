@@ -27,7 +27,7 @@ object LibTestModelLexGroups {
 
     fun testCILemmas(model: CoreModel, lemma: Lemma, ps: PrintStream) {
         val lemmas = model.lexes.findLemmasFor(lemma)
-        ps.println("$lemma ${lemmas?.joinToString(separator = ",", prefix = "{", postfix = "}")}")
+        ps.println("$lemma ${lemmas.joinToString(separator = ",", prefix = "{", postfix = "}")}")
     }
 
     fun testCICounts(model: CoreModel, lemma: Lemma, ps: PrintStream) {

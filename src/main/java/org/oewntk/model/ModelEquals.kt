@@ -9,7 +9,6 @@ object ModelEquals {
 
     fun <T> Collection<T>.zipEquals(other: Collection<T>): Boolean = zip(other).none { (o1, o2) -> (o1 != o2) }
 
-    @OptIn(ExperimentalStdlibApi::class)
     fun CoreModel.dataEquals(other: Any?): Boolean {
         return this === other || if (other is CoreModel) {
             val eq = lexes == other.lexes && senses == other.senses && synsets == other.synsets
@@ -47,7 +46,6 @@ object ModelEquals {
         } else false
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     fun CoreModel.dataSetsEquals(other: Any?): Boolean {
         return this === other || if (other is CoreModel) {
             val lexesSet = lexes.toSet()

@@ -255,10 +255,8 @@ open class CoreModel(
         return this
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     val id = identityHashCode(this).toHexString()
 
-    @OptIn(ExperimentalStdlibApi::class)
     override fun toString() = "@$id #${hashCode().toHexString()} $source"
 
     /**

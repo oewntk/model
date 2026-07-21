@@ -92,12 +92,10 @@ data class Sense(
         get() = "$senseKey ${lemma.replace(' ', '_')}"
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        return if (other is Sense) {
-            key == other.key
-                    && value == other.value
-                    && properties.contentEquals(other.properties)
-        } else false
+        return this === other || other is Sense && (
+                key == other.key
+                && value == other.value
+                && properties.contentEquals(other.properties))
     }
 
     override fun hashCode(): Int {

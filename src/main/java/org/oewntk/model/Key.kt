@@ -39,7 +39,7 @@ interface Key {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other !is Base) return false
-            return if (lemma != other.lemma) false else this.category == other.category
+            return lemma == other.lemma && this.category == other.category
         }
 
         override fun hashCode(): Int = Objects.hash(lemma, category)

@@ -60,10 +60,10 @@ data class LexIdImpl(val lemma: Lemma, val type: SynsetType, val discriminant: D
         get() = type.toPartOfSpeech()
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        return if (other is LexId) Objects.equals(lemma, other.lemma)
-                    && Objects.equals(partOfSpeech, other.partOfSpeech)
-                    && Objects.equals(discriminant, other.discriminant) else false
+        return this === other || other is LexId && (
+                Objects.equals(lemma, other.lemma)
+                && Objects.equals(partOfSpeech, other.partOfSpeech)
+                && Objects.equals(discriminant, other.discriminant))
     }
 
     override fun hashCode(): Int = Objects.hash(lemma, partOfSpeech, discriminant)

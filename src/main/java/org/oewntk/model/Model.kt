@@ -30,14 +30,12 @@ data class DataModel(
     ) : this(coreModel.lexes, coreModel.senses, coreModel.synsets, verbFrames, verbTemplates)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        return if (other is DataModel)
-            lexes == other.lexes
-                    && senses == other.senses
-                    && synsets == other.synsets
-                    && verbFrames == other.verbFrames
-                    && verbTemplates == other.verbTemplates
-        else false
+        return this === other || other is DataModel && (
+                lexes == other.lexes
+                && senses == other.senses
+                && synsets == other.synsets
+                && verbFrames == other.verbFrames
+                && verbTemplates == other.verbTemplates)
     }
 
     override fun hashCode(): Int {
@@ -139,8 +137,7 @@ class Model(
     // identity
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        return if (other is Model) {
+        return this === other || if (other is Model) {
             val superEq = super.equals(other)
             superEq && verbFrames == other.verbFrames && verbTemplates == other.verbTemplates
         } else false

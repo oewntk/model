@@ -46,12 +46,10 @@ data class DataCoreModel(
     ) : this(model.lexes, model.senses, model.synsets)
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        return if (other is DataCoreModel)
-            lexes == other.lexes
-                    && senses == other.senses
-                    && synsets == other.synsets
-        else false
+        return this === other || other is DataCoreModel && (
+                lexes == other.lexes
+                && senses == other.senses
+                && synsets == other.synsets)
     }
 
     override fun hashCode(): Int {
@@ -134,10 +132,7 @@ open class CoreModel(
     private val synsetsById: Map<SynsetId, Synset> by lazy { synsets.asSequence().synsetsById() }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        return if (other is CoreModel) {
-            lexes == other.lexes && senses == other.senses && synsets == other.synsets
-        } else false
+        return this === other || other is CoreModel && lexes == other.lexes && senses == other.senses && synsets == other.synsets
     }
 
     override fun hashCode(): Int {

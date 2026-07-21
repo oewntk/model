@@ -11,8 +11,7 @@ object ModelEquals {
 
     @OptIn(ExperimentalStdlibApi::class)
     fun CoreModel.dataEquals(other: Any?): Boolean {
-        if (this === other) return true
-        return if (other is CoreModel) {
+        return this === other || if (other is CoreModel) {
             val eq = lexes == other.lexes && senses == other.senses && synsets == other.synsets
             if (!eq) {
                 val eqLexes = lexes == other.lexes
@@ -50,8 +49,7 @@ object ModelEquals {
 
     @OptIn(ExperimentalStdlibApi::class)
     fun CoreModel.dataSetsEquals(other: Any?): Boolean {
-        if (this === other) return true
-        return if (other is CoreModel) {
+        return this === other || if (other is CoreModel) {
             val lexesSet = lexes.toSet()
             val sensesSet = senses.toSet()
             val synsetsSet = synsets.toSet()

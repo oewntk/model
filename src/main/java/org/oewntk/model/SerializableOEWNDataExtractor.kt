@@ -182,7 +182,7 @@ fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Bool
         verbFrames?.let { this[KEY_VERBFRAME] = it.toList() }
         if (includeVerbTemplates) verbTemplates?.let { this[KEY_VERBTEMPLATE] = it.toList() }
         relations
-            ?.filterNot { if (leaveRedundantRelation) it.key in INVERSE_SENSE_RELATIONS_SET else false }
+            ?.filterNot { leaveRedundantRelation && it.key in INVERSE_SENSE_RELATIONS_SET }
             ?.forEach { (rel: String, target) ->
                 this[rel] = target.toList()
             }
@@ -261,7 +261,7 @@ fun Synset.toOEWNData(includeLexFile: Boolean = false, leaveRedundantRelation: B
         examples?.let { this[KEY_EXAMPLE] = it.map { it2 -> if (it2.source == null) it2.text else mapOf(KEY_SOURCE to it2.source, KEY_TEXT to it2.text) } }
         usages?.let { this[KEY_USAGE] = it }
         relations
-            ?.filterNot { if (leaveRedundantRelation) it.key in INVERSE_SYNSET_RELATIONS_SET else false }
+            ?.filterNot { leaveRedundantRelation && it.key in INVERSE_SYNSET_RELATIONS_SET }
             ?.forEach { (rel, target) ->
                 this[rel] = target.toList()
             }

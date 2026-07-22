@@ -13,6 +13,8 @@ object InverseRelationFactory {
 
     private const val LOG_ALREADY_PRESENT = false
 
+    private const val THROW_NON_EXISTING_TARGET = false
+
     val INVERSE_SYNSET_RELATIONS_SET = INVERSE_SYNSET_RELATIONS.values.toSet()
 
     val INVERSE_SENSE_RELATIONS_SET = INVERSE_SENSE_RELATIONS.values.toSet()
@@ -43,8 +45,14 @@ object InverseRelationFactory {
                     if (!targetSynsetIds.isNullOrEmpty()) {
                         val inverseType = toInverse[it]
                         for (targetSynsetId in targetSynsetIds) {
-                            val targetSynset =
-                                checkNotNull(synsetsById[targetSynsetId]) { Tracing.psErr.println("[E] non-existing target $targetSynsetId of synset relation $it($sourceSynsetId)") }
+                            val targetSynset = synsetsById[targetSynsetId]
+                            if (targetSynset == null) {
+                                val message = "[E] non-existing target $targetSynsetId of synset relation $it($sourceSynsetId)"
+                                if (THROW_NON_EXISTING_TARGET) throw IllegalArgumentException(message) else {
+                                    Tracing.psErr.println(message)
+                                    continue
+                                }
+                            }
                             try {
                                 targetSynset.addInverseRelation(inverseType!!, sourceSynsetId)
                                 count++

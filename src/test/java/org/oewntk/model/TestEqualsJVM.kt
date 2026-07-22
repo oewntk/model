@@ -66,7 +66,7 @@ class TestEqualsJVM {
         val obj1 = mutableSetOf("jest", "joke")
         val obj2 = setOf("joke", "jest")
         assertTrue(Objects.equals(obj1, obj2))
-        sertEquals(obj2, obj1)
+        assertEquals(obj2, obj1)
     }
 
     @Test

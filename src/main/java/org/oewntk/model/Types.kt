@@ -205,4 +205,4 @@ enum class CategoryImpl(val value: Char) {
  * Example
  */
 @kotlinx.serialization.Serializable
-data class ExampleImpl(val text: String, val source: String? = null)
+data class ExampleImpl(val text: String, val source: String? = null) : Serializable

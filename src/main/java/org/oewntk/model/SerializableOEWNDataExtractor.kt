@@ -175,7 +175,7 @@ fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?, includeLexFile: Boolean = fal
         .toList()
     return mutableMapOf<String, Any>(
         KEY_LEMMA to lemma,
-        KEY_PART_OF_SPEECH to type.value,
+        KEY_PART_OF_SPEECH to partOfSpeech.value,
         KEY_SENSE to serializedSenses,
         //  KEY_KEY2 to key2,
     ).apply {
@@ -190,15 +190,15 @@ fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?, includeLexFile: Boolean = fal
  * Lex from dict
  *
  * @param lemma lemma
- * @param type synset type
+ * @param partOfSpeech part of speech
  * @param discriminant discriminant
  * @param dict dictionary
  * @return lex
  */
-fun lexFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?, dict: Map<String, Any>): Lex {
+fun lexFromOEWNData(lemma: Lemma, partOfSpeech: PartOfSpeech, discriminant: Discriminant?, dict: Map<String, Any>): Lex {
     val senseDicts = safeCast<List<Map<String, Any>>>(dict[KEY_SENSE]!!)
     val senseKeys = senseDicts.map { safeCast<SenseKey>(it[KEY_ID]!!) }.toList()
-    return Lex(lemma, type, discriminant, senseKeys).apply {
+    return Lex(lemma, partOfSpeech, discriminant, senseKeys).apply {
         dict[KEY_FORM]?.let { forms = safeCast<List<String>>(it).toSet() }
         dict[KEY_PRONUNCIATION]?.let { pronunciations = safeCast<List<Map<String, Any>>>(it).map { p -> pronunciationFromOEWNData(p) }.toSet() }
     }
@@ -241,13 +241,13 @@ fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Bool
  * Sense from dict
  *
  * @param lemma lemma
- * @param type synset type
+ * @param partOfSpeech part of speech
  * @param discriminant discriminant
  * @param dict dictionary
  * @return sense
  */
-fun senseFromOEWNData(lemma: Lemma, type: SynsetType, discriminant: Discriminant?, idx: Int, dict: Map<String, Any>): Sense {
-    val lexId: LexId = LexId(lemma, type, discriminant)
+fun senseFromOEWNData(lemma: Lemma, partOfSpeech: PartOfSpeech, discriminant: Discriminant?, idx: Int, dict: Map<String, Any>): Sense {
+    val lexId: LexId = LexId(lemma, partOfSpeech, discriminant)
     val senseId: SenseKey = safeCast(dict[KEY_ID]!!)
     val synsetId: SynsetId = safeCast(dict[KEY_SYNSET]!!)
     val indexInLex: Int = idx
@@ -454,7 +454,7 @@ fun lexesAndSensesFromOEWNData(dict: Map<Lemma, Map<Key2, Map<String, Any>>>): P
     val lexes = entries(dict).map {
         val (lemma, key2, value2) = it
         val lexDict = safeCast<Map<String, Any>>(value2)
-        lexFromOEWNData(lemma, SynsetType.fromKey2(key2), SynsetType.discriminantFromKey2(key2), lexDict)
+        lexFromOEWNData(lemma, PartOfSpeech.fromKey2(key2), SynsetType.discriminantFromKey2(key2), lexDict)
     }
     // senses
     val senses = entries(dict).flatMap {
@@ -462,7 +462,7 @@ fun lexesAndSensesFromOEWNData(dict: Map<Lemma, Map<Key2, Map<String, Any>>>): P
         val lexDict = safeCast<Map<String, Any>>(value2)
         val senseDicts = safeCast<List<Map<String, Any>>>(lexDict[KEY_SENSE]!!)
         senseDicts.withIndex().map { (idx, senseDict) ->
-            senseFromOEWNData(lemma, SynsetType.fromKey2(key2), SynsetType.discriminantFromKey2(key2), idx, senseDict)
+            senseFromOEWNData(lemma, PartOfSpeech.fromKey2(key2), SynsetType.discriminantFromKey2(key2), idx, senseDict)
         }
     }
 

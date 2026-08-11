@@ -55,7 +55,7 @@ interface Key {
             fun of(
                 lex: Lex,
                 lemmaExtractor: (Lex) -> Lemma = Lex::lemma,
-                categoryExtractor: (Lex) -> Category = { it.type.toCategory() },
+                categoryExtractor: (Lex) -> Category = { it.partOfSpeech.toCategory() },
             ): Base = Base(lemmaExtractor(lex), categoryExtractor(lex))
 
             fun ofIgnoringCase(lex: Lex): Base = of(lex, Lex::lCLemma)
@@ -110,7 +110,7 @@ interface Key {
             fun of(
                 lex: Lex,
                 lemmaExtractor: (Lex) -> Lemma = Lex::lemma,
-                categoryExtractor: (Lex) -> Category = { it.type.toCategory() },
+                categoryExtractor: (Lex) -> Category = { it.partOfSpeech.toCategory() },
             ): UsingDiscriminant = UsingDiscriminant(lemmaExtractor(lex), categoryExtractor(lex), lex.discriminant)
 
             fun ofIgnoringCase(lex: Lex): UsingDiscriminant = of(lex, Lex::lCLemma)
@@ -162,7 +162,7 @@ interface Key {
             fun of(
                 lex: Lex,
                 lemmaExtractor: (Lex) -> Lemma = Lex::lemma,
-                categoryExtractor: (Lex) -> Category = { it.type.toCategory() },
+                categoryExtractor: (Lex) -> Category = { it.partOfSpeech.toCategory() },
             ): UsingPronunciation = UsingPronunciation(lemmaExtractor(lex), categoryExtractor(lex), lex.pronunciations?.toSet())
 
             fun ofUsingPartOfSpeech(lex: Lex): UsingPronunciation = of(lex) { it.partOfSpeech.toCategory() }

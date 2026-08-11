@@ -14,6 +14,7 @@ private const val KEY_INDEX = "index"
 private const val KEY_LEMMA = "lemma"
 private const val KEY_LEXFILE = "lexfile"
 private const val KEY_MEMBERS = "member"
+private const val KEY_PARTOFSPEECH = "partOfSpeech"
 private const val KEY_PRONUNCIATION = "pronunciation"
 private const val KEY_RELATION = "relation"
 private const val KEY_SENSE = "sense"
@@ -42,6 +43,21 @@ fun typeFromData(dict: Map<String, Any>): SynsetType {
         when (it) {
             is String -> SynsetType.fromKey2(it)
             is Char -> SynsetType.fromChar(it)
+            else -> throw IllegalArgumentException(it.toString())
+        }
+    }
+}
+
+/**
+ * PartOfSpeech from dict
+ *
+ * @return part of speech
+ */
+fun partOfSpeechFromData(dict: Map<String, Any>): PartOfSpeech {
+    return dict[KEY_TYPE].let {
+        when (it) {
+            is String -> PartOfSpeech.fromKey2(it)
+            is Char -> PartOfSpeech.fromChar(it)
             else -> throw IllegalArgumentException(it.toString())
         }
     }
@@ -105,7 +121,7 @@ fun pronunciationFromData(dict: Map<String, Any>): Pronunciation {
 fun LexId.toData(): Map<String, Any> {
     return mutableMapOf(
         KEY_LEMMA to lemma,
-        KEY_TYPE to type.value,
+        KEY_PARTOFSPEECH to partOfSpeech.value,
     )
         .apply {
             discriminant?.let { this[KEY_DISCRIMINANT] = it }
@@ -120,9 +136,9 @@ fun LexId.toData(): Map<String, Any> {
  */
 fun lexIdFromData(dict: Map<String, Any>): LexId {
     val lemma = dict[KEY_LEMMA] as Lemma
-    val type: SynsetType = typeFromData(dict)
+    val partOfSpeech: PartOfSpeech = partOfSpeechFromData(dict)
     val discriminant = dict[KEY_DISCRIMINANT] as Discriminant?
-    return LexId(lemma, type, discriminant)
+    return LexId(lemma, partOfSpeech, discriminant)
 }
 
 /**
@@ -134,7 +150,7 @@ fun lexIdFromData(dict: Map<String, Any>): LexId {
 fun Lex.toData(): Map<String, Any> {
     return mutableMapOf(
         KEY_LEMMA to lemma,
-        KEY_TYPE to type.value,
+        KEY_PARTOFSPEECH to partOfSpeech.value,
         KEY_SENSE to senseKeys,
     ).apply {
         discriminant?.let { this[KEY_DISCRIMINANT] = it }
@@ -152,7 +168,7 @@ fun Lex.toData(): Map<String, Any> {
 fun lexFromData(dict: Map<String, Any>): Lex {
     val lexId = lexIdFromData(dict)
     val senseKeys = safeCast<List<SenseKey>>(dict[KEY_SENSE]!!)
-    return Lex(lexId.lemma, lexId.type, lexId.discriminant, senseKeys).apply {
+    return Lex(lexId.lemma, lexId.partOfSpeech, lexId.discriminant, senseKeys).apply {
         dict[KEY_FORM]?.let { forms = safeCast<List<String>>(it).toSet() }
         dict[KEY_PRONUNCIATION]?.let { pronunciations = safeCast<List<Map<String, Any>>>(it).map { p -> pronunciationFromData(p) }.toSet() }
     }

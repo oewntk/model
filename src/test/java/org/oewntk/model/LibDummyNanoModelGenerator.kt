@@ -101,8 +101,8 @@ object LibDummyNanoModelGenerator {
         Lex(LEMMA1, "a", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) }
 
     fun genLeDiffWithDiscriminant(): Pair<Lex, Lex> =
-        Lex(LEMMA1, SynsetType.V, discriminant= null, listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) } to
-        Lex(LEMMA1, SynsetType.V, discriminant = "-1", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) }
+        Lex(LEMMA1, PartOfSpeech.V, discriminant= null, listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) } to
+        Lex(LEMMA1, PartOfSpeech.V, discriminant = "-1", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) }
 
     fun genLeDiffWithKey2(): Pair<Lex, Lex> =
         Lex(LEMMA1, "v", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) } to

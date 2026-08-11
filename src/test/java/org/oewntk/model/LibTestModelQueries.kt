@@ -30,7 +30,7 @@ object LibTestModelQueries {
     fun testWordByType(model: CoreModel, lemma: Lemma, ps: PrintStream) {
         ps.println(lemma)
         val lexes = model.lexResolver(lemma)
-        dump(lexes, Lex::type, nullableDiscriminant, model, ps)
+        dump(lexes, Lex::partOfSpeech, nullableDiscriminant, model, ps)
     }
 
     fun testWordByPos(model: CoreModel, lemma: Lemma, ps: PrintStream) {
@@ -42,7 +42,7 @@ object LibTestModelQueries {
     fun testWordByTypeAndPronunciation(model: CoreModel, lemma: Lemma, ps: PrintStream) {
         ps.println(lemma)
         val lexes = model.lexResolver(lemma)
-        dump(lexes, Lex::type, nullablePronunciations, model, ps)
+        dump(lexes, Lex::partOfSpeech, nullablePronunciations, model, ps)
     }
 
     fun testWordByPosAndPronunciation(model: CoreModel, lemma: Lemma, ps: PrintStream) {
@@ -95,7 +95,7 @@ object LibTestModelQueries {
             "%ssk=%s type=%c pos=%c lemma='%s' index=%d adj=%s synset=%s%n",
             indent,
             sense.senseKey,
-            sense.type.value,
+            sense.partOfSpeech.value,
             sense.partOfSpeech.value,
             sense.lemma,
             sense.indexInLex + 1,

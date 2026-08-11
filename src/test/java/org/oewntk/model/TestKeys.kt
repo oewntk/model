@@ -25,8 +25,8 @@ class TestKeys {
         assertNotEquals(Key.UsingDiscriminant.of(lexRowOu), Key.UsingDiscriminant.of(lexRowAu)) // because discriminant is different
         assertEquals(Key.UsingDiscriminant.of(lexRowOuN), Key.UsingDiscriminant.of(lexRowAuN)) // because discriminant is same
         assertEquals(
-            Key.Base.of(lexRowOu, Lex::lemma) { it.type.toCategory() },
-            Key.Base.of(lexRowAu, Lex::lemma) { it.type.toCategory() }
+            Key.Base.of(lexRowOu, Lex::lemma) { it.partOfSpeech.toCategory() },
+            Key.Base.of(lexRowAu, Lex::lemma) { it.partOfSpeech.toCategory() }
         )
     }
 

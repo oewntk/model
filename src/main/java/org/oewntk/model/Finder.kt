@@ -43,20 +43,6 @@ object Finder {
     }
 
     /**
-     * Find lex matching word and type filter
-     *
-     * @param model      model
-     * @param lemma      lemma (CS)
-     * @param targetType target type
-     * @return sequence of lexes
-     */
-    fun getLexesHavingType(model: CoreModel, lemma: Lemma, targetType: SynsetType): Sequence<Lex>? {
-        return model.lexFinder(lemma)
-            ?.asSequence()
-            ?.filter { it.type.value == targetType.value }
-    }
-
-    /**
      * Find lex matching word and part-of-speech filter
      *
      * @param model     model
@@ -68,20 +54,6 @@ object Finder {
         return model.lexFinder(lemma)
             ?.asSequence()
             ?.filter { it.partOfSpeech.value == targetPos.value }
-    }
-
-    /**
-     * Find lexes matching lemma ignoring case and having the desired type
-     *
-     * @param model      model
-     * @param lemma      target lemma (its case is immaterial)
-     * @param targetType target typer
-     * @return sequence of lexes
-     */
-    fun getLcLexesHavingType(model: CoreModel, lemma: Lemma, targetType: SynsetType): Sequence<Lex>? {
-        return model.lexIgnoreCaseFinder(lemma)
-            ?.asSequence()
-            ?.filter { it.type.value == targetType.value }
     }
 
     /**

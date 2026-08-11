@@ -14,7 +14,7 @@ import java.util.*
  * The value is the set of senses while the key is made up of member elements, depending on the key.
  *
  * @property lemma          lemma written form
- * @property type           type ss_type {'n', 'v', 'a', 'r', 's'}
+ * @property partOfSpeech   synset part-of-speech {'n', 'v', 'a', 'r'} with ss_type 's' (satellite adj) mapped to 'a'
  * @property lexfile        source
  * @property senseKeys      senses
  * @property generated      whether the lex entry was generated (as apposed to read from data)
@@ -24,7 +24,6 @@ import java.util.*
  *
  * @property lCLemma        lower-cased lemma
  * @property isCased        whether lemma contains uppercase
- * @property partOfSpeech   synset part-of-speech {'n', 'v', 'a', 'r'} with ss_type 's' (satellite adj) mapped to 'a'
  * @property key2           unique key (at source level 2) made up of part-of-speech and discriminant
  * @property lexfile        the lexfile it is expected to be output to ("entries-lexfileChar")
  * @property discriminant   discriminates same type entries
@@ -34,7 +33,7 @@ data class Lex(
 
     // key
     val lemma: Lemma,
-    val type: SynsetType,
+    val partOfSpeech: PartOfSpeech,
     val discriminant: Discriminant? = null,
 
     // value
@@ -50,11 +49,11 @@ data class Lex(
 
     // computed properties (key, value)
     val key: LexId
-        get() = LexId(lemma, type, discriminant)
+        get() = LexId(lemma, partOfSpeech, discriminant)
     val value: List<SenseKey>
         get() = senseKeys
     val key2: String
-        get() = if (discriminant != null) "${type.value}$discriminant" else type.value.toString()
+        get() = if (discriminant != null) "${partOfSpeech.value}$discriminant" else partOfSpeech.value.toString()
     val properties: Array<Any?>
         get() = arrayOf(forms, pronunciations)
 
@@ -63,8 +62,6 @@ data class Lex(
         get() = lemma.lowercase(Locale.ENGLISH)
     val isCased: Boolean
         get() = lemma != lCLemma
-    val partOfSpeech: PartOfSpeech
-        get() = type.toPartOfSpeech()
     val lexfileChar: Char
         get() {
             val c = lemma[0].lowercaseChar()
@@ -85,7 +82,7 @@ data class Lex(
         key2: String,
         senseKeys: List<SenseKey> = ArrayList(),
         generated: Boolean = false
-    ) : this(lemma, SynsetType.fromKey2(key2), SynsetType.discriminantFromKey2(key2), senseKeys, generated = generated)
+    ) : this(lemma, PartOfSpeech.fromKey2(key2), PartOfSpeech.discriminantFromKey2(key2), senseKeys, generated = generated)
 
     // identify
 

@@ -55,8 +55,8 @@ class TestEquals {
 
     @Test
     fun testLexId() {
-        val obj1 = LexId("jest", SynsetType.V, null)
-        val obj2 = LexId("jest", SynsetType.V, null)
+        val obj1 = LexId("jest", PartOfSpeech.V, null)
+        val obj2 = LexId("jest", PartOfSpeech.V, null)
         assertTrue(Objects.equals(obj1, obj2))
         assertEquals(obj1, obj2)
     }
@@ -104,7 +104,7 @@ class TestEquals {
             val (it1, it2) = it
             assertEquals(it1.key, it2.key)
             assertEquals(it1.value, it2.value)
-            assertEquals(it1.type, it2.type)
+            assertEquals(it1.partOfSpeech, it2.partOfSpeech)
             assertEquals(it1.indexInLex, it2.indexInLex)
             assertEquals(it1.verbFrames, it2.verbFrames)
             assertEquals(it1.verbTemplates, it2.verbTemplates)
@@ -133,7 +133,7 @@ class TestEquals {
             val (it1, it2) = it
             assertEquals(it1.key, it2.key)
             assertEquals(it1.value, it2.value)
-            assertEquals(it1.type, it2.type)
+            assertEquals(it1.partOfSpeech, it2.partOfSpeech)
             assertEquals(it1.senseKeys, it2.senseKeys)
             assertEquals(it1.forms, it2.forms)
             assertEquals(it1.pronunciations, it2.pronunciations)

@@ -62,7 +62,7 @@ data class Sense(
     val value: Pair<LexId, SynsetId>
         get() = lexId to synsetId
     val properties: Array<Any?>
-        get() = arrayOf(type, indexInLex, examples, adjPosition, relations, verbFrames, verbTemplates, tagCount)
+        get() = arrayOf(partOfSpeech, indexInLex, examples, adjPosition, relations, verbFrames, verbTemplates, tagCount)
 
     // computed properties
     val lemma: Lemma
@@ -71,10 +71,8 @@ data class Sense(
         get() = lemma.lowercase(Locale.ENGLISH)
     val isCased: Boolean
         get() = lemma != lCLemma
-    val type: SynsetType
-        get() = lexId.type
     val partOfSpeech: PartOfSpeech
-        get() = type.toPartOfSpeech()
+        get() = lexId.partOfSpeech
     val senseKey: SenseKey
         get() = senseId
     val intTagCount: Int
@@ -177,12 +175,12 @@ data class Sense(
     // stringify
 
     override fun toString(): String {
-        return "$senseId (${indexInLex + 1}th of '${lemma}', $synsetId ${type.value})"
+        return "$senseId (${indexInLex + 1}th of '${lemma}', $synsetId ${partOfSpeech.value})"
     }
 
     fun toLongString(): String {
         val relationsStr = relations?.joinToString(",") ?: ""
-        return "[${indexInLex + 1}] of '${lemma}' $senseId ${type.value} $synsetId {$relationsStr}"
+        return "[${indexInLex + 1}] of '${lemma}' $senseId ${partOfSpeech.value} $synsetId {$relationsStr}"
     }
 
     companion object {

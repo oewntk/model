@@ -117,7 +117,7 @@ object ModelEquals {
             if (lex1 != lex2) {
                 val keyEq = lex1.key == lex2.key
                 val valueEq = lex1.value == lex2.value
-                val typeEq = lex1.type == lex2.type
+                val typeEq = lex1.partOfSpeech == lex2.partOfSpeech
                 val propertiesEq = lex1.properties.contentEquals(lex2.properties)
                 val formsEq = lex1.forms == lex2.forms
                 val pronunciationsEq = lex1.pronunciations == lex2.pronunciations
@@ -154,7 +154,7 @@ object ModelEquals {
                 val keyEq = sense1.key == sense2.key
                 val valueEq = sense1.value == sense2.value
                 val propertiesEq = sense1.properties.contentEquals(sense2.properties)
-                val typeEq = sense1.type == sense2.type
+                val typeEq = sense1.partOfSpeech == sense2.partOfSpeech
                 val indexInLexEq = sense1.indexInLex == sense2.indexInLex
                 val examplesEq = sense1.examples == sense2.examples
                 val adjPositionEq = sense1.adjPosition == sense2.adjPosition

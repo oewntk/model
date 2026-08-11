@@ -22,13 +22,13 @@ private const val KEY_KEY2 = "key2"
 private const val KEY_LEMMA = "lemma"
 private const val KEY_LEXFILE = "lexfile"
 private const val KEY_MEMBERS = "members"
-private const val KEY_PART_OF_SPEECH = "partOfSpeech"
+private const val KEY_PART_OF_SPEECH = "part-of-speech"
 private const val KEY_PRONUNCIATION = "pronunciation"
 private const val KEY_SENSE = "sense"
 private const val KEY_SENSE_EXAMPLE = "sent"
 private const val KEY_SOURCE = "source"
 private const val KEY_SYNSET = "synset"
-private const val KEY_SYNSETID = "synsetId"
+private const val KEY_SYNSETID = "id"
 private const val KEY_SYNSETTYPE = "part-of-speech"
 private const val KEY_TAGCOUNT = "tagcount"
 private const val KEY_TEXT = "text"
@@ -337,7 +337,7 @@ fun Synset.toOEWNDataValue(includeLexFile: Boolean = false, leaveRedundantRelati
 fun Synset.toOEWNData(includeLexFile: Boolean = false, leaveRedundantRelation: Boolean = false): Map<String, Any> {
     return mutableMapOf(
         KEY_SYNSETID to synsetId,
-        KEY_PART_OF_SPEECH to type.value,
+        KEY_SYNSETTYPE to type.value,
         KEY_DEFINITION to definitions,
         KEY_MEMBERS to members.toList(),
         KEY_DOMAIN to domain,

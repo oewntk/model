@@ -8,13 +8,13 @@ enum class SerializationMode {
     fun serialize(obj: Any, resolver: (SenseKey) -> Sense, leaveRedundantRelation: Boolean = false): Map<String, Any> {
         return when (obj) {
             is Lex -> when (this) {
-                OEWN -> obj.toOEWNData(resolver, leaveRedundantRelation = leaveRedundantRelation)
+                OEWN -> obj.toOEWNDataValue(resolver, leaveRedundantRelation = leaveRedundantRelation)
                 DATA -> obj.toData()
                 MODEL -> throw IllegalArgumentException("$obj ${obj::class}")
             }
 
             is Synset -> when (this) {
-                OEWN -> obj.toOEWNData(leaveRedundantRelation = leaveRedundantRelation)
+                OEWN -> obj.toOEWNDataValue(leaveRedundantRelation = leaveRedundantRelation)
                 DATA -> obj.toData()
                 MODEL -> throw IllegalArgumentException("$obj ${obj::class}")
             }

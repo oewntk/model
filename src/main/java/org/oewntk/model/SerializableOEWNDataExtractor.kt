@@ -19,7 +19,7 @@ private const val KEY_FORM = "form"
 private const val KEY_ID = "id"
 private const val KEY_ILI = "ili"
 private const val KEY_KEY2 = "key2"
-private const val KEY_LEMMA = "lemme"
+private const val KEY_LEMMA = "lemma"
 private const val KEY_LEXFILE = "lexfile"
 private const val KEY_MEMBERS = "members"
 private const val KEY_PART_OF_SPEECH = "partOfSpeech"
@@ -175,7 +175,7 @@ fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?, includeLexFile: Boolean = fal
         .toList()
     return mutableMapOf<String, Any>(
         KEY_LEMMA to lemma,
-        KEY_PART_OF_SPEECH to type,
+        KEY_PART_OF_SPEECH to type.value,
         KEY_SENSE to serializedSenses,
         //  KEY_KEY2 to key2,
     ).apply {

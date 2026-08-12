@@ -477,7 +477,7 @@ fun lexesAndSensesFromOEWNData(dict: Map<Lemma, Map<Key2, Map<String, Any>>>): P
  * @receiver core model
  * @yield content (either lex entries or synsets) to file
  */
-fun CoreModel.toOneOEWNData(leaveRedundantRelation: Boolean = false): Sequence<Pair<Map<String, Any>, Filename>> {
+fun CoreModel.toOneOEWNDataSeq(leaveRedundantRelation: Boolean = false): Sequence<Pair<Map<String, Any>, Filename>> {
 
     return sequence {
         val lexData = lexes.asSequence().toOEWNData(senseResolver, leaveRedundantRelation = leaveRedundantRelation)
@@ -486,6 +486,19 @@ fun CoreModel.toOneOEWNData(leaveRedundantRelation: Boolean = false): Sequence<P
         val synsetData = synsets.asSequence().toOEWNData(leaveRedundantRelation = leaveRedundantRelation)
         yield(synsetData to "data-all")  // yield content with source file base
     }
+}
+
+/**
+ * OEWN serializable data
+ *
+ * @receiver core model
+ * @return lex entries or synsets contents
+ */
+fun CoreModel.toOneOEWNData(leaveRedundantRelation: Boolean = false): Pair<Map<String, Any>, Map<String, Any>> {
+    val serializables = toOneOEWNDataSeq(leaveRedundantRelation = leaveRedundantRelation).iterator()
+    val (serializable1, _) = serializables.next() // lexes
+    val (serializable2, _) = serializables.next() //synsets
+    return serializable1 to serializable2
 }
 
 /**

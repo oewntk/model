@@ -54,7 +54,7 @@ fun typeFromData(dict: Map<String, Any>): SynsetType {
  * @return part of speech
  */
 fun partOfSpeechFromData(dict: Map<String, Any>): PartOfSpeech {
-    return dict[KEY_TYPE].let {
+    return dict[KEY_PARTOFSPEECH].let {
         when (it) {
             is String -> PartOfSpeech.fromKey2(it)
             is Char -> PartOfSpeech.fromChar(it)

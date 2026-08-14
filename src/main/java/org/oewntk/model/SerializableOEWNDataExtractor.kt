@@ -173,7 +173,7 @@ fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?, includeLexFile: Boolean = fal
         .map { resolver.invoke(it)!! }
         .map { it.toOEWNData(leaveRedundantRelation = leaveRedundantRelation) }
         .toList()
-    return mutableMapOf<String, Any>(
+    return mutableMapOf(
         KEY_LEMMA to lemma,
         KEY_PART_OF_SPEECH to partOfSpeech.value,
         KEY_SENSE to serializedSenses,

@@ -22,8 +22,8 @@ import java.util.*
  * @property senseId          sense id / sensekey
  * @property lexId            lexical item (lex) id this sense refers to
  * @property synsetId         synset id
- * @property type             synset type ss_type {'n', 'v', 'a', 'r', 's'}
- * @property indexInLex         zero-based index of this sense in lex list/array of senses
+ * @property partOfSpeech     synset type ss_type {'n', 'v', 'a', 'r', 's'}
+ * @property indexInLex       zero-based index of this sense in lex list/array of senses
  * @property examples         examples
  * @property verbFrames       verb frames
  * @property adjPosition      adjective position {'a', 'ip', 'p'} meaning {attribute,immediate postnominal,predicate}

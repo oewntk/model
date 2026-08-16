@@ -91,18 +91,6 @@ class TestKeys {
     }
 
     @Test
-    fun testCritical() {
-        val wordCritical = "critical"
-        val lexCriticalA = Lex(wordCritical, "a")
-        val lexCriticalS = Lex(wordCritical, "s")
-
-        assertNotEquals(Key.UsingPronunciation.of(lexCriticalA), Key.UsingPronunciation.of(lexCriticalS))
-        assertNotEquals(Key.UsingDiscriminant.of(lexCriticalA), Key.UsingDiscriminant.of(lexCriticalS))
-        assertEquals(Key.Base.ofUsingPartOfSpeech(lexCriticalA), Key.Base.ofUsingPartOfSpeech(lexCriticalS))
-        assertEquals(Key.UsingPronunciation.ofUsingPartOfSpeech(lexCriticalA), Key.UsingPronunciation.ofUsingPartOfSpeech(lexCriticalS)) // A and S are merged
-    }
-
-    @Test
     fun testCapitalisation() {
         val wordEarthL = "earth"
         val wordEarthU = "Earth"

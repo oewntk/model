@@ -7,7 +7,7 @@
 
     <groupId>io.github.oewntk</groupId>
     <artifactId>model</artifactId>
-    <version>3.0.1</version>
+    <version>3.0.1-SNAPSHOT</version>
     <name>model</name>
     <description>Wordnet model.</description>
     <url>https://github.com/oewntk/model</url>

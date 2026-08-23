@@ -52,7 +52,7 @@ data class Sense(
     var verbTemplates: Set<VerbTemplateId>? = null,
     val adjPosition: AdjPosition? = null,
     var tagCount: Int? = null,
-    var relations: Map<Relation, Set<SenseKey>>? = null,
+    var relations: Map<Relation, Set<RelationTarget>>? = null,
 
     ) : Comparable<Sense>, Serializable {
 

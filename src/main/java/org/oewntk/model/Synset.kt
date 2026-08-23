@@ -47,7 +47,7 @@ data class Synset(
     val definitions: List<String>,
     val examples: List<Example>? = null,
     val usages: List<String>? = null,
-    var relations: Map<Relation, Set<SynsetId>>? = null,
+    var relations: Map<Relation, Set<RelationTarget>>? = null,
     val ili: String? = null,
     val wikidata: List<String>? = null,
 

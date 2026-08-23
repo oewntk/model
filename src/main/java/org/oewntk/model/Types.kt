@@ -9,14 +9,15 @@ import java.util.Comparator
 import java.util.Objects
 
 typealias Lemma = String
+typealias LowerCasedLemma = String
 typealias Key2 = String
 typealias Discriminant = String
 typealias LexId = LexIdImpl
 typealias SenseKey = String
 typealias SynsetId = String
 
-typealias LowerCasedLemma = String
 typealias Relation = String
+typealias RelationTarget = String
 
 typealias Example = ExampleImpl
 

@@ -23,42 +23,61 @@ object InverseRelationFactory {
      * Generate inverse synset relations
      *
      * @param synsetsById synsets mapped by id
+     * @param sensesById senses mapped by id
      * @return count
      */
-    fun makeInverseSynsetRelations(synsetsById: Map<SynsetId, Synset>): Int {
-        return makeInverseSynsetRelations(INVERSE_SYNSET_RELATIONS, synsetsById)
-    }
+    fun makeInverseSynsetRelations(synsetsById: Map<SynsetId, Synset>, sensesById: Map<SynsetId, Sense>): Int = makeInverseSynsetRelations(INVERSE_SYNSET_RELATIONS, synsetsById, sensesById)
 
     /**
      * Generate inverse synset relations as per map
      *
      * @param toInverse relation mapped to its inverse
      * @param synsetsById synsets mapped by id
+     * @param sensesById senses mapped by id
      * @return count
      */
-    fun makeInverseSynsetRelations(toInverse: Map<Relation, Relation>, synsetsById: Map<SynsetId, Synset>): Int {
+    fun makeInverseSynsetRelations(toInverse: Map<Relation, Relation>, synsetsById: Map<SynsetId, Synset>, sensesById: Map<SynsetId, Sense>): Int {
         var count = 0
         for ((sourceSynsetId, sourceSynset) in synsetsById) {
             if (!sourceSynset.relations.isNullOrEmpty()) {
                 toInverse.keys.forEach {
-                    val targetSynsetIds = sourceSynset.relations!![it]
-                    if (!targetSynsetIds.isNullOrEmpty()) {
+                    val targetIds = sourceSynset.relations!![it]
+                    if (!targetIds.isNullOrEmpty()) {
                         val inverseType = toInverse[it]
-                        for (targetSynsetId in targetSynsetIds) {
-                            val targetSynset = synsetsById[targetSynsetId]
-                            if (targetSynset == null) {
-                                val message = "[E] non-existing target $targetSynsetId of synset relation $it($sourceSynsetId)"
-                                if (THROW_NON_EXISTING_TARGET) throw IllegalArgumentException(message) else {
-                                    Tracing.psErr.println(message)
-                                    continue
+                        for (targetId in targetIds) {
+                            if (targetId.isSynsetId()) {
+                                val targetSynset = synsetsById[targetId]
+                                if (targetSynset == null) {
+                                    val message = "[E] non-existing target $targetId of synset relation $it($sourceSynsetId)"
+                                    if (THROW_NON_EXISTING_TARGET) throw IllegalArgumentException(message) else {
+                                        Tracing.psErr.println(message)
+                                        continue
+                                    }
                                 }
-                            }
-                            try {
-                                targetSynset.addInverseRelation(inverseType!!, sourceSynsetId)
-                                count++
-                            } catch (e: IllegalArgumentException) {
-                                if (LOG_ALREADY_PRESENT) {
-                                    Tracing.psErr.println("[W] ${e.message}\n")
+                                try {
+                                    targetSynset.addInverseRelation(inverseType!!, sourceSynsetId)
+                                    count++
+                                } catch (e: IllegalArgumentException) {
+                                    if (LOG_ALREADY_PRESENT) {
+                                        Tracing.psErr.println("[W] ${e.message}\n")
+                                    }
+                                }
+                            } else if (targetId.isSenseKey()) {
+                                val targetSense = sensesById[targetId]
+                                if (targetSense == null) {
+                                    val message = "[E] non-existing target $targetId of synset relation $it($sourceSynsetId)"
+                                    if (THROW_NON_EXISTING_TARGET) throw IllegalArgumentException(message) else {
+                                        Tracing.psErr.println(message)
+                                        continue
+                                    }
+                                }
+                                try {
+                                    targetSense.addInverseRelation(inverseType!!, sourceSynsetId)
+                                    count++
+                                } catch (e: IllegalArgumentException) {
+                                    if (LOG_ALREADY_PRESENT) {
+                                        Tracing.psErr.println("[W] ${e.message}\n")
+                                    }
                                 }
                             }
                         }
@@ -73,36 +92,61 @@ object InverseRelationFactory {
      * Generate inverse sense relations
      *
      * @param sensesById senses mapped by id
+     * @param synsetsById synsets mapped by id
      * @return count
      */
-    fun makeInverseSenseRelations(sensesById: Map<SenseKey, Sense>): Int {
-        return makeInverseSenseRelations(INVERSE_SENSE_RELATIONS, sensesById)
-    }
+    fun makeInverseSenseRelations(sensesById: Map<SenseKey, Sense>, synsetsById: Map<SynsetId, Synset>): Int = makeInverseSenseRelations(INVERSE_SENSE_RELATIONS, sensesById, synsetsById)
 
     /**
      * Generate inverse sense relations
      *
      * @param toInverse relation mapped to its inverse
      * @param sensesById senses mapped by id
+     * @param synsetsById synsets mapped by id
      * @return count
      */
-    fun makeInverseSenseRelations(toInverse: Map<Relation, Relation>, sensesById: Map<SenseKey, Sense>): Int {
+    fun makeInverseSenseRelations(toInverse: Map<Relation, Relation>, sensesById: Map<SenseKey, Sense>, synsetsById: Map<SynsetId, Synset>): Int {
         var count = 0
         for ((sourceSenseId, sourceSense) in sensesById) {
             if (!sourceSense.relations.isNullOrEmpty()) {
                 toInverse.keys.forEach {
-                    val targetSenseIds = sourceSense.relations!![it]
-                    if (!targetSenseIds.isNullOrEmpty()) {
+                    val targetIds = sourceSense.relations!![it]
+                    if (!targetIds.isNullOrEmpty()) {
                         val inverseType = toInverse[it]!!
-                        for (targetSenseId in targetSenseIds) {
-                            val targetSense =
-                                checkNotNull(sensesById[targetSenseId]) { Tracing.psErr.println("[E] non-existing target $targetSenseId of synset relation $it($sourceSenseId)") }
-                            try {
-                                targetSense.addInverseRelation(inverseType, sourceSenseId)
-                                count++
-                            } catch (e: IllegalArgumentException) {
-                                if (LOG_ALREADY_PRESENT) {
-                                    Tracing.psErr.println("[W] ${e.message}\n")
+                        for (targetId in targetIds) {
+                            if (targetId.isSynsetId()) {
+                                val targetSynset = synsetsById[safeCast(targetId)]
+                                if (targetSynset == null) {
+                                    val message = "[E] non-existing target $targetId of synset relation $it($sourceSenseId)"
+                                    if (THROW_NON_EXISTING_TARGET) throw IllegalArgumentException(message) else {
+                                        Tracing.psErr.println(message)
+                                        continue
+                                    }
+                                }
+                                try {
+                                    targetSynset.addInverseRelation(inverseType, sourceSenseId)
+                                    count++
+                                } catch (e: IllegalArgumentException) {
+                                    if (LOG_ALREADY_PRESENT) {
+                                        Tracing.psErr.println("[W] ${e.message}\n")
+                                    }
+                                }
+                            } else if (targetId.isSenseKey()) {
+                                val targetSense = sensesById[targetId]
+                                if (targetSense == null) {
+                                    val message = "[E] non-existing target $targetId of synset relation $it($sourceSenseId)"
+                                    if (THROW_NON_EXISTING_TARGET) throw IllegalArgumentException(message) else {
+                                        Tracing.psErr.println(message)
+                                        continue
+                                    }
+                                }
+                                try {
+                                    targetSense.addInverseRelation(inverseType, sourceSenseId)
+                                    count++
+                                } catch (e: IllegalArgumentException) {
+                                    if (LOG_ALREADY_PRESENT) {
+                                        Tracing.psErr.println("[W] ${e.message}\n")
+                                    }
                                 }
                             }
                         }

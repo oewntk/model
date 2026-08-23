@@ -240,8 +240,8 @@ open class CoreModel(
      * @return this model
      */
     fun generateInverseRelations(): CoreModel {
-        makeInverseSynsetRelations(synsetsById)
-        makeInverseSenseRelations(sensesById)
+        makeInverseSynsetRelations(synsetsById, sensesById)
+        makeInverseSenseRelations(sensesById, synsetsById)
         generatedInverses = true
         return this
     }
@@ -257,8 +257,8 @@ open class CoreModel(
         toSynsetRelationInverse: Map<Relation, Relation>,
         toSenseRelationInverse: Map<Relation, Relation>
     ): CoreModel {
-        makeInverseSynsetRelations(toSynsetRelationInverse, synsetsById)
-        makeInverseSenseRelations(toSenseRelationInverse, sensesById)
+        makeInverseSynsetRelations(toSynsetRelationInverse, synsetsById, sensesById)
+        makeInverseSenseRelations(toSenseRelationInverse, sensesById, synsetsById)
         generatedInverses = true
         return this
     }

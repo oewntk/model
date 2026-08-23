@@ -130,7 +130,7 @@ fun pronunciationFromOEWNData(dict: Map<String, Any>): Pronunciation {
  * Lex to OEWN serializable dict
  *
  * @receiver lex
- * @param resolver senseKey to sense resolver
+ * @param senseResolver senseKey to sense resolver
  * @return dict
  * Keys:
  * - form
@@ -138,9 +138,9 @@ fun pronunciationFromOEWNData(dict: Map<String, Any>): Pronunciation {
  * - sense
  * - source
  */
-fun Lex.toOEWNDataValue(resolver: (SenseKey) -> Sense?, includeLexFile: Boolean = false, leaveRedundantRelation: Boolean = false): Map<String, Any> {
+fun Lex.toOEWNDataValue(senseResolver: (SenseKey) -> Sense?, includeLexFile: Boolean = false, leaveRedundantRelation: Boolean = false): Map<String, Any> {
     val serializedSenses = senseKeys
-        .map { resolver.invoke(it)!! }
+        .map { senseResolver.invoke(it)!! }
         .map { it.toOEWNData(leaveRedundantRelation = leaveRedundantRelation) }
         .toList()
     return mutableMapOf<String, Any>(
@@ -157,7 +157,7 @@ fun Lex.toOEWNDataValue(resolver: (SenseKey) -> Sense?, includeLexFile: Boolean 
  * Lex to OEWN serializable dict, including lemma, part-of-speech and discriminant
  *
  * @receiver lex
- * @param resolver senseKey to sense resolver
+ * @param senseResolver senseKey to sense resolver
  * @return dict
  * Keys:
  * - lemma
@@ -168,9 +168,9 @@ fun Lex.toOEWNDataValue(resolver: (SenseKey) -> Sense?, includeLexFile: Boolean 
  * - sense
  * - source
  */
-fun Lex.toOEWNData(resolver: (SenseKey) -> Sense?, includeLexFile: Boolean = false, leaveRedundantRelation: Boolean = false): Map<String, Any> {
+fun Lex.toOEWNData(senseResolver: (SenseKey) -> Sense?, includeLexFile: Boolean = false, leaveRedundantRelation: Boolean = false): Map<String, Any> {
     val serializedSenses = senseKeys
-        .map { resolver.invoke(it)!! }
+        .map { senseResolver.invoke(it)!! }
         .map { it.toOEWNData(leaveRedundantRelation = leaveRedundantRelation) }
         .toList()
     return mutableMapOf(
@@ -441,7 +441,7 @@ fun Sequence<Lex>.toOEWNDataAlt(senseResolver: (SenseKey) -> Sense, leaveRedunda
 fun HyperMap1.toOEWNData(senseResolver: (SenseKey) -> Sense, leaveRedundantRelation: Boolean = false): Map<Lemma, Map<Key2, Map<String, Any>>> {
     return this
         .mapValues { (_: Lemma, v) ->
-            v.mapValues { (_: Key2, lex) -> lex.toOEWNDataValue(resolver = { senseResolver(it) }, leaveRedundantRelation = leaveRedundantRelation) }.toSortedMap()
+            v.mapValues { (_: Key2, lex) -> lex.toOEWNDataValue(senseResolver = { senseResolver(it) }, leaveRedundantRelation = leaveRedundantRelation) }.toSortedMap()
         }.toSortedMap()
 }
 

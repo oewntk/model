@@ -222,11 +222,15 @@ const val ESC_LEMMA_CHARS_RE = "${BASE_LEMMA_CHARS_RE}_"
 
 const val LEMMA_RE = "[${LEMMA_CHARS_RE}]+"
 
+const val LEXID_RE = "$LEMMA_RE,[nvar]-?[\\d]?"
+
 const val SENSEKEY_RE = "(?!$SYNSET_ID_RE$)[${ESC_LEMMA_CHARS_RE}]+%\\d+:\\d+:\\d+:[${ESC_LEMMA_CHARS_RE}]*:\\d*"
 
 val synsetIdRegex = "^$SYNSET_ID_RE$".toRegex()
 
 val senseKeyRegex = "^$SENSEKEY_RE$".toRegex()
+
+val lexIdRegex = "^$LEXID_RE$".toRegex()
 
 val lemmaRegex = "^$LEMMA_RE$".toRegex()
 
@@ -235,3 +239,5 @@ fun String.isSynsetId(): Boolean = synsetIdRegex.matches(this)
 fun String.isSenseKey(): Boolean = senseKeyRegex.matches(this)
 
 fun String.isLemma(): Boolean = lemmaRegex.matches(this)
+
+fun String.isLexId(): Boolean = lexIdRegex.matches(this)

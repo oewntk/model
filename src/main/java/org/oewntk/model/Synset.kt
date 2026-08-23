@@ -69,7 +69,7 @@ data class Synset(
     val definition: String?
         get() = definitions.firstOrNull()
     var lexfile: String = "$partOfSpeechName.$domain"
-    val flatRelations: List<Pair<Relation, SynsetId>>?
+    val flatRelations: List<Pair<Relation, RelationTarget>>?
         get() = relations?.flatMap { (key, values) -> values.map { key to it } }
 
     // identity

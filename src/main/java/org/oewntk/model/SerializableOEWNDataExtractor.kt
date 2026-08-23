@@ -76,8 +76,8 @@ fun examplesFromOEWNData(list: List<Any>): List<Example> {
  * @param dict dictionary
  * @return relation targets grouped by relation type
  */
-fun synsetRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<SynsetId>>? {
-    val relations = safeCast<Map<Relation, List<SynsetId>>>(dict)
+fun synsetRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<RelationTarget>>? {
+    val relations = safeCast<Map<Relation, List<RelationTarget>>>(dict)
         .filter { it.key in SYNSET_RELATIONS }
         .mapValues { it.value.toSet() }
     return relations.ifEmpty { null }
@@ -89,8 +89,8 @@ fun synsetRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<Syn
  * @param dict dictionary
  * @return relation targets grouped by relation type
  */
-fun senseRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<SenseKey>>? {
-    val relations = safeCast<Map<Relation, List<SenseKey>>>(dict)
+fun senseRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<RelationTarget>>? {
+    val relations = safeCast<Map<Relation, List<RelationTarget>>>(dict)
         .filter { it.key in SENSE_RELATIONS }
         .mapValues { it.value.toSet() }
     return relations.ifEmpty { null }
@@ -256,7 +256,7 @@ fun senseFromOEWNData(lemma: Lemma, partOfSpeech: PartOfSpeech, discriminant: Di
     val verbTemplates: List<VerbTemplateId>? = dict[KEY_VERBTEMPLATE]?.let { safeCast(it) }
     val adjPosition: AdjPosition? = safeNullableCast(dict[KEY_ADJPOSITION])
     val tagCount: Int? = safeNullableCast(dict[KEY_TAGCOUNT])
-    val relations: Map<Relation, Set<SenseKey>>? = senseRelationsFromOEWNData(dict)
+    val relations: Map<Relation, Set<RelationTarget>>? = senseRelationsFromOEWNData(dict)
     return Sense(
         senseId, lexId, synsetId, indexInLex,
         examples = examples,

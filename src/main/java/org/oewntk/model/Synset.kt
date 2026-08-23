@@ -56,7 +56,7 @@ data class Synset(
     var source: String? = null
 
     // computed properties (key, value)
-    val key: SenseKey
+    val key: SynsetId
         get() = synsetId
     val value: Array<Any?>
         get() = arrayOf(type, domain, members, definitions, examples, usages, relations, ili, wikidata, source)

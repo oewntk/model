@@ -91,6 +91,14 @@ open class CoreModel(
         data: DataCoreModel,
     ) : this(data.lexes, data.senses, data.synsets)
 
+    // derived
+
+    val lemmas: Sequence<Lemma>
+        get() = lexes.asSequence().map(Lex::lemma)
+
+    val lCLemmas: Sequence<Lemma>
+        get() = lexes.asSequence().map(Lex::lCLemma)
+
     // B Y - K E Y    C A C H E D    L A Z Y   M A P S
 
     /**

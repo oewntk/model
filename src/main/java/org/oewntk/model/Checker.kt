@@ -116,15 +116,15 @@ object Validator {
             .asSequence()
             .filter { !it.relations.isNullOrEmpty() }
             .flatMap { synset ->
-                synset.relations!!.flatMap { (rel, targets) ->
-                    targets.map { target -> Triple(synset, rel, target) }
+                synset.relations!!.flatMap { (rel, targetIds) ->
+                    targetIds.map { targetId -> Triple(synset, rel, targetId) }
                 }
             }
-            .filter { (_, _, target) -> target[0] != 'Q' && synsetFinder(target) == null }
+            .filter { (_, _, targetId) -> targetId[0] != 'Q' && synsetFinder(targetId) == null && senseFinder(targetId) == null }
             .toList()
 
         if (instances.isNotEmpty()) {
-            val state = instances.joinToString(separator = "\n") { (synset, rel, target) -> "${synset.synsetId};$rel;$target" }
+            val state = instances.joinToString(separator = "\n") { (synset, rel, targetId) -> "${synset.synsetId};$rel;$targetId" }
             if (throws) throw IllegalStateException(state)
             if (verbose) {
                 val csvFile = File("relations-synset.log")
@@ -150,7 +150,7 @@ object Validator {
                     targets.map { target -> Triple(sense, rel, target) }
                 }
             }
-            .filter { (_, _, target) -> senseFinder(target) == null }
+            .filter { (_, _, target) -> senseFinder(target) == null && synsetFinder(target) == null }
             .toList()
 
         if (instances.isNotEmpty()) {

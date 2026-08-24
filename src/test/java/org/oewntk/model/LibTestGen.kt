@@ -30,8 +30,8 @@ object LibTestGen {
             "id" to "sk-$i-$j-$it",
             "synset" to "sy-$i-$j-$it",
         ).apply {
-            genRelations(n = 2).forEach { (rel, targets) ->
-                this[rel] = targets.map { t: Int -> "sk-$t" }.toList()
+            genRelations(n = 2).forEach { (rel, targetIds) ->
+                this[rel] = targetIds.map { t: Int -> "sk-$t" }.toList()
             }
         }
     }.toList()
@@ -69,8 +69,8 @@ object LibTestGen {
             "definition" to "definition",
             "member" to genMembers(i, n = 3),
         ).apply {
-            genRelations(n = 2).forEach { (rel, targets) ->
-                this[rel] = targets.map { "sy-$it" }.toList()
+            genRelations(n = 2).forEach { (rel, targetIds) ->
+                this[rel] = targetIds.map { "sy-$it" }.toList()
             }
         }
     }

@@ -147,7 +147,7 @@ object Validator {
             .filter { !it.relations.isNullOrEmpty() }
             .flatMap { sense ->
                 sense.relations!!.flatMap { (rel, targets) ->
-                    targets.map { targets -> Triple(sense, rel, targets) }
+                    targets.map { target -> Triple(sense, rel, target) }
                 }
             }
             .filter { (_, _, target) -> senseFinder(target) == null && synsetFinder(target) == null }

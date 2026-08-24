@@ -117,7 +117,7 @@ object InverseRelationFactory {
                             if (targetId.isSynsetId()) {
                                 val targetSynset = synsetsById[safeCast(targetId)]
                                 if (targetSynset == null) {
-                                    val message = "[E] non-existing target $targetId of synset relation $it($sourceSenseId)"
+                                    val message = "[E] non-existing target $targetId of sense relation $it($sourceSenseId)"
                                     if (THROW_NON_EXISTING_TARGET) throw IllegalArgumentException(message) else {
                                         Tracing.psErr.println(message)
                                         continue
@@ -134,7 +134,7 @@ object InverseRelationFactory {
                             } else if (targetId.isSenseKey()) {
                                 val targetSense = sensesById[targetId]
                                 if (targetSense == null) {
-                                    val message = "[E] non-existing target $targetId of synset relation $it($sourceSenseId)"
+                                    val message = "[E] non-existing target $targetId of sense relation $it($sourceSenseId)"
                                     if (THROW_NON_EXISTING_TARGET) throw IllegalArgumentException(message) else {
                                         Tracing.psErr.println(message)
                                         continue

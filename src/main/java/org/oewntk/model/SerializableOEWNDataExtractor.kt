@@ -230,8 +230,8 @@ fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Bool
         if (includeVerbTemplates) verbTemplates?.let { this[KEY_VERBTEMPLATE] = it.toList() }
         relations
             ?.filterNot { leaveRedundantRelation && it.key in INVERSE_SENSE_RELATIONS_SET }
-            ?.forEach { (rel: String, target) ->
-                this[rel] = target.toList()
+            ?.forEach { (rel: String, targetIds) ->
+                this[rel] = targetIds.toList()
             }
         if (includeTagCount) tagCount?.let { this[KEY_TAGCOUNT] = it }
     }.toSortedMap()
@@ -309,8 +309,8 @@ fun Synset.toOEWNDataValue(includeLexFile: Boolean = false, leaveRedundantRelati
         usages?.let { this[KEY_USAGE] = it }
         relations
             ?.filterNot { leaveRedundantRelation && it.key in INVERSE_SYNSET_RELATIONS_SET }
-            ?.forEach { (rel, target) ->
-                this[rel] = target.toList()
+            ?.forEach { (rel, targetIds) ->
+                this[rel] = targetIds.toList()
             }
         wikidata?.let { if (it.isNotEmpty()) this[KEY_WIKIDATA] = if (it.size == 1) it[0] else it }
         ili?.let { this[KEY_ILI] = it }
@@ -346,8 +346,8 @@ fun Synset.toOEWNData(includeLexFile: Boolean = false, leaveRedundantRelation: B
         usages?.let { this[KEY_USAGE] = it }
         relations
             ?.filterNot { leaveRedundantRelation && it.key in INVERSE_SYNSET_RELATIONS_SET }
-            ?.forEach { (rel, target) ->
-                this[rel] = target.toList()
+            ?.forEach { (rel, targetIds) ->
+                this[rel] = targetIds.toList()
             }
         wikidata?.let { if (it.isNotEmpty()) this[KEY_WIKIDATA] = if (it.size == 1) it[0] else it }
         ili?.let { this[KEY_ILI] = it }

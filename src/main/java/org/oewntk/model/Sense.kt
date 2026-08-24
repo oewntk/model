@@ -112,17 +112,17 @@ data class Sense(
      * Add inverse sense relations of this synset
      *
      * @param inverseType    inverse type
-     * @param targetSensekey target sense id (sensekey)
+     * @param target         target
      */
-    fun addInverseRelation(inverseType: Relation, targetSensekey: SenseKey) {
+    fun addInverseRelation(inverseType: Relation, target: SenseKey) {
         val mutableRelations = if (relations == null) HashMap() else relations!!.toMutableMap()
         relations = mutableRelations
         val inverseRelations =
             mutableRelations.computeIfPresent(inverseType) { _: Relation, v: Set<SynsetId> -> v.toMutableSet() }
                 ?: mutableRelations.computeIfAbsent(inverseType) { LinkedHashSet() }
 
-        require(!inverseRelations.contains(targetSensekey)) { "Inverse relation $inverseType from $synsetId to $targetSensekey was already there." }
-        (inverseRelations as MutableSet<SynsetId>).add(targetSensekey)
+        require(!inverseRelations.contains(target)) { "Inverse relation $inverseType from $synsetId to $target was already there." }
+        (inverseRelations as MutableSet<SynsetId>).add(target)
     }
 
     // computed

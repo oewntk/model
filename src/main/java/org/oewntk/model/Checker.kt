@@ -116,15 +116,15 @@ object Validator {
             .asSequence()
             .filter { !it.relations.isNullOrEmpty() }
             .flatMap { synset ->
-                synset.relations!!.flatMap { (rel, targetSynsetIds) ->
-                    targetSynsetIds.map { targetSynsetId -> Triple(synset, rel, targetSynsetId) }
+                synset.relations!!.flatMap { (rel, targets) ->
+                    targets.map { target -> Triple(synset, rel, target) }
                 }
             }
-            .filter { (_, _, targetSynsetId) -> targetSynsetId[0] != 'Q' && synsetFinder(targetSynsetId) == null }
+            .filter { (_, _, target) -> target[0] != 'Q' && synsetFinder(target) == null }
             .toList()
 
         if (instances.isNotEmpty()) {
-            val state = instances.joinToString(separator = "\n") { (synset, rel, targetSynsetId) -> "${synset.synsetId};$rel;$targetSynsetId" }
+            val state = instances.joinToString(separator = "\n") { (synset, rel, target) -> "${synset.synsetId};$rel;$target" }
             if (throws) throw IllegalStateException(state)
             if (verbose) {
                 val csvFile = File("relations-synset.log")
@@ -146,15 +146,15 @@ object Validator {
             .asSequence()
             .filter { !it.relations.isNullOrEmpty() }
             .flatMap { sense ->
-                sense.relations!!.flatMap { (rel, targetSenseKeys) ->
-                    targetSenseKeys.map { targetSenseKey -> Triple(sense, rel, targetSenseKey) }
+                sense.relations!!.flatMap { (rel, targets) ->
+                    targets.map { target -> Triple(sense, rel, target) }
                 }
             }
-            .filter { (_, _, targetSenseKey) -> senseFinder(targetSenseKey) == null }
+            .filter { (_, _, target) -> senseFinder(target) == null }
             .toList()
 
         if (instances.isNotEmpty()) {
-            val state = instances.joinToString(separator = "\n") { (sense, rel, targetSenseKey) -> "${sense.senseKey};$rel;$targetSenseKey" }
+            val state = instances.joinToString(separator = "\n") { (sense, rel, target) -> "${sense.senseKey};$rel;$target" }
             if (throws) throw IllegalStateException(state)
             if (verbose) {
                 val csvFile = File("relations-sense.log")

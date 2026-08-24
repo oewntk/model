@@ -5,10 +5,10 @@ enum class SerializationMode {
     DATA,
     MODEL;
 
-    fun serialize(obj: Any, resolver: (SenseKey) -> Sense, leaveRedundantRelation: Boolean = false): Map<String, Any> {
+    fun serialize(obj: Any, senseResolver: (SenseKey) -> Sense, leaveRedundantRelation: Boolean = false): Map<String, Any> {
         return when (obj) {
             is Lex -> when (this) {
-                OEWN -> obj.toOEWNDataValue(resolver, leaveRedundantRelation = leaveRedundantRelation)
+                OEWN -> obj.toOEWNDataValue(senseResolver, leaveRedundantRelation = leaveRedundantRelation)
                 DATA -> obj.toData()
                 MODEL -> throw IllegalArgumentException("$obj ${obj::class}")
             }

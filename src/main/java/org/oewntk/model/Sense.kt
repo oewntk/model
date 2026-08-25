@@ -121,7 +121,7 @@ data class Sense(
             mutableRelations.computeIfPresent(inverseType) { _: Relation, v: Set<RelationTarget> -> v.toMutableSet() }
                 ?: mutableRelations.computeIfAbsent(inverseType) { LinkedHashSet() }
 
-        require(!inverseRelations.contains(targetId)) { "Inverse relation $inverseType from $synsetId to $targetId was already there." }
+        require(!inverseRelations.contains(targetId)) { "Inverse relation $inverseType from $senseId to $targetId was already there." }
         (inverseRelations as MutableSet<RelationTarget>).add(targetId)
     }
 

@@ -93,7 +93,7 @@ data class LexIdImpl(val lemma: Lemma, val partOfSpeech: PartOfSpeech, val discr
 /**
  * Synset type
  *
- * [n,v,a,r]
+ * [n,v,a,r,s]
  */
 enum class SynsetTypeImpl(val value: Char) {
     N('n') {
@@ -154,7 +154,7 @@ enum class SynsetTypeImpl(val value: Char) {
 /**
  * Part-of-Speech
  *
- * [n,v,a,r,s]
+ * [n,v,a,r]
  */
 enum class PartOfSpeechImpl(val value: Char, val fullName: String) {
     N('n', "noun") {

@@ -146,15 +146,15 @@ object Validator {
             .asSequence()
             .filter { !it.relations.isNullOrEmpty() }
             .flatMap { sense ->
-                sense.relations!!.flatMap { (rel, targets) ->
-                    targets.map { target -> Triple(sense, rel, target) }
+                sense.relations!!.flatMap { (rel, targetIds) ->
+                    targetIds.map { targetId -> Triple(sense, rel, targetId) }
                 }
             }
-            .filter { (_, _, target) -> senseFinder(target) == null && synsetFinder(target) == null }
+            .filter { (_, _, targetId) -> senseFinder(targetId) == null && synsetFinder(targetId) == null }
             .toList()
 
         if (instances.isNotEmpty()) {
-            val state = instances.joinToString(separator = "\n") { (sense, rel, target) -> "${sense.senseKey};$rel;$target" }
+            val state = instances.joinToString(separator = "\n") { (sense, rel, targetId) -> "${sense.senseKey};$rel;$targetId" }
             if (throws) throw IllegalStateException(state)
             if (verbose) {
                 val csvFile = File("relations-sense.log")

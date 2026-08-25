@@ -52,10 +52,9 @@ typealias PartOfSpeech = PartOfSpeechImpl
 @kotlinx.serialization.Serializable
 @JvmInline
 value class SenseKeyImpl(val id: String) : Comparable<SenseKeyImpl> {
-    init { require(SENSE_KEY_REGEX.matches(id)) { "Invalid sense key: '$id'" } }
+    init { require(senseKeyRegex.matches(id)) { "Invalid sense key: '$id'" } }
     override fun toString(): String = id
     override fun compareTo(other: SenseKeyImpl): Int = id.compareTo(other.id)
-    companion object { private val SENSE_KEY_REGEX = Regex("""[^%]+%\d:\d{2}:\d{2}:[^:]*:\d{2}""") }
 }
 
 /**
@@ -64,10 +63,9 @@ value class SenseKeyImpl(val id: String) : Comparable<SenseKeyImpl> {
 @kotlinx.serialization.Serializable
 @JvmInline
 value class SynsetIdImpl(val id: String) : Comparable<SynsetIdImpl> {
-    init { require(SYNSET_ID_REGEX.matches(id)) { "Invalid synset id: '$id'" } }
+    init { require(synsetIdRegex.matches(id)) { "Invalid synset id: '$id'" } }
     override fun toString(): String = id
     override fun compareTo(other: SynsetIdImpl): Int = id.compareTo(other.id)
-    companion object { private val SYNSET_ID_REGEX = Regex("""\d{8}-[nvarcs]""") }
 }
 
 /**

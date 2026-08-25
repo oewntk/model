@@ -37,12 +37,12 @@ typealias HyperMap1 = Map<Lemma, Map<Key2, Lex>>
 typealias Category = CategoryImpl
 
 /**
- * [n,v,a,r]
+ * [n,v,a,r,s]
  */
 typealias SynsetType = SynsetTypeImpl
 
 /**
- * [n,v,a,r,s]
+ * [n,v,a,r]
  */
 typealias PartOfSpeech = PartOfSpeechImpl
 

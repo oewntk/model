@@ -46,6 +46,9 @@ typealias SynsetType = SynsetTypeImpl
  */
 typealias PartOfSpeech = PartOfSpeechImpl
 
+/**
+ * SenseKey implementation
+ */
 @kotlinx.serialization.Serializable
 @JvmInline
 value class SenseKeyImpl(val id: String) : Comparable<SenseKeyImpl> {
@@ -55,6 +58,9 @@ value class SenseKeyImpl(val id: String) : Comparable<SenseKeyImpl> {
     companion object { private val SENSE_KEY_REGEX = Regex("""[^%]+%\d:\d{2}:\d{2}:[^:]*:\d{2}""") }
 }
 
+/**
+ * Synset Id implementation
+ */
 @kotlinx.serialization.Serializable
 @JvmInline
 value class SynsetIdImpl(val id: String) : Comparable<SynsetIdImpl> {

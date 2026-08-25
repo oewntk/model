@@ -164,7 +164,7 @@ data class Sense(
      * @return lexid
      */
     fun findLexid(): Int {
-        return senseId.value.split("%".toRegex())
+        return senseId.id.split("%".toRegex())
             .dropLastWhile { it.isEmpty() }
             .toTypedArray()[1]
             .split(":".toRegex())

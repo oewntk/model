@@ -400,7 +400,7 @@ fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFil
  * @receiver sequence of synsets
  * @return dict of synset by id
  */
-fun Sequence<Synset>.toOEWNData(leaveRedundantRelation: Boolean = false): Map<String, Any> = this.associate { it.synsetId.value to it.toOEWNDataValue(leaveRedundantRelation = leaveRedundantRelation) }
+fun Sequence<Synset>.toOEWNData(leaveRedundantRelation: Boolean = false): Map<String, Any> = this.associate { it.synsetId.id to it.toOEWNDataValue(leaveRedundantRelation = leaveRedundantRelation) }
 
 /**
  * Synsets by id to OEWN serializable dict

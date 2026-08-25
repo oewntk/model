@@ -120,7 +120,7 @@ object Validator {
                     targetIds.map { targetId -> Triple(synset, rel, targetId) }
                 }
             }
-            .filter { (_, _, targetId) -> targetId[0] != 'Q' && synsetFinder(targetId) == null && senseFinder(targetId) == null }
+            .filter { (_, _, targetId) -> targetId.value[0] != 'Q' && synsetFinder(targetId) == null }
             .toList()
 
         if (instances.isNotEmpty()) {
@@ -150,7 +150,7 @@ object Validator {
                     targetIds.map { targetId -> Triple(sense, rel, targetId) }
                 }
             }
-            .filter { (_, _, targetId) -> senseFinder(targetId) == null && synsetFinder(targetId) == null }
+            .filter { (_, _, targetId) -> senseFinder(targetId) == null }
             .toList()
 
         if (instances.isNotEmpty()) {

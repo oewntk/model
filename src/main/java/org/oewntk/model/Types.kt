@@ -13,8 +13,8 @@ typealias LowerCasedLemma = String
 typealias Key2 = String
 typealias Discriminant = String
 typealias LexId = LexIdImpl
-typealias SenseKey = String
-typealias SynsetId = String
+typealias SenseKey = SenseKeyImpl
+typealias SynsetId = SynsetIdImpl
 
 typealias Relation = String
 
@@ -45,6 +45,24 @@ typealias SynsetType = SynsetTypeImpl
  * [n,v,a,r,s]
  */
 typealias PartOfSpeech = PartOfSpeechImpl
+
+@kotlinx.serialization.Serializable
+@JvmInline
+value class SenseKeyImpl(val value: String) : Comparable<SenseKeyImpl> {
+    init { require(SENSE_KEY_REGEX.matches(value)) { "Invalid sense key: '$value'" } }
+    override fun toString(): String = value
+    override fun compareTo(other: SenseKeyImpl): Int = value.compareTo(other.value)
+    companion object { private val SENSE_KEY_REGEX = Regex("""[^%]+%\d:\d{2}:\d{2}:[^:]*:\d{2}""") }
+}
+
+@kotlinx.serialization.Serializable
+@JvmInline
+value class SynsetIdImpl(val value: String) : Comparable<SynsetIdImpl> {
+    init { require(SYNSET_ID_REGEX.matches(value)) { "Invalid synset id: '$value'" } }
+    override fun toString(): String = value
+    override fun compareTo(other: SynsetIdImpl): Int = value.compareTo(other.value)
+    companion object { private val SYNSET_ID_REGEX = Regex("""\d{8}-[nvarcs]""") }
+}
 
 /**
  * LexId

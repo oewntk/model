@@ -25,7 +25,7 @@ fun Sequence<Lex>.toLexesMappedData(): Map<String, Any> {
  * @preceiver sequence of synsets
  * @return synset serializable map
  */
-fun Sequence<Synset>.toSynsetsMappedData(): Map<String, Any> {
+fun Sequence<Synset>.toSynsetsMappedData(): Map<SynsetId, Any> {
     return synsetsById().mapValues { it.value.toData() }
 }
 
@@ -35,7 +35,7 @@ fun Sequence<Synset>.toSynsetsMappedData(): Map<String, Any> {
  * @preceiver sequence of senses
  * @return sense serializable map
  */
-fun Sequence<Sense>.toSensesMappedData(): Map<String, Any> {
+fun Sequence<Sense>.toSensesMappedData(): Map<SenseKey, Any> {
     return sensesById().mapValues { it.value.toData() }
 }
 
@@ -54,7 +54,7 @@ fun CoreModel.toMappedData(
     whichLexes: Sequence<Lex> = lexes.asSequence().sortedWith(compareBy(Lex::lemma).thenBy(Lex::key2)),
     whichSynsets: Sequence<Synset> = synsets.asSequence().sortedBy { it.synsetId },
     whichSenses: Sequence<Sense> = senses.asSequence().sortedBy { it.senseKey },
-): Triple<Map<String, Any>, Map<String, Any>, Map<String, Any>> {
+): Triple<Map<String, Any>, Map<SynsetId, Any>, Map<SenseKey, Any>> {
     val lexesData: Map<Lemma, Any> = whichLexes.toLexesMappedData()
     val synsetsData: Map<SynsetId, Any> = whichSynsets.toSynsetsMappedData()
     val sensesData: Map<SenseKey, Any> = whichSenses.toSensesMappedData()

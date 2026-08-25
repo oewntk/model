@@ -370,7 +370,7 @@ fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFil
     val definitions = safeCast<List<String>>(dict[KEY_DEFINITION]!!)
     val examples = dict[KEY_EXAMPLE]?.let { examplesFromOEWNData(safeCast(it)) }
     val usages = dict[KEY_USAGE]?.let { safeCast<List<String>>(it) }
-    val relations: Map<Relation, Set<SenseKey>>? = synsetRelationsFromOEWNData(dict)
+    val relations: Map<Relation, Set<SynsetId>>? = synsetRelationsFromOEWNData(dict)
     val ili = dict[KEY_ILI] as String?
     val wikidata = dict[KEY_WIKIDATA]?.let {
         when (it) {
@@ -400,7 +400,7 @@ fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFil
  * @receiver sequence of synsets
  * @return dict of synset by id
  */
-fun Sequence<Synset>.toOEWNData(leaveRedundantRelation: Boolean = false): Map<SynsetId, Any> = this.associate { it.synsetId to it.toOEWNDataValue(leaveRedundantRelation = leaveRedundantRelation) }
+fun Sequence<Synset>.toOEWNData(leaveRedundantRelation: Boolean = false): Map<String, Any> = this.associate { it.synsetId.value to it.toOEWNDataValue(leaveRedundantRelation = leaveRedundantRelation) }
 
 /**
  * Synsets by id to OEWN serializable dict

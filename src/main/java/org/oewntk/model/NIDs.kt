@@ -111,7 +111,7 @@ object NIDs {
             .map { s: Synset -> s.synsetId }
             .sorted()
             .withIndex()
-            .associate { it.value to it.index + 1 }
+            .associate { it.value.value to it.index + 1 }
     }
 
     /**

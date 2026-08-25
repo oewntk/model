@@ -370,7 +370,7 @@ fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFil
     val definitions = safeCast<List<String>>(dict[KEY_DEFINITION]!!)
     val examples = dict[KEY_EXAMPLE]?.let { examplesFromOEWNData(safeCast(it)) }
     val usages = dict[KEY_USAGE]?.let { safeCast<List<String>>(it) }
-    val relations: Map<Relation, Set<SenseKey>>? = synsetRelationsFromOEWNData(dict)
+    val relations: Map<Relation, Set<RelationTarget>>? = synsetRelationsFromOEWNData(dict)
     val ili = dict[KEY_ILI] as String?
     val wikidata = dict[KEY_WIKIDATA]?.let {
         when (it) {

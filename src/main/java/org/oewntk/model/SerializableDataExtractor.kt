@@ -205,7 +205,7 @@ fun Synset.toData(includeLexFile: Boolean = false): Map<String, Any> {
  * @return synset
  */
 fun synsetFromData(dict: Map<String, Any>, includeLexFile: Boolean = false): Synset {
-    val synsetId = dict[KEY_ID] as SynsetId
+    val synsetId = SynsetId(dict[KEY_ID] as String)
     val type = typeFromData(dict)
     val domain = dict[KEY_DOMAIN] as Domain
     val members = safeCast<List<Lemma>>(dict[KEY_MEMBERS]!!)
@@ -260,8 +260,8 @@ fun Sense.toData(): Map<String, Any> {
  * @return sense
  */
 fun senseFromData(dict: Map<String, Any>): Sense {
-    val id = dict[KEY_ID] as SenseKey
-    val synsetId = dict[KEY_SYNSET] as SynsetId
+    val id = SenseKey(dict[KEY_ID] as String)
+    val synsetId = SynsetId(dict[KEY_SYNSET] as String)
     val lexId = lexIdFromData(dict)
     val index = dict[KEY_INDEX] as Int
     val examples = dict[KEY_SENSE_EXAMPLE]?.let { examplesFromData(safeCast(it)) }

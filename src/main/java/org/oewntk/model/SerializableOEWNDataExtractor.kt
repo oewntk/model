@@ -197,7 +197,7 @@ fun Lex.toOEWNData(senseResolver: (SenseKey) -> Sense?, includeLexFile: Boolean 
  */
 fun lexFromOEWNData(lemma: Lemma, partOfSpeech: PartOfSpeech, discriminant: Discriminant?, dict: Map<String, Any>): Lex {
     val senseDicts = safeCast<List<Map<String, Any>>>(dict[KEY_SENSE]!!)
-    val senseKeys = senseDicts.map { safeCast<SenseKey>(it[KEY_ID]!!) }.toList()
+    val senseKeys = senseDicts.map { SenseKey(it[KEY_ID] as String) }.toList()
     return Lex(lemma, partOfSpeech, discriminant, senseKeys).apply {
         dict[KEY_FORM]?.let { forms = safeCast<List<String>>(it).toSet() }
         dict[KEY_PRONUNCIATION]?.let { pronunciations = safeCast<List<Map<String, Any>>>(it).map { p -> pronunciationFromOEWNData(p) }.toSet() }
@@ -248,8 +248,8 @@ fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Bool
  */
 fun senseFromOEWNData(lemma: Lemma, partOfSpeech: PartOfSpeech, discriminant: Discriminant?, idx: Int, dict: Map<String, Any>): Sense {
     val lexId: LexId = LexId(lemma, partOfSpeech, discriminant)
-    val senseId: SenseKey = safeCast(dict[KEY_ID]!!)
-    val synsetId: SynsetId = safeCast(dict[KEY_SYNSET]!!)
+    val senseId: SenseKey = SenseKey(dict[KEY_ID] as String)
+    val synsetId: SynsetId = SynsetId(dict[KEY_SYNSET] as String)
     val indexInLex: Int = idx
     val examples = dict[KEY_SENSE_EXAMPLE]?.let { examplesFromOEWNData(safeCast(it)) }
     val verbFrames: List<VerbFrameId>? = dict[KEY_VERBFRAME]?.let { safeCast(it) }

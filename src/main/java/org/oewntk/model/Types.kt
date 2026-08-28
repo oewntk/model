@@ -51,8 +51,11 @@ typealias PartOfSpeech = PartOfSpeechImpl
  */
 @kotlinx.serialization.Serializable
 @JvmInline
-value class SenseKeyImpl(val id: String) : Comparable<SenseKeyImpl> {
-    init { require(senseKeyRegex.matches(id)) { "Invalid sense key: '$id'" } }
+value class SenseKeyImpl(val id: String) : Comparable<SenseKeyImpl>, Serializable {
+    init {
+        require(senseKeyRegex.matches(id)) { "Invalid sense key: '$id'" }
+    }
+
     override fun toString(): String = id
     override fun compareTo(other: SenseKeyImpl): Int = id.compareTo(other.id)
 }
@@ -62,8 +65,11 @@ value class SenseKeyImpl(val id: String) : Comparable<SenseKeyImpl> {
  */
 @kotlinx.serialization.Serializable
 @JvmInline
-value class SynsetIdImpl(val id: String) : Comparable<SynsetIdImpl> {
-    init { require(synsetIdRegex.matches(id)) { "Invalid synset id: '$id'" } }
+value class SynsetIdImpl(val id: String) : Comparable<SynsetIdImpl>, Serializable {
+    init {
+        require(synsetIdRegex.matches(id)) { "Invalid synset id: '$id'" }
+    }
+
     override fun toString(): String = id
     override fun compareTo(other: SynsetIdImpl): Int = id.compareTo(other.id)
 }

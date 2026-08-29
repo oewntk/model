@@ -77,9 +77,9 @@ fun examplesFromOEWNData(list: List<Any>): List<Example> {
  * @return relation targets grouped by relation type
  */
 fun synsetRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<SynsetId>>? {
-    val relations = safeCast<Map<Relation, List<SynsetId>>>(dict)
+    val relations = safeCast<Map<Relation, List<String>>>(dict)
         .filter { it.key in SYNSET_RELATIONS }
-        .mapValues { it.value.toSet() }
+        .mapValues { (_, targetIds) -> targetIds.map { SynsetId(it) }.toSet() }
     return relations.ifEmpty { null }
 }
 
@@ -90,9 +90,9 @@ fun synsetRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<Syn
  * @return relation targets grouped by relation type
  */
 fun senseRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<SenseKey>>? {
-    val relations = safeCast<Map<Relation, List<SenseKey>>>(dict)
+    val relations = safeCast<Map<Relation, List<String>>>(dict)
         .filter { it.key in SENSE_RELATIONS }
-        .mapValues { it.value.toSet() }
+        .mapValues { (_, targetIds) -> targetIds.map { SenseKey(it) }.toSet() }
     return relations.ifEmpty { null }
 }
 

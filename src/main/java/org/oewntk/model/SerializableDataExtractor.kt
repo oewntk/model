@@ -167,7 +167,8 @@ fun Lex.toData(): Map<String, Any> {
  */
 fun lexFromData(dict: Map<String, Any>): Lex {
     val lexId = lexIdFromData(dict)
-    val senseKeys = safeCast<List<SenseKey>>(dict[KEY_SENSE]!!)
+    val senseKeys = safeCast<List<String>>(dict[KEY_SENSE]!!)
+        .map{ SenseKey(it) }
     return Lex(lexId.lemma, lexId.partOfSpeech, lexId.discriminant, senseKeys).apply {
         dict[KEY_FORM]?.let { forms = safeCast<List<String>>(it).toSet() }
         dict[KEY_PRONUNCIATION]?.let { pronunciations = safeCast<List<Map<String, Any>>>(it).map { p -> pronunciationFromData(p) }.toSet() }

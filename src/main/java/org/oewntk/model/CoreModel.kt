@@ -232,7 +232,7 @@ open class CoreModel(
      * This does not preclude the inverse relation having been read from input.
      */
     var generatedInverses: Boolean = false
-        private set
+        protected set
 
     /**
      * Generate inverse relations

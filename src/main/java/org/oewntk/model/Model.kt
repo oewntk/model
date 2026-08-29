@@ -129,9 +129,11 @@ class Model(
         data: DataModel,
         source: String,
         source2: String,
+        generatedInverses: Boolean = false
     ) : this(data.lexes, data.senses, data.synsets, data.verbFrames, data.verbTemplates) {
         this.source = source
         this.source2 = source2
+        this.generatedInverses = generatedInverses
     }
 
     // identity

@@ -119,7 +119,7 @@ fun Pronunciation.toOEWNData(): Map<String, Any> {
  * @return pronunciation
  */
 fun pronunciationFromOEWNData(dict: Map<String, Any>): Pronunciation {
-    val value = dict[KEY_VALUE] as PronunciationValue
+    val value = PronunciationValue(dict[KEY_VALUE] as String)
     val variety = dict[KEY_VARIETY] as PronunciationVariety?
     return Pronunciation(value, variety)
 }

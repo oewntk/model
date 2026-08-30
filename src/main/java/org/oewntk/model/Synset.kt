@@ -188,7 +188,7 @@ data class Synset(
 
     override fun toString(): String {
         val membersStr = members.joinToString(",")
-        val relationsStr = relations?.get("hypernym")?.first()?.toString() ?: "∅"
+        val relationsStr = relations?.get(Relation("hypernym"))?.first()?.toString() ?: "∅"
         return "$synsetId ${type.value} {$membersStr} '$definition' ^$relationsStr"
     }
 
@@ -234,16 +234,16 @@ data class Synset(
         )
 
         val INVERSE_SYNSET_RELATIONS = mapOf(
-            "hypernym" to "hyponym",
-            "instance_hypernym" to "instance_hyponym",
-            "mero_part" to "holo_part",
-            "mero_member" to "holo_member",
-            "mero_substance" to "holo_substance",
-            "causes" to "is_caused_by",
-            "entails" to "is_entailed_by",
-            "exemplifies" to "is_exemplified_by",
-            "domain_topic" to "has_domain_topic",
-            "domain_region" to "has_domain_region",
+            Relation("hypernym") to Relation("hyponym"),
+            Relation("instance_hypernym") to Relation("instance_hyponym"),
+            Relation("mero_part") to Relation("holo_part"),
+            Relation("mero_member") to Relation("holo_member"),
+            Relation("mero_substance") to Relation("holo_substance"),
+            Relation("causes") to Relation("is_caused_by"),
+            Relation("entails") to Relation("is_entailed_by"),
+            Relation("exemplifies") to Relation("is_exemplified_by"),
+            Relation("domain_topic") to Relation("has_domain_topic"),
+            Relation("domain_region") to Relation("has_domain_region"),
         )
 
         /*

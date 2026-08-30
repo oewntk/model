@@ -11,6 +11,7 @@ import org.oewntk.model.LibDummyNanoModel.senseD11
 import org.oewntk.model.LibDummyNanoModel.synset1
 import org.oewntk.model.LibDummyNanoModel.synsetH1
 import org.oewntk.model.Sense.Companion.INVERSE_SENSE_RELATIONS
+import org.oewntk.model.Synset.Companion.INVERSE_SYNSET_RELATIONS
 import java.io.PrintStream
 
 class TestAddInverse {
@@ -54,8 +55,8 @@ class TestAddInverse {
         ps.println("generate inverses")
         ps.println("model after generating inverses")
         model1.generateInverseRelations(
-            INVERSE_SENSE_RELATIONS + mapOf("also" to "also"),
-            INVERSE_SENSE_RELATIONS + mapOf("also" to "also"),
+            INVERSE_SYNSET_RELATIONS + mapOf(Relation("also") to Relation("also")),
+            INVERSE_SENSE_RELATIONS + mapOf(Relation("also") to Relation("also")),
         )
         dump(model1, ps)
     }

@@ -57,3 +57,12 @@ const val IPA_RE = "[${IPA_CHARS_RE}]+"
 val ipaRegex = "^$IPA_RE$".toRegex()
 
 fun String.isIPA(): Boolean = ipaRegex.matches(this)
+
+
+val RELATION_RE = (Synset.VALID_SYNSET_RELATIONS + Sense.VALID_SENSE_RELATIONS)
+    .distinct()
+    .joinToString(separator = "|", prefix = "(", postfix = ")")
+
+val relationRegex = "^$RELATION_RE$".toRegex()
+
+fun String.isRelation(): Boolean = relationRegex.matches(this)

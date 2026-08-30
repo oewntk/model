@@ -141,6 +141,8 @@ fun lexIdFromData(dict: Map<String, Any>): LexId {
     return LexId(lemma, partOfSpeech, discriminant)
 }
 
+// L E X E S
+
 /**
  * Lex to serializable dict
  *
@@ -174,6 +176,8 @@ fun lexFromData(dict: Map<String, Any>): Lex {
         dict[KEY_PRONUNCIATION]?.let { pronunciations = safeCast<List<Map<String, Any>>>(it).map { p -> pronunciationFromData(p) }.toSet() }
     }
 }
+
+// S Y N S E T
 
 /**
  * Synset to serializable dict
@@ -213,11 +217,14 @@ fun synsetFromData(dict: Map<String, Any>, includeLexFile: Boolean = false): Syn
     val definitions = safeCast<List<String>>(dict[KEY_DEFINITION]!!)
     val examples = dict[KEY_EXAMPLE]?.let { examplesFromData(safeCast(it)) }
     val usages = dict[KEY_USAGE]?.let { safeCast<List<String>>(it) }
-    val relations = dict[KEY_RELATION]?.let { safeCast<Map<Relation, Collection<String>>>(it).mapValues { (_, targetIds) -> targetIds.map { SynsetId(it) }.toSet() } }
     val ili = dict[KEY_ILI] as String?
     val wikidata = dict[KEY_WIKIDATA]?.let { safeCast<String>(it).split(";") }
     val source = dict[KEY_SOURCE] as String?
     val lexfile = dict[KEY_LEXFILE] as String?
+    val relations = dict[KEY_RELATION]?.let {
+        safeCast<Map<String, Collection<String>>>(it)
+            .mapKeys { (rel, _) -> Relation(rel) }
+            .mapValues { (_, targetIds) -> targetIds.map { SynsetId(it) }.toSet() } }
     return Synset(
         synsetId, type, domain, members.toSet(), definitions,
         examples = examples,
@@ -230,6 +237,8 @@ fun synsetFromData(dict: Map<String, Any>, includeLexFile: Boolean = false): Syn
         if (includeLexFile && lexfile != null) this.lexfile = lexfile
     }
 }
+
+// S E N S E
 
 /**
  * Sense to serializable dict
@@ -270,7 +279,10 @@ fun senseFromData(dict: Map<String, Any>): Sense {
     val verbTemplates = dict[KEY_VERBTEMPLATE]?.let { safeCast<String>(it).split(";").map(String::toInt) }?.toSet()
     val adjPosition = dict[KEY_ADJPOSITION] as String?
     val tagCount = dict[KEY_TAGCOUNT] as Int?
-    val relations = dict[KEY_RELATION]?.let { safeCast<Map<Relation, Collection<String>>>(it).mapValues { (_, targetIds) -> targetIds.map { SenseKey(it) }.toSet() } }
+    val relations = dict[KEY_RELATION]?.let {
+        safeCast<Map<String, Collection<String>>>(it)
+            .mapKeys { (rel, _) -> Relation(rel) }
+            .mapValues { (_, targetIds) -> targetIds.map { SenseKey(it) }.toSet() } }
     return Sense(id, lexId, synsetId, index, examples, verbFrames, verbTemplates, adjPosition, tagCount, relations)
 }
 

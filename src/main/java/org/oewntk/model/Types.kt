@@ -16,7 +16,7 @@ typealias LexId = LexIdImpl
 typealias SenseKey = SenseKeyImpl
 typealias SynsetId = SynsetIdImpl
 
-typealias Relation = String
+typealias Relation = RelationImpl
 
 typealias Example = ExampleImpl
 
@@ -239,6 +239,20 @@ enum class CategoryImpl(val value: Char) {
  */
 @kotlinx.serialization.Serializable
 data class ExampleImpl(val text: String, val source: String? = null) : Serializable
+
+/**
+ * Relation implementation
+ */
+@kotlinx.serialization.Serializable
+@JvmInline
+value class RelationImpl(val id: String) : Comparable<RelationImpl>, Serializable {
+    init {
+        require(ipaRegex.matches(id)) { "Invalid Relation: '$id'" }
+    }
+
+    override fun toString(): String = id
+    override fun compareTo(other: RelationImpl): Int = id.compareTo(other.id)
+}
 
 /**
  * Pronunciation value implementation

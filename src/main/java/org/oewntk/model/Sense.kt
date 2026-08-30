@@ -246,9 +246,9 @@ data class Sense(
         )
 
         val INVERSE_SENSE_RELATIONS = mapOf(
-            "exemplifies" to "is_exemplified_by",
-            "domain_topic" to "has_domain_topic",
-            "domain_region" to "has_domain_region",
+            Relation("exemplifies") to Relation("is_exemplified_by"),
+            Relation("domain_topic") to Relation("has_domain_topic"),
+            Relation("domain_region") to Relation("has_domain_region"),
         )
 
         /*

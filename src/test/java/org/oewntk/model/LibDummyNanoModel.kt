@@ -38,12 +38,12 @@ object LibDummyNanoModel {
     val pronunciation3 = Pronunciation(IPA3, null)
 
     val synsetRelations1 = mapOf(
-        "hypernym" to setOf(SynsetId(SYNSETID_H1)),
-        "also" to setOf(SynsetId(SYNSETID2), SynsetId(SYNSETID_D1)),
+        Relation("hypernym") to setOf(SynsetId(SYNSETID_H1)),
+        Relation("also") to setOf(SynsetId(SYNSETID2), SynsetId(SYNSETID_D1)),
     )
     val sense11Relations = mapOf(
-        "derivation" to setOf(SenseKey(SENSEKEY_D11)),
-        "also" to setOf(SenseKey(SENSEKEY12)),
+        Relation("derivation") to setOf(SenseKey(SENSEKEY_D11)),
+        Relation("also") to setOf(SenseKey(SENSEKEY12)),
     )
 
     val lex1 = Lex(LEMMA1, "v", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) }

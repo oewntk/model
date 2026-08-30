@@ -188,7 +188,7 @@ data class Synset(
 
     override fun toString(): String {
         val membersStr = members.joinToString(",")
-        val relationsStr = relations?.get("hypernym") ?: ""
+        val relationsStr = relations?.get("hypernym")?.first()?.toString() ?: "∅"
         return "$synsetId ${type.value} {$membersStr} '$definition' ^$relationsStr"
     }
 

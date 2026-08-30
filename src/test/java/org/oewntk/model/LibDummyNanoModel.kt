@@ -24,10 +24,10 @@ object LibDummyNanoModel {
     const val SYNSETID_H1 = "00742582-v"
     const val SYNSETID_D1 = "10240982-n"
 
-    const val IPA1 = "dʒɛst"
-    const val IPA21 = "dʒəʊk"
-    const val IPA22 = "dʒoʊk"
-    const val IPA3 = "dʒʌst"
+    val IPA1 = PronunciationValue("dʒɛst")
+    val IPA21 = PronunciationValue("dʒəʊk")
+    val IPA22 = PronunciationValue("dʒoʊk")
+    val IPA3 = PronunciationValue("dʒʌst")
 
     val DEFINITION1 = listOf("tell a joke", "speak humorously")
     val DEFINITION2 = listOf("act in a funny teasing way")

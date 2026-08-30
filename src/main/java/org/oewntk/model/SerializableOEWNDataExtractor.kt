@@ -106,7 +106,7 @@ fun senseRelationsFromOEWNData(dict: Map<Relation, Any>): Map<Relation, Set<Sens
  *  - variety
  */
 fun Pronunciation.toOEWNData(): Map<String, Any> {
-    return mutableMapOf(KEY_VALUE to value)
+    return mutableMapOf<String,Any>(KEY_VALUE to value)
         .apply {
             variety?.let { this[KEY_VARIETY] = it }
         }

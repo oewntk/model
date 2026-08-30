@@ -13,8 +13,8 @@ class TestKeys {
     @Test
     fun testRow() {
         val wordRow = "row"
-        val pRowOu = Pronunciation("ɹəʊ", null)
-        val pRowAu = Pronunciation("ɹaʊ", null)
+        val pRowOu = Pronunciation(PronunciationValue("ɹəʊ"), null)
+        val pRowAu = Pronunciation(PronunciationValue("ɹaʊ"), null)
 
         val lexRowOu = Lex(wordRow, "n-1").apply { pronunciations = setOf(pRowOu) }
         val lexRowAu = Lex(wordRow, "n-2").apply { pronunciations = setOf(pRowAu) }
@@ -33,9 +33,9 @@ class TestKeys {
     @Test
     fun testEquals() {
         val wordMobile = "mobile"
-        val pMobile = Pronunciation("ˈməʊbaɪl", null)
-        val pMobileGB = Pronunciation("ˈməʊbaɪl", "GB")
-        val pMobileUS = Pronunciation("ˈmoʊbil", "US")
+        val pMobile = Pronunciation(PronunciationValue("ˈməʊbaɪl"), null)
+        val pMobileGB = Pronunciation(PronunciationValue("ˈməʊbaɪl"), "GB")
+        val pMobileUS = Pronunciation(PronunciationValue("ˈmoʊbil"), "US")
         val paMobile1 = arrayOf(pMobile, pMobileGB, pMobileUS)
         val paMobile2 = arrayOf(pMobile, pMobileUS, pMobileGB)
         ps.println("pronunciations1 = ${paMobile1.withIndex().joinToString(separator = " ") { "#${it.index} ${it.value}" }}")
@@ -71,9 +71,9 @@ class TestKeys {
     @Test
     fun testMobile() {
         val wordMobile = "mobile"
-        val pMobile = Pronunciation("ˈməʊbaɪl", null)
-        val pMobileGB = Pronunciation("ˈməʊbaɪl", "GB")
-        val pMobileUS = Pronunciation("ˈmoʊbil", "US")
+        val pMobile = Pronunciation(PronunciationValue("ˈməʊbaɪl"), null)
+        val pMobileGB = Pronunciation(PronunciationValue("ˈməʊbaɪl"), "GB")
+        val pMobileUS = Pronunciation(PronunciationValue("ˈmoʊbil"), "US")
         val paMobile1 = arrayOf(pMobile, pMobileGB, pMobileUS)
         val paMobile2 = arrayOf(pMobile, pMobileGB, pMobileUS)
 
@@ -105,16 +105,16 @@ class TestKeys {
 
     @Test
     fun testPronunciations() {
-        val pMobile = Pronunciation("ˈməʊbaɪl", null)
-        val pMobileGB = Pronunciation("ˈməʊbaɪl", "GB")
-        val pMobileUS = Pronunciation("ˈmoʊbil", "US")
+        val pMobile = Pronunciation(PronunciationValue("ˈməʊbaɪl"), null)
+        val pMobileGB = Pronunciation(PronunciationValue("ˈməʊbaɪl"), "GB")
+        val pMobileUS = Pronunciation(PronunciationValue("ˈmoʊbil"), "US")
         val paMobile1 = arrayOf(pMobile, pMobileGB, pMobileUS)
         val paMobile2 = arrayOf(pMobile, pMobileGB, pMobileUS)
         val psMobile1 = setOf(*paMobile1)
         val psMobile2 = setOf(*paMobile2)
 
-        assertEquals(pMobile, Pronunciation("ˈməʊbaɪl", null))
-        assertEquals(pMobileGB, Pronunciation("ˈməʊbaɪl", "GB"))
+        assertEquals(pMobile, Pronunciation(PronunciationValue("ˈməʊbaɪl"), null))
+        assertEquals(pMobileGB, Pronunciation(PronunciationValue("ˈməʊbaɪl"), "GB"))
         assertNotEquals(pMobile, null)
         assertNotEquals(pMobile, pMobileGB)
         assertNotEquals(pMobile, pMobileUS)
@@ -133,18 +133,18 @@ class TestKeys {
         assertEquals(psMobile2, setOf(pMobile, pMobileGB, pMobileUS))
         assertEquals(
             psMobile1,
-            setOf(Pronunciation("ˈməʊbaɪl", "GB"), Pronunciation("ˈməʊbaɪl", null), Pronunciation("ˈmoʊbil", "US"))
+            setOf(Pronunciation(PronunciationValue("ˈməʊbaɪl"), "GB"), Pronunciation(PronunciationValue("ˈməʊbaɪl"), null), Pronunciation(PronunciationValue("ˈmoʊbil"), "US"))
         )
         assertEquals(
             psMobile2,
-            setOf(Pronunciation("ˈməʊbaɪl", null), Pronunciation("ˈməʊbaɪl", "GB"), Pronunciation("ˈmoʊbil", "US"))
+            setOf(Pronunciation(PronunciationValue("ˈməʊbaɪl"), null), Pronunciation(PronunciationValue("ˈməʊbaɪl"), "GB"), Pronunciation(PronunciationValue("ˈmoʊbil"), "US"))
         )
 
         assertNotEquals(paMobile1, paMobile2)
         assertEquals(psMobile1, psMobile2)
 
-        val pRowOu = Pronunciation("ɹəʊ", null)
-        val pRowAu = Pronunciation("ɹaʊ", null)
+        val pRowOu = Pronunciation(PronunciationValue("ɹəʊ"), null)
+        val pRowAu = Pronunciation(PronunciationValue("ɹaʊ"), null)
         val paRow1 = arrayOf(pRowOu, pRowAu)
         val paRow2 = arrayOf(pRowAu, pRowOu)
         val psRow1 = setOf(*paRow1)

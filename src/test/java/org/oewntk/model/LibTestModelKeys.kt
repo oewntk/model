@@ -15,8 +15,8 @@ object LibTestModelKeys {
     // M O B I L E
 
     fun testMobile(model: CoreModel, ps: PrintStream): IntArray {
-        val pGB = ipa("ˈməʊbaɪl", "GB")
-        val pUS = ipa("ˈmoʊbil", "US")
+        val pGB = ipa(PronunciationValue("ˈməʊbaɪl"), "GB")
+        val pUS = ipa(PronunciationValue("ˈmoʊbil"), "US")
         val pronunciations = arrayOf(pGB, pUS)
         return testWordMulti(model, ps, "Mobile", pronunciations, Category.N)
     }
@@ -58,7 +58,7 @@ object LibTestModelKeys {
     // R O W
 
     fun testRowDeep(model: CoreModel, ps: PrintStream): IntArray {
-        return testPronunciations(model, ps, "row", Category.N, ipa("ɹəʊ"), ipa("ɹaʊ"))
+        return testPronunciations(model, ps, "row", Category.N, ipa(PronunciationValue("ɹəʊ")), ipa(PronunciationValue("ɹaʊ")))
     }
 
     fun testRowShallow(model: CoreModel, ps: PrintStream): IntArray {
@@ -76,7 +76,7 @@ object LibTestModelKeys {
     // B A S S
 
     fun testBassDeep(model: CoreModel, ps: PrintStream): IntArray {
-        return testPronunciations(model, ps, "bass", Category.N, ipa("beɪs"), ipa("bæs"))
+        return testPronunciations(model, ps, "bass", Category.N, ipa(PronunciationValue("beɪs")), ipa(PronunciationValue("bæs")))
     }
 
     fun testBassShallow(model: CoreModel, ps: PrintStream): IntArray {

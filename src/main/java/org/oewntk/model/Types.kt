@@ -22,7 +22,7 @@ typealias Example = ExampleImpl
 
 typealias Domain = String
 typealias Morph = String
-typealias PronunciationValue = String
+typealias PronunciationValue = PronunciationValueImpl
 typealias PronunciationVariety = String
 typealias VerbFrameId = String
 typealias VerbTemplateId = Int
@@ -239,3 +239,17 @@ enum class CategoryImpl(val value: Char) {
  */
 @kotlinx.serialization.Serializable
 data class ExampleImpl(val text: String, val source: String? = null) : Serializable
+
+/**
+ * Pronunciation value implementation
+ */
+@kotlinx.serialization.Serializable
+@JvmInline
+value class PronunciationValueImpl(val ipa: String) : Comparable<PronunciationValueImpl>, Serializable {
+    init {
+        require(ipaRegex.matches(ipa)) { "Invalid IPA: '$ipa'" }
+    }
+
+    override fun toString(): String = ipa
+    override fun compareTo(other: PronunciationValueImpl): Int = ipa.compareTo(other.ipa)
+}

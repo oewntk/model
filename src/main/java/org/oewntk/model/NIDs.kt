@@ -96,7 +96,7 @@ object NIDs {
             .sorted()
             .distinct()
             .withIndex()
-            .associate { it.value to it.index + 1 }
+            .associate { it.value.ipa to it.index + 1 }
     }
 
     /**

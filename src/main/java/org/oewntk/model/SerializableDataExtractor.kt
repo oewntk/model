@@ -89,7 +89,7 @@ fun examplesFromData(list: List<Any>): List<Example> {
  *  - variety
  */
 fun Pronunciation.toData(): Map<String, Any> {
-    return mutableMapOf(KEY_VALUE to value)
+    return mutableMapOf<String,Any>(KEY_VALUE to value)
         .apply {
             variety?.let { this[KEY_VARIETY] = it }
         }

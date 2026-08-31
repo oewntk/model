@@ -10,7 +10,6 @@ import java.util.Locale
 import java.util.Objects
 
 typealias Lemma = LemmaImpl
-typealias LowerCasedLemma = String
 typealias Key2 = String
 typealias Discriminant = String
 typealias LexId = LexIdImpl

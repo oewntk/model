@@ -125,7 +125,7 @@ open class CoreModel(
      * A multimap: each value is an array of lexes for the lemma.
      * @Transient
      */
-    private val lexesByLCLemma: Map<LowerCasedLemma, Collection<Lex>> by lazy { lexes.asSequence().groupByLCLemma() }
+    private val lexesByLCLemma: Map<Lemma, Collection<Lex>> by lazy { lexes.asSequence().groupByLCLemma() }
 
     /**
      * Senses mapped by id (sensekey)
@@ -163,7 +163,7 @@ open class CoreModel(
      * Resolution may yield null
      */
     val lexIgnoreCaseFinder: (Lemma) -> Collection<Lex>?
-        get() = { lexesByLCLemma[it.lCLemma.form] }
+        get() = { lexesByLCLemma[it.lCLemma] }
 
     /**
      * Lex resolver

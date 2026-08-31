@@ -181,9 +181,9 @@ data class Lex(
          * @receiver lexes
          * @return lexes grouped by lowercased lemma
          */
-        fun Sequence<Lex>.groupByLCLemma(): Map<String, Set<Lex>> {
+        fun Sequence<Lex>.groupByLCLemma(): Map<Lemma, Set<Lex>> {
             return this
-                .groupBy { it.lemma.lowercased }
+                .groupBy { it.lemma.lCLemma }
                 .mapValues { it.value.toSet() }
         }
     }

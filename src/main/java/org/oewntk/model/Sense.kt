@@ -68,7 +68,7 @@ data class Sense(
     val lemma: Lemma
         get() = lexId.lemma
     val lCLemma: Lemma
-        get() = lemma.lowercase(Locale.ENGLISH)
+        get() = lemma.lCLemma
     val isCased: Boolean
         get() = lemma != lCLemma
     val partOfSpeech: PartOfSpeech
@@ -87,7 +87,7 @@ data class Sense(
      * Used in NID maps
      */
     val uniqueId
-        get() = "$senseKey ${lemma.replace(' ', '_')}"
+        get() = "$senseKey ${lemma.form.replace(' ', '_')}"
 
     override fun equals(other: Any?): Boolean {
         return this === other || other is Sense && (

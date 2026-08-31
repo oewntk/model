@@ -6,9 +6,10 @@ package org.oewntk.model
 
 import java.io.Serializable
 import java.util.Comparator
+import java.util.Locale
 import java.util.Objects
 
-typealias Lemma = String
+typealias Lemma = LemmaImpl
 typealias LowerCasedLemma = String
 typealias Key2 = String
 typealias Discriminant = String
@@ -72,6 +73,24 @@ value class SynsetIdImpl(val id: String) : Comparable<SynsetIdImpl>, Serializabl
 
     override fun toString(): String = id
     override fun compareTo(other: SynsetIdImpl): Int = id.compareTo(other.id)
+}
+
+/**
+ * Lemma implementation
+ */
+@kotlinx.serialization.Serializable
+@JvmInline
+value class LemmaImpl(val form: String) : Comparable<LemmaImpl>, Serializable {
+    init {
+        require(lemmaRegex.matches(form)) { "Invalid lemma: '$form'" }
+    }
+
+    override fun toString(): String = form
+    override fun compareTo(other: LemmaImpl): Int = form.compareTo(other.form)
+    val lowercased: String
+        get() = form.lowercase(Locale.ENGLISH)
+    val lCLemma: Lemma
+        get() = Lemma(lowercased)
 }
 
 /**

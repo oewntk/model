@@ -104,7 +104,7 @@ object SenseGroupings {
      */
     class KeyLCLemmaAndPos(lemma: Lemma, val category: Category) : Comparable<KeyLCLemmaAndPos> {
 
-        val lcLemma: LowerCasedLemma = lemma.lowercase(Locale.ENGLISH)
+        val lcLemma: String = lemma.lowercased
 
         constructor(sense: Sense) : this(sense.lemma, sense.partOfSpeech.toCategory())
 

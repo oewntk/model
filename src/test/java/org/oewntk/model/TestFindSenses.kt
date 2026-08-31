@@ -48,19 +48,19 @@ class TestFindSenses {
 
     @Test
     fun testFindSensesOfLemmaInSynset() {
-        val result11 = synset1.resolveSenseOf(LEMMA1, model1.lexResolver,  model1.senseResolver)
+        val result11 = synset1.resolveSenseOf(Lemma(LEMMA1), model1.lexResolver,  model1.senseResolver)
         ps.println("senseOf $LEMMA1 in $synset1 is $result11")
         assertEquals(sense11, result11)
 
-        val result21 = synset1.resolveSenseOf(LEMMA2, model1.lexResolver,  model1.senseResolver)
+        val result21 = synset1.resolveSenseOf(Lemma(LEMMA2), model1.lexResolver,  model1.senseResolver)
         ps.println("senseOf $LEMMA2 in $synset1 is $result21")
         assertEquals(sense21, result21)
 
-        val result12 = synset2.resolveSenseOf(LEMMA1, model1.lexResolver,  model1.senseResolver)
+        val result12 = synset2.resolveSenseOf(Lemma(LEMMA1), model1.lexResolver,  model1.senseResolver)
         ps.println("senseOf $LEMMA1 in $synset2 is $result12")
         assertEquals(sense12, result12)
 
-        val result22 = synset2.resolveSenseOf(LEMMA2, model1.lexResolver,  model1.senseResolver)
+        val result22 = synset2.resolveSenseOf(Lemma(LEMMA2), model1.lexResolver,  model1.senseResolver)
         ps.println("senseOf $LEMMA2 in $synset2 is $result22")
         assertEquals(sense22, result22)
     }

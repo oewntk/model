@@ -46,14 +46,14 @@ object LibDummyNanoModel {
         Relation("also") to setOf(SenseKey(SENSEKEY12)),
     )
 
-    val lex1 = Lex(LEMMA1, "v", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) }
-    val lex2 = Lex(LEMMA2, "v", listOf(SenseKey(SENSEKEY21), SenseKey(SENSEKEY22))).apply { pronunciations = setOf(pronunciation21, pronunciation22) }
-    val lexD1 = Lex(LEMMA3, "n", listOf(SenseKey(SENSEKEY_D11)))
+    val lex1 = Lex(Lemma(LEMMA1), "v", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) }
+    val lex2 = Lex(Lemma(LEMMA2), "v", listOf(SenseKey(SENSEKEY21), SenseKey(SENSEKEY22))).apply { pronunciations = setOf(pronunciation21, pronunciation22) }
+    val lexD1 = Lex(Lemma(LEMMA3), "n", listOf(SenseKey(SENSEKEY_D11)))
 
-    val synset1 = Synset(SynsetId(SYNSETID1), SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, null, null, relations = synsetRelations1)
-    val synset2 = Synset(SynsetId(SYNSETID2), SynsetType.V, DOMAIN2, setOf(LEMMA1, LEMMA2), DEFINITION2)
-    val synsetH1 = Synset(SynsetId(SYNSETID_H1), SynsetType.V, DOMAIN1, setOf("communicate", "intercommunicate"), listOf("transmit thoughts or feelings"))
-    val synsetD1 = Synset(SynsetId(SYNSETID_D1), SynsetType.N, DOMAIN3, setOf("jester", "fool", "motley fool"), listOf("a professional clown employed to entertain a king or nobleman in the Middle Ages"))
+    val synset1 = Synset(SynsetId(SYNSETID1), SynsetType.V, DOMAIN1, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION1, null, null, relations = synsetRelations1)
+    val synset2 = Synset(SynsetId(SYNSETID2), SynsetType.V, DOMAIN2, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION2)
+    val synsetH1 = Synset(SynsetId(SYNSETID_H1), SynsetType.V, DOMAIN1, setOf(Lemma("communicate"), Lemma("intercommunicate")), listOf("transmit thoughts or feelings"))
+    val synsetD1 = Synset(SynsetId(SYNSETID_D1), SynsetType.N, DOMAIN3, setOf(Lemma("jester"), Lemma("fool"), Lemma("motley fool")), listOf("a professional clown employed to entertain a king or nobleman in the Middle Ages"))
 
     val sense11 = Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID1), indexInLex = 0, relations = sense11Relations)
     val sense12 = Sense(SenseKey(SENSEKEY12), lex1.key, SynsetId(SYNSETID2), indexInLex = 1)

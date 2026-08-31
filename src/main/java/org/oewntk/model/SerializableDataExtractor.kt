@@ -119,8 +119,8 @@ fun pronunciationFromData(dict: Map<String, Any>): Pronunciation {
  *  - optional
  */
 fun LexId.toData(): Map<String, Any> {
-    return mutableMapOf(
-        KEY_LEMMA to lemma,
+    return mutableMapOf<String, Any>(
+        KEY_LEMMA to lemma.form,
         KEY_PARTOFSPEECH to partOfSpeech.value,
     )
         .apply {
@@ -135,7 +135,7 @@ fun LexId.toData(): Map<String, Any> {
  * @return lex id
  */
 fun lexIdFromData(dict: Map<String, Any>): LexId {
-    val lemma = dict[KEY_LEMMA] as Lemma
+    val lemma = Lemma(dict[KEY_LEMMA] as String)
     val partOfSpeech: PartOfSpeech = partOfSpeechFromData(dict)
     val discriminant = dict[KEY_DISCRIMINANT] as Discriminant?
     return LexId(lemma, partOfSpeech, discriminant)
@@ -151,7 +151,7 @@ fun lexIdFromData(dict: Map<String, Any>): LexId {
  */
 fun Lex.toData(): Map<String, Any> {
     return mutableMapOf(
-        KEY_LEMMA to lemma,
+        KEY_LEMMA to lemma.form,
         KEY_PARTOFSPEECH to partOfSpeech.value,
         KEY_SENSE to senseKeys,
     ).apply {
@@ -213,7 +213,7 @@ fun synsetFromData(dict: Map<String, Any>, includeLexFile: Boolean = false): Syn
     val synsetId = SynsetId(dict[KEY_ID] as String)
     val type = typeFromData(dict)
     val domain = dict[KEY_DOMAIN] as Domain
-    val members = safeCast<List<Lemma>>(dict[KEY_MEMBERS]!!)
+    val members = safeCast<List<String>>(dict[KEY_MEMBERS]!!)
     val definitions = safeCast<List<String>>(dict[KEY_DEFINITION]!!)
     val examples = dict[KEY_EXAMPLE]?.let { examplesFromData(safeCast(it)) }
     val usages = dict[KEY_USAGE]?.let { safeCast<List<String>>(it) }
@@ -226,7 +226,7 @@ fun synsetFromData(dict: Map<String, Any>, includeLexFile: Boolean = false): Syn
             .mapKeys { (rel, _) -> Relation(rel) }
             .mapValues { (_, targetIds) -> targetIds.map { SynsetId(it) }.toSet() } }
     return Synset(
-        synsetId, type, domain, members.toSet(), definitions,
+        synsetId, type, domain, members.map(::Lemma).toSet(), definitions,
         examples = examples,
         usages = usages,
         relations = relations,

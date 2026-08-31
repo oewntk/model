@@ -6,7 +6,6 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.PrintStream
 import java.nio.charset.StandardCharsets
-import java.util.*
 
 object NIDs {
 
@@ -32,11 +31,11 @@ object NIDs {
      * @param lexes lexes
      * @return word-to-nid map
      */
-    fun makeWordNIDs(lexes: Collection<Lex>): Map<String, Int> {
+    fun makeWordNIDs(lexes: Collection<Lex>): Map<Lemma, Int> {
         // stream of words
         val map = lexes
             .asSequence()
-            .map(Lex::lCLemma)
+            .map { it.lemma.lCLemma }
             .distinct()
             .sorted()
             .withIndex()
@@ -51,7 +50,7 @@ object NIDs {
      * @param lexes lexes
      * @return cased_word-to-nid map
      */
-    fun makeCasedWordNIDs(lexes: Collection<Lex>): Map<String, Int> {
+    fun makeCasedWordNIDs(lexes: Collection<Lex>): Map<Lemma, Int> {
         val map = lexes
             .asSequence()
             .filter(Lex::isCased)
@@ -87,7 +86,7 @@ object NIDs {
      * @param lexes lexes
      * @return pronunciation-to-nid map
      */
-    fun makePronunciationNIDs(lexes: Collection<Lex>): Map<String, Int> {
+    fun makePronunciationNIDs(lexes: Collection<Lex>): Map<PronunciationValue, Int> {
         return lexes
             .asSequence()
             .filter { it.pronunciations != null && it.pronunciations!!.isNotEmpty() }
@@ -96,7 +95,7 @@ object NIDs {
             .sorted()
             .distinct()
             .withIndex()
-            .associate { it.value.ipa to it.index + 1 }
+            .associate { it.value to it.index + 1 }
     }
 
     /**
@@ -158,8 +157,8 @@ object NIDs {
      * @param key key, already lower-cased
      * @return nid
      */
-    fun lookupLC(map: Map<String, Int>, key: String): Int {
-        assert(key == key.lowercase(Locale.ENGLISH))
+    fun lookupLC(map: Map<Lemma, Int>, key: Lemma): Int {
+        assert(key.form == key.lowercased)
         return lookup(map, key)
     }
 
@@ -232,10 +231,10 @@ object NIDs {
      * @param ps    print stream
      * @param toNID od-to-nid map
      */
-    private fun print(ps: PrintStream, toNID: Map<String, Int>) {
+    private fun <T: Comparable<T>> print(ps: PrintStream, toNID: Map<T, Int>) {
         val data = toNID.keys
             .sorted()
-            .joinToString(separator=",\n", prefix="{\n", postfix="\n}") { "\"$it\": ${toNID[it]}" }
+            .joinToString(separator = ",\n", prefix = "{\n", postfix = "\n}") { "\"$it\": ${toNID[it]}" }
         ps.println(data)
     }
 

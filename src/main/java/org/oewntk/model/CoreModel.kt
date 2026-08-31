@@ -163,7 +163,7 @@ open class CoreModel(
      * Resolution may yield null
      */
     val lexIgnoreCaseFinder: (Lemma) -> Collection<Lex>?
-        get() = { lexesByLCLemma[it.lowercase(Locale.ENGLISH)] }
+        get() = { lexesByLCLemma[it.lCLemma.form] }
 
     /**
      * Lex resolver

@@ -53,7 +53,7 @@ object SenseKeys {
         "generated" to 99,
     )
 
-    fun Lemma.escapeForSenseKey(): String {
+    fun String.escapeForSenseKey(): String {
         return replace(' ', '_')
     }
 
@@ -62,8 +62,8 @@ object SenseKeys {
     fun SynsetType.toPosNum(): Int = ordinal + 1
 
     fun generateSenseKey(lemma: Lemma, synset: Synset, idx: Int): SenseKey {
-        val discriminant = if (lemma[0].isUpperCase()) 1 else 0
-        val escapedLemma = lemma.lowercase(Locale.ENGLISH).escapeForSenseKey()
+        val discriminant = if (lemma.form[0].isUpperCase()) 1 else 0
+        val escapedLemma = lemma.lowercased.escapeForSenseKey()
         val ssType = synset.type.toPosNum()
         val lexfileNum = "%02d".format(synset.lexfile.toLexFileNum())
         val lexfileIdx = "%02d".format(idx+ discriminant)

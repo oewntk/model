@@ -16,10 +16,10 @@ class TestKeys {
         val pRowOu = Pronunciation(PronunciationValue("ɹəʊ"), null)
         val pRowAu = Pronunciation(PronunciationValue("ɹaʊ"), null)
 
-        val lexRowOu = Lex(wordRow, "n-1").apply { pronunciations = setOf(pRowOu) }
-        val lexRowAu = Lex(wordRow, "n-2").apply { pronunciations = setOf(pRowAu) }
-        val lexRowOuN = Lex(wordRow, "n").apply { pronunciations = setOf(pRowOu) }
-        val lexRowAuN = Lex(wordRow, "n").apply { pronunciations = setOf(pRowAu) }
+        val lexRowOu = Lex(Lemma(wordRow), "n-1").apply { pronunciations = setOf(pRowOu) }
+        val lexRowAu = Lex(Lemma(wordRow), "n-2").apply { pronunciations = setOf(pRowAu) }
+        val lexRowOuN = Lex(Lemma(wordRow), "n").apply { pronunciations = setOf(pRowOu) }
+        val lexRowAuN = Lex(Lemma(wordRow), "n").apply { pronunciations = setOf(pRowAu) }
 
         assertNotEquals(Key.UsingPronunciation.of(lexRowOu), Key.UsingPronunciation.of(lexRowAu))
         assertNotEquals(Key.UsingDiscriminant.of(lexRowOu), Key.UsingDiscriminant.of(lexRowAu)) // because discriminant is different
@@ -44,9 +44,9 @@ class TestKeys {
         assertFalse(paMobile1.contentEquals(paMobile2))
         assertEquals(paMobile1.toSet(), paMobile2.toSet())
 
-        val lexMobile0 = Lex(wordMobile, "n")
-        val lexMobile1 = Lex(wordMobile, "n").apply { pronunciations = paMobile1.toSet() }
-        val lexMobile2 = Lex(wordMobile, "n").apply { pronunciations = paMobile2.toSet() }
+        val lexMobile0 = Lex(Lemma(wordMobile), "n")
+        val lexMobile1 = Lex(Lemma(wordMobile), "n").apply { pronunciations = paMobile1.toSet() }
+        val lexMobile2 = Lex(Lemma(wordMobile), "n").apply { pronunciations = paMobile2.toSet() }
         ps.println("lex0 = $lexMobile0")
         ps.println("lex1 = $lexMobile1")
         ps.println("lex2 = $lexMobile2")
@@ -77,9 +77,9 @@ class TestKeys {
         val paMobile1 = arrayOf(pMobile, pMobileGB, pMobileUS)
         val paMobile2 = arrayOf(pMobile, pMobileGB, pMobileUS)
 
-        val lexMobile0 = Lex(wordMobile, "n").apply { pronunciations = null }
-        val lexMobile1 = Lex(wordMobile, "n").apply { pronunciations = paMobile1.toSet() }
-        val lexMobile2 = Lex(wordMobile, "n").apply { pronunciations = paMobile2.toSet() }
+        val lexMobile0 = Lex(Lemma(wordMobile), "n").apply { pronunciations = null }
+        val lexMobile1 = Lex(Lemma(wordMobile), "n").apply { pronunciations = paMobile1.toSet() }
+        val lexMobile2 = Lex(Lemma(wordMobile), "n").apply { pronunciations = paMobile2.toSet() }
 
         assertEquals(Key.UsingPronunciation.of(lexMobile1), Key.UsingPronunciation.of(lexMobile2))
         assertEquals(Key.UsingDiscriminant.of(lexMobile1), Key.UsingDiscriminant.of(lexMobile2))
@@ -94,8 +94,8 @@ class TestKeys {
     fun testCapitalisation() {
         val wordEarthL = "earth"
         val wordEarthU = "Earth"
-        val lexEarthL = Lex(wordEarthL, "n")
-        val lexEarthU = Lex(wordEarthU, "n")
+        val lexEarthL = Lex(Lemma(wordEarthL), "n")
+        val lexEarthU = Lex(Lemma(wordEarthU), "n")
 
         assertNotEquals(Key.UsingPronunciation.of(lexEarthL), Key.UsingPronunciation.of(lexEarthU))
         assertNotEquals(Key.UsingDiscriminant.of(lexEarthL), Key.UsingDiscriminant.of(lexEarthU))

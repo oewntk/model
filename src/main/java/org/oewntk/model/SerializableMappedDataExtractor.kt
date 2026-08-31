@@ -12,9 +12,9 @@ import org.oewntk.model.MapFactory.synsetsById
  * @preceiver sequence of lexes
  * @return lex serializable hypermap
  */
-fun Sequence<Lex>.toLexesMappedData(): Map<String, Any> {
+fun Sequence<Lex>.toLexesMappedData(): Map<Lemma, Any> {
     return lexByLemmaThenByKey2()
-        .mapValues { (_: Lemma, key2Map: Map<Key2, Lex>) ->
+        .mapValues { (_, key2Map: Map<Key2, Lex>) ->
             key2Map.mapValues { it.value.toData() }
         }
 }
@@ -54,7 +54,7 @@ fun CoreModel.toMappedData(
     whichLexes: Sequence<Lex> = lexes.asSequence().sortedWith(compareBy(Lex::lemma).thenBy(Lex::key2)),
     whichSynsets: Sequence<Synset> = synsets.asSequence().sortedBy { it.synsetId },
     whichSenses: Sequence<Sense> = senses.asSequence().sortedBy { it.senseKey },
-): Triple<Map<String, Any>, Map<SynsetId, Any>, Map<SenseKey, Any>> {
+): Triple<Map<Lemma, Any>, Map<SynsetId, Any>, Map<SenseKey, Any>> {
     val lexesData: Map<Lemma, Any> = whichLexes.toLexesMappedData()
     val synsetsData: Map<SynsetId, Any> = whichSynsets.toSynsetsMappedData()
     val sensesData: Map<SenseKey, Any> = whichSenses.toSensesMappedData()

@@ -58,8 +58,53 @@ val ipaRegex = "^$IPA_RE$".toRegex()
 
 fun String.isIPA(): Boolean = ipaRegex.matches(this)
 
+private val SYNSET_RELATIONS = arrayOf(
+    "hypernym", "hyponym",
+    "instance_hypernym", "instance_hyponym",
+    "mero_part", "holo_part",
+    "mero_member", "holo_member",
+    "mero_substance", "holo_substance",
+    "causes", "is_caused_by",
+    "entails", "is_entailed_by",
+    "exemplifies", "is_exemplified_by",
+    "domain_topic", "has_domain_topic",
+    "domain_region", "has_domain_region",
+    "attribute",
+    "similar",
+    "also",
+)
 
-val RELATION_RE = (Synset.VALID_SYNSET_RELATIONS + Sense.VALID_SENSE_RELATIONS)
+private val SENSE_RELATIONS = arrayOf(
+    "antonym",
+    "similar",
+    "exemplifies", "is_exemplified_by",
+    "derivation",
+    "pertainym",
+    "participle",
+    "also",
+    "domain_region", "has_domain_region",
+    "domain_topic", "has_domain_topic",
+
+    "agent",
+    "material",
+    "event",
+    "instrument",
+    "location",
+    "by_means_of",
+    "undergoer",
+    "property",
+    "result",
+    "state",
+    "uses",
+    "destination",
+    "body_part",
+    "vehicle",
+
+    "collocation",
+    "other"
+)
+
+val RELATION_RE = (SYNSET_RELATIONS + SENSE_RELATIONS)
     .distinct()
     .joinToString(separator = "|", prefix = "(", postfix = ")")
 

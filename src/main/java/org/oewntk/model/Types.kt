@@ -247,7 +247,7 @@ data class ExampleImpl(val text: String, val source: String? = null) : Serializa
 @JvmInline
 value class RelationImpl(val id: String) : Comparable<RelationImpl>, Serializable {
     init {
-        require(ipaRegex.matches(id)) { "Invalid Relation: '$id'" }
+        require(relationRegex.matches(id)) { "Invalid Relation: '$id'" }
     }
 
     override fun toString(): String = id

@@ -72,6 +72,7 @@ private val SYNSET_RELATIONS = arrayOf(
     "attribute",
     "similar",
     "also",
+    "verb_group", // wn31 (now similar)
 )
 
 private val SENSE_RELATIONS = arrayOf(

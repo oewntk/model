@@ -195,7 +195,7 @@ fun Synset.toData(includeLexFile: Boolean = false): Map<String, Any> {
     ).apply {
         examples?.let { this[KEY_EXAMPLE] = it.map { example -> if (example.source == null) example.text else mapOf(KEY_TEXT to example.text, KEY_SOURCE to example.source) }.toList() }
         usages?.let { this[KEY_USAGE] = it }
-        relations?.let { this[KEY_RELATION] = it }
+        relations?.let { this[KEY_RELATION] = it.mapKeys{ (relation,_) -> relation.id } }
         ili?.let { this[KEY_ILI] = it }
         wikidata?.let { this[KEY_WIKIDATA] = it.joinToString(separator = ";") }
         source?.let { this[KEY_SOURCE] = it }
@@ -259,7 +259,7 @@ fun Sense.toData(): Map<String, Any> {
             verbTemplates?.let { this[KEY_VERBTEMPLATE] = it.joinToString(separator = ";") }
             adjPosition?.let { this[KEY_ADJPOSITION] = it }
             tagCount?.let { this[KEY_TAGCOUNT] = it }
-            relations?.let { this[KEY_RELATION] = it }
+            relations?.let { this[KEY_RELATION] = it.mapKeys{ (relation,_) -> relation.id } }
         }
 }
 

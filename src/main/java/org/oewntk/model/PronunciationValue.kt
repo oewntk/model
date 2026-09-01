@@ -4,17 +4,17 @@ import java.io.Serializable
 
 
 /**
- * Pronunciation value implementation
+ * Pronunciation value in IPA
  */
 @kotlinx.serialization.Serializable
 @JvmInline
-value class PronunciationValueImpl(val ipa: String) : Comparable<PronunciationValueImpl>, Serializable {
+value class PronunciationValue(val ipa: String) : Comparable<PronunciationValue>, Serializable {
     init {
         require(ipaRegex.matches(ipa)) { "Invalid IPA: '$ipa'" }
     }
 
     override fun toString(): String = ipa
-    override fun compareTo(other: PronunciationValueImpl): Int = ipa.compareTo(other.ipa)
+    override fun compareTo(other: PronunciationValue): Int = ipa.compareTo(other.ipa)
 
     companion object {
 

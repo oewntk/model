@@ -3,17 +3,17 @@ package org.oewntk.model
 import java.io.Serializable
 
 /**
- * Key2 implementation
+ * Key2 (level 2 key in YAML files)
  */
 @kotlinx.serialization.Serializable
 @JvmInline
-value class Key2Impl(val id: String) : Comparable<Key2Impl>, Serializable {
+value class Key2(val id: String) : Comparable<Key2>, Serializable {
     init {
         require(key2Regex.matches(id)) { "Invalid key2: '$id'" }
     }
 
     override fun toString(): String = id
-    override fun compareTo(other: Key2Impl): Int = id.compareTo(other.id)
+    override fun compareTo(other: Key2): Int = id.compareTo(other.id)
 
     companion object {
 

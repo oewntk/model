@@ -7,37 +7,37 @@ import java.util.Comparator
  *
  * [n,v,a,r,s]
  */
-enum class SynsetTypeImpl(val value: Char) {
+enum class SynsetType(val value: Char) {
     N('n') {
-        override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.N
-        override fun toCategory(): CategoryImpl = CategoryImpl.N
+        override fun toPartOfSpeech(): PartOfSpeech = PartOfSpeech.N
+        override fun toCategory(): Category = Category.N
     },
     V('v') {
-        override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.V
-        override fun toCategory(): CategoryImpl = CategoryImpl.V
+        override fun toPartOfSpeech(): PartOfSpeech = PartOfSpeech.V
+        override fun toCategory(): Category = Category.V
     },
     A('a') {
-        override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.A
-        override fun toCategory(): CategoryImpl = CategoryImpl.A
+        override fun toPartOfSpeech(): PartOfSpeech = PartOfSpeech.A
+        override fun toCategory(): Category = Category.A
     },
     R('r') {
-        override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.R
-        override fun toCategory(): CategoryImpl = CategoryImpl.R
+        override fun toPartOfSpeech(): PartOfSpeech = PartOfSpeech.R
+        override fun toCategory(): Category = Category.R
     },
     S('s') {
-        override fun toPartOfSpeech(): PartOfSpeechImpl = PartOfSpeechImpl.A
-        override fun toCategory(): CategoryImpl = CategoryImpl.S
+        override fun toPartOfSpeech(): PartOfSpeech = PartOfSpeech.A
+        override fun toCategory(): Category = Category.S
     };
 
-    abstract fun toPartOfSpeech(): PartOfSpeechImpl
-    abstract fun toCategory(): CategoryImpl
+    abstract fun toPartOfSpeech(): PartOfSpeech
+    abstract fun toCategory(): Category
 
     override fun toString(): String {
         throw IllegalAccessException("Illegal: use .value ${this.value}")
     }
 
     companion object {
-        fun fromCharOrNull(c: Char): SynsetTypeImpl? {
+        fun fromCharOrNull(c: Char): SynsetType? {
             return when (c) {
                 'n', 'N' -> N
                 'v', 'V' -> V

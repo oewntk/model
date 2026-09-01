@@ -1,22 +1,21 @@
 package org.oewntk.model
 
-import org.oewntk.model.LemmaImpl.Companion.ESC_LEMMA_CHARS_RE
-import org.oewntk.model.SynsetIdImpl.Companion.SYNSET_ID_RE
+import org.oewntk.model.Lemma.Companion.ESC_LEMMA_CHARS_RE
+import org.oewntk.model.SynsetId.Companion.SYNSET_ID_RE
 import java.io.Serializable
-import kotlin.text.matches
 
 /**
- * SenseKey implementation
+ * SenseKey
  */
 @kotlinx.serialization.Serializable
 @JvmInline
-value class SenseKeyImpl(val id: String) : Comparable<SenseKeyImpl>, Serializable {
+value class SenseKey(val id: String) : Comparable<SenseKey>, Serializable {
     init {
         require(senseKeyRegex.matches(id)) { "Invalid sense key: '$id'" }
     }
 
     override fun toString(): String = id
-    override fun compareTo(other: SenseKeyImpl): Int = id.compareTo(other.id)
+    override fun compareTo(other: SenseKey): Int = id.compareTo(other.id)
 
     companion object {
 

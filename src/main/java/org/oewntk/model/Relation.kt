@@ -3,17 +3,17 @@ package org.oewntk.model
 import java.io.Serializable
 
 /**
- * Relation implementation
+ * Relation
  */
 @kotlinx.serialization.Serializable
 @JvmInline
-value class RelationImpl(val id: String) : Comparable<RelationImpl>, Serializable {
+value class Relation(val id: String) : Comparable<Relation>, Serializable {
     init {
         require(relationRegex.matches(id)) { "Invalid Relation: '$id'" }
     }
 
     override fun toString(): String = id
-    override fun compareTo(other: RelationImpl): Int = id.compareTo(other.id)
+    override fun compareTo(other: Relation): Int = id.compareTo(other.id)
 
     companion object{
 

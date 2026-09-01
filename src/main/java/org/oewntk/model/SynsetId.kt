@@ -1,20 +1,19 @@
 package org.oewntk.model
 
 import java.io.Serializable
-import kotlin.text.matches
 
 /**
- * Synset Id implementation
+ * Synset Id
  */
 @kotlinx.serialization.Serializable
 @JvmInline
-value class SynsetIdImpl(val id: String) : Comparable<SynsetIdImpl>, Serializable {
+value class SynsetId(val id: String) : Comparable<SynsetId>, Serializable {
     init {
         require(synsetIdRegex.matches(id)) { "Invalid synset id: '$id'" }
     }
 
     override fun toString(): String = id
-    override fun compareTo(other: SynsetIdImpl): Int = id.compareTo(other.id)
+    override fun compareTo(other: SynsetId): Int = id.compareTo(other.id)
 
     companion object {
 

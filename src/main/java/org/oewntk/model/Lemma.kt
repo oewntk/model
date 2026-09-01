@@ -2,20 +2,19 @@ package org.oewntk.model
 
 import java.io.Serializable
 import java.util.Locale
-import kotlin.text.matches
 
 /**
- * Lemma implementation
+ * Lemma
  */
 @kotlinx.serialization.Serializable
 @JvmInline
-value class LemmaImpl(val form: String) : Comparable<LemmaImpl>, Serializable {
+value class Lemma(val form: String) : Comparable<Lemma>, Serializable {
     init {
         require(lemmaRegex.matches(form)) { "Invalid lemma: '$form'" }
     }
 
     override fun toString(): String = form
-    override fun compareTo(other: LemmaImpl): Int = form.compareTo(other.form)
+    override fun compareTo(other: Lemma): Int = form.compareTo(other.form)
     val lowercased: String
         get() = form.lowercase(Locale.ENGLISH)
     val lCLemma: Lemma

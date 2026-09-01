@@ -3,17 +3,17 @@ package org.oewntk.model
 import java.io.Serializable
 
 /**
- * Discriminant implementation
+ * Discriminant
  */
 @kotlinx.serialization.Serializable
 @JvmInline
-value class DiscriminantImpl(val id: String) : Comparable<DiscriminantImpl>, Serializable {
+value class Discriminant(val id: String) : Comparable<Discriminant>, Serializable {
     init {
         require(discriminantRegex.matches(id)) { "Invalid discriminant: '$id'" }
     }
 
     override fun toString(): String = id
-    override fun compareTo(other: DiscriminantImpl): Int = id.compareTo(other.id)
+    override fun compareTo(other: Discriminant): Int = id.compareTo(other.id)
 
     companion object {
 

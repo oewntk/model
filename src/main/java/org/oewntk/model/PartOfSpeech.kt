@@ -7,27 +7,27 @@ import java.util.Comparator
  *
  * [n,v,a,r]
  */
-enum class PartOfSpeechImpl(val value: Char, val fullName: String) {
+enum class PartOfSpeech(val value: Char, val fullName: String) {
     N('n', "noun") {
-        override fun toCategory(): CategoryImpl = CategoryImpl.N
+        override fun toCategory(): Category = Category.N
     },
     V('v', "verb") {
-        override fun toCategory(): CategoryImpl = CategoryImpl.V
+        override fun toCategory(): Category = Category.V
     },
     A('a', "adj") {
-        override fun toCategory(): CategoryImpl = CategoryImpl.A
+        override fun toCategory(): Category = Category.A
     },
     R('r', "adv") {
-        override fun toCategory(): CategoryImpl = CategoryImpl.R
+        override fun toCategory(): Category = Category.R
     };
 
-    abstract fun toCategory(): CategoryImpl
+    abstract fun toCategory(): Category
     override fun toString(): String {
         throw IllegalAccessException("Illegal: use .value ${this.value}")
     }
 
     companion object {
-        fun fromCharOrNull(c: Char): PartOfSpeechImpl? {
+        fun fromCharOrNull(c: Char): PartOfSpeech? {
             return when (c) {
                 'n' -> N
                 'v' -> V
@@ -37,11 +37,11 @@ enum class PartOfSpeechImpl(val value: Char, val fullName: String) {
             }
         }
 
-        fun fromFullNameOrNull(fullName: String): PartOfSpeechImpl? = entries.firstOrNull { it.fullName == fullName }
+        fun fromFullNameOrNull(fullName: String): PartOfSpeech? = entries.firstOrNull { it.fullName == fullName }
 
-        fun fromChar(c: Char): PartOfSpeechImpl = fromCharOrNull(c) ?: throw IllegalArgumentException("Illegal PartOfSpeech: $c")
+        fun fromChar(c: Char): PartOfSpeech = fromCharOrNull(c) ?: throw IllegalArgumentException("Illegal PartOfSpeech: $c")
 
-        fun fromFullName(fullName: String): PartOfSpeechImpl = fromFullNameOrNull(fullName) ?: throw IllegalArgumentException("Illegal PartOfSpeech: $fullName")
+        fun fromFullName(fullName: String): PartOfSpeech = fromFullNameOrNull(fullName) ?: throw IllegalArgumentException("Illegal PartOfSpeech: $fullName")
 
         fun fromKey2(key2: Key2): PartOfSpeech {
             if (key2.id.isEmpty()) throw IllegalArgumentException("Illegal SynsetType: $key2")

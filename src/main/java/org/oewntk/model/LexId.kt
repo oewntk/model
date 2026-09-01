@@ -1,18 +1,18 @@
 package org.oewntk.model
 
-import org.oewntk.model.LemmaImpl.Companion.LEMMA_RE
+import org.oewntk.model.Lemma.Companion.LEMMA_RE
 import java.io.Serializable
 import java.util.Objects
 
 /**
- * LexId
+ * Lex Id
  *
  * @property lemma lemma
  * @property partOfSpeech part of speech
  * @property discriminant discriminant (nullable)
  */
 @kotlinx.serialization.Serializable
-data class LexIdImpl(val lemma: Lemma, val partOfSpeech: PartOfSpeech, val discriminant: Discriminant? = null) : Serializable {
+data class LexId(val lemma: Lemma, val partOfSpeech: PartOfSpeech, val discriminant: Discriminant? = null) : Serializable {
 
     override fun equals(other: Any?): Boolean {
         return this === other || other is LexId && (

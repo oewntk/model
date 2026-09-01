@@ -3,7 +3,7 @@
  */
 package org.oewntk.model
 
-import org.oewntk.model.PartOfSpeechImpl.Companion.partOfSpeechComparator
+import org.oewntk.model.PartOfSpeech.Companion.partOfSpeechComparator
 import java.io.Serializable
 import java.util.*
 

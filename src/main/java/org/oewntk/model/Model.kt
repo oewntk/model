@@ -111,6 +111,7 @@ class Model(
         verbFrames: List<VerbFrame>,
         verbTemplates: List<VerbTemplate>,
         injector: Injector,
+        generatedInverses: Boolean = false
     ) : this(
         coreModel.lexes,
         coreModel.senses,
@@ -118,7 +119,9 @@ class Model(
         verbFrames,
         verbTemplates,
         injector,
-    )
+    ) {
+         this.generatedInverses = generatedInverses
+    }
 
     /**
      * Constructor from data

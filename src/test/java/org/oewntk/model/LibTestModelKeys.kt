@@ -62,7 +62,7 @@ object LibTestModelKeys {
     }
 
     fun testRowShallow(model: CoreModel, ps: PrintStream): IntArray {
-        return testShallow(model, ps, Lemma("row"), Category.N, "-1", "-2")
+        return testShallow(model, ps, Lemma("row"), Category.N, arrayOf(Discriminant("-1"), Discriminant("-2")))
     }
 
     fun testRowNoPronunciationDeep(model: CoreModel, ps: PrintStream): IntArray {
@@ -80,7 +80,7 @@ object LibTestModelKeys {
     }
 
     fun testBassShallow(model: CoreModel, ps: PrintStream): IntArray {
-        return testShallow(model, ps, Lemma("bass"), Category.N, "-1", "-2")
+        return testShallow(model, ps, Lemma("bass"), Category.N, arrayOf(Discriminant("-1"), Discriminant("-2")))
     }
 
     fun testBassNoPronunciationDeep(model: CoreModel, ps: PrintStream): IntArray {
@@ -249,10 +249,10 @@ object LibTestModelKeys {
         ps: PrintStream,
         lemma: Lemma,
         category: Category,
-        vararg discriminants: Discriminant?,
+        discriminants: Array<Discriminant>? = null,
     ): IntArray {
         val keys: MutableList<MultiValued> = ArrayList()
-        for (discriminant in discriminants) {
+        discriminants?.forEach { discriminant ->
             keys.add(KeyF.FuncUsingDiscriminant.Multi.from(Lex::lemma, { it.partOfSpeech.toCategory() }, lemma, category, discriminant!!))
         }
         keys.add(KeyF.FuncBase.Multi.from(Lex::lemma, { it.partOfSpeech.toCategory() }, lemma, category))

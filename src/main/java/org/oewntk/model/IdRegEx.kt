@@ -112,3 +112,16 @@ val RELATION_RE = (SYNSET_RELATIONS + SENSE_RELATIONS)
 val relationRegex = "^$RELATION_RE$".toRegex()
 
 fun String.isRelation(): Boolean = relationRegex.matches(this)
+
+
+val KEY2_RE = "^[nvar](-[0-9]+)?$"
+
+val key2Regex = "^$KEY2_RE$".toRegex()
+
+fun String.isKey2(): Boolean = key2Regex.matches(this)
+
+val DISCRIMINANT_RE = "^(-[0-9]+)?$"
+
+val discriminantRegex = "^$DISCRIMINANT_RE$".toRegex()
+
+fun String.isDiscriminant(): Boolean = discriminantRegex.matches(this)

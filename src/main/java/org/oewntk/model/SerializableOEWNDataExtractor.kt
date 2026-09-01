@@ -41,11 +41,11 @@ private const val KEY_WIKIDATA = "wikidata"
 
 // U T I L S
 
-fun keyPairs(dict: Map<String, Map<Key2, Map<String, Any>>>): Sequence<Pair<String, Key2>> = dict
+fun keyPairs(dict: Map<String, Map<String, Map<String, Any>>>): Sequence<Pair<String, String>> = dict
     .asSequence()
     .flatMap { (key1, inner) -> inner.keys.map { key2 -> key1 to key2 } }
 
-fun entries(dict: Map<String, Map<Key2, Map<String, Any>>>): Sequence<Triple<String, Key2, Any>> = dict
+fun entries(dict: Map<String, Map<String, Map<String, Any>>>): Sequence<Triple<String, String, Any>> = dict
     .asSequence()
     .flatMap { (key1, inner) ->
         inner.map { (key2, thing) -> Triple(key1, key2, thing) }
@@ -181,7 +181,7 @@ fun Lex.toOEWNData(senseResolver: (SenseKey) -> Sense?, includeLexFile: Boolean 
         KEY_SENSE to serializedSenses,
         //  KEY_KEY2 to key2,
     ).apply {
-        discriminant?.let { this[KEY_DISCRIMINANT] = discriminant }
+        discriminant?.let { this[KEY_DISCRIMINANT] = it }
         forms?.let { this[KEY_FORM] = it.toList() }
         pronunciations?.let { this[KEY_PRONUNCIATION] = it.map(Pronunciation::toOEWNData).toList() }
         if (includeLexFile) lexfile.let { this[KEY_LEXFILE] = it }
@@ -366,7 +366,7 @@ fun Synset.toOEWNData(includeLexFile: Boolean = false, leaveRedundantRelation: B
  */
 fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFile: Boolean = false): Synset {
 
-    val type = SynsetType.fromKey2(dict[KEY_PART_OF_SPEECH] as String)
+    val type = SynsetType.fromChar((dict[KEY_PART_OF_SPEECH] as String)[0])
     val domain = dict[KEY_DOMAIN] as Domain
     val members = safeCast<List<String>>(dict[KEY_MEMBERS]!!)
     val definitions = safeCast<List<String>>(dict[KEY_DEFINITION]!!)
@@ -418,19 +418,19 @@ fun Map<SynsetId, Synset>.toOEWNData(leaveRedundantRelation: Boolean = false): M
  * @param senseResolver senseKey to sense resolver
  * @return dict by lemma
  */
-fun Sequence<Lex>.toOEWNData(senseResolver: (SenseKey) -> Sense, leaveRedundantRelation: Boolean = false): Map<String, Map<Key2, Map<String, Any>>> {
+fun Sequence<Lex>.toOEWNData(senseResolver: (SenseKey) -> Sense, leaveRedundantRelation: Boolean = false): Map<String, Map<String, Map<String, Any>>> {
     val hypermap1: HyperMap1 = this.lexByLemmaThenByKey2()
     return hypermap1.toOEWNData(senseResolver, leaveRedundantRelation = leaveRedundantRelation)
 }
 
-fun Sequence<Lex>.toOEWNDataAlt(senseResolver: (SenseKey) -> Sense, leaveRedundantRelation: Boolean = false): Map<String, Map<Key2, Map<String, Any>>> {
-    return mutableMapOf<String, Map<Key2, Map<String, Any>>>()
+fun Sequence<Lex>.toOEWNDataAlt(senseResolver: (SenseKey) -> Sense, leaveRedundantRelation: Boolean = false): Map<String, Map<String, Map<String, Any>>> {
+    return mutableMapOf<String, Map<String, Map<String, Any>>>()
         .apply {
             this@toOEWNDataAlt
                 .sortedBy { it.lemma }
                 .groupBy { it.lemma.form }
                 .forEach { (lemma, lexes) ->
-                    this[lemma] = lexes.associate { it.key2 to it.toOEWNDataValue(senseResolver, leaveRedundantRelation = leaveRedundantRelation) }
+                    this[lemma] = lexes.associate { it.key2.id to it.toOEWNDataValue(senseResolver, leaveRedundantRelation = leaveRedundantRelation) }
                 }
         }
 }
@@ -440,24 +440,26 @@ fun Sequence<Lex>.toOEWNDataAlt(senseResolver: (SenseKey) -> Sense, leaveRedunda
  *
  * @receiver hypermap1 (lex by lemma then by key2)
  */
-fun HyperMap1.toOEWNData(senseResolver: (SenseKey) -> Sense, leaveRedundantRelation: Boolean = false): Map<String, Map<Key2, Map<String, Any>>> {
+fun HyperMap1.toOEWNData(senseResolver: (SenseKey) -> Sense, leaveRedundantRelation: Boolean = false): Map<String, Map<String, Map<String, Any>>> {
     return this
-        .mapKeys { (k, _) -> k.form }
+        .mapKeys { (lemma, _) -> lemma.form }
         .mapValues { (_, v) ->
-            v.mapValues { (_: Key2, lex) -> lex.toOEWNDataValue(senseResolver = { senseResolver(it) }, leaveRedundantRelation = leaveRedundantRelation) }.toSortedMap()
+            v
+                .mapKeys { (key2, _) -> key2.id }
+                .mapValues { (_, lex) -> lex.toOEWNDataValue(senseResolver = { senseResolver(it) }, leaveRedundantRelation = leaveRedundantRelation) }.toSortedMap()
         }.toSortedMap()
 }
 
 /**
  * Lexes and senses from dictionary
  */
-fun lexesAndSensesFromOEWNData(dict: Map<String, Map<Key2, Map<String, Any>>>): Pair<Sequence<Lex>, Sequence<Sense>> {
+fun lexesAndSensesFromOEWNData(dict: Map<String, Map<String, Map<String, Any>>>): Pair<Sequence<Lex>, Sequence<Sense>> {
 
     // lexes
     val lexes = entries(dict).map {
         val (lemma, key2, value2) = it
         val lexDict = safeCast<Map<String, Any>>(value2)
-        lexFromOEWNData(Lemma(lemma), PartOfSpeech.fromKey2(key2), SynsetType.discriminantFromKey2(key2), lexDict)
+        lexFromOEWNData(Lemma(lemma), PartOfSpeech.fromKey2(Key2(key2)), SynsetType.discriminantFromKey2(Key2(key2)), lexDict)
     }
     // senses
     val senses = entries(dict).flatMap {
@@ -465,7 +467,7 @@ fun lexesAndSensesFromOEWNData(dict: Map<String, Map<Key2, Map<String, Any>>>): 
         val lexDict = safeCast<Map<String, Any>>(value2)
         val senseDicts = safeCast<List<Map<String, Any>>>(lexDict[KEY_SENSE]!!)
         senseDicts.withIndex().map { (idx, senseDict) ->
-            senseFromOEWNData(Lemma(lemma), PartOfSpeech.fromKey2(key2), SynsetType.discriminantFromKey2(key2), idx, senseDict)
+            senseFromOEWNData(Lemma(lemma), PartOfSpeech.fromKey2(Key2(key2)), SynsetType.discriminantFromKey2(Key2(key2)), idx, senseDict)
         }
     }
 

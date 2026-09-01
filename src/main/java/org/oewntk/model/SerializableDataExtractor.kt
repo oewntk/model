@@ -41,7 +41,7 @@ private const val KEY_WIKIDATA = "wikidata"
 fun typeFromData(dict: Map<String, Any>): SynsetType {
     return dict[KEY_TYPE].let {
         when (it) {
-            is String -> SynsetType.fromKey2(it)
+            is String -> SynsetType.fromChar(it[0])
             is Char -> SynsetType.fromChar(it)
             else -> throw IllegalArgumentException(it.toString())
         }
@@ -56,7 +56,7 @@ fun typeFromData(dict: Map<String, Any>): SynsetType {
 fun partOfSpeechFromData(dict: Map<String, Any>): PartOfSpeech {
     return dict[KEY_PARTOFSPEECH].let {
         when (it) {
-            is String -> PartOfSpeech.fromKey2(it)
+            is String -> PartOfSpeech.fromKey2(Key2(it))
             is Char -> PartOfSpeech.fromChar(it)
             else -> throw IllegalArgumentException(it.toString())
         }
@@ -89,7 +89,7 @@ fun examplesFromData(list: List<Any>): List<Example> {
  *  - variety
  */
 fun Pronunciation.toData(): Map<String, Any> {
-    return mutableMapOf<String,Any>(KEY_VALUE to value)
+    return mutableMapOf<String, Any>(KEY_VALUE to value)
         .apply {
             variety?.let { this[KEY_VARIETY] = it }
         }
@@ -137,7 +137,7 @@ fun LexId.toData(): Map<String, Any> {
 fun lexIdFromData(dict: Map<String, Any>): LexId {
     val lemma = Lemma(dict[KEY_LEMMA] as String)
     val partOfSpeech: PartOfSpeech = partOfSpeechFromData(dict)
-    val discriminant = dict[KEY_DISCRIMINANT] as Discriminant?
+    val discriminant = (dict[KEY_DISCRIMINANT] as String?)?.let { Discriminant(it) }
     return LexId(lemma, partOfSpeech, discriminant)
 }
 
@@ -170,7 +170,7 @@ fun Lex.toData(): Map<String, Any> {
 fun lexFromData(dict: Map<String, Any>): Lex {
     val lexId = lexIdFromData(dict)
     val senseKeys = safeCast<List<String>>(dict[KEY_SENSE]!!)
-        .map{ SenseKey(it) }
+        .map { SenseKey(it) }
     return Lex(lexId.lemma, lexId.partOfSpeech, lexId.discriminant, senseKeys).apply {
         dict[KEY_FORM]?.let { forms = safeCast<List<String>>(it).toSet() }
         dict[KEY_PRONUNCIATION]?.let { pronunciations = safeCast<List<Map<String, Any>>>(it).map { p -> pronunciationFromData(p) }.toSet() }
@@ -195,7 +195,7 @@ fun Synset.toData(includeLexFile: Boolean = false): Map<String, Any> {
     ).apply {
         examples?.let { this[KEY_EXAMPLE] = it.map { example -> if (example.source == null) example.text else mapOf(KEY_TEXT to example.text, KEY_SOURCE to example.source) }.toList() }
         usages?.let { this[KEY_USAGE] = it }
-        relations?.let { this[KEY_RELATION] = it.mapKeys{ (relation,_) -> relation.id } }
+        relations?.let { this[KEY_RELATION] = it.mapKeys { (relation, _) -> relation.id } }
         ili?.let { this[KEY_ILI] = it }
         wikidata?.let { this[KEY_WIKIDATA] = it.joinToString(separator = ";") }
         source?.let { this[KEY_SOURCE] = it }
@@ -224,7 +224,8 @@ fun synsetFromData(dict: Map<String, Any>, includeLexFile: Boolean = false): Syn
     val relations = dict[KEY_RELATION]?.let {
         safeCast<Map<String, Collection<String>>>(it)
             .mapKeys { (rel, _) -> Relation(rel) }
-            .mapValues { (_, targetIds) -> targetIds.map { SynsetId(it) }.toSet() } }
+            .mapValues { (_, targetIds) -> targetIds.map { SynsetId(it) }.toSet() }
+    }
     return Synset(
         synsetId, type, domain, members.map(::Lemma).toSet(), definitions,
         examples = examples,
@@ -259,7 +260,7 @@ fun Sense.toData(): Map<String, Any> {
             verbTemplates?.let { this[KEY_VERBTEMPLATE] = it.joinToString(separator = ";") }
             adjPosition?.let { this[KEY_ADJPOSITION] = it }
             tagCount?.let { this[KEY_TAGCOUNT] = it }
-            relations?.let { this[KEY_RELATION] = it.mapKeys{ (relation,_) -> relation.id } }
+            relations?.let { this[KEY_RELATION] = it.mapKeys { (relation, _) -> relation.id } }
         }
 }
 
@@ -282,7 +283,8 @@ fun senseFromData(dict: Map<String, Any>): Sense {
     val relations = dict[KEY_RELATION]?.let {
         safeCast<Map<String, Collection<String>>>(it)
             .mapKeys { (rel, _) -> Relation(rel) }
-            .mapValues { (_, targetIds) -> targetIds.map { SenseKey(it) }.toSet() } }
+            .mapValues { (_, targetIds) -> targetIds.map { SenseKey(it) }.toSet() }
+    }
     return Sense(id, lexId, synsetId, index, examples, verbFrames, verbTemplates, adjPosition, tagCount, relations)
 }
 

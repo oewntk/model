@@ -10,8 +10,8 @@ import java.util.Locale
 import java.util.Objects
 
 typealias Lemma = LemmaImpl
-typealias Key2 = String
-typealias Discriminant = String
+typealias Key2 = Key2Impl
+typealias Discriminant = DiscriminantImpl
 typealias LexId = LexIdImpl
 typealias SenseKey = SenseKeyImpl
 typealias SynsetId = SynsetIdImpl
@@ -19,14 +19,14 @@ typealias SynsetId = SynsetIdImpl
 typealias Relation = RelationImpl
 
 typealias Example = ExampleImpl
-
-typealias Domain = String
-typealias Morph = String
 typealias PronunciationValue = PronunciationValueImpl
+
 typealias PronunciationVariety = String
+typealias Domain = String
+typealias AdjPosition = String
+typealias Morph = String
 typealias VerbFrameId = String
 typealias VerbTemplateId = Int
-typealias AdjPosition = String
 
 typealias HyperMap = Map<Lemma, Map<Key2, Collection<Lex>>>
 typealias HyperMap1 = Map<Lemma, Map<Key2, Lex>>
@@ -115,6 +115,34 @@ data class LexIdImpl(val lemma: Lemma, val partOfSpeech: PartOfSpeech, val discr
 }
 
 /**
+ * Key2 implementation
+ */
+@kotlinx.serialization.Serializable
+@JvmInline
+value class Key2Impl(val id: String) : Comparable<Key2Impl>, Serializable {
+    init {
+        require(key2Regex.matches(id)) { "Invalid key2: '$id'" }
+    }
+
+    override fun toString(): String = id
+    override fun compareTo(other: Key2Impl): Int = id.compareTo(other.id)
+}
+
+/**
+ * Discriminant implementation
+ */
+@kotlinx.serialization.Serializable
+@JvmInline
+value class DiscriminantImpl(val id: String) : Comparable<DiscriminantImpl>, Serializable {
+    init {
+        require(discriminantRegex.matches(id)) { "Invalid discriminant: '$id'" }
+    }
+
+    override fun toString(): String = id
+    override fun compareTo(other: DiscriminantImpl): Int = id.compareTo(other.id)
+}
+
+/**
  * Synset type
  *
  * [n,v,a,r,s]
@@ -160,15 +188,10 @@ enum class SynsetTypeImpl(val value: Char) {
             }
         }
 
-        fun fromChar(c: Char): SynsetTypeImpl = fromCharOrNull(c) ?: throw IllegalArgumentException("Illegal SynsetType: $c")
-
-        fun fromKey2(key2: Key2): SynsetTypeImpl {
-            if (key2.isEmpty()) throw IllegalArgumentException("Illegal SynsetType: $key2")
-            return fromChar(key2[0])
-        }
+        fun fromChar(c: Char): SynsetType = fromCharOrNull(c) ?: throw IllegalArgumentException("Illegal SynsetType: $c")
 
         fun discriminantFromKey2(key2: Key2): Discriminant? {
-            return if (key2.length > 1) key2.substring(1) else null
+            return if (key2.id.length > 1) Discriminant(key2.id.substring(1)) else null
         }
 
         val synsetTypeComparator: Comparator<SynsetType> = compareBy(SynsetType::value)
@@ -216,13 +239,13 @@ enum class PartOfSpeechImpl(val value: Char, val fullName: String) {
 
         fun fromFullName(fullName: String): PartOfSpeechImpl = fromFullNameOrNull(fullName) ?: throw IllegalArgumentException("Illegal PartOfSpeech: $fullName")
 
-        fun fromKey2(key2: Key2): PartOfSpeechImpl {
-            if (key2.isEmpty()) throw IllegalArgumentException("Illegal SynsetType: $key2")
-            return fromChar(key2[0])
+        fun fromKey2(key2: Key2): PartOfSpeech {
+            if (key2.id.isEmpty()) throw IllegalArgumentException("Illegal SynsetType: $key2")
+            return fromChar(key2.id[0])
         }
 
         fun discriminantFromKey2(key2: Key2): Discriminant? {
-            return if (key2.length > 1) key2.substring(1) else null
+            return if (key2.id.length > 1) Discriminant(key2.id.substring(1)) else null
         }
 
         val partOfSpeechComparator: Comparator<PartOfSpeech> = compareBy(PartOfSpeech::value)

@@ -52,8 +52,8 @@ data class Lex(
         get() = LexId(lemma, partOfSpeech, discriminant)
     val value: List<SenseKey>
         get() = senseKeys
-    val key2: String
-        get() = if (discriminant != null) "${partOfSpeech.value}$discriminant" else partOfSpeech.value.toString()
+    val key2: Key2
+        get() = Key2(if (discriminant != null) "${partOfSpeech.value}$discriminant" else partOfSpeech.value.toString())
     val properties: Array<Any?>
         get() = arrayOf(forms, pronunciations)
 
@@ -82,7 +82,7 @@ data class Lex(
         key2: String,
         senseKeys: List<SenseKey> = ArrayList(),
         generated: Boolean = false
-    ) : this(lemma, PartOfSpeech.fromKey2(key2), PartOfSpeech.discriminantFromKey2(key2), senseKeys, generated = generated)
+    ) : this(lemma, PartOfSpeech.fromKey2(Key2(key2)), PartOfSpeech.discriminantFromKey2(Key2(key2)), senseKeys, generated = generated)
 
     // identify
 

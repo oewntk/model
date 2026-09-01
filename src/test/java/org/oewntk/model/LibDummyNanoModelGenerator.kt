@@ -102,7 +102,7 @@ object LibDummyNanoModelGenerator {
 
     fun genLeDiffWithDiscriminant(): Pair<Lex, Lex> =
         Lex(Lemma(LEMMA1), PartOfSpeech.V, discriminant= null, listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) } to
-        Lex(Lemma(LEMMA1), PartOfSpeech.V, discriminant = "-1", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) }
+        Lex(Lemma(LEMMA1), PartOfSpeech.V, discriminant = Discriminant("-1"), listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) }
 
     fun genLeDiffWithKey2(): Pair<Lex, Lex> =
         Lex(Lemma(LEMMA1), "v", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) } to

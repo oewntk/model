@@ -3,8 +3,8 @@ package org.oewntk.model
 import org.oewntk.model.InverseRelationFactory.INVERSE_SENSE_RELATIONS_SET
 import org.oewntk.model.InverseRelationFactory.INVERSE_SYNSET_RELATIONS_SET
 import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
-import org.oewntk.model.Sense.Companion.SENSE_RELATIONS
-import org.oewntk.model.Synset.Companion.SYNSET_RELATIONS
+import org.oewntk.model.Relation.Companion.SENSE_RELATIONS
+import org.oewntk.model.Relation.Companion.SYNSET_RELATIONS
 
 typealias Filename = String
 

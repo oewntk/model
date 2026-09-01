@@ -215,75 +215,11 @@ data class Sense(
             "other"
         )
 
-        val SENSE_RELATIONS = arrayOf(
-            "antonym",
-            "similar",
-            "exemplifies", "is_exemplified_by",
-            "derivation",
-            "pertainym",
-            "participle",
-            "also",
-            "domain_region", "has_domain_region",
-            "domain_topic", "has_domain_topic",
-
-            "agent",
-            "material",
-            "event",
-            "instrument",
-            "location",
-            "by_means_of",
-            "undergoer",
-            "property",
-            "result",
-            "state",
-            "uses",
-            "destination",
-            "body_part",
-            "vehicle",
-
-            "collocation",
-            "other"
-        )
-
         val INVERSE_SENSE_RELATIONS = mapOf(
             Relation("exemplifies") to Relation("is_exemplified_by"),
             Relation("domain_topic") to Relation("has_domain_topic"),
             Relation("domain_region") to Relation("has_domain_region"),
         )
-
-        /*
-        ignored
-          // antonym|
-          // also|
-          // participle|
-          // pertainym|
-          // derivation|
-          // domain_topic|
-          // has_domain_topic|
-          // domain_region|
-          // has_domain_region|
-          // exemplifies|
-          // is_exemplified_by|
-          // similar|
-          // other|
-          simple_aspect_ip|
-          secondary_aspect_ip|
-          simple_aspect_pi|
-          secondary_aspect_pi|
-          feminine|
-          has_feminine|
-          masculine|
-          has_masculine|
-          young|
-          has_young|
-          diminutive|
-          has_diminutive|
-          augmentative|
-          has_augmentative|
-          anto_gradable|
-          anto_simple|
-          anto_converse
-         */
 
     }
 }

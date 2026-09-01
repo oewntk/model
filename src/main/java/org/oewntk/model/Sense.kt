@@ -92,8 +92,8 @@ data class Sense(
     override fun equals(other: Any?): Boolean {
         return this === other || other is Sense && (
                 key == other.key
-                && value == other.value
-                && properties.contentEquals(other.properties))
+                        && value == other.value
+                        && properties.contentEquals(other.properties))
     }
 
     override fun hashCode(): Int {
@@ -181,45 +181,5 @@ data class Sense(
     fun toLongString(): String {
         val relationsStr = relations?.joinToString(",") ?: ""
         return "[${indexInLex + 1}] of '${lemma}' $senseId ${partOfSpeech.value} $synsetId {$relationsStr}"
-    }
-
-    companion object {
-
-        val VALID_SENSE_RELATIONS = arrayOf(
-            "antonym",
-            "similar",
-            "exemplifies",
-            "derivation",
-            "pertainym",
-            "participle",
-            "also",
-            "domain_region",
-            "domain_topic",
-
-            "state",
-            "result",
-            "event",
-            "property",
-            "location",
-            "destination",
-            "agent",
-            "undergoer",
-            "uses",
-            "instrument",
-            "by_means_of",
-            "material",
-            "vehicle",
-            "body_part",
-
-            "collocation",
-            "other"
-        )
-
-        val INVERSE_SENSE_RELATIONS = mapOf(
-            Relation("exemplifies") to Relation("is_exemplified_by"),
-            Relation("domain_topic") to Relation("has_domain_topic"),
-            Relation("domain_region") to Relation("has_domain_region"),
-        )
-
     }
 }

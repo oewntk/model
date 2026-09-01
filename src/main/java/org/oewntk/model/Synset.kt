@@ -78,7 +78,7 @@ data class Synset(
         // throw UnsupportedOperationException("$this / $other")
         return this === other || other is Synset && (
                 key == other.key
-                && value.contentEquals(other.value))
+                        && value.contentEquals(other.value))
     }
 
     override fun hashCode(): Int {
@@ -198,37 +198,4 @@ data class Synset(
         return "$synsetId ${type.value} {$membersStr} '$definition' {$relationsStr}"
     }
 
-    companion object {
-
-        val VALID_SYNSET_RELATIONS = arrayOf(
-            "hypernym",  // "hyponym",
-            "instance_hypernym",  // "instance_hyponym",
-            "mero_part",  // "holo_part",
-            "mero_member",  // "holo_member",
-            "mero_substance",  // "holo_substance",
-            "causes",  // "is_caused_by",
-            "entails",  // "is_entailed_by",
-            "exemplifies",  // "is_exemplified_by",
-            "domain_topic",  // "has_domain_topic"
-            "domain_region",  // "has_domain_region"
-            "attribute",
-            "similar",
-            "verb_group", // wn31
-            "also",
-        )
-
-        val INVERSE_SYNSET_RELATIONS = mapOf(
-            Relation("hypernym") to Relation("hyponym"),
-            Relation("instance_hypernym") to Relation("instance_hyponym"),
-            Relation("mero_part") to Relation("holo_part"),
-            Relation("mero_member") to Relation("holo_member"),
-            Relation("mero_substance") to Relation("holo_substance"),
-            Relation("causes") to Relation("is_caused_by"),
-            Relation("entails") to Relation("is_entailed_by"),
-            Relation("exemplifies") to Relation("is_exemplified_by"),
-            Relation("domain_topic") to Relation("has_domain_topic"),
-            Relation("domain_region") to Relation("has_domain_region"),
-        )
-
-    }
 }

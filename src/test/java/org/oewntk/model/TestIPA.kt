@@ -5,6 +5,8 @@ package org.oewntk.model
 
 import junit.framework.TestCase.assertTrue
 import org.junit.Test
+import org.oewntk.model.PronunciationValueImpl.Companion.ipaRegex
+import org.oewntk.model.PronunciationValueImpl.Companion.isIPA
 
 class TestIPA {
 

@@ -5,6 +5,7 @@ package org.oewntk.model
 
 import junit.framework.TestCase.assertFalse
 import org.junit.Test
+import org.oewntk.model.RelationImpl.Companion.isRelation
 
 class TestRelation {
 

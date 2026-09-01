@@ -9,7 +9,6 @@ import org.oewntk.model.KeyF.MonoValued
 import org.oewntk.model.KeyF.MultiValued
 import org.oewntk.model.Pronunciation.Companion.ipa
 import java.io.PrintStream
-import java.util.Locale
 
 object LibTestModelKeys {
     // M O B I L E
@@ -253,7 +252,7 @@ object LibTestModelKeys {
     ): IntArray {
         val keys: MutableList<MultiValued> = ArrayList()
         discriminants?.forEach { discriminant ->
-            keys.add(KeyF.FuncUsingDiscriminant.Multi.from(Lex::lemma, { it.partOfSpeech.toCategory() }, lemma, category, discriminant!!))
+            keys.add(KeyF.FuncUsingDiscriminant.Multi.from(Lex::lemma, { it.partOfSpeech.toCategory() }, lemma, category, discriminant))
         }
         keys.add(KeyF.FuncBase.Multi.from(Lex::lemma, { it.partOfSpeech.toCategory() }, lemma, category))
         return testKeysMulti(model, ps, lemma, *keys.toTypedArray<MultiValued>())

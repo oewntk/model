@@ -14,7 +14,6 @@ import org.oewntk.model.TestUtils.lexHypermapForLemmaToString
 import org.oewntk.model.TestUtils.lexesToString
 import org.oewntk.model.TestUtils.sensesToString
 import java.io.PrintStream
-import java.util.Locale
 
 object LibTestModelLexGroups {
 

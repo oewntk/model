@@ -1,7 +1,5 @@
 package org.oewntk.model
 
-import java.util.*
-
 object LibLexGroupings {
 
     /**

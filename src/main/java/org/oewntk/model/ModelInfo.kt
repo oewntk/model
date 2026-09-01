@@ -3,8 +3,6 @@
  */
 package org.oewntk.model
 
-import java.util.*
-
 /**
  * Model info
  */

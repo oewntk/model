@@ -1,7 +1,5 @@
 package org.oewntk.model
 
-import java.util.Locale
-
 object SenseKeys {
 
     val LEXFILE_TO_NUM = mapOf(

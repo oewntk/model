@@ -4,7 +4,6 @@
 package org.oewntk.model
 
 import java.io.StringWriter
-import java.util.Locale
 
 object TestUtils {
 

@@ -48,8 +48,8 @@ data class DataCoreModel(
     override fun equals(other: Any?): Boolean {
         return this === other || other is DataCoreModel && (
                 lexes == other.lexes
-                        && senses == other.senses
-                        && synsets == other.synsets)
+                && senses == other.senses
+                && synsets == other.synsets)
     }
 
     override fun hashCode(): Int {

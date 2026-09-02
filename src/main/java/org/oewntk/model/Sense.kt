@@ -68,7 +68,7 @@ data class Sense(
     val lemma: Lemma
         get() = lexId.lemma
     val lCLemma: Lemma
-        get() = lemma.lowercase(Locale.ENGLISH)
+        get() = lemma.lCLemma
     val isCased: Boolean
         get() = lemma != lCLemma
     val partOfSpeech: PartOfSpeech
@@ -87,13 +87,13 @@ data class Sense(
      * Used in NID maps
      */
     val uniqueId
-        get() = "$senseKey ${lemma.replace(' ', '_')}"
+        get() = "$senseKey ${lemma.form.replace(' ', '_')}"
 
     override fun equals(other: Any?): Boolean {
         return this === other || other is Sense && (
                 key == other.key
-                && value == other.value
-                && properties.contentEquals(other.properties))
+                        && value == other.value
+                        && properties.contentEquals(other.properties))
     }
 
     override fun hashCode(): Int {
@@ -164,7 +164,7 @@ data class Sense(
      * @return lexid
      */
     fun findLexid(): Int {
-        return senseId.split("%".toRegex())
+        return senseId.id.split("%".toRegex())
             .dropLastWhile { it.isEmpty() }
             .toTypedArray()[1]
             .split(":".toRegex())
@@ -181,109 +181,5 @@ data class Sense(
     fun toLongString(): String {
         val relationsStr = relations?.joinToString(",") ?: ""
         return "[${indexInLex + 1}] of '${lemma}' $senseId ${partOfSpeech.value} $synsetId {$relationsStr}"
-    }
-
-    companion object {
-
-        val VALID_SENSE_RELATIONS = arrayOf(
-            "antonym",
-            "similar",
-            "exemplifies",
-            "derivation",
-            "pertainym",
-            "participle",
-            "also",
-            "domain_region",
-            "domain_topic",
-
-            "state",
-            "result",
-            "event",
-            "property",
-            "location",
-            "destination",
-            "agent",
-            "undergoer",
-            "uses",
-            "instrument",
-            "by_means_of",
-            "material",
-            "vehicle",
-            "body_part",
-
-            "collocation",
-            "other"
-        )
-
-        val SENSE_RELATIONS = arrayOf(
-            "antonym",
-            "similar",
-            "exemplifies", "is_exemplified_by",
-            "derivation",
-            "pertainym",
-            "participle",
-            "also",
-            "domain_region", "has_domain_region",
-            "domain_topic", "has_domain_topic",
-
-            "agent",
-            "material",
-            "event",
-            "instrument",
-            "location",
-            "by_means_of",
-            "undergoer",
-            "property",
-            "result",
-            "state",
-            "uses",
-            "destination",
-            "body_part",
-            "vehicle",
-
-            "collocation",
-            "other"
-        )
-
-        val INVERSE_SENSE_RELATIONS = mapOf(
-            "exemplifies" to "is_exemplified_by",
-            "domain_topic" to "has_domain_topic",
-            "domain_region" to "has_domain_region",
-        )
-
-        /*
-        ignored
-          // antonym|
-          // also|
-          // participle|
-          // pertainym|
-          // derivation|
-          // domain_topic|
-          // has_domain_topic|
-          // domain_region|
-          // has_domain_region|
-          // exemplifies|
-          // is_exemplified_by|
-          // similar|
-          // other|
-          simple_aspect_ip|
-          secondary_aspect_ip|
-          simple_aspect_pi|
-          secondary_aspect_pi|
-          feminine|
-          has_feminine|
-          masculine|
-          has_masculine|
-          young|
-          has_young|
-          diminutive|
-          has_diminutive|
-          augmentative|
-          has_augmentative|
-          anto_gradable|
-          anto_simple|
-          anto_converse
-         */
-
     }
 }

@@ -23,98 +23,98 @@ object LibDummyNanoModelGenerator {
 
     // @formatter:off
     fun genSynsetEqual(): Pair<Synset, Synset> =
-        Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, null, null) to
-        Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, null, null)
+        Synset(SynsetId(SYNSETID1), SynsetType.V, DOMAIN1, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION1, null, null) to
+        Synset(SynsetId(SYNSETID1), SynsetType.V, DOMAIN1, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION1, null, null)
 
     fun genSynsetDiffWithId(): Pair<Synset, Synset> =
-        Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, null, null) to
-        Synset(SYNSETID2, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, null, null)
+        Synset(SynsetId(SYNSETID1), SynsetType.V, DOMAIN1, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION1, null, null) to
+        Synset(SynsetId(SYNSETID2), SynsetType.V, DOMAIN1, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION1, null, null)
 
     fun genSynsetDiffWithType(): Pair<Synset, Synset> =
-        Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, null, null) to
-        Synset(SYNSETID1, SynsetType.N, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, null, null)
+        Synset(SynsetId(SYNSETID1), SynsetType.V, DOMAIN1, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION1, null, null) to
+        Synset(SynsetId(SYNSETID1), SynsetType.N, DOMAIN1, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION1, null, null)
 
     fun genSynsetDiffWithDomain(): Pair<Synset, Synset> =
-        Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, null, null) to
-        Synset(SYNSETID1, SynsetType.V, DOMAIN2, setOf(LEMMA1, LEMMA2), DEFINITION1, null, null)
+        Synset(SynsetId(SYNSETID1), SynsetType.V, DOMAIN1, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION1, null, null) to
+        Synset(SynsetId(SYNSETID1), SynsetType.V, DOMAIN2, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION1, null, null)
 
     fun genSynsetDiffWithMembers(): Pair<Synset, Synset> =
-        Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, null, null) to
-        Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA3), DEFINITION1, null, null)
+        Synset(SynsetId(SYNSETID1), SynsetType.V, DOMAIN1, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION1, null, null) to
+        Synset(SynsetId(SYNSETID1), SynsetType.V, DOMAIN1, setOf(Lemma(LEMMA1), Lemma(LEMMA3)), DEFINITION1, null, null)
 
     fun genSynsetDiffWithDefinition(): Pair<Synset, Synset> =
-        Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, null, null) to
-        Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION2, null, null)
+        Synset(SynsetId(SYNSETID1), SynsetType.V, DOMAIN1, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION1, null, null) to
+        Synset(SynsetId(SYNSETID1), SynsetType.V, DOMAIN1, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION2, null, null)
 
     fun genSynsetDiffWithExamples(): Pair<Synset, Synset> =
-        Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, null, null) to
-        Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, listOf(Example("He often jokes when ...", null)), null)
+        Synset(SynsetId(SYNSETID1), SynsetType.V, DOMAIN1, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION1, null, null) to
+        Synset(SynsetId(SYNSETID1), SynsetType.V, DOMAIN1, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION1, listOf(Example("He often jokes when ...", null)), null)
 
     // @formatter:on
 
     // @formatter:off
 
     fun genSenseEqual(): Pair<Sense, Sense> =
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0) to
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0)
+        Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID1), indexInLex = 0) to
+        Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID1), indexInLex = 0)
 
     fun genSenseDiffWithId(): Pair<Sense, Sense> =
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0) to
-        Sense(SENSEKEY12, lex1.key, SYNSETID1, indexInLex = 0)
+        Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID1), indexInLex = 0) to
+        Sense(SenseKey(SENSEKEY12), lex1.key, SynsetId(SYNSETID1), indexInLex = 0)
 
     fun genSenseDiffWithLexId(): Pair<Sense, Sense> =
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0) to
-        Sense(SENSEKEY11, lex2.key, SYNSETID1, indexInLex = 0)
+        Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID1), indexInLex = 0) to
+        Sense(SenseKey(SENSEKEY11), lex2.key, SynsetId(SYNSETID1), indexInLex = 0)
 
     fun genSenseDiffWithSynsetId(): Pair<Sense, Sense> =
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0) to
-        Sense(SENSEKEY11, lex1.key, SYNSETID2, indexInLex = 0)
+        Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID1), indexInLex = 0) to
+        Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID2), indexInLex = 0)
 
     fun genSenseDiffWithIndexInLex(): Pair<Sense, Sense> =
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0) to
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 1)
+        Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID1), indexInLex = 0) to
+        Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID1), indexInLex = 1)
 
     fun genSenseDiffWithAdjPosition(): Pair<Sense, Sense> =
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, adjPosition = "a") to
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, adjPosition = "ip")
+        Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID1), indexInLex = 0, adjPosition = "a") to
+        Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID1), indexInLex = 0, adjPosition = "ip")
 
     fun genSenseDiffWithVerbFrames(): Pair<Sense, Sense> =
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, verbFrames = setOf("vt","vta")) to
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, verbFrames = setOf("vt","vti"))
+        Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID1), indexInLex = 0, verbFrames = setOf("vt","vta")) to
+        Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID1), indexInLex = 0, verbFrames = setOf("vt","vti"))
 
     fun genSenseDiffWithVerbTemplates(): Pair<Sense, Sense> =
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, verbTemplates = setOf(1,2,3)) to
-        Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, verbTemplates = setOf(4,5,6))
+        Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID1), indexInLex = 0, verbTemplates = setOf(1,2,3)) to
+        Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID1), indexInLex = 0, verbTemplates = setOf(4,5,6))
 
     // @formatter:off
 
     fun genLexEqual(): Pair<Lex, Lex> =
-        Lex(LEMMA1, "v", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) } to
-        Lex(LEMMA1, "v", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) }
+        Lex(Lemma(LEMMA1), "v", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) } to
+        Lex(Lemma(LEMMA1), "v", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) }
 
     fun genLeDiffWithLemma(): Pair<Lex, Lex> =
-        Lex(LEMMA1, "v", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) } to
-        Lex(LEMMA2, "v", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) }
+        Lex(Lemma(LEMMA1), "v", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) } to
+        Lex(Lemma(LEMMA2), "v", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) }
 
     fun genLeDiffWithType(): Pair<Lex, Lex> =
-        Lex(LEMMA1, "v", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) } to
-        Lex(LEMMA1, "a", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) }
+        Lex(Lemma(LEMMA1), "v", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) } to
+        Lex(Lemma(LEMMA1), "a", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) }
 
     fun genLeDiffWithDiscriminant(): Pair<Lex, Lex> =
-        Lex(LEMMA1, PartOfSpeech.V, discriminant= null, listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) } to
-        Lex(LEMMA1, PartOfSpeech.V, discriminant = "-1", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) }
+        Lex(Lemma(LEMMA1), PartOfSpeech.V, discriminant= null, listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) } to
+        Lex(Lemma(LEMMA1), PartOfSpeech.V, discriminant = Discriminant("-1"), listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) }
 
     fun genLeDiffWithKey2(): Pair<Lex, Lex> =
-        Lex(LEMMA1, "v", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) } to
-        Lex(LEMMA1, "v-1", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) }
+        Lex(Lemma(LEMMA1), "v", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) } to
+        Lex(Lemma(LEMMA1), "v-1", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) }
 
     fun genLeDiffWithSenseKeys(): Pair<Lex, Lex> =
-        Lex(LEMMA1, "v", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) } to
-        Lex(LEMMA1, "v", listOf(SENSEKEY11)).apply { pronunciations = setOf(pronunciation1) }
+        Lex(Lemma(LEMMA1), "v", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) } to
+        Lex(Lemma(LEMMA1), "v", listOf(SenseKey(SENSEKEY11))).apply { pronunciations = setOf(pronunciation1) }
 
    fun genLeDiffWithPronunciations(): Pair<Lex, Lex> =
-        Lex(LEMMA1, "v", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) } to
-        Lex(LEMMA1, "v", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation21) }
+        Lex(Lemma(LEMMA1), "v", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) } to
+        Lex(Lemma(LEMMA1), "v", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation21) }
 
     // @formatter:on
 }

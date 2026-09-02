@@ -9,86 +9,85 @@ import org.oewntk.model.KeyF.MonoValued
 import org.oewntk.model.KeyF.MultiValued
 import org.oewntk.model.Pronunciation.Companion.ipa
 import java.io.PrintStream
-import java.util.Locale
 
 object LibTestModelKeys {
     // M O B I L E
 
     fun testMobile(model: CoreModel, ps: PrintStream): IntArray {
-        val pGB = ipa("ˈməʊbaɪl", "GB")
-        val pUS = ipa("ˈmoʊbil", "US")
+        val pGB = ipa(PronunciationValue("ˈməʊbaɪl"), "GB")
+        val pUS = ipa(PronunciationValue("ˈmoʊbil"), "US")
         val pronunciations = arrayOf(pGB, pUS)
-        return testWordMulti(model, ps, "Mobile", pronunciations, Category.N)
+        return testWordMulti(model, ps, Lemma("Mobile"), pronunciations, Category.N)
     }
 
     fun testMobileNoPronunciation(model: CoreModel, ps: PrintStream): IntArray {
-        return testWordNoPronunciationMulti(model, ps, "Mobile", Category.N)
+        return testWordNoPronunciationMulti(model, ps, Lemma("Mobile"), Category.N)
     }
 
     // E A R T H (case)
 
     fun testEarthMulti(model: CoreModel, ps: PrintStream): IntArray {
-        return testWordNoPronunciationMulti(model, ps, "Earth", Category.N)
+        return testWordNoPronunciationMulti(model, ps, Lemma("Earth"), Category.N)
     }
 
     fun testEarthMono(model: CoreModel, ps: PrintStream): IntArray {
-        return testWordNoPronunciationMono(model, ps, "Earth", Category.N)
+        return testWordNoPronunciationMono(model, ps, Lemma("Earth"), Category.N)
     }
 
     // B A R O Q U E (case)
 
     fun testBaroqueMulti(model: CoreModel, ps: PrintStream): IntArray {
-        return testWordNoPronunciationMulti(model, ps, "Baroque", Category.A, Category.S)
+        return testWordNoPronunciationMulti(model, ps, Lemma("Baroque"), Category.A, Category.S)
     }
 
     fun testBaroqueMono(model: CoreModel, ps: PrintStream): IntArray {
-        return testWordNoPronunciationMono(model, ps, "Baroque", Category.A, Category.S)
+        return testWordNoPronunciationMono(model, ps, Lemma("Baroque"), Category.A, Category.S)
     }
 
     // C R I T I C A L (part-of-speech/type)
 
     fun testCriticalMulti(model: CoreModel, ps: PrintStream): IntArray {
-        return testWordNoPronunciationMulti(model, ps, "critical", Category.A, Category.S)
+        return testWordNoPronunciationMulti(model, ps, Lemma("critical"), Category.A, Category.S)
     }
 
     fun testCriticalMono(model: CoreModel, ps: PrintStream): IntArray {
-        return testWordNoPronunciationMono(model, ps, "critical", Category.A, Category.S)
+        return testWordNoPronunciationMono(model, ps, Lemma("critical"), Category.A, Category.S)
     }
 
     // R O W
 
     fun testRowDeep(model: CoreModel, ps: PrintStream): IntArray {
-        return testPronunciations(model, ps, "row", Category.N, ipa("ɹəʊ"), ipa("ɹaʊ"))
+        return testPronunciations(model, ps, Lemma("row"), Category.N, ipa(PronunciationValue("ɹəʊ")), ipa(PronunciationValue("ɹaʊ")))
     }
 
     fun testRowShallow(model: CoreModel, ps: PrintStream): IntArray {
-        return testShallow(model, ps, "row", Category.N, "-1", "-2")
+        return testShallow(model, ps, Lemma("row"), Category.N, arrayOf(Discriminant("-1"), Discriminant("-2")))
     }
 
     fun testRowNoPronunciationDeep(model: CoreModel, ps: PrintStream): IntArray {
-        return testPronunciations(model, ps, "row", Category.N)
+        return testPronunciations(model, ps, Lemma("row"), Category.N)
     }
 
     fun testRowNoPronunciationShallow(model: CoreModel, ps: PrintStream): IntArray {
-        return testShallow(model, ps, "row", Category.N)
+        return testShallow(model, ps, Lemma("row"), Category.N)
     }
 
     // B A S S
 
     fun testBassDeep(model: CoreModel, ps: PrintStream): IntArray {
-        return testPronunciations(model, ps, "bass", Category.N, ipa("beɪs"), ipa("bæs"))
+        return testPronunciations(model, ps, Lemma("bass"), Category.N, ipa(PronunciationValue("beɪs")), ipa(PronunciationValue("bæs")))
     }
 
     fun testBassShallow(model: CoreModel, ps: PrintStream): IntArray {
-        return testShallow(model, ps, "bass", Category.N, "-1", "-2")
+        return testShallow(model, ps, Lemma("bass"), Category.N, arrayOf(Discriminant("-1"), Discriminant("-2")))
     }
 
     fun testBassNoPronunciationDeep(model: CoreModel, ps: PrintStream): IntArray {
-        return testPronunciations(model, ps, "bass", Category.N)
+        return testPronunciations(model, ps, Lemma("bass"), Category.N)
     }
 
     fun testBassNoPronunciationShallow(model: CoreModel, ps: PrintStream): IntArray {
-        return testShallow(model, ps, "bass", Category.N)
+        return testShallow(model, ps, Lemma("bass"), Category.N)
     }
 
     // W O R D    T E S T S
@@ -101,7 +100,7 @@ object LibTestModelKeys {
         p: Array<Pronunciation>,
         vararg categories: Category,
     ): IntArray {
-        val lc = cased.lowercase(Locale.ENGLISH)
+        val lc = cased.lCLemma
         val isCased = lc != cased
         val pSet = p.toSet()
         val keys: MutableList<MultiValued> = ArrayList()
@@ -138,7 +137,7 @@ object LibTestModelKeys {
         cased: Lemma,
         vararg categories: Category,
     ): IntArray {
-        val lc = cased.lowercase(Locale.ENGLISH)
+        val lc = cased.lCLemma
         val isCased = lc != cased
 
         val keys: MutableList<MultiValued> = ArrayList()
@@ -152,9 +151,9 @@ object LibTestModelKeys {
             if (category == Category.S || category == Category.A) {
                 keys.add(KeyF.FuncBase.Multi.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased, category))
                 if (isCased) {
-                    keys.add(KeyF.FuncBase.Multi.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
-                    keys.add(KeyF.FuncBase.Multi.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
-                    keys.add(KeyF.FuncBase.Multi.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
+                    keys.add(KeyF.FuncBase.Multi.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lCLemma, category))
+                    keys.add(KeyF.FuncBase.Multi.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lCLemma, category))
+                    keys.add(KeyF.FuncBase.Multi.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lCLemma, category))
                 }
             }
         }
@@ -173,8 +172,8 @@ object LibTestModelKeys {
         p: Array<Pronunciation>,
         vararg categories: Category,
     ): IntArray {
-        val lc = cased.lowercase(Locale.ENGLISH)
-        val isCased = lc != cased
+        val lc = cased.lowercased
+        val isCased = lc != cased.form
         val pSet = p.toSet()
 
         val keys: MutableList<MonoValued> = ArrayList()
@@ -184,17 +183,17 @@ object LibTestModelKeys {
                 keys.add(KeyF.FuncUsingPronunciation.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased, category, pSet))
             }
             if (isCased) {
-                keys.add(KeyF.FuncUsingPronunciation.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category, pSet))
-                keys.add(KeyF.FuncUsingPronunciation.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category, pSet))
-                keys.add(KeyF.FuncUsingPronunciation.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category, pSet))
+                keys.add(KeyF.FuncUsingPronunciation.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lCLemma, category, pSet))
+                keys.add(KeyF.FuncUsingPronunciation.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lCLemma, category, pSet))
+                keys.add(KeyF.FuncUsingPronunciation.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lCLemma, category, pSet))
             }
 
             if (category == Category.S || category == Category.A) {
                 keys.add(KeyF.FuncUsingPronunciation.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased, category, pSet))
                 if (isCased) {
-                    keys.add(KeyF.FuncUsingPronunciation.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category, pSet))
-                    keys.add(KeyF.FuncUsingPronunciation.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category, pSet))
-                    keys.add(KeyF.FuncUsingPronunciation.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category, pSet))
+                    keys.add(KeyF.FuncUsingPronunciation.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lCLemma, category, pSet))
+                    keys.add(KeyF.FuncUsingPronunciation.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lCLemma, category, pSet))
+                    keys.add(KeyF.FuncUsingPronunciation.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lCLemma, category, pSet))
                 }
             }
         }
@@ -212,24 +211,24 @@ object LibTestModelKeys {
         cased: Lemma,
         vararg categories: Category,
     ): IntArray {
-        val lc = cased.lowercase(Locale.ENGLISH)
+        val lc = cased.lCLemma
         val isCased = lc != cased
 
         val keys: MutableList<MonoValued> = ArrayList()
         for (category in categories) {
             keys.add(KeyF.FuncBase.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased, category))
             if (isCased) {
-                keys.add(KeyF.FuncBase.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
-                keys.add(KeyF.FuncBase.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
-                keys.add(KeyF.FuncBase.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
+                keys.add(KeyF.FuncBase.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lCLemma, category))
+                keys.add(KeyF.FuncBase.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lCLemma, category))
+                keys.add(KeyF.FuncBase.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lCLemma, category))
             }
 
             if (category == Category.S || category == Category.A) {
                 keys.add(KeyF.FuncBase.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased, category))
                 if (isCased) {
-                    keys.add(KeyF.FuncBase.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
-                    keys.add(KeyF.FuncBase.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
-                    keys.add(KeyF.FuncBase.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lowercase(Locale.ENGLISH), category))
+                    keys.add(KeyF.FuncBase.Mono.from(Lex::lemma, { it.partOfSpeech.toCategory() }, cased.lCLemma, category))
+                    keys.add(KeyF.FuncBase.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lCLemma, category))
+                    keys.add(KeyF.FuncBase.Mono.from(Lex::lCLemma, { it.partOfSpeech.toCategory() }, cased.lCLemma, category))
                 }
             }
         }
@@ -249,11 +248,11 @@ object LibTestModelKeys {
         ps: PrintStream,
         lemma: Lemma,
         category: Category,
-        vararg discriminants: Discriminant?,
+        discriminants: Array<Discriminant>? = null,
     ): IntArray {
         val keys: MutableList<MultiValued> = ArrayList()
-        for (discriminant in discriminants) {
-            keys.add(KeyF.FuncUsingDiscriminant.Multi.from(Lex::lemma, { it.partOfSpeech.toCategory() }, lemma, category, discriminant!!))
+        discriminants?.forEach { discriminant ->
+            keys.add(KeyF.FuncUsingDiscriminant.Multi.from(Lex::lemma, { it.partOfSpeech.toCategory() }, lemma, category, discriminant))
         }
         keys.add(KeyF.FuncBase.Multi.from(Lex::lemma, { it.partOfSpeech.toCategory() }, lemma, category))
         return testKeysMulti(model, ps, lemma, *keys.toTypedArray<MultiValued>())
@@ -263,7 +262,7 @@ object LibTestModelKeys {
     private fun testPronunciations(
         model: CoreModel,
         ps: PrintStream,
-        lemma: String,
+        lemma: Lemma,
         category: Category,
         vararg pronunciations: Pronunciation?,
     ): IntArray {
@@ -303,7 +302,7 @@ object LibTestModelKeys {
     fun testKeysMulti(
         model: CoreModel,
         ps: PrintStream,
-        lemma: String,
+        lemma: Lemma,
         vararg keys: MultiValued,
     ): IntArray {
         val r = IntArray(keys.size)
@@ -322,7 +321,7 @@ object LibTestModelKeys {
     // C O N T E X T
 
     private fun dumpContext(
-        lemma: String,
+        lemma: Lemma,
         model: CoreModel,
         ps: PrintStream,
     ) {

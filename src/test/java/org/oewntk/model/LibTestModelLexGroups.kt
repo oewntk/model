@@ -14,13 +14,12 @@ import org.oewntk.model.TestUtils.lexHypermapForLemmaToString
 import org.oewntk.model.TestUtils.lexesToString
 import org.oewntk.model.TestUtils.sensesToString
 import java.io.PrintStream
-import java.util.Locale
 
 object LibTestModelLexGroups {
 
     fun testCIMultipleAll(model: CoreModel, ps: PrintStream) {
         model.lexes.lemmasByLCLemmaHavingMultipleCount()
-            .forEach { (u: String?, cs: Set<String>) ->
+            .forEach { (u: String?, cs: Set<Lemma>) ->
                 ps.println("$u ${cs.joinToString(separator = ",", prefix = "{", postfix = "}")}")
             }
     }
@@ -31,12 +30,12 @@ object LibTestModelLexGroups {
     }
 
     fun testCICounts(model: CoreModel, lemma: Lemma, ps: PrintStream) {
-        val count = model.lexes.countsByLCLemma()[lemma]
+        val count = model.lexes.countsByLCLemma()[lemma.form]
         ps.printf("%s %d%n", lemma, count)
     }
 
     fun testCICountsFromMap(model: CoreModel, lemma: Lemma, ps: PrintStream) {
-        val count = model.lexes.multipleCountsByICLemma()[lemma]
+        val count = model.lexes.multipleCountsByICLemma()[lemma.form]
         ps.printf("%s %d%n", lemma, count)
     }
 
@@ -46,12 +45,12 @@ object LibTestModelLexGroups {
         ps.printf("ci '%s'%n", lemma2)
         ps.println(s1)
 
-        lemma2 = lemma2.lowercase(Locale.ENGLISH)
+        lemma2 = lemma2.lCLemma
         val s2 = testCILexesFor(model, lemma2)
         ps.printf("ci '%s'%n", lemma2)
         ps.println(s2)
 
-        lemma2 = lemma2.uppercase()
+        lemma2 = Lemma(lemma2.form.uppercase())
         val s3 = testCILexesFor(model, lemma2)
         ps.printf("ci '%s'%n", lemma2)
         ps.println(s3)
@@ -90,23 +89,23 @@ object LibTestModelLexGroups {
         return sensesToString(senses)
     }
 
-    fun testCIHypermap(lexHyperMap: Map<String, Map<String, Collection<Lex>>>, lemma: Lemma, ps: PrintStream) {
+    fun testCIHypermap(lexHyperMap: Map<Lemma, Map<Key2, Collection<Lex>>>, lemma: Lemma, ps: PrintStream) {
         ps.printf("ci '%s'%n", lemma)
         ps.println(testCIHypermapString(lexHyperMap, lemma))
     }
 
-    fun testCIHypermap3(lexHyperMap: Map<String, Map<String, Collection<Lex>>>, lemma: Lemma, ps: PrintStream) {
+    fun testCIHypermap3(lexHyperMap: Map<Lemma, Map<Key2, Collection<Lex>>>, lemma: Lemma, ps: PrintStream) {
         var lemma2 = lemma
         val s1 = testCIHypermapString(lexHyperMap, lemma2)
         ps.printf("ci '%s'%n", lemma2)
         ps.println(s1)
 
-        lemma2 = lemma2.lowercase(Locale.ENGLISH)
+        lemma2 = lemma2.lCLemma
         val s2 = testCIHypermapString(lexHyperMap, lemma2)
         ps.printf("ci '%s'%n", lemma2)
         ps.println(s2)
 
-        lemma2 = lemma2.uppercase()
+        lemma2 = Lemma(lemma2.form.uppercase())
         val s3 = testCIHypermapString(lexHyperMap, lemma2)
         ps.printf("ci '%s'%n", lemma2)
         ps.println(s3)
@@ -115,7 +114,7 @@ object LibTestModelLexGroups {
         Assert.assertEquals(s2, s3)
     }
 
-    private fun testCIHypermapString(lexHyperMap: Map<Lemma, Map<Lemma, Collection<Lex>>>, lemma: Lemma): String {
+    private fun testCIHypermapString(lexHyperMap: Map<Lemma, Map<Key2, Collection<Lex>>>, lemma: Lemma): String {
         return lexHypermapForLemmaToString(lexHyperMap, lemma)
     }
 }

@@ -125,7 +125,7 @@ open class CoreModel(
      * A multimap: each value is an array of lexes for the lemma.
      * @Transient
      */
-    private val lexesByLCLemma: Map<LowerCasedLemma, Collection<Lex>> by lazy { lexes.asSequence().groupByLCLemma() }
+    private val lexesByLCLemma: Map<Lemma, Collection<Lex>> by lazy { lexes.asSequence().groupByLCLemma() }
 
     /**
      * Senses mapped by id (sensekey)
@@ -163,7 +163,7 @@ open class CoreModel(
      * Resolution may yield null
      */
     val lexIgnoreCaseFinder: (Lemma) -> Collection<Lex>?
-        get() = { lexesByLCLemma[it.lowercase(Locale.ENGLISH)] }
+        get() = { lexesByLCLemma[it.lCLemma] }
 
     /**
      * Lex resolver
@@ -232,7 +232,7 @@ open class CoreModel(
      * This does not preclude the inverse relation having been read from input.
      */
     var generatedInverses: Boolean = false
-        private set
+        protected set
 
     /**
      * Generate inverse relations

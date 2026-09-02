@@ -24,10 +24,10 @@ object LibDummyNanoModel {
     const val SYNSETID_H1 = "00742582-v"
     const val SYNSETID_D1 = "10240982-n"
 
-    const val IPA1 = "dʒɛst"
-    const val IPA21 = "dʒəʊk"
-    const val IPA22 = "dʒoʊk"
-    const val IPA3 = "dʒʌst"
+    val IPA1 = PronunciationValue("dʒɛst")
+    val IPA21 = PronunciationValue("dʒəʊk")
+    val IPA22 = PronunciationValue("dʒoʊk")
+    val IPA3 = PronunciationValue("dʒʌst")
 
     val DEFINITION1 = listOf("tell a joke", "speak humorously")
     val DEFINITION2 = listOf("act in a funny teasing way")
@@ -38,28 +38,28 @@ object LibDummyNanoModel {
     val pronunciation3 = Pronunciation(IPA3, null)
 
     val synsetRelations1 = mapOf(
-        "hypernym" to setOf(SYNSETID_H1),
-        "also" to setOf(SYNSETID2, SYNSETID_D1),
+        Relation("hypernym") to setOf(SynsetId(SYNSETID_H1)),
+        Relation("also") to setOf(SynsetId(SYNSETID2), SynsetId(SYNSETID_D1)),
     )
     val sense11Relations = mapOf(
-        "derivation" to setOf(SENSEKEY_D11),
-        "also" to setOf(SENSEKEY12),
+        Relation("derivation") to setOf(SenseKey(SENSEKEY_D11)),
+        Relation("also") to setOf(SenseKey(SENSEKEY12)),
     )
 
-    val lex1 = Lex(LEMMA1, "v", listOf(SENSEKEY11, SENSEKEY12)).apply { pronunciations = setOf(pronunciation1) }
-    val lex2 = Lex(LEMMA2, "v", listOf(SENSEKEY21, SENSEKEY22)).apply { pronunciations = setOf(pronunciation21, pronunciation22) }
-    val lexD1 = Lex(LEMMA3, "n", listOf(SENSEKEY_D11))
+    val lex1 = Lex(Lemma(LEMMA1), "v", listOf(SenseKey(SENSEKEY11), SenseKey(SENSEKEY12))).apply { pronunciations = setOf(pronunciation1) }
+    val lex2 = Lex(Lemma(LEMMA2), "v", listOf(SenseKey(SENSEKEY21), SenseKey(SENSEKEY22))).apply { pronunciations = setOf(pronunciation21, pronunciation22) }
+    val lexD1 = Lex(Lemma(LEMMA3), "n", listOf(SenseKey(SENSEKEY_D11)))
 
-    val synset1 = Synset(SYNSETID1, SynsetType.V, DOMAIN1, setOf(LEMMA1, LEMMA2), DEFINITION1, null, null, relations = synsetRelations1)
-    val synset2 = Synset(SYNSETID2, SynsetType.V, DOMAIN2, setOf(LEMMA1, LEMMA2), DEFINITION2)
-    val synsetH1 = Synset(SYNSETID_H1, SynsetType.V, DOMAIN1, setOf("communicate", "intercommunicate"), listOf("transmit thoughts or feelings"))
-    val synsetD1 = Synset(SYNSETID_D1, SynsetType.N, DOMAIN3, setOf("jester", "fool", "motley fool"), listOf("a professional clown employed to entertain a king or nobleman in the Middle Ages"))
+    val synset1 = Synset(SynsetId(SYNSETID1), SynsetType.V, DOMAIN1, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION1, null, null, relations = synsetRelations1)
+    val synset2 = Synset(SynsetId(SYNSETID2), SynsetType.V, DOMAIN2, setOf(Lemma(LEMMA1), Lemma(LEMMA2)), DEFINITION2)
+    val synsetH1 = Synset(SynsetId(SYNSETID_H1), SynsetType.V, DOMAIN1, setOf(Lemma("communicate"), Lemma("intercommunicate")), listOf("transmit thoughts or feelings"))
+    val synsetD1 = Synset(SynsetId(SYNSETID_D1), SynsetType.N, DOMAIN3, setOf(Lemma("jester"), Lemma("fool"), Lemma("motley fool")), listOf("a professional clown employed to entertain a king or nobleman in the Middle Ages"))
 
-    val sense11 = Sense(SENSEKEY11, lex1.key, SYNSETID1, indexInLex = 0, relations = sense11Relations)
-    val sense12 = Sense(SENSEKEY12, lex1.key, SYNSETID2, indexInLex = 1)
-    val sense21 = Sense(SENSEKEY21, lex2.key, SYNSETID1, indexInLex = 0)
-    val sense22 = Sense(SENSEKEY22, lex2.key, SYNSETID2, indexInLex = 1)
-    val senseD11 = Sense(SENSEKEY_D11, lexD1.key, SYNSETID_D1, indexInLex = 0)
+    val sense11 = Sense(SenseKey(SENSEKEY11), lex1.key, SynsetId(SYNSETID1), indexInLex = 0, relations = sense11Relations)
+    val sense12 = Sense(SenseKey(SENSEKEY12), lex1.key, SynsetId(SYNSETID2), indexInLex = 1)
+    val sense21 = Sense(SenseKey(SENSEKEY21), lex2.key, SynsetId(SYNSETID1), indexInLex = 0)
+    val sense22 = Sense(SenseKey(SENSEKEY22), lex2.key, SynsetId(SYNSETID2), indexInLex = 1)
+    val senseD11 = Sense(SenseKey(SENSEKEY_D11), lexD1.key, SynsetId(SYNSETID_D1), indexInLex = 0)
 
     val lexes1 = listOf(lex1, lex2, lexD1)
     val senses1 = listOf(sense11, sense12, sense21, sense22, senseD11)
@@ -73,15 +73,15 @@ object LibDummyNanoModel {
     val senses3 = listOf(sense11, sense12, sense21, sense22)
     val synsets3 = listOf(synset1, synset2)
 
-    val coreModel1 = CoreModel(lexes1.distinct(), senses1.distinct(), synsets1.distinct(), source="#1")
-    val coreModel2 = CoreModel(lexes2.distinct(), senses2.distinct(), synsets2.distinct(), source="#2")
-    val coreModel3 = CoreModel(lexes3.distinct(), senses3.distinct(), synsets3.distinct(), source="#3")
+    val coreModel1 = CoreModel(lexes1.distinct(), senses1.distinct(), synsets1.distinct(), source = "#1")
+    val coreModel2 = CoreModel(lexes2.distinct(), senses2.distinct(), synsets2.distinct(), source = "#2")
+    val coreModel3 = CoreModel(lexes3.distinct(), senses3.distinct(), synsets3.distinct(), source = "#3")
 
     val dataModel1 = DataModel(coreModel1, emptyList(), emptyList())
     val dataModel2 = DataModel(coreModel2, emptyList(), emptyList())
     val dataModel3 = DataModel(coreModel3, emptyList(), emptyList())
 
-    val model1 = Model(dataModel1, source="#1", source2="#1_2")
-    val model2 = Model(dataModel2, source="#2", source2="#2_2")
-    val model3 = Model(dataModel3, source="#3", source2="#3_2")
+    val model1 = Model(dataModel1, source = "#1", source2 = "#1_2")
+    val model2 = Model(dataModel2, source = "#2", source2 = "#2_2")
+    val model3 = Model(dataModel3, source = "#3", source2 = "#3_2")
 }

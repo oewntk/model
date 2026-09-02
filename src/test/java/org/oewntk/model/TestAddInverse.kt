@@ -5,12 +5,13 @@ package org.oewntk.model
 
 import org.junit.BeforeClass
 import org.junit.Test
+import org.oewntk.model.InverseRelationFactory.INVERSE_SENSE_RELATIONS_MAP
+import org.oewntk.model.InverseRelationFactory.INVERSE_SYNSET_RELATIONS_MAP
 import org.oewntk.model.LibDummyNanoModel.model1
 import org.oewntk.model.LibDummyNanoModel.sense11
 import org.oewntk.model.LibDummyNanoModel.senseD11
 import org.oewntk.model.LibDummyNanoModel.synset1
 import org.oewntk.model.LibDummyNanoModel.synsetH1
-import org.oewntk.model.Sense.Companion.INVERSE_SENSE_RELATIONS
 import java.io.PrintStream
 
 class TestAddInverse {
@@ -54,8 +55,8 @@ class TestAddInverse {
         ps.println("generate inverses")
         ps.println("model after generating inverses")
         model1.generateInverseRelations(
-            INVERSE_SENSE_RELATIONS + mapOf("also" to "also"),
-            INVERSE_SENSE_RELATIONS + mapOf("also" to "also"),
+            INVERSE_SYNSET_RELATIONS_MAP + mapOf(Relation("also") to Relation("also")),
+            INVERSE_SENSE_RELATIONS_MAP + mapOf(Relation("also") to Relation("also")),
         )
         dump(model1, ps)
     }

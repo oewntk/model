@@ -1,7 +1,5 @@
 package org.oewntk.model
 
-import java.util.*
-
 object LibLexGroupings {
 
     /**
@@ -12,10 +10,10 @@ object LibLexGroupings {
      * @receiver lexes
      * @return lemmas by LC lemmas
      */
-    private val Collection<Lex>.lemmasByLCLemma: Map<LowerCasedLemma, Set<Lemma>>
+    private val Collection<Lex>.lemmasByLCLemma: Map<String, Set<Lemma>>
         get() = this
             .map(Lex::lemma)
-            .groupBy { it.lowercase(Locale.ENGLISH) }
+            .groupBy { it.lowercased }
             .mapValues { it.value.toSortedSet() }
 
     /**
@@ -26,7 +24,7 @@ object LibLexGroupings {
      * @return lemmas for given target
      */
     fun Collection<Lex>.findLemmasFor(target: Lemma): Set<Lemma> {
-        return lemmasByLCLemma[target.lowercase()]!!
+        return lemmasByLCLemma[target.lowercased]!!
     }
 
     // hyper maps
@@ -37,8 +35,8 @@ object LibLexGroupings {
      * @receiver lexes
      * @return lemmas by LC lemmas, with count &gt; 2
      */
-    fun Collection<Lex>.lemmasByLCLemmaHavingMultipleCount(): Map<LowerCasedLemma, Set<Lemma>> {
-        return Groupings.groupByHavingMultipleCount(this.map(Lex::lemma)) { it.lowercase(Locale.ENGLISH) }
+    fun Collection<Lex>.lemmasByLCLemmaHavingMultipleCount(): Map<String, Set<Lemma>> {
+        return Groupings.groupByHavingMultipleCount(this.map(Lex::lemma)) { it.lowercased }
     }
 
     // counts
@@ -49,10 +47,10 @@ object LibLexGroupings {
      * @receiver lexes
      * @return counts of lemmas by LC lemmas
      */
-    fun Collection<Lex>.countsByLCLemma(): Map<LowerCasedLemma, Long> {
+    fun Collection<Lex>.countsByLCLemma(): Map<String, Long> {
         return this
             .map(Lex::lemma)
-            .groupBy { it.lowercase(Locale.ENGLISH) }
+            .groupBy { it.lowercased }
             .toSortedMap(naturalOrder())
             .mapValues { it.value.toSet().size.toLong() }
     }
@@ -63,10 +61,10 @@ object LibLexGroupings {
      * @receiver lexes
      * @return counts of lemmas by LC lemmas, with count &gt; 2
      */
-    fun Collection<Lex>.multipleCountsByICLemma(): Map<Lemma, Long> {
+    fun Collection<Lex>.multipleCountsByICLemma(): Map<String, Long> {
         return this
             .map(Lex::lemma)
-            .groupBy { it.lowercase(Locale.ENGLISH) }
+            .groupBy { it.lowercased }
             .mapValues { it.value.toSet().size.toLong() }
             .toList()
             .filter { it.second > 1L }

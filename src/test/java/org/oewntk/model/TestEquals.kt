@@ -55,8 +55,8 @@ class TestEquals {
 
     @Test
     fun testLexId() {
-        val obj1 = LexId("jest", PartOfSpeech.V, null)
-        val obj2 = LexId("jest", PartOfSpeech.V, null)
+        val obj1 = LexId(Lemma("jest"), PartOfSpeech.V, null)
+        val obj2 = LexId(Lemma("jest"), PartOfSpeech.V, null)
         assertTrue(Objects.equals(obj1, obj2))
         assertEquals(obj1, obj2)
     }

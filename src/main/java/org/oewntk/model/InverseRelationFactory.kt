@@ -3,8 +3,8 @@
  */
 package org.oewntk.model
 
-import org.oewntk.model.Sense.Companion.INVERSE_SENSE_RELATIONS
-import org.oewntk.model.Synset.Companion.INVERSE_SYNSET_RELATIONS
+import org.oewntk.model.Relation.Companion.INVERSE_SENSE_RELATIONS
+import org.oewntk.model.Relation.Companion.INVERSE_SYNSET_RELATIONS
 
 /**
  * Generator of inverse synset relations
@@ -15,9 +15,13 @@ object InverseRelationFactory {
 
     private const val THROW_NON_EXISTING_TARGET = false
 
-    val INVERSE_SYNSET_RELATIONS_SET = INVERSE_SYNSET_RELATIONS.values.toSet()
+    val INVERSE_SYNSET_RELATIONS_MAP = INVERSE_SYNSET_RELATIONS.mapKeys { (k, _) -> Relation(k) }.mapValues { (_, v) -> Relation(v) }
 
-    val INVERSE_SENSE_RELATIONS_SET = INVERSE_SENSE_RELATIONS.values.toSet()
+    val INVERSE_SENSE_RELATIONS_MAP = INVERSE_SENSE_RELATIONS.mapKeys { (k, _) -> Relation(k) }.mapValues { (_, v) -> Relation(v) }
+
+    val INVERSE_SYNSET_RELATIONS_SET = INVERSE_SYNSET_RELATIONS_MAP.values
+
+    val INVERSE_SENSE_RELATIONS_SET = INVERSE_SENSE_RELATIONS_MAP.values
 
     /**
      * Generate inverse synset relations
@@ -26,7 +30,7 @@ object InverseRelationFactory {
      * @return count
      */
     fun makeInverseSynsetRelations(synsetsById: Map<SynsetId, Synset>): Int {
-        return makeInverseSynsetRelations(INVERSE_SYNSET_RELATIONS, synsetsById)
+        return makeInverseSynsetRelations(INVERSE_SYNSET_RELATIONS_MAP, synsetsById)
     }
 
     /**
@@ -76,7 +80,7 @@ object InverseRelationFactory {
      * @return count
      */
     fun makeInverseSenseRelations(sensesById: Map<SenseKey, Sense>): Int {
-        return makeInverseSenseRelations(INVERSE_SENSE_RELATIONS, sensesById)
+        return makeInverseSenseRelations(INVERSE_SENSE_RELATIONS_MAP, sensesById)
     }
 
     /**

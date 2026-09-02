@@ -65,9 +65,9 @@ object LibTestModel {
         }
     }
 
-    fun testWords(model: CoreModel, ps: PrintStream, vararg lemmas: Lemma) {
+    fun testWords(model: CoreModel, ps: PrintStream, lemmas: Array<Lemma>) {
         for (lemma in lemmas) {
-            val lexes = model.lexResolver(lemma)
+            val lexes = model.lexResolver(Lemma(lemma.form))
             for (lex in lexes) {
                 ps.println(lex)
                 dumpKeys(lex, ps)

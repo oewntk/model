@@ -3,7 +3,7 @@
  */
 package org.oewntk.model
 
-import org.oewntk.model.PartOfSpeechImpl.Companion.partOfSpeechComparator
+import org.oewntk.model.PartOfSpeech.Companion.partOfSpeechComparator
 import java.io.Serializable
 import java.util.*
 
@@ -52,19 +52,19 @@ data class Lex(
         get() = LexId(lemma, partOfSpeech, discriminant)
     val value: List<SenseKey>
         get() = senseKeys
-    val key2: String
-        get() = if (discriminant != null) "${partOfSpeech.value}$discriminant" else partOfSpeech.value.toString()
+    val key2: Key2
+        get() = Key2(if (discriminant != null) "${partOfSpeech.value}$discriminant" else partOfSpeech.value.toString())
     val properties: Array<Any?>
         get() = arrayOf(forms, pronunciations)
 
     // computed properties
-    val lCLemma: LowerCasedLemma
-        get() = lemma.lowercase(Locale.ENGLISH)
+    val lCLemma: Lemma
+        get() = lemma.lCLemma
     val isCased: Boolean
-        get() = lemma != lCLemma
+        get() = lemma.form != lCLemma.form
     val lexfileChar: Char
         get() {
-            val c = lemma[0].lowercaseChar()
+            val c = lemma.form[0].lowercaseChar()
             return if (c !in 'a' until 'z' + 1) '0' else c
         }
     val lexfile: String
@@ -82,7 +82,7 @@ data class Lex(
         key2: String,
         senseKeys: List<SenseKey> = ArrayList(),
         generated: Boolean = false
-    ) : this(lemma, PartOfSpeech.fromKey2(key2), PartOfSpeech.discriminantFromKey2(key2), senseKeys, generated = generated)
+    ) : this(lemma, PartOfSpeech.fromKey2(Key2(key2)), PartOfSpeech.discriminantFromKey2(Key2(key2)), senseKeys, generated = generated)
 
     // identify
 
@@ -90,8 +90,8 @@ data class Lex(
         // throw UnsupportedOperationException("$this / $other")
         return this === other || other is Lex && (
                 key == other.key
-                && value == other.value
-                && properties.contentEquals(other.properties))
+                        && value == other.value
+                        && properties.contentEquals(other.properties))
     }
 
     override fun hashCode(): Int {
@@ -135,10 +135,10 @@ data class Lex(
          * level 2 key=type or type-discriminant
          * lexes = map[lemma][key2]
          */
-        fun Sequence<Lex>.groupByLCLemmaThenByKey2(): Map<LowerCasedLemma, Map<Key2, Collection<Lex>>> {
+        fun Sequence<Lex>.groupByLCLemmaThenByKey2(): Map<Lemma, Map<Key2, Collection<Lex>>> {
             return this
-                .groupBy(Lex::lCLemma)
-                .mapValues { (_: LowerCasedLemma, lexes: Collection<Lex>) ->
+                .groupBy { it.lemma.lCLemma }
+                .mapValues { (_, lexes: Collection<Lex>) ->
                     lexes.groupBy(Lex::key2)
                 }
         }
@@ -181,9 +181,9 @@ data class Lex(
          * @receiver lexes
          * @return lexes grouped by lowercased lemma
          */
-        fun Sequence<Lex>.groupByLCLemma(): Map<LowerCasedLemma, Set<Lex>> {
+        fun Sequence<Lex>.groupByLCLemma(): Map<Lemma, Set<Lex>> {
             return this
-                .groupBy(Lex::lCLemma)
+                .groupBy { it.lemma.lCLemma }
                 .mapValues { it.value.toSet() }
         }
     }

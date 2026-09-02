@@ -3,8 +3,6 @@
  */
 package org.oewntk.model
 
-import java.util.*
-
 /**
  * Model info
  */
@@ -26,7 +24,7 @@ object ModelInfo {
             .count()
         val casedCount = model.lexes
             .map { it.lemma }
-            .filter { it != it.lowercase(Locale.ENGLISH) }
+            .filter { it.form != it.lowercased }
             .distinct()
             .count()
 

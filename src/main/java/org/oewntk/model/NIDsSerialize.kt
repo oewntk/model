@@ -115,7 +115,7 @@ object SerializeNIDs {
         val wordToNID = NIDs.makeWordNIDs(model.lexes)
         val synsetIdToNID = NIDs.makeSynsetNIDs(model.synsets)
         val m = model.senses
-            .associate { it.senseKey to (wordToNID[it.lCLemma] to synsetIdToNID[it.synsetId.id]) } // (sensekey, (lemma,synsetId))
+            .associate { it.senseKey to (wordToNID[it.lCLemma] to synsetIdToNID[it.synsetId]) } // (sensekey, (lemma,synsetId))
         serialize(os, m)
     }
 
@@ -131,7 +131,7 @@ object SerializeNIDs {
         val wordToNID = NIDs.makeWordNIDs(model.lexes)
         val synsetIdToNID = NIDs.makeSynsetNIDs(model.synsets)
         val m = model.senses
-            .associate { it.senseKey to (wordToNID[it.lCLemma] to synsetIdToNID[it.synsetId.id]) } // (sensekey, (lemma,synsetId))
+            .associate { it.senseKey to (wordToNID[it.lCLemma] to synsetIdToNID[it.synsetId]) } // (sensekey, (lemma,synsetId))
         serialize(os, m)
     }
 

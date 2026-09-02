@@ -14,15 +14,60 @@ object NIDs {
     /**
      * Make lex-to-NID map
      */
-    fun makeLexesNIDs(
-        lexes: Collection<Lex>,
-    ): Map<LexId, Int> {
+    fun makeLexesNIDs(lexes: Collection<Lex>): Map<LexId, Int> {
         return lexes
             .asSequence()
             .map { it.key }
             .sortedWith(lexIdComparator)
             .withIndex()
             .associate { it.value to it.index + 1 } // map(lexId, nid)
+    }
+
+    /**
+     * Make synset id-to-nid map
+     *
+     * @param synsets synsets
+     * @return id-to-nid map
+     */
+    fun makeSynsetNIDs(synsets: Collection<Synset>): Map<SynsetId, Int> {
+        return synsets
+            .asSequence()
+            .map { it.synsetId }
+            .sorted()
+            .withIndex()
+            .associate { it.value to it.index + 1 }
+    }
+
+    /**
+     * Make sense id-to-nid map
+     *
+     * @param senses senses
+     * @return id-to-nid map
+     */
+    fun makeSenseNIDs(senses: Collection<Sense>): Map<SenseKey, Int> {
+        return senses
+            .asSequence()
+            .map(Sense::senseKey)
+            .distinct()
+            .sorted()
+            .withIndex()
+            .associate { it.value to it.index + 1 }
+    }
+
+    /**
+     * Make sense_lemma id-to-nid map
+     *
+     * @param senses senses
+     * @return id-to-nid map
+     */
+    fun makeSenseWordNIDs(senses: Collection<Sense>): Map<String, Int> {
+        return senses
+            .asSequence()
+            .map(Sense::uniqueId)
+            .distinct()
+            .sorted()
+            .withIndex()
+            .associate { it.value to it.index + 1 }
     }
 
     /**
@@ -69,7 +114,7 @@ object NIDs {
      * @param lexes lexes
      * @return morph-to-nid map
      */
-    fun makeMorphNIDs(lexes: Collection<Lex>): Map<String, Int> {
+    fun makeMorphNIDs(lexes: Collection<Lex>): Map<Morph, Int> {
         return lexes
             .asSequence()
             .filter { it.forms != null && it.forms!!.isNotEmpty() }
@@ -94,37 +139,6 @@ object NIDs {
             .map { it.value }
             .sorted()
             .distinct()
-            .withIndex()
-            .associate { it.value to it.index + 1 }
-    }
-
-    /**
-     * Make synset id-to-nid map
-     *
-     * @param synsets synsets
-     * @return id-to-nid map
-     */
-    fun makeSynsetNIDs(synsets: Collection<Synset>): Map<String, Int> {
-        return synsets
-            .asSequence()
-            .map { s: Synset -> s.synsetId }
-            .sorted()
-            .withIndex()
-            .associate { it.value.id to it.index + 1 }
-    }
-
-    /**
-     * Make sense id-to-nid map
-     *
-     * @param senses senses
-     * @return id-to-nid map
-     */
-    fun makeSenseNIDs(senses: Collection<Sense>): Map<String, Int> {
-        return senses
-            .asSequence()
-            .map(Sense::uniqueId)
-            .distinct()
-            .sorted()
             .withIndex()
             .associate { it.value to it.index + 1 }
     }
@@ -231,7 +245,7 @@ object NIDs {
      * @param ps    print stream
      * @param toNID od-to-nid map
      */
-    private fun <T: Comparable<T>> print(ps: PrintStream, toNID: Map<T, Int>) {
+    private fun <T : Comparable<T>> print(ps: PrintStream, toNID: Map<T, Int>) {
         val data = toNID.keys
             .sorted()
             .joinToString(separator = ",\n", prefix = "{\n", postfix = "\n}") { "\"$it\": ${toNID[it]}" }

@@ -105,7 +105,7 @@ object LibTestModelQueries {
         dumpSynset(sense.synsetId, model, indent + "\t", ps)
 
         // relations
-        val relations: Map<Relation, Set<SenseKey>>? = sense.relations
+        val relations: Map<Relation, Set<RelationTarget>>? = sense.relations
         relations?.keys?.forEach { type: Relation ->
             ps.printf(
                 "%s%-28s: [%s]%n",

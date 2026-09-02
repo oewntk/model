@@ -224,7 +224,7 @@ fun synsetFromData(dict: Map<String, Any>, includeLexFile: Boolean = false): Syn
     val relations = dict[KEY_RELATION]?.let {
         safeCast<Map<String, Collection<String>>>(it)
             .mapKeys { (rel, _) -> Relation(rel) }
-            .mapValues { (_, targetIds) -> targetIds.map { it2 -> SynsetId(it2) }.toSet() }
+            .mapValues { (_, targetIds) -> targetIds.map { it2 -> RelationTarget(it2) }.toSet() }
     }
     return Synset(
         synsetId, type, domain, members.map(::Lemma).toSet(), definitions,
@@ -283,7 +283,7 @@ fun senseFromData(dict: Map<String, Any>): Sense {
     val relations = dict[KEY_RELATION]?.let {
         safeCast<Map<String, Collection<String>>>(it)
             .mapKeys { (rel, _) -> Relation(rel) }
-            .mapValues { (_, targetIds) -> targetIds.map { it2 -> SenseKey(it2) }.toSet() }
+            .mapValues { (_, targetIds) -> targetIds.map { it2 -> RelationTarget(it2) }.toSet() }
     }
     return Sense(id, lexId, synsetId, index, examples, verbFrames, verbTemplates, adjPosition, tagCount, relations)
 }

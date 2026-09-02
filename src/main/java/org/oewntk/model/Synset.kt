@@ -47,7 +47,7 @@ data class Synset(
     val definitions: List<String>,
     val examples: List<Example>? = null,
     val usages: List<String>? = null,
-    var relations: Map<Relation, Set<SynsetId>>? = null,
+    var relations: Map<Relation, Set<RelationTarget>>? = null,
     val ili: String? = null,
     val wikidata: List<String>? = null,
 
@@ -69,7 +69,7 @@ data class Synset(
     val definition: String?
         get() = definitions.firstOrNull()
     var lexfile: String = "$partOfSpeechName.$domain"
-    val flatRelations: List<Pair<Relation, SynsetId>>?
+    val flatRelations: List<Pair<Relation, RelationTarget>>?
         get() = relations?.flatMap { (key, values) -> values.map { key to it } }
 
     // identity
@@ -98,17 +98,17 @@ data class Synset(
      * Add inverse synset relations of this synset
      *
      * @param inverseType    inverse type
-     * @param targetSynsetId target synset id
+     * @param targetId       target id
      */
-    fun addInverseRelation(inverseType: Relation, targetSynsetId: SynsetId) {
+    fun addInverseRelation(inverseType: Relation, targetId: RelationTarget) {
         val mutableRelations = if (relations == null) HashMap() else relations!!.toMutableMap()
         relations = mutableRelations
         val inverseRelations =
-            mutableRelations.computeIfPresent(inverseType) { _: Relation, v: Set<SynsetId> -> v.toMutableSet() }
+            mutableRelations.computeIfPresent(inverseType) { _: Relation, v: Set<RelationTarget> -> v.toMutableSet() }
                 ?: mutableRelations.computeIfAbsent(inverseType) { LinkedHashSet() }
 
-        require(!inverseRelations.contains(targetSynsetId)) { "Inverse relation $inverseType from $synsetId to $targetSynsetId was already there." }
-        (inverseRelations as MutableSet<SynsetId>).add(targetSynsetId)
+        require(!inverseRelations.contains(targetId)) { "Inverse relation $inverseType from $synsetId to $targetId was already there." }
+        (inverseRelations as MutableSet<RelationTarget>).add(targetId)
     }
 
     // computed

@@ -26,6 +26,21 @@ object NIDs {
     }
 
     /**
+     * Make synset id-to-nid map
+     *
+     * @param synsets synsets
+     * @return id-to-nid map
+     */
+    fun makeSynsetNIDs(synsets: Collection<Synset>): Map<SynsetId, Int> {
+        return synsets
+            .asSequence()
+            .map { it.synsetId }
+            .sorted()
+            .withIndex()
+            .associate { it.value to it.index + 1 }
+    }
+
+    /**
      * Make word-to-NID map
      *
      * @param lexes lexes
@@ -69,7 +84,7 @@ object NIDs {
      * @param lexes lexes
      * @return morph-to-nid map
      */
-    fun makeMorphNIDs(lexes: Collection<Lex>): Map<String, Int> {
+    fun makeMorphNIDs(lexes: Collection<Lex>): Map<Morph, Int> {
         return lexes
             .asSequence()
             .filter { it.forms != null && it.forms!!.isNotEmpty() }
@@ -96,21 +111,6 @@ object NIDs {
             .distinct()
             .withIndex()
             .associate { it.value to it.index + 1 }
-    }
-
-    /**
-     * Make synset id-to-nid map
-     *
-     * @param synsets synsets
-     * @return id-to-nid map
-     */
-    fun makeSynsetNIDs(synsets: Collection<Synset>): Map<String, Int> {
-        return synsets
-            .asSequence()
-            .map { s: Synset -> s.synsetId }
-            .sorted()
-            .withIndex()
-            .associate { it.value.id to it.index + 1 }
     }
 
     /**

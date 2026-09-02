@@ -52,7 +52,7 @@ data class Sense(
     var verbTemplates: Set<VerbTemplateId>? = null,
     val adjPosition: AdjPosition? = null,
     var tagCount: Int? = null,
-    var relations: Map<Relation, Set<SenseKey>>? = null,
+    var relations: Map<Relation, Set<RelationTarget>>? = null,
 
     ) : Comparable<Sense>, Serializable {
 
@@ -77,7 +77,7 @@ data class Sense(
         get() = senseId
     val intTagCount: Int
         get() = tagCount ?: 0
-    val flatRelations: List<Pair<Relation, SenseKey>>?
+    val flatRelations: List<Pair<Relation, RelationTarget>>?
         get() = relations?.flatMap { (key, values) -> values.map { key to it } }
 
     // identity
@@ -114,15 +114,15 @@ data class Sense(
      * @param inverseType    inverse type
      * @param targetId       target id
      */
-    fun addInverseRelation(inverseType: Relation, targetId: SenseKey) {
+    fun addInverseRelation(inverseType: Relation, targetId: RelationTarget) {
         val mutableRelations = if (relations == null) HashMap() else relations!!.toMutableMap()
         relations = mutableRelations
         val inverseRelations =
-            mutableRelations.computeIfPresent(inverseType) { _: Relation, v: Set<SenseKey> -> v.toMutableSet() }
+            mutableRelations.computeIfPresent(inverseType) { _: Relation, v: Set<RelationTarget> -> v.toMutableSet() }
                 ?: mutableRelations.computeIfAbsent(inverseType) { LinkedHashSet() }
 
         require(!inverseRelations.contains(targetId)) { "Inverse relation $inverseType from $senseId to $targetId was already there." }
-        (inverseRelations as MutableSet<SenseKey>).add(targetId)
+        (inverseRelations as MutableSet<RelationTarget>).add(targetId)
     }
 
     // computed

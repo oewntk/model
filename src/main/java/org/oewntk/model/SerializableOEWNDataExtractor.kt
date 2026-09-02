@@ -76,11 +76,11 @@ fun examplesFromOEWNData(list: List<Any>): List<Example> {
  * @param dict dictionary
  * @return relation targets grouped by relation type
  */
-fun synsetRelationsFromOEWNData(dict: Map<String, Any>): Map<Relation, Set<SynsetId>>? {
+fun synsetRelationsFromOEWNData(dict: Map<String, Any>): Map<Relation, Set<RelationTarget>>? {
     val relations = safeCast<Map<String, Collection<String>>>(dict)
         .filter { it.key in SYNSET_RELATIONS }
         .mapKeys { (rel, _) -> Relation(rel) }
-        .mapValues { (_, targetIds) -> targetIds.map { SynsetId(it) }.toSet() }
+        .mapValues { (_, targetIds) -> targetIds.map { RelationTarget(it) }.toSet() }
     return relations.ifEmpty { null }
 }
 
@@ -90,11 +90,11 @@ fun synsetRelationsFromOEWNData(dict: Map<String, Any>): Map<Relation, Set<Synse
  * @param dict dictionary
  * @return relation targets grouped by relation type
  */
-fun senseRelationsFromOEWNData(dict: Map<String, Any>): Map<Relation, Set<SenseKey>>? {
+fun senseRelationsFromOEWNData(dict: Map<String, Any>): Map<Relation, Set<RelationTarget>>? {
     val relations = safeCast<Map<String, Collection<String>>>(dict)
         .filter { it.key in SENSE_RELATIONS }
         .mapKeys { (rel, _) -> Relation(rel) }
-        .mapValues { (_, targetIds) -> targetIds.map { SenseKey(it) }.toSet() }
+        .mapValues { (_, targetIds) -> targetIds.map { RelationTarget(it) }.toSet() }
     return relations.ifEmpty { null }
 }
 
@@ -258,7 +258,7 @@ fun senseFromOEWNData(lemma: Lemma, partOfSpeech: PartOfSpeech, discriminant: Di
     val verbTemplates: List<VerbTemplateId>? = dict[KEY_VERBTEMPLATE]?.let { safeCast(it) }
     val adjPosition: AdjPosition? = safeNullableCast(dict[KEY_ADJPOSITION])
     val tagCount: Int? = safeNullableCast(dict[KEY_TAGCOUNT])
-    val relations: Map<Relation, Set<SenseKey>>? = senseRelationsFromOEWNData(dict)
+    val relations: Map<Relation, Set<RelationTarget>>? = senseRelationsFromOEWNData(dict)
     return Sense(
         senseId, lexId, synsetId, indexInLex,
         examples = examples,
@@ -372,7 +372,7 @@ fun synsetFromOEWNData(synsetId: SynsetId, dict: Map<String, Any>, includeLexFil
     val definitions = safeCast<List<String>>(dict[KEY_DEFINITION]!!)
     val examples = dict[KEY_EXAMPLE]?.let { examplesFromOEWNData(safeCast(it)) }
     val usages = dict[KEY_USAGE]?.let { safeCast<List<String>>(it) }
-    val relations: Map<Relation, Set<SynsetId>>? = synsetRelationsFromOEWNData(dict)
+    val relations: Map<Relation, Set<RelationTarget>>? = synsetRelationsFromOEWNData(dict)
     val ili = dict[KEY_ILI] as String?
     val wikidata = dict[KEY_WIKIDATA]?.let {
         when (it) {

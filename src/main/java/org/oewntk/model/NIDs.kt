@@ -245,7 +245,7 @@ object NIDs {
      * @param ps    print stream
      * @param toNID od-to-nid map
      */
-    private fun <T : Comparable<T>> print(ps: PrintStream, toNID: Map<T, Int>) {
+    private fun <T: Comparable<T>> print(ps: PrintStream, toNID: Map<T, Int>) {
         val data = toNID.keys
             .sorted()
             .joinToString(separator = ",\n", prefix = "{\n", postfix = "\n}") { "\"$it\": ${toNID[it]}" }

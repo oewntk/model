@@ -14,9 +14,7 @@ object NIDs {
     /**
      * Make lex-to-NID map
      */
-    fun makeLexesNIDs(
-        lexes: Collection<Lex>,
-    ): Map<LexId, Int> {
+    fun makeLexesNIDs(lexes: Collection<Lex>): Map<LexId, Int> {
         return lexes
             .asSequence()
             .map { it.key }
@@ -35,6 +33,38 @@ object NIDs {
         return synsets
             .asSequence()
             .map { it.synsetId }
+            .sorted()
+            .withIndex()
+            .associate { it.value to it.index + 1 }
+    }
+
+    /**
+     * Make sense id-to-nid map
+     *
+     * @param senses senses
+     * @return id-to-nid map
+     */
+    fun makeSenseNIDs(senses: Collection<Sense>): Map<SenseKey, Int> {
+        return senses
+            .asSequence()
+            .map(Sense::senseKey)
+            .distinct()
+            .sorted()
+            .withIndex()
+            .associate { it.value to it.index + 1 }
+    }
+
+    /**
+     * Make sense_lemma id-to-nid map
+     *
+     * @param senses senses
+     * @return id-to-nid map
+     */
+    fun makeSenseWordNIDs(senses: Collection<Sense>): Map<String, Int> {
+        return senses
+            .asSequence()
+            .map(Sense::uniqueId)
+            .distinct()
             .sorted()
             .withIndex()
             .associate { it.value to it.index + 1 }
@@ -109,38 +139,6 @@ object NIDs {
             .map { it.value }
             .sorted()
             .distinct()
-            .withIndex()
-            .associate { it.value to it.index + 1 }
-    }
-
-    /**
-     * Make sense id-to-nid map
-     *
-     * @param senses senses
-     * @return id-to-nid map
-     */
-    fun makeSenseNIDs(senses: Collection<Sense>): Map<SenseKey, Int> {
-        return senses
-            .asSequence()
-            .map(Sense::senseKey)
-            .distinct()
-            .sorted()
-            .withIndex()
-            .associate { it.value to it.index + 1 }
-    }
-
-    /**
-     * Make sense id-to-nid map
-     *
-     * @param senses senses
-     * @return id-to-nid map
-     */
-    fun makeSenseWordNIDs(senses: Collection<Sense>): Map<String, Int> {
-        return senses
-            .asSequence()
-            .map(Sense::uniqueId)
-            .distinct()
-            .sorted()
             .withIndex()
             .associate { it.value to it.index + 1 }
     }

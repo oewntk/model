@@ -119,7 +119,23 @@ object NIDs {
      * @param senses senses
      * @return id-to-nid map
      */
-    fun makeSenseNIDs(senses: Collection<Sense>): Map<String, Int> {
+    fun makeSenseNIDs(senses: Collection<Sense>): Map<SenseKey, Int> {
+        return senses
+            .asSequence()
+            .map(Sense::senseKey)
+            .distinct()
+            .sorted()
+            .withIndex()
+            .associate { it.value to it.index + 1 }
+    }
+
+    /**
+     * Make sense id-to-nid map
+     *
+     * @param senses senses
+     * @return id-to-nid map
+     */
+    fun makeSenseWordNIDs(senses: Collection<Sense>): Map<String, Int> {
         return senses
             .asSequence()
             .map(Sense::uniqueId)

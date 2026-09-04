@@ -9,6 +9,8 @@ import java.nio.charset.StandardCharsets
 
 object NIDs {
 
+    private const val SENSEKEYS_WORDS_SYNSETS_FILE = "sensekeys_words_synsets"
+
     // M A K E
 
     /**
@@ -39,15 +41,46 @@ object NIDs {
     }
 
     /**
+     * Make synset id string-to-nid map
+     *
+     * @param synsets synsets
+     * @return synset id string-to-nid map
+     */
+    fun makeStrSynsetNIDs(synsets: Collection<Synset>): Map<String, Int> {
+        return synsets
+            .asSequence()
+            .map { it.synsetId.id }
+            .sorted()
+            .withIndex()
+            .associate { it.value to it.index + 1 }
+    }
+
+    /**
      * Make sense id-to-nid map
      *
      * @param senses senses
-     * @return id-to-nid map
+     * @return sense key-to-nid map
      */
     fun makeSenseNIDs(senses: Collection<Sense>): Map<SenseKey, Int> {
         return senses
             .asSequence()
             .map(Sense::senseKey)
+            .distinct()
+            .sorted()
+            .withIndex()
+            .associate { it.value to it.index + 1 }
+    }
+
+    /**
+     * Make sense key string-to-nid map
+     *
+     * @param senses senses
+     * @return sense key string-to-nid map
+     */
+    fun makeStrSenseNIDs(senses: Collection<Sense>): Map<String, Int> {
+        return senses
+            .asSequence()
+            .map { it.senseKey.id }
             .distinct()
             .sorted()
             .withIndex()
@@ -71,7 +104,7 @@ object NIDs {
     }
 
     /**
-     * Make word-to-NID map
+     * Make word -to-NID map
      *
      * @param lexes lexes
      * @return word-to-nid map
@@ -81,6 +114,25 @@ object NIDs {
         val map = lexes
             .asSequence()
             .map { it.lemma.lCLemma }
+            .distinct()
+            .sorted()
+            .withIndex()
+            .associate { it.value to it.index + 1 }
+        assert(map.values.none { it == 0 })
+        return map
+    }
+
+    /**
+     * Make word string-to-NID map
+     *
+     * @param lexes lexes
+     * @return word string-to-nid map
+     */
+    fun makeStrWordNIDs(lexes: Collection<Lex>): Map<String, Int> {
+        // stream of words
+        val map = lexes
+            .asSequence()
+            .map { it.lemma.lCLemma.form }
             .distinct()
             .sorted()
             .withIndex()
@@ -100,6 +152,25 @@ object NIDs {
             .asSequence()
             .filter(Lex::isCased)
             .map { it.lemma }
+            .distinct()
+            .sorted()
+            .withIndex()
+            .associate { it.value to it.index + 1 }
+        assert(map.values.none { it == 0 })
+        return map
+    }
+
+    /**
+     * Make cased_word string-to-NID map
+     *
+     * @param lexes lexes
+     * @return cased_word string-to-nid map
+     */
+    fun makeStrCasedWordNIDs(lexes: Collection<Lex>): Map<String, Int> {
+        val map = lexes
+            .asSequence()
+            .filter(Lex::isCased)
+            .map { it.lemma.form }
             .distinct()
             .sorted()
             .withIndex()
@@ -137,6 +208,24 @@ object NIDs {
             .filter { it.pronunciations != null && it.pronunciations!!.isNotEmpty() }
             .flatMap { it.pronunciations!!.asSequence() }
             .map { it.value }
+            .sorted()
+            .distinct()
+            .withIndex()
+            .associate { it.value to it.index + 1 }
+    }
+
+    /**
+     * Make pronunciation(values) string-to-NID map
+     *
+     * @param lexes lexes
+     * @return pronunciation string-to-nid map
+     */
+    fun makeStrPronunciationNIDs(lexes: Collection<Lex>): Map<String, Int> {
+        return lexes
+            .asSequence()
+            .filter { it.pronunciations != null && it.pronunciations!!.isNotEmpty() }
+            .flatMap { it.pronunciations!!.asSequence() }
+            .map { it.value.ipa }
             .sorted()
             .distinct()
             .withIndex()
@@ -248,6 +337,23 @@ object NIDs {
     private fun printSensesWords(ps: PrintStream, senses: Collection<Sense>) = print(ps, makeSenseWordNIDs(senses))
 
     /**
+     * Print sensekey to wordnid-synsetnid
+     * Does not use Kotlin pairs.
+     *
+     * @param ps    print stream
+     * @param model model
+     * @throws IOException io exception
+     */
+    @Throws(IOException::class)
+    private fun printSensesWordsSynsetsNIDs(ps: PrintStream, model: CoreModel) {
+        val wordToNID = NIDs.makeWordNIDs(model.lexes)
+        val synsetIdToNID = NIDs.makeSynsetNIDs(model.synsets)
+        val m = model.senses
+            .associate { it.senseKey.id to (wordToNID[it.lCLemma]!! to synsetIdToNID[it.synsetId]!!) } // (sensekey, (lemma,synsetId))
+        print2(ps, m)
+    }
+
+    /**
      * Print id-to-nid map
      *
      * @param ps    print stream
@@ -257,6 +363,19 @@ object NIDs {
         val data = toNID.keys
             .sorted()
             .joinToString(separator = ",\n", prefix = "{\n", postfix = "\n}") { "\"$it\": ${toNID[it]}" }
+        ps.println(data)
+    }
+
+     /**
+     * Print id-to-nid map
+     *
+     * @param ps     print stream
+     * @param toNIDs sod-to-nids(pair) map
+     */
+   private fun <T: Comparable<T>> print2(ps: PrintStream, toNIDs: Map<T, Pair<Int, Int>>) {
+        val data = toNIDs.keys
+            .sorted()
+            .joinToString(separator = ",\n", prefix = "{\n", postfix = "\n}") { "\"$it\": ${toNIDs[it]}" }
         ps.println(data)
     }
 
@@ -297,5 +416,6 @@ object NIDs {
         print(outDir, synsetsFile) { printSynsets(it, model.synsets) }
         print(outDir, sensesFile) { printSenses(it, model.senses) }
         print(outDir, sensesWordsFile) { printSensesWords(it, model.senses) }
+        print(outDir, SENSEKEYS_WORDS_SYNSETS_FILE) { printSensesWordsSynsetsNIDs(it, model) }
     }
 }

@@ -20,7 +20,7 @@ object SerializeNIDs {
      */
     @Throws(IOException::class)
     fun serializeWordNIDs(os: OutputStream, lexes: Collection<Lex>) {
-        val wordToNID = NIDs.makeWordNIDs(lexes)
+        val wordToNID = NIDs.makeStrWordNIDs(lexes)
         serialize(os, wordToNID)
     }
 
@@ -33,7 +33,7 @@ object SerializeNIDs {
      */
     @Throws(IOException::class)
     fun serializeCasedWordNIDs(os: OutputStream, lexes: Collection<Lex>) {
-        val casedToNID = NIDs.makeCasedWordNIDs(lexes)
+        val casedToNID = NIDs.makeStrCasedWordNIDs(lexes)
         serialize(os, casedToNID)
     }
 
@@ -59,7 +59,7 @@ object SerializeNIDs {
      */
     @Throws(IOException::class)
     fun serializePronunciationNIDs(os: OutputStream, lexes: Collection<Lex>) {
-        val pronunciationValueToNID = NIDs.makeMorphNIDs(lexes)
+        val pronunciationValueToNID = NIDs.makeStrPronunciationNIDs(lexes)
         serialize(os, pronunciationValueToNID)
     }
 
@@ -72,7 +72,7 @@ object SerializeNIDs {
      */
     @Throws(IOException::class)
     private fun serializeSensesNIDs(os: OutputStream, senses: Collection<Sense>) {
-        val senseToNID = NIDs.makeSenseNIDs(senses)
+        val senseToNID = NIDs.makeStrSenseNIDs(senses)
         serialize(os, senseToNID)
     }
 
@@ -98,7 +98,7 @@ object SerializeNIDs {
      */
     @Throws(IOException::class)
     fun serializeSynsetNIDs(os: OutputStream, synsets: Collection<Synset>) {
-        val synsetIdToNID = NIDs.makeSynsetNIDs(synsets)
+        val synsetIdToNID = NIDs.makeStrSynsetNIDs(synsets)
         serialize(os, synsetIdToNID)
     }
 
@@ -128,7 +128,7 @@ object SerializeNIDs {
         val wordToNID = NIDs.makeWordNIDs(model.lexes)
         val synsetIdToNID = NIDs.makeSynsetNIDs(model.synsets)
         val m = model.senses
-            .associate { it.senseKey to (wordToNID[it.lCLemma] to synsetIdToNID[it.synsetId]) } // (sensekey, (lemma,synsetId))
+            .associate { it.senseKey.id to (wordToNID[it.lCLemma] to synsetIdToNID[it.synsetId]) } // (sensekey, (lemma,synsetId))
         serialize(os, m)
     }
 

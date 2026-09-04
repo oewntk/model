@@ -240,6 +240,14 @@ object NIDs {
     private fun printSenses(ps: PrintStream, senses: Collection<Sense>) = print(ps, makeSenseNIDs(senses))
 
     /**
+     * Print sense+word id-to-nid map
+     *
+     * @param ps     print stream
+     * @param senses senses
+     */
+    private fun printSensesWords(ps: PrintStream, senses: Collection<Sense>) = print(ps, makeSenseWordNIDs(senses))
+
+    /**
      * Print id-to-nid map
      *
      * @param ps    print stream
@@ -268,6 +276,7 @@ object NIDs {
      * @param pronunciationsFile pronunciations
      * @param synsetsFile synsets
      * @param sensesFile senses
+     * @param sensesWordsFile senses+words
      * @throws java.io.IOException io exception
      */
     @Throws(IOException::class)
@@ -279,6 +288,7 @@ object NIDs {
         pronunciationsFile: String = "pronunciations",
         synsetsFile: String = "synsets",
         sensesFile: String = "senses",
+        sensesWordsFile: String = "senseswords",
     ) {
         print(outDir, wordsFile) { printWords(it, model.lexes) }
         print(outDir, casedWordsFile) { printCasedWords(it, model.lexes) }
@@ -286,5 +296,6 @@ object NIDs {
         print(outDir, pronunciationsFile) { printPronunciations(it, model.lexes) }
         print(outDir, synsetsFile) { printSynsets(it, model.synsets) }
         print(outDir, sensesFile) { printSenses(it, model.senses) }
+        print(outDir, sensesWordsFile) { printSensesWords(it, model.senses) }
     }
 }

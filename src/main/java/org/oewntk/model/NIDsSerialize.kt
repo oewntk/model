@@ -77,6 +77,19 @@ object SerializeNIDs {
     }
 
     /**
+     * Serialize senses+words id-to-nid map
+     *
+     * @param os     output stream
+     * @param senses senses
+     * @throws IOException io exception
+     */
+    @Throws(IOException::class)
+    private fun serializeSensesWordsNIDs(os: OutputStream, senses: Collection<Sense>) {
+        val senseToNID = NIDs.makeSenseWordNIDs(senses)
+        serialize(os, senseToNID)
+    }
+
+    /**
      * Serialize id-to-nid map
      *
      * @param os      output stream
@@ -119,22 +132,6 @@ object SerializeNIDs {
         serialize(os, m)
     }
 
-    /**
-     * Serialize sensekey to wordnid-synsetnid
-     *
-     * @param os    output stream
-     * @param model model
-     * @throws IOException io exception
-     */
-    @Throws(IOException::class)
-    private fun kserializeSensekeysWordsSynsetsNIDs(os: OutputStream, model: CoreModel) {
-        val wordToNID = NIDs.makeWordNIDs(model.lexes)
-        val synsetIdToNID = NIDs.makeSynsetNIDs(model.synsets)
-        val m = model.senses
-            .associate { it.senseKey to (wordToNID[it.lCLemma] to synsetIdToNID[it.synsetId]) } // (sensekey, (lemma,synsetId))
-        serialize(os, m)
-    }
-
     private fun serialize(outDir: File, baseName: String, printFunction: (FileOutputStream) -> Unit) {
         FileOutputStream(File(outDir, "$baseName.ser"))
             .use { printFunction.invoke(it) }
@@ -152,7 +149,9 @@ object SerializeNIDs {
      * @param morphsFile  morphs
      * @param pronunciationsFile pronunciations
      * @param synsetsFile synsets
-     * @param sensesFile senses     * @throws IOException io exception
+     * @param sensesFile senses
+     * @param sensesWordsFile senses+words
+     * @throws IOException io exception
      */
     @Throws(IOException::class)
     fun serializeNIDs(
@@ -163,12 +162,14 @@ object SerializeNIDs {
         pronunciationsFile: String = "pronunciations",
         synsetsFile: String = "synsets",
         sensesFile: String = "senses",
+        sensesWordsFile: String = "senseswords",
     ) {
         serialize(outDir, "$NID_PREFIX$wordsFile") { serializeWordNIDs(it, model.lexes) }
         serialize(outDir, "$NID_PREFIX$casedWordsFile") { serializeCasedWordNIDs(it, model.lexes) }
         serialize(outDir, "$NID_PREFIX$morphsFile") { serializeMorphNIDs(it, model.lexes) }
         serialize(outDir, "$NID_PREFIX$pronunciationsFile") { serializePronunciationNIDs(it, model.lexes) }
         serialize(outDir, "$NID_PREFIX$sensesFile") { serializeSensesNIDs(it, model.senses) }
+        serialize(outDir, "$NID_PREFIX$sensesWordsFile") { serializeSensesWordsNIDs(it, model.senses) }
         serialize(outDir, "$NID_PREFIX$synsetsFile") { serializeSynsetNIDs(it, model.synsets) }
         serialize(outDir, SENSEKEYS_WORDS_SYNSETS_FILE) { serializeSensekeysWordsSynsetsNIDs(it, model) }
     }

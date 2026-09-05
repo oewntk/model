@@ -359,23 +359,23 @@ object NIDs {
      * @param ps    print stream
      * @param toNID od-to-nid map
      */
-    private fun <T: Comparable<T>> print(ps: PrintStream, toNID: Map<T, Int>) {
+    private fun <T : Comparable<T>> print(ps: PrintStream, toNID: Map<T, Int>) {
         val data = toNID.keys
             .sorted()
             .joinToString(separator = ",\n", prefix = "{\n", postfix = "\n}") { "\"$it\": ${toNID[it]}" }
         ps.println(data)
     }
 
-     /**
+    /**
      * Print id-to-nid map
      *
      * @param ps     print stream
      * @param toNIDs sod-to-nids(pair) map
      */
-   private fun <T: Comparable<T>> print2(ps: PrintStream, toNIDs: Map<T, Pair<Int, Int>>) {
+    private fun <T : Comparable<T>> print2(ps: PrintStream, toNIDs: Map<T, Pair<Int, Int>>) {
         val data = toNIDs.keys
             .sorted()
-            .joinToString(separator = ",\n", prefix = "{\n", postfix = "\n}") { "\"$it\": ${toNIDs[it]}" }
+            .joinToString(separator = ",\n", prefix = "{\n", postfix = "\n}") { val v = toNIDs[it]; "\"$it\": [${v?.first}, ${v?.second}]" }
         ps.println(data)
     }
 

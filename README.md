@@ -20,4 +20,4 @@ Project [model](https://github.com/oewntk/model)
 
 		<groupId>io.github.oewntk</groupId>
 		<artifactId>model</artifactId>
-		<version>3.0.1</version>
+		<version>3.0.2</version>

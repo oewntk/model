@@ -124,11 +124,11 @@ object SerializeNIDs {
      * @throws IOException io exception
      */
     @Throws(IOException::class)
-    private fun serializeSensekeysWordsSynsetsNIDs(os: OutputStream, model: CoreModel) {
+    private fun serializeSensekeysToWordsSynsetsNIDs(os: OutputStream, model: CoreModel) {
         val wordToNID = NIDs.makeWordNIDs(model.lexes)
         val synsetIdToNID = NIDs.makeSynsetNIDs(model.synsets)
         val m = model.senses
-            .associate { it.senseKey.id to (wordToNID[it.lCLemma] to synsetIdToNID[it.synsetId]) } // (sensekey, (lemma,synsetId))
+            .associate { it.senseKey.id to listOf(wordToNID[it.lCLemma], synsetIdToNID[it.synsetId]) } // (sensekey, [lemma,synsetId])
         serialize(os, m)
     }
 
@@ -171,6 +171,6 @@ object SerializeNIDs {
         serialize(outDir, "$NID_PREFIX$sensesFile") { serializeSensesNIDs(it, model.senses) }
         serialize(outDir, "$NID_PREFIX$sensesWordsFile") { serializeSensesWordsNIDs(it, model.senses) }
         serialize(outDir, "$NID_PREFIX$synsetsFile") { serializeSynsetNIDs(it, model.synsets) }
-        serialize(outDir, SENSEKEYS_WORDS_SYNSETS_FILE) { serializeSensekeysWordsSynsetsNIDs(it, model) }
+        serialize(outDir, SENSEKEYS_WORDS_SYNSETS_FILE) { serializeSensekeysToWordsSynsetsNIDs(it, model) }
     }
 }

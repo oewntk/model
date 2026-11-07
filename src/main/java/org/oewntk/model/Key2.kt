@@ -17,7 +17,7 @@ value class Key2(val id: String) : Comparable<Key2>, Serializable {
 
     companion object {
 
-        const val KEY2_RE = "^[nvar](-[0-9]+)?$"
+        const val KEY2_RE = "^[nvare](-[0-9]+)?$"
 
         val key2Regex = "^$KEY2_RE$".toRegex()
 

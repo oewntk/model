@@ -17,7 +17,7 @@ value class SynsetId(val id: String) : Comparable<SynsetId>, Serializable {
 
     companion object {
 
-        const val SYNSET_ID_RE = "\\d{8}-[nvars]"
+        const val SYNSET_ID_RE = "\\d{8}-[nvarse]"
 
         val synsetIdRegex = "^$SYNSET_ID_RE$".toRegex()
 

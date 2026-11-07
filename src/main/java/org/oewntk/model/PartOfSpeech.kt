@@ -19,6 +19,9 @@ enum class PartOfSpeech(val value: Char, val fullName: String) {
     },
     R('r', "adv") {
         override fun toCategory(): Category = Category.R
+    },
+    E('e', "name") {
+        override fun toCategory(): Category = Category.E
     };
 
     abstract fun toCategory(): Category
@@ -33,6 +36,7 @@ enum class PartOfSpeech(val value: Char, val fullName: String) {
                 'v' -> V
                 'a' -> A
                 'r' -> R
+                'e' -> E
                 else -> null
             }
         }

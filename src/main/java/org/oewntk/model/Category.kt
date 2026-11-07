@@ -19,6 +19,9 @@ enum class Category(val value: Char) {
     },
     S('s') {
         override fun toPartOfSpeech(): PartOfSpeech = PartOfSpeech.A
+    },
+    E('e') {
+        override fun toPartOfSpeech(): PartOfSpeech = PartOfSpeech.E
     };
 
     abstract fun toPartOfSpeech(): PartOfSpeech

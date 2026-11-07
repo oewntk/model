@@ -27,6 +27,10 @@ enum class SynsetType(val value: Char) {
     S('s') {
         override fun toPartOfSpeech(): PartOfSpeech = PartOfSpeech.A
         override fun toCategory(): Category = Category.S
+    },
+    E('e') {
+        override fun toPartOfSpeech(): PartOfSpeech = PartOfSpeech.E
+        override fun toCategory(): Category = Category.E
     };
 
     abstract fun toPartOfSpeech(): PartOfSpeech
@@ -44,6 +48,7 @@ enum class SynsetType(val value: Char) {
                 'a', 'A' -> A
                 'r', 'R' -> R
                 's', 'S' -> S
+                'e', 'E' -> E
                 else -> null
             }
         }

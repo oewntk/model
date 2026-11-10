@@ -5,6 +5,7 @@ import org.oewntk.model.InverseRelationFactory.INVERSE_SYNSET_RELATIONS_SET
 import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
 import org.oewntk.model.Relation.Companion.SENSE_RELATIONS
 import org.oewntk.model.Relation.Companion.SYNSET_RELATIONS
+import kotlin.toString
 
 typealias Filename = String
 
@@ -77,10 +78,10 @@ fun examplesFromOEWNData(list: List<Any>): List<Example> {
  * @return relation targets grouped by relation type
  */
 fun synsetRelationsFromOEWNData(dict: Map<String, Any>): Map<Relation, Set<RelationTarget>>? {
-    val relations = safeCast<Map<String, Collection<String>>>(dict)
+    val relations = safeCast<Map<String, Collection<Map<String, Any>>>>(dict)
         .filter { it.key in SYNSET_RELATIONS }
         .mapKeys { (rel, _) -> Relation(rel) }
-        .mapValues { (_, targetIds) -> targetIds.map { RelationTarget(it) }.toSet() }
+        .mapValues { (_, targetIds) -> targetIds.map { RelationTarget(it["id"].toString()) }.toSet() }
     return relations.ifEmpty { null }
 }
 
@@ -91,10 +92,10 @@ fun synsetRelationsFromOEWNData(dict: Map<String, Any>): Map<Relation, Set<Relat
  * @return relation targets grouped by relation type
  */
 fun senseRelationsFromOEWNData(dict: Map<String, Any>): Map<Relation, Set<RelationTarget>>? {
-    val relations = safeCast<Map<String, Collection<String>>>(dict)
+    val relations = safeCast<Map<String, Collection<Map<String, Any>>>>(dict)
         .filter { it.key in SENSE_RELATIONS }
         .mapKeys { (rel, _) -> Relation(rel) }
-        .mapValues { (_, targetIds) -> targetIds.map { RelationTarget(it) }.toSet() }
+        .mapValues { (_, targetIds) -> targetIds.map { RelationTarget(it["id"].toString()) }.toSet() }
     return relations.ifEmpty { null }
 }
 

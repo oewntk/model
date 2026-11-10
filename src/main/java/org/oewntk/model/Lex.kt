@@ -65,10 +65,11 @@ data class Lex(
     val lexfileChar: Char
         get() {
             val c = lemma.form[0].lowercaseChar()
-            return if (c !in 'a' until 'z' + 1) '0' else c
+            val upperC = c.lowercaseChar()
+            return if (c !in 'a' until 'z' + 1) '0' else (if (partOfSpeech == PartOfSpeech.E) c else upperC)
         }
     val lexfile: String
-        get() = "entries-$lexfileChar"
+        get() = if (partOfSpeech == PartOfSpeech.E) "entries-$lexfileChar-name" else "entries-$lexfileChar"
 
     /**
      * Constructor

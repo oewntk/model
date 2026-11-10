@@ -5,7 +5,6 @@ import org.oewntk.model.InverseRelationFactory.INVERSE_SYNSET_RELATIONS_SET
 import org.oewntk.model.Lex.Groups.lexByLemmaThenByKey2
 import org.oewntk.model.Relation.Companion.SENSE_RELATIONS
 import org.oewntk.model.Relation.Companion.SYNSET_RELATIONS
-import kotlin.toString
 
 typealias Filename = String
 
@@ -78,10 +77,10 @@ fun examplesFromOEWNData(list: List<Any>): List<Example> {
  * @return relation targets grouped by relation type
  */
 fun synsetRelationsFromOEWNData(dict: Map<String, Any>): Map<Relation, Set<RelationTarget>>? {
-    val relations = safeCast<Map<String, Collection<Map<String, Any>>>>(dict)
+    val relations = safeCast<Map<String, Collection<String>>>(dict)
         .filter { it.key in SYNSET_RELATIONS }
         .mapKeys { (rel, _) -> Relation(rel) }
-        .mapValues { (_, targetIds) -> targetIds.map { RelationTarget(it["id"].toString()) }.toSet() }
+        .mapValues { (_, targetIds) -> targetIds.map { RelationTarget(it) }.toSet() }
     return relations.ifEmpty { null }
 }
 
@@ -92,10 +91,10 @@ fun synsetRelationsFromOEWNData(dict: Map<String, Any>): Map<Relation, Set<Relat
  * @return relation targets grouped by relation type
  */
 fun senseRelationsFromOEWNData(dict: Map<String, Any>): Map<Relation, Set<RelationTarget>>? {
-    val relations = safeCast<Map<String, Collection<Map<String, Any>>>>(dict)
+    val relations = safeCast<Map<String, Collection<String>>>(dict)
         .filter { it.key in SENSE_RELATIONS }
         .mapKeys { (rel, _) -> Relation(rel) }
-        .mapValues { (_, targetIds) -> targetIds.map { RelationTarget(it["id"].toString()) }.toSet() }
+        .mapValues { (_, targetIds) -> targetIds.map { RelationTarget(it) }.toSet() }
     return relations.ifEmpty { null }
 }
 
@@ -234,7 +233,7 @@ fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Bool
         relations
             ?.filterNot { leaveRedundantRelation && it.key in INVERSE_SENSE_RELATIONS_SET }
             ?.forEach { (rel: Relation, targetIds) ->
-                this[rel.id] = targetIds.toList()
+                this[rel.id] = targetIds.map { it.id }.toList()
             }
         if (includeTagCount) tagCount?.let { this[KEY_TAGCOUNT] = it }
     }.toSortedMap()
@@ -250,9 +249,9 @@ fun Sense.toOEWNData(includeVerbTemplates: Boolean = true, includeTagCount: Bool
  * @return sense
  */
 fun senseFromOEWNData(lemma: Lemma, partOfSpeech: PartOfSpeech, discriminant: Discriminant?, idx: Int, dict: Map<String, Any>): Sense {
-    val lexId: LexId = LexId(lemma, partOfSpeech, discriminant)
-    val senseId: SenseKey = SenseKey(dict[KEY_ID] as String)
-    val synsetId: SynsetId = SynsetId(dict[KEY_SYNSET] as String)
+    val lexId = LexId(lemma, partOfSpeech, discriminant)
+    val senseId = SenseKey(dict[KEY_ID] as String)
+    val synsetId = SynsetId(dict[KEY_SYNSET] as String)
     val indexInLex: Int = idx
     val examples = dict[KEY_SENSE_EXAMPLE]?.let { examplesFromOEWNData(safeCast(it)) }
     val verbFrames: List<VerbFrameId>? = dict[KEY_VERBFRAME]?.let { safeCast(it) }
@@ -313,7 +312,7 @@ fun Synset.toOEWNDataValue(includeLexFile: Boolean = false, leaveRedundantRelati
         relations
             ?.filterNot { leaveRedundantRelation && it.key in INVERSE_SYNSET_RELATIONS_SET }
             ?.forEach { (rel, targetIds) ->
-                this[rel.id] = targetIds.toList()
+                this[rel.id] = targetIds.map { it.id }.toList()
             }
         wikidata?.let { if (it.isNotEmpty()) this[KEY_WIKIDATA] = if (it.size == 1) it[0] else it }
         ili?.let { this[KEY_ILI] = it }

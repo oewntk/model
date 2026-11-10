@@ -75,7 +75,7 @@ object ModelInfo {
         val senseRelationSum = model.senses
             .mapNotNull { it.relations }
             .flatMap { it.values }
-            .sumOf { it.size}
+            .sumOf { it.size }
 
         val withRelationSynsetCount = model.synsets
             .count { it.relations != null }
@@ -162,7 +162,7 @@ object ModelInfo {
                 formatCounts("morph references", morphRefSum, last = true)
     }
 
-    private fun reportRelationCounts(model: CoreModel): String {
+    fun relationCounts(model: CoreModel): String {
         val synsetRelationSum = model.synsets
             .mapNotNull { it.relations }
             .flatMap { it.values }
@@ -184,7 +184,6 @@ object ModelInfo {
             .flatMap { it.keys }
             .sorted()
             .distinct()
-
         val senseRelations = model.senses
             .mapNotNull { it.relations }
             .flatMap { it.keys }

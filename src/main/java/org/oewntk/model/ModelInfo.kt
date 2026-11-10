@@ -175,6 +175,36 @@ object ModelInfo {
                 formatCounts("sense relations", senseRelationSum, last = true)
     }
 
+    fun endogenousRelationCounts(model: CoreModel): String {
+        val synsetRelationSum = model.synsets
+            .mapNotNull { it.relations }
+            .flatMap { it.values }
+            .flatMap { it.asSequence() }
+            .count { it.isSynsetId }
+        val senseRelationSum = model.senses
+            .mapNotNull { it.relations }
+            .flatMap { it.values }
+            .flatMap { it.asSequence() }
+            .count { it.isSenseKey }
+        return formatCounts("synset relations with synset target", synsetRelationSum) +
+                formatCounts("sense relations with sense target", senseRelationSum, last = true)
+    }
+
+    fun crossRelationCounts(model: CoreModel): String {
+        val synsetRelationSum = model.synsets
+            .mapNotNull { it.relations }
+            .flatMap { it.values }
+            .flatMap { it.asSequence() }
+            .count { it.isSenseKey }
+        val senseRelationSum = model.senses
+            .mapNotNull { it.relations }
+            .flatMap { it.values }
+            .flatMap { it.asSequence() }
+            .count { it.isSynsetId }
+        return formatCounts("synset relations with sense target", synsetRelationSum) +
+                formatCounts("sense relations with synset target", senseRelationSum, last = true)
+    }
+
     /**
      * Relation types
      */

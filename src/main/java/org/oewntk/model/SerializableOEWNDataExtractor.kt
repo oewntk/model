@@ -516,6 +516,7 @@ fun CoreModel.toSplitOEWNData(generated: Boolean = false, leaveRedundantRelation
 
     return sequence {
         lexes
+            .filter { it.partOfSpeech != PartOfSpeech.E }
             .groupBy {
                 if (generated) {
                     if (it.generated) "entries-generated" else it.lexfile
@@ -527,6 +528,28 @@ fun CoreModel.toSplitOEWNData(generated: Boolean = false, leaveRedundantRelation
             }
 
         synsets
+            .filter { it.partOfSpeech != PartOfSpeech.E }
+            .sortedBy { it.synsetId }
+            .groupBy { it.lexfile }
+            .forEach { (lexfile, synsets) ->
+                val synsetData = synsets.asSequence().toOEWNData(leaveRedundantRelation = leaveRedundantRelation)
+                yield(synsetData to lexfile)  // yield content with source file base
+            }
+
+        lexes
+            .filter { it.partOfSpeech == PartOfSpeech.E }
+            .groupBy {
+                if (generated) {
+                    if (it.generated) "entries-generated" else it.lexfile
+                } else it.lexfile
+            }
+            .forEach { (file, lexes) ->
+                val lexData = lexes.asSequence().toOEWNData(senseResolver, leaveRedundantRelation = leaveRedundantRelation)
+                yield(lexData to file) // yield content with source file base
+            }
+
+        synsets
+            .filter { it.partOfSpeech == PartOfSpeech.E }
             .sortedBy { it.synsetId }
             .groupBy { it.lexfile }
             .forEach { (lexfile, synsets) ->
